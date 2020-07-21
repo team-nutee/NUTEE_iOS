@@ -1,0 +1,6 @@
+framework module Pods_NUTEE {
+  umbrella header "Pods-NUTEE-umbrella.h"
+
+  export *
+  module * { export * }
+}
