@@ -3,13 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0B3827FB041D46212374CBA2 /* Pods_NUTEETests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 066E8F9DAE85B2F296E9E3BA /* Pods_NUTEETests.framework */; };
 		354617B889A0574629A7C313 /* Pods_NUTEE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3243E55C992B1AC612F59912 /* Pods_NUTEE.framework */; };
 		37AE9D60D81DCEB874809E14 /* Pods_NUTEEUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */; };
+		5E70FC5924C8046D001F79F7 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */; };
+		5E70FC5B24C8049E001F79F7 /* Font+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E70FC5A24C8049E001F79F7 /* Font+Enum.swift */; };
 		5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA65124C6D1AA00A58F43 /* AppDelegate.swift */; };
 		5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA65324C6D1AA00A58F43 /* SceneDelegate.swift */; };
 		5E8BA65C24C6D1AA00A58F43 /* NUTEE.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA65A24C6D1AA00A58F43 /* NUTEE.xcdatamodeld */; };
@@ -58,6 +60,8 @@
 		3243E55C992B1AC612F59912 /* Pods_NUTEE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NUTEE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F020B527E3089EEA90DCFFE /* Pods-NUTEEUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEEUITests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEEUITests/Pods-NUTEEUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NUTEEUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		5E70FC5A24C8049E001F79F7 /* Font+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Font+Enum.swift"; path = "../../../../../../Documents/Font+Enum.swift"; sourceTree = "<group>"; };
 		5E8BA64E24C6D1AA00A58F43 /* NUTEE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTEE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8BA65124C6D1AA00A58F43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5E8BA65324C6D1AA00A58F43 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -131,8 +135,16 @@
 				3F020B527E3089EEA90DCFFE /* Pods-NUTEEUITests.debug.xcconfig */,
 				292BDA4088538027B8492389 /* Pods-NUTEEUITests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		5E70FC5724C8044D001F79F7 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				5E70FC5A24C8049E001F79F7 /* Font+Enum.swift */,
+			);
+			name = Enums;
+			path = "New Group1";
 			sourceTree = "<group>";
 		};
 		5E8BA64524C6D1AA00A58F43 = {
@@ -187,6 +199,8 @@
 		5E8BA68424C6D1BF00A58F43 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				5E70FC5724C8044D001F79F7 /* Enums */,
+				5EFD2EA624C803C6000C3D81 /* Extensions */,
 				5E8BA69424C6D2AB00A58F43 /* Supporting Files */,
 				5E8BA69324C6D27C00A58F43 /* Resources */,
 				5E8BA68B24C6D1F500A58F43 /* Utils */,
@@ -428,6 +442,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		5EFD2EA624C803C6000C3D81 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D1F0CF141A3B075229D52A3E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -662,12 +684,14 @@
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* UserVC.swift in Sources */,
 				5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */,
+				5E70FC5B24C8049E001F79F7 /* Font+Enum.swift in Sources */,
 				5E8BA6A124C6D31E00A58F43 /* HomeVC.swift in Sources */,
 				5E8BA6BC24C6D60D00A58F43 /* SearchCVCell.swift in Sources */,
 				5E8BA6C224C6D63500A58F43 /* NoticeVC.swift in Sources */,
 				5E8BA6BE24C6D61800A58F43 /* PostCVCell.swift in Sources */,
 				5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */,
 				5E8BA69A24C6D2D800A58F43 /* APIConstants.swift in Sources */,
+				5E70FC5924C8046D001F79F7 /* UIImageView+Extension.swift in Sources */,
 				5E8BA65C24C6D1AA00A58F43 /* NUTEE.xcdatamodeld in Sources */,
 				5E8BA6BA24C6D5FF00A58F43 /* LoginCVCell.swift in Sources */,
 				5E8BA6C024C6D62400A58F43 /* NoticeCVCell.swift in Sources */,
