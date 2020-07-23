@@ -10,21 +10,49 @@ import UIKit
 
 class SplashVC: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
-        // Do any additional setup after loading the view.
+    // MARK: - UI components
+    
+    let nuteeImageView = UIImageView().then {
+        $0.image = #imageLiteral(resourceName: "Nutee_Image_white")
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // MARK: - Variables and Properties
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+//        addSplashView()
     }
-    */
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        Thread.sleep(forTimeInterval: 0.5)
+        startNuteeApp()
+    }
+    
+    // MARK: - Helper
+    
+    func addSplashView() {
+        view.backgroundColor = .white
+        
+        view.addSubview(nuteeImageView)
+        
+        nuteeImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            $0.width.equalTo(100)
+            $0.height.equalTo(nuteeImageView.snp.width)
+        }
+    }
+    
+    func startNuteeApp() {
+        let nuteeNewsFeedVC = NewsFeedVC()
+        nuteeNewsFeedVC.view.backgroundColor = .green
+        
+        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+        sceneDelegate.window?.rootViewController = nuteeNewsFeedVC
+    }
 
 }
