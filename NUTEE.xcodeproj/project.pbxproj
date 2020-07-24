@@ -34,6 +34,7 @@
 		5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */; };
 		D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
+		D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		B68CB2F77807D8C93FCD9CD4 /* Pods-NUTEE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.debug.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.debug.xcconfig"; sourceTree = "<group>"; };
 		D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedVC.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
+		D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -429,6 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */,
+				D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -663,6 +666,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
 				D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,

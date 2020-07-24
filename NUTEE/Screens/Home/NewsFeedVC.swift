@@ -17,6 +17,7 @@ class NewsFeedVC: UIViewController {
     
     // MARK: - UI components
     
+    let navigationBar = UINavigationBar()
     let newsFeedTableView = UITableView()
     
     var refreshControl: UIRefreshControl!
@@ -36,8 +37,9 @@ class NewsFeedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initNewsFeed()
+        setNavigationBar()
         setTableView()
+        
 //        self.view.addSubview(loadCompleteBtn)
         
 //        initColor()
@@ -99,26 +101,32 @@ class NewsFeedVC: UIViewController {
     
     // MARK: -Helper
     
-    func initNewsFeed() {
+    func setNavigationBar() {
+        _ = navigationBar.then {
+            view.addSubview($0)
+
+            self.navigationItem.title = "NUTEE"
+        }
+    }
+    
+    func setTableView() {
         _ = newsFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
             
             $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: "NewsFeedTVCell")
             
+            view.addSubview($0)
+            
+            $0.snp.makeConstraints {
+                $0.top.equalTo(navigationBar.snp.bottom)
+                $0.left.equalToSuperview()
+                $0.right.equalToSuperview()
+                $0.bottom.equalToSuperview()
+            }
+            
             $0.separatorInset.left = 0
-            $0.separatorStyle = .none
-        }
-    }
-    
-    func setTableView() {
-        view.addSubview(newsFeedTableView)
-        
-        newsFeedTableView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview()
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
-            make.bottom.equalToSuperview()
+//            $0.separatorStyle = .none
         }
     }
     
@@ -236,10 +244,8 @@ extension NewsFeedVC : UITableViewDataSource {
         // Custom셀인 'NewsFeedCell' 형식으로 생성
         let cell = newsFeedTableView.dequeueReusableCell(withIdentifier: "NewsFeedTVCell", for: indexPath) as! NewsFeedTVCell
 
-        cell.testLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
-        }
+        cell.initCell()
+        cell.addContentView()
         
 //        // 셀 선택시 백그라운드 변경 안되게 하기 위한 코드
 //        cell.addBorder((.bottom), color: .lightGray, thickness: 0.1)

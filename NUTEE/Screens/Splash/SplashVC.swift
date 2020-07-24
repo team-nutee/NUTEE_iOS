@@ -48,11 +48,23 @@ class SplashVC: UIViewController {
     }
     
     func startNuteeApp() {
-        let nuteeNewsFeedVC = NewsFeedVC()
-        nuteeNewsFeedVC.view.backgroundColor = .green
+        
+        let newsFeedVC = NewsFeedVC()
+        let navigationController = UINavigationController(rootViewController: newsFeedVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "house")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
+        
+        let newsFeedVC2 = NewsFeedVC()
+        let navigationController2 = UINavigationController(rootViewController: newsFeedVC2)
+        navigationController2.tabBarItem.image = UIImage(systemName: "person")
+        navigationController2.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [navigationController, navigationController2]
+        tabBarController.tabBar.tintColor = .nuteeGreen
         
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = nuteeNewsFeedVC
+        sceneDelegate.window?.rootViewController = tabBarController
     }
 
 }
