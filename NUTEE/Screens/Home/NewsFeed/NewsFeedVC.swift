@@ -37,7 +37,9 @@ class NewsFeedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigationBar()
+        self.navigationItem.title = "NUTEE"
+        
+//        setNavigationBar()
         setTableView()
         
 //        self.view.addSubview(loadCompleteBtn)
@@ -106,6 +108,7 @@ class NewsFeedVC: UIViewController {
             view.addSubview($0)
 
             self.navigationItem.title = "NUTEE"
+            UINavigationBar.appearance().barTintColor = .black
         }
     }
     
@@ -119,7 +122,7 @@ class NewsFeedVC: UIViewController {
             view.addSubview($0)
             
             $0.snp.makeConstraints {
-                $0.top.equalTo(navigationBar.snp.bottom)
+                $0.top.equalToSuperview()
                 $0.left.equalToSuperview()
                 $0.right.equalToSuperview()
                 $0.bottom.equalToSuperview()
@@ -249,9 +252,9 @@ extension NewsFeedVC : UITableViewDataSource {
         
 //        // 셀 선택시 백그라운드 변경 안되게 하기 위한 코드
 //        cell.addBorder((.bottom), color: .lightGray, thickness: 0.1)
-//        cell.selectionStyle = .none
-//
-//
+        cell.selectionStyle = .none
+
+
 //        // cell 초기화 진행
 //        // emptyStatusView(tag: 404) cell에서 제거하기
 //        if let viewWithTag = self.view.viewWithTag(404) {
@@ -275,11 +278,9 @@ extension NewsFeedVC : UITableViewDataSource {
         return cell
     }
 
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        // DetailNewsFeed 창으로 전환
-//        let detailNewsFeedSB = UIStoryboard(name: "DetailNewsFeed", bundle: nil)
-//        let showDetailNewsFeedVC = detailNewsFeedSB.instantiateViewController(withIdentifier: "DetailNewsFeed") as! DetailNewsFeedVC
-//
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailNewsFeedVC = DetailNewsFeedVC()
+        
 //        // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
 //        showDetailNewsFeedVC.postId = newsPostsArr?[indexPath.row].id
 //        showDetailNewsFeedVC.getPostService(postId: showDetailNewsFeedVC.postId!, completionHandler: {(returnedData)-> Void in
@@ -288,9 +289,9 @@ extension NewsFeedVC : UITableViewDataSource {
 //
 //        // NewsFeedVC와 중간 매개 델리게이트(DetailNewsFeed) 사이를 통신하기 위한 변수 연결작업
 //        showDetailNewsFeedVC.delegate = self
-//
-//        self.navigationController?.pushViewController(showDetailNewsFeedVC, animated: true)
-//    }
+
+        self.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
+    }
 
     // 마지막 셀일 때 ActivateIndicator와 함께 새로운 cell 정보 로딩
 //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
