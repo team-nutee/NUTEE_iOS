@@ -17,8 +17,8 @@ class NewsFeedTVCell: UITableViewCell {
     let dateLabel = UILabel()
     let moreButton = UIButton()
     
-    let newsFeedTitleLabel = UILabel()
-    let newsFeedTextView = UITextView()
+    let titleLabel = UILabel()
+    let contentTextView = UITextView()
     
     let viewCountButton = UIButton()
     let viewCountLabel = UILabel()
@@ -109,12 +109,12 @@ class NewsFeedTVCell: UITableViewCell {
             $0.isUserInteractionEnabled = false
         }
         
-        _ = newsFeedTitleLabel.then {
+        _ = titleLabel.then {
             $0.text = "제목"
             $0.font = .boldSystemFont(ofSize: 20)
             $0.sizeToFit()
         }
-        _ = newsFeedTextView.then {
+        _ = contentTextView.then {
             $0.text = "간단한 내용"
             $0.textContainer.maximumNumberOfLines = 3
             $0.textContainer.lineBreakMode = .byTruncatingTail
@@ -182,8 +182,8 @@ class NewsFeedTVCell: UITableViewCell {
         contentView.addSubview(dateLabel)
         contentView.addSubview(moreButton)
         
-        contentView.addSubview(newsFeedTitleLabel)
-        contentView.addSubview(newsFeedTextView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(contentTextView)
         
         contentView.addSubview(viewCountButton)
         contentView.addSubview(viewCountLabel)
@@ -195,8 +195,8 @@ class NewsFeedTVCell: UITableViewCell {
         contentView.addSubview(replyLabel)
         
         
-        let leftAndRightSpace = 20
         let TopAndBottomSpace = 10
+        let leftAndRightSpace = 20
         categoryButton.snp.makeConstraints {
             $0.width.equalTo(56)
             $0.height.equalTo(24)
@@ -214,26 +214,26 @@ class NewsFeedTVCell: UITableViewCell {
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
         
-        newsFeedTitleLabel.snp.makeConstraints {
+        titleLabel.snp.makeConstraints {
             $0.top.equalTo(categoryButton.snp.bottom).offset(10)
-            $0.left.equalTo(leftAndRightSpace)
-            $0.right.equalTo(leftAndRightSpace)
+            $0.left.equalToSuperview().offset(leftAndRightSpace)
+            $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
-        newsFeedTextView.snp.makeConstraints {
-            $0.top.equalTo(newsFeedTitleLabel.snp.bottom).offset(5)
-            $0.left.equalTo(leftAndRightSpace)
-            $0.right.equalTo(leftAndRightSpace)
+        contentTextView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(5)
+            $0.left.equalToSuperview().offset(leftAndRightSpace)
+            $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
         
-        let betweenButtons = 10
         let buttonWidth = 15
         let buttonHeight = 11
+        let betweenButtons = 10
         let betweenButtonAndLabel = 5
         viewCountButton.snp.makeConstraints {
             $0.width.equalTo(buttonWidth)
             $0.height.equalTo(buttonHeight)
-            $0.top.equalTo(newsFeedTextView.snp.bottom).offset(10)
-            $0.left.equalTo(leftAndRightSpace)
+            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
+            $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
         }
         viewCountLabel.snp.makeConstraints{

@@ -51,6 +51,7 @@ class SplashVC: UIViewController {
         
         let newsFeedVC = NewsFeedVC()
         let navigationController = UINavigationController(rootViewController: newsFeedVC)
+        
         navigationController.tabBarItem.image = UIImage(systemName: "house")
         navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
         
