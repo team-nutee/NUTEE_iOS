@@ -32,6 +32,11 @@
 		5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C324C6D63D00A58F43 /* PostVC.swift */; };
 		5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C524C6D64300A58F43 /* SearchVC.swift */; };
 		5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */; };
+		D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD724D14714005F4580 /* Font+Enum.swift */; };
+		D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD924D1472A005F4580 /* Identify+Enum.swift */; };
+		D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BDB24D14734005F4580 /* Image+Enum.swift */; };
+		D12D8BDE24D1483A005F4580 /* UserDefaultKeys+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BDD24D1483A005F4580 /* UserDefaultKeys+Enum.swift */; };
+		D12D8BE024D14850005F4580 /* KeyChainKeys+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BDF24D14850005F4580 /* KeyChainKeys+Enum.swift */; };
 		D15080DE24D0691E00FE895A /* UserVC+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15080DD24D0691E00FE895A /* UserVC+Constraint.swift */; };
 		D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
@@ -65,7 +70,6 @@
 		3F020B527E3089EEA90DCFFE /* Pods-NUTEEUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEEUITests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEEUITests/Pods-NUTEEUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NUTEEUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
-		5E70FC5A24C8049E001F79F7 /* Font+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Font+Enum.swift"; path = "../../../../../../Documents/Font+Enum.swift"; sourceTree = "<group>"; };
 		5E8BA64E24C6D1AA00A58F43 /* NUTEE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTEE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8BA65124C6D1AA00A58F43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5E8BA65324C6D1AA00A58F43 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +100,11 @@
 		98AE3E3C051A29A8490945A6 /* Pods-NUTEETests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.debug.xcconfig"; sourceTree = "<group>"; };
 		A816ED88D6C73686EF0AFCD1 /* Pods-NUTEE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.release.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.release.xcconfig"; sourceTree = "<group>"; };
 		B68CB2F77807D8C93FCD9CD4 /* Pods-NUTEE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.debug.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.debug.xcconfig"; sourceTree = "<group>"; };
+		D12D8BD724D14714005F4580 /* Font+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Enum.swift"; sourceTree = "<group>"; };
+		D12D8BD924D1472A005F4580 /* Identify+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Identify+Enum.swift"; sourceTree = "<group>"; };
+		D12D8BDB24D14734005F4580 /* Image+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Enum.swift"; sourceTree = "<group>"; };
+		D12D8BDD24D1483A005F4580 /* UserDefaultKeys+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaultKeys+Enum.swift"; sourceTree = "<group>"; };
+		D12D8BDF24D14850005F4580 /* KeyChainKeys+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyChainKeys+Enum.swift"; sourceTree = "<group>"; };
 		D15080DD24D0691E00FE895A /* UserVC+Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserVC+Constraint.swift"; sourceTree = "<group>"; };
 		D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedVC.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
@@ -145,15 +154,6 @@
 				292BDA4088538027B8492389 /* Pods-NUTEEUITests.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		5E70FC5724C8044D001F79F7 /* Enums */ = {
-			isa = PBXGroup;
-			children = (
-				5E70FC5A24C8049E001F79F7 /* Font+Enum.swift */,
-			);
-			name = Enums;
-			path = "New Group1";
 			sourceTree = "<group>";
 		};
 		5E8BA64524C6D1AA00A58F43 = {
@@ -208,7 +208,7 @@
 		5E8BA68424C6D1BF00A58F43 /* Global */ = {
 			isa = PBXGroup;
 			children = (
-				5E70FC5724C8044D001F79F7 /* Enums */,
+				D12D8BD624D1470A005F4580 /* Enum */,
 				5EFD2EA624C803C6000C3D81 /* Extensions */,
 				5E8BA69424C6D2AB00A58F43 /* Supporting Files */,
 				5E8BA69324C6D27C00A58F43 /* Resources */,
@@ -443,6 +443,18 @@
 				D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D12D8BD624D1470A005F4580 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				D12D8BD724D14714005F4580 /* Font+Enum.swift */,
+				D12D8BD924D1472A005F4580 /* Identify+Enum.swift */,
+				D12D8BDB24D14734005F4580 /* Image+Enum.swift */,
+				D12D8BDD24D1483A005F4580 /* UserDefaultKeys+Enum.swift */,
+				D12D8BDF24D14850005F4580 /* KeyChainKeys+Enum.swift */,
+			);
+			path = Enum;
 			sourceTree = "<group>";
 		};
 		D1F0CF141A3B075229D52A3E /* Frameworks */ = {
@@ -695,14 +707,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
+				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
+				D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */,
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
+				D12D8BE024D14850005F4580 /* KeyChainKeys+Enum.swift in Sources */,
 				D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
 				D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* UserVC.swift in Sources */,
 				5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */,
+				D12D8BDE24D1483A005F4580 /* UserDefaultKeys+Enum.swift in Sources */,
 				5E8BA6BC24C6D60D00A58F43 /* SearchCVCell.swift in Sources */,
 				5E8BA6C224C6D63500A58F43 /* NoticeVC.swift in Sources */,
+				D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */,
 				5E8BA6BE24C6D61800A58F43 /* PostCVCell.swift in Sources */,
 				5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */,
 				D15080DE24D0691E00FE895A /* UserVC+Constraint.swift in Sources */,
