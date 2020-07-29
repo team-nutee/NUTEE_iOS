@@ -11,6 +11,9 @@
 import UIKit
 
 enum Font {
+    static let emptyTableBoldLabel = UIFont.boldSystemFont(ofSize: 18)
+    static let emptyTableLabel = UIFont.systemFont(ofSize: 16)
+
     static let nameLabel = UIFont.boldSystemFont(ofSize: 15)
     static let dateLabel = UIFont.systemFont(ofSize: 10)
 }
