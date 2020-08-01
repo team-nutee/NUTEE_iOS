@@ -28,14 +28,14 @@ extension UIImageView {
         }
 
     }
-    
-    func setImageNutee(_ urlString: String?){
-        if urlString == "" || urlString == nil {
-            setImage(with: APIConstants.BaseURL + "/settings/nutee_profile.png")
-        } else {
-            setImage(with: APIConstants.BaseURL + "/"  + (urlString ?? ""))
-        }
-    }
+//
+//    func setImageNutee(_ urlString: String?){
+//        if urlString == "" || urlString == nil {
+//            setImage(with: APIConstants.BaseURL + "/settings/nutee_profile.png")
+//        } else {
+//            setImage(with: APIConstants.BaseURL + "/"  + (urlString ?? ""))
+//        }
+//    }
     
     func setImageContentMode(_ urlString: String?, imgvw: ImageView){
         if urlString == "" || urlString == nil {

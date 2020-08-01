@@ -303,10 +303,10 @@
 		5E8BA68C24C6D20700A58F43 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				5E8BA69024C6D24400A58F43 /* Search */,
 				D592A92A24D3F9C600D49F62 /* HomeVC.swift */,
 				D576A86D24D4456100202135 /* FeedContainerCVCell.swift */,
 				D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */,
-				5E8BA69024C6D24400A58F43 /* Search */,
 				D58C93D824CAE513005570D4 /* NewsFeed */,
 				D58C93D724CAE4FA005570D4 /* DetailNewsFeed */,
 			);
