@@ -49,8 +49,8 @@ class SplashVC: UIViewController {
     
     func startNuteeApp() {
         
-        let newsFeedVC = NewsFeedVC()
-        let navigationController = UINavigationController(rootViewController: newsFeedVC)
+        let homeVC = HomeVC()
+        let navigationController = UINavigationController(rootViewController: homeVC)
         
         navigationController.tabBarItem.image = UIImage(systemName: "house")
         navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
