@@ -18,6 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UINavigationBar.appearance().backgroundColor = .white
         UINavigationBar.appearance().tintColor = .nuteeGreen
+
+        // remove navigation bar bottom line
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UINavigationBar.appearance().shadowImage = UIImage()
+        // make same between status bar and navigation bar
+        UINavigationBar.appearance().isTranslucent = false
         
         return true
     }
