@@ -34,7 +34,6 @@ class HomeVC: UIViewController {
         self.navigationItem.title = "NUTEE"
         view.backgroundColor = .white
         
-        setNavigationBar()
         setMenuBar()
         setNewsFeedContainerCollectionView()
     }
@@ -50,39 +49,18 @@ class HomeVC: UIViewController {
     
     // MARK: - Helper
     
-    func setNavigationBar() {
-        _ = navigationBar.then {
-            let navigationBarAppearence = UINavigationBarAppearance()
-            navigationBarAppearence.shadowColor = .clear
-
-            $0.scrollEdgeAppearance = navigationBarAppearence
-            
-            $0.backgroundColor = .white
-        }
-        
-        view.addSubview(navigationBar)
-        navigationBar.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.left.equalToSuperview()
-            $0.right.equalToSuperview()
-        }
-    }
-    
     func setMenuBar() {
         _ = menuBar.then {
             view.addSubview($0)
             
             $0.snp.makeConstraints {
-                let window = UIApplication.shared.windows.first {$0.isKeyWindow}
-                let statusBarHeight = CGFloat(window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0)
-                let navigationHeight = CGFloat(self.navigationController?.navigationBar.frame.height ?? 0.0)
-                
-                $0.top.equalTo(statusBarHeight + navigationHeight)
+                $0.top.equalTo(view.snp.top)
                 $0.left.equalTo(view.snp.left)
                 $0.right.equalTo(view.snp.right)
                 $0.height.equalTo(50)
             }
             
+            $0.menuList = ["추천 게시글", "내 전공", "전체 게시글"]
             $0.homeVC = self
         }
     }

@@ -17,7 +17,10 @@ class MenuBarCV : UIView {
     
     // MARK: - Variables and Properties
     
+    var menuList = [""]
+    
     var homeVC: HomeVC?
+    var profileVC: ProfileVC?
     
     // MARK: - Life Cycle
     
@@ -77,10 +80,6 @@ class MenuBarCV : UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Variables and Properties
-    
-    let menuList = ["추천 게시글", "내 전공", "전체 게시글"]
-    
     // MARK: - Helper
 }
     
@@ -117,6 +116,7 @@ extension MenuBarCV : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.homeVC?.scrollToMenuIndex(menuIndex: indexPath.item)
+        self.profileVC?.scrollToMenuIndex(menuIndex: indexPath.item)
     }
 }
 
