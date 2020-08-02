@@ -31,6 +31,7 @@
 		5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C324C6D63D00A58F43 /* PostVC.swift */; };
 		5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C524C6D64300A58F43 /* SearchVC.swift */; };
 		5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */; };
+		D1142FDB24D6A16D006E4A0A /* LoginVC+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1142FDA24D6A16D006E4A0A /* LoginVC+Constraint.swift */; };
 		D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD724D14714005F4580 /* Font+Enum.swift */; };
 		D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD924D1472A005F4580 /* Identify+Enum.swift */; };
 		D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BDB24D14734005F4580 /* Image+Enum.swift */; };
@@ -109,6 +110,7 @@
 		98AE3E3C051A29A8490945A6 /* Pods-NUTEETests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.debug.xcconfig"; sourceTree = "<group>"; };
 		A816ED88D6C73686EF0AFCD1 /* Pods-NUTEE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.release.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.release.xcconfig"; sourceTree = "<group>"; };
 		B68CB2F77807D8C93FCD9CD4 /* Pods-NUTEE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.debug.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.debug.xcconfig"; sourceTree = "<group>"; };
+		D1142FDA24D6A16D006E4A0A /* LoginVC+Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginVC+Constraint.swift"; sourceTree = "<group>"; };
 		D12D8BD724D14714005F4580 /* Font+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Enum.swift"; sourceTree = "<group>"; };
 		D12D8BD924D1472A005F4580 /* Identify+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Identify+Enum.swift"; sourceTree = "<group>"; };
 		D12D8BDB24D14734005F4580 /* Image+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Enum.swift"; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */,
+				D1142FDA24D6A16D006E4A0A /* LoginVC+Constraint.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
 				D12D8BE024D14850005F4580 /* KeyChainKeys+Enum.swift in Sources */,
 				D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */,
+				D1142FDB24D6A16D006E4A0A /* LoginVC+Constraint.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
 				D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* ProfileVC.swift in Sources */,
