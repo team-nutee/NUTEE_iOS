@@ -58,6 +58,13 @@ class SplashVC: UIViewController {
 
         let HomeTab = navigationController
         
+        let noticeVC = NoticeVC()
+        navigationController = UINavigationController(rootViewController: noticeVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "person")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+
+        let NoticeTab = navigationController
         
         let profileVC = ProfileVC()
         navigationController = UINavigationController(rootViewController: profileVC)
@@ -68,7 +75,7 @@ class SplashVC: UIViewController {
         
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [HomeTab, ProfileTab]
+        tabBarController.viewControllers = [HomeTab, NoticeTab, ProfileTab]
         tabBarController.tabBar.tintColor = .nuteeGreen
         
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
