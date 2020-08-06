@@ -46,6 +46,9 @@
 		D12D8BEE24D14CC4005F4580 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BED24D14CC4005F4580 /* String+Extension.swift */; };
 		D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BEF24D14CDE005F4580 /* UITabbar+Extension.swift */; };
 		D12D8BF224D14E32005F4580 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BF124D14E32005F4580 /* CALayer+Extension.swift */; };
+		D17150D524D723D4009E743E /* NoticeVC+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17150D424D723D4009E743E /* NoticeVC+Constraint.swift */; };
+		D17150D724D725AA009E743E /* NoticeTabCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17150D624D725AA009E743E /* NoticeTabCVCell.swift */; };
+		D17150D924D7288C009E743E /* NoticePageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17150D824D7288C009E743E /* NoticePageCVCell.swift */; };
 		D51A442924C86E9200B0FC6E /* NewsFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
 		D576A86E24D4456100202135 /* FeedContainerCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576A86D24D4456100202135 /* FeedContainerCVCell.swift */; };
@@ -125,6 +128,9 @@
 		D12D8BED24D14CC4005F4580 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		D12D8BEF24D14CDE005F4580 /* UITabbar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabbar+Extension.swift"; sourceTree = "<group>"; };
 		D12D8BF124D14E32005F4580 /* CALayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
+		D17150D424D723D4009E743E /* NoticeVC+Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NoticeVC+Constraint.swift"; sourceTree = "<group>"; };
+		D17150D624D725AA009E743E /* NoticeTabCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeTabCVCell.swift; sourceTree = "<group>"; };
+		D17150D824D7288C009E743E /* NoticePageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticePageCVCell.swift; sourceTree = "<group>"; };
 		D51A442824C86E9200B0FC6E /* NewsFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedVC.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
 		D576A86D24D4456100202135 /* FeedContainerCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedContainerCVCell.swift; sourceTree = "<group>"; };
@@ -433,6 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6C124C6D63500A58F43 /* NoticeVC.swift */,
+				D17150D424D723D4009E743E /* NoticeVC+Constraint.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -441,6 +448,8 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6BF24C6D62400A58F43 /* NoticeCVCell.swift */,
+				D17150D624D725AA009E743E /* NoticeTabCVCell.swift */,
+				D17150D824D7288C009E743E /* NoticePageCVCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -724,6 +733,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
+				D17150D924D7288C009E743E /* NoticePageCVCell.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
 				D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */,
@@ -755,7 +765,9 @@
 				5E8BA6BA24C6D5FF00A58F43 /* LoginCVCell.swift in Sources */,
 				5E8BA6C024C6D62400A58F43 /* NoticeCVCell.swift in Sources */,
 				D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */,
+				D17150D724D725AA009E743E /* NoticeTabCVCell.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
+				D17150D524D723D4009E743E /* NoticeVC+Constraint.swift in Sources */,
 				5E8BA69824C6D2CC00A58F43 /* User.swift in Sources */,
 				D12D8BE424D14C4D005F4580 /* UITextView+Extension.swift in Sources */,
 				D58C93DC24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift in Sources */,

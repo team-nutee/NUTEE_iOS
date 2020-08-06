@@ -21,6 +21,7 @@ class MenuBarCV : UIView {
     
     var homeVC: HomeVC?
     var profileVC: ProfileVC?
+    var noticeVC: NoticeVC?
     
     // MARK: - Life Cycle
     
