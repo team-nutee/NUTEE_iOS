@@ -50,6 +50,7 @@ class SplashVC: UIViewController {
     func startNuteeApp() {
         var navigationController: UINavigationController
         
+        // HomeTab
         let homeVC = HomeVC()
         navigationController = UINavigationController(rootViewController: homeVC)
         
@@ -58,14 +59,15 @@ class SplashVC: UIViewController {
 
         let HomeTab = navigationController
         
-        let noticeVC = NoticeVC()
-        navigationController = UINavigationController(rootViewController: noticeVC)
+        // SearchTab
+        let searchVC = SearchVC()
+        navigationController = UINavigationController(rootViewController: searchVC)
         
-        navigationController.tabBarItem.image = UIImage(systemName: "person")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
 
-        let NoticeTab = navigationController
+        let SearchTab = navigationController
         
+        // PostTab
         let postVC = UIViewController()
         postVC.view.backgroundColor = .white
         navigationController = UINavigationController(rootViewController: postVC)
@@ -73,7 +75,16 @@ class SplashVC: UIViewController {
         
         let PostTab = navigationController
         
+        // NoticeTab
+        let noticeVC = NoticeVC()
+        navigationController = UINavigationController(rootViewController: noticeVC)
         
+        navigationController.tabBarItem.image = UIImage(systemName: "pin")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+
+        let NoticeTab = navigationController
+        
+        // ProfileTab
         let profileVC = ProfileVC()
         navigationController = UINavigationController(rootViewController: profileVC)
         navigationController.tabBarItem.image = UIImage(systemName: "person")
@@ -81,9 +92,9 @@ class SplashVC: UIViewController {
 
         let ProfileTab = navigationController
         
-        
+        // TabBarController Settings
         let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, PostTab, NoticeTab, ProfileTab]
+        tabBarController.viewControllers = [HomeTab, SearchTab, PostTab, NoticeTab, ProfileTab]
 
         tabBarController.tabBar.tintColor = .nuteeGreen
         

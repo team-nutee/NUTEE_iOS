@@ -56,7 +56,7 @@ extension TabBarController : UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) { }
     
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if viewController == tabBarController.viewControllers?[1] {
+        if viewController == tabBarController.viewControllers?[2] {
             // present 형식으로 PostVC 화면 띄우기
             didTapToPostButton()
 
