@@ -20,7 +20,6 @@ class PostImageCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        initCell()
         addContentView()
     }
     
@@ -28,12 +27,23 @@ class PostImageCVCell : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        initCell()
+    }
+    
     // MARK: - Helper
     
     func initCell() {
+        _ = postImageImageView.then {
+            $0.cornerRadius = 10
+            $0.clipsToBounds = true
+        }
+        
         _ = cancelButton.then {
-            $0.setImage(UIImage(named: "xmark"), for: .normal)
-            $0.tintColor = .gray
+            $0.setImage(UIImage(systemName: "xmark"), for: .normal)
+            $0.tintColor = .lightGray
         }
     }
     
@@ -44,9 +54,9 @@ class PostImageCVCell : UICollectionViewCell {
         
         
         postImageImageView.snp.makeConstraints {
-            $0.width.equalTo(100)
+            $0.width.equalTo(60)
             $0.height.equalTo(postImageImageView.snp.width)
-            
+
             $0.centerX.equalTo(contentView)
             $0.centerY.equalTo(contentView)
         }

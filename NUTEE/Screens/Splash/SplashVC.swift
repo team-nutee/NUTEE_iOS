@@ -59,6 +59,14 @@ class SplashVC: UIViewController {
         let HomeTab = navigationController
         
         
+        let postVC = UIViewController()
+        postVC.view.backgroundColor = .white
+        navigationController = UINavigationController(rootViewController: postVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "plus")
+        
+        let PostTab = navigationController
+        
+        
         let profileVC = ProfileVC()
         navigationController = UINavigationController(rootViewController: profileVC)
         navigationController.tabBarItem.image = UIImage(systemName: "person")
@@ -67,34 +75,12 @@ class SplashVC: UIViewController {
         let ProfileTab = navigationController
         
         
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [HomeTab, ProfileTab]
+        let tabBarController = TabBarController()
+        tabBarController.viewControllers = [HomeTab, PostTab, ProfileTab]
         tabBarController.tabBar.tintColor = .nuteeGreen
         
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
         sceneDelegate.window?.rootViewController = tabBarController
     }
     
-    
-    func startNuteeAppaa() {
-        
-        let homeVC = HomeVC()
-        let navigationController = UINavigationController(rootViewController: homeVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "house")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-        let newsFeedVC2 = ProfileVC()
-        let navigationController2 = UINavigationController(rootViewController: newsFeedVC2)
-        navigationController2.tabBarItem.image = UIImage(systemName: "person")
-        navigationController2.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [navigationController, navigationController2]
-        tabBarController.tabBar.tintColor = .nuteeGreen
-        
-        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = tabBarController
-    }
-
 }
