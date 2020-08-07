@@ -17,7 +17,6 @@ class HomeVC: UIViewController {
     
     // MARK: - UI components
     
-    let navigationBar = UINavigationBar()
     let menuBar = MenuBarCV()
     
     let newsFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())

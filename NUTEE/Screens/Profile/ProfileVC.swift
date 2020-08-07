@@ -12,8 +12,6 @@ class ProfileVC: UIViewController {
 
     // MARK: - UI components
     
-    let navigationBar = UINavigationBar()
-    
     let userInfoView = UIView()
     
     let userProfileImageImageView = UIImageView()
