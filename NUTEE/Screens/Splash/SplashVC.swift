@@ -64,6 +64,8 @@ class SplashVC: UIViewController {
         navigationController = UINavigationController(rootViewController: searchVC)
         
         navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
 
         let SearchTab = navigationController
         
