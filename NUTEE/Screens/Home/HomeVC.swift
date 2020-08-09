@@ -76,7 +76,7 @@ class HomeVC: UIViewController {
             $0.delegate = self
             $0.dataSource = self
             
-            $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: "FeedContainerCVCell")
+            $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
             
             view.addSubview($0)
             $0.snp.makeConstraints {
@@ -128,7 +128,7 @@ extension HomeVC : UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: "FeedContainerCVCell", for: indexPath) as! FeedContainerCVCell
+        let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
 
         cell.homeVC = self
         cell.setTableView()

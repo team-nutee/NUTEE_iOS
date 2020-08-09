@@ -10,6 +10,8 @@ import UIKit
 
 class FeedContainerCVCell : UICollectionViewCell {
     
+    static let identifier = Identify.FeedContainerCVCell
+    
     // MARK: - UI components
     
     let newsFeedTableView = UITableView()
@@ -25,7 +27,7 @@ class FeedContainerCVCell : UICollectionViewCell {
                 $0.delegate = self
                 $0.dataSource = self
                 
-                $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: "NewsFeedTVCell")
+                $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: Identify.NewsFeedTVCell)
                 
                 contentView.addSubview($0)
                 
@@ -72,7 +74,7 @@ extension FeedContainerCVCell : UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Custom셀인 'NewsFeedCell' 형식으로 생성
-        let cell = newsFeedTableView.dequeueReusableCell(withIdentifier: "NewsFeedTVCell", for: indexPath) as! NewsFeedTVCell
+        let cell = newsFeedTableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
 
         cell.initCell()
         cell.addContentView()

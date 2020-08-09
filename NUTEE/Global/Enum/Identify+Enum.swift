@@ -11,6 +11,9 @@
 
 enum Identify {
     
+    static let FeedContainerCVCell = "FeedContainerCVCell"
+    static let NewsFeedTVCell = "NewsFeedTVCell"
+    
     static let noticeCVCell = "noticeCVCell"
     static let noticeTabCVCell = "noticeTabCVCell"
     static let noticePageCVCell = "noticePageCVCell"

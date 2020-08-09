@@ -13,6 +13,8 @@ import SwiftKeychainWrapper
 
 class NewsFeedTVCell: UITableViewCell {
     
+    static let identifier = Identify.NewsFeedTVCell
+    
     let categoryButton = UIButton()
     let dateLabel = UILabel()
     let moreButton = UIButton()
