@@ -24,6 +24,8 @@ import CoreData
         UINavigationBar.appearance().shadowImage = UIImage()
         // make same between status bar and navigation bar
         UINavigationBar.appearance().isTranslucent = false
+        // remove all navigationbar back button title
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         
         return true
     }
