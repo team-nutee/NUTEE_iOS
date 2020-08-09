@@ -74,10 +74,10 @@ class PostVC: UIViewController {
         let barItemFont = UIFont.boldSystemFont(ofSize: 20)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(didTapClosePosting))
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont], for: .normal)
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "게시", style: .plain, target: self, action: #selector(didTapClosePosting))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
     }
     
     func initPostingView() {
