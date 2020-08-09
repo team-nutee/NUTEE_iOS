@@ -29,7 +29,6 @@ class SearchVC: UIViewController {
         
         initSearchVC()
         setSearchBar()
-        setTableView()
         
         addSubView()
     }
@@ -75,12 +74,6 @@ class SearchVC: UIViewController {
             $0.isHidden = true
             
             $0.addTarget(self, action: #selector(search), for: .touchUpInside)
-        }
-    }
-    
-    func setTableView() {
-        _ = searchHistoryTableView.then {
-            $0.searchVC = self
         }
     }
     

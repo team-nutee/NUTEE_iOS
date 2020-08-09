@@ -69,6 +69,8 @@ class SearchHistoryTV : UITableView {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
+            
+            $0.keyboardDismissMode = .onDrag
         }
         
     }
@@ -186,10 +188,6 @@ extension SearchHistoryTV : UITableViewDataSource {
         searchText = recodeMemory[indexPath.row]
         self.searchInList()
         self.searchTableView.reloadData()
-    }
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        searchVC?.searchTextField.resignFirstResponder()
     }
     
 }
