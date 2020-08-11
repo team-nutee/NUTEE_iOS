@@ -74,6 +74,7 @@ class SettingNicknameVC : UIViewController {
             $0.height.equalTo(40)
             
             $0.centerY.equalTo(nicknameLabel)
+            $0.left.equalTo(nicknameTextField.snp.right).offset(5)
             $0.right.equalTo(view.snp.right).inset(15)
         }
         
@@ -82,7 +83,6 @@ class SettingNicknameVC : UIViewController {
             
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(15)
             $0.left.equalTo(nicknameLabel.snp.left)
-            $0.right.equalTo(saveButton.snp.right)
         }
     }
     

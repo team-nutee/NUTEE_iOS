@@ -65,6 +65,7 @@
 		D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */; };
 		D5FFA5A624E2C189005B3C33 /* SettingNicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */; };
 		D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */; };
+		D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -154,6 +155,7 @@
 		D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileImageVC.swift; sourceTree = "<group>"; };
 		D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingNicknameVC.swift; sourceTree = "<group>"; };
 		D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPasswordVC.swift; sourceTree = "<group>"; };
+		D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMajorVC.swift; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -497,6 +499,7 @@
 				D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */,
 				D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */,
 				D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */,
+				D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 				5E8BA6C024C6D62400A58F43 /* NoticeCVCell.swift in Sources */,
 				D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */,
 				D17150D724D725AA009E743E /* NoticeTabCVCell.swift in Sources */,
+				D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */,
 				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
 				D17150D524D723D4009E743E /* NoticeVC+Constraint.swift in Sources */,
