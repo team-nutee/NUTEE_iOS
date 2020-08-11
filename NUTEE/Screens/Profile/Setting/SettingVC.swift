@@ -98,7 +98,7 @@ extension SettingVC : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailNewsFeedVC = DetailNewsFeedVC()
+        let detailNewsFeedVC = SettingProfileImageVC()
         
         self.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
     }

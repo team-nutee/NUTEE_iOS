@@ -62,6 +62,7 @@
 		D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A18AFD24E12FD60075B886 /* SettingVC.swift */; };
 		D5C9C31E24DE430E006621D6 /* SearchTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
+		D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +149,7 @@
 		D5A18AFD24E12FD60075B886 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
+		D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileImageVC.swift; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -488,6 +490,7 @@
 			isa = PBXGroup;
 			children = (
 				D5A18AFD24E12FD60075B886 /* SettingVC.swift */,
+				D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -750,6 +753,7 @@
 				5E8BA6C024C6D62400A58F43 /* NoticeCVCell.swift in Sources */,
 				D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */,
 				D17150D724D725AA009E743E /* NoticeTabCVCell.swift in Sources */,
+				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
 				D17150D524D723D4009E743E /* NoticeVC+Constraint.swift in Sources */,
 				5E8BA69824C6D2CC00A58F43 /* User.swift in Sources */,
