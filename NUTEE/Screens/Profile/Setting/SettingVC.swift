@@ -98,9 +98,16 @@ extension SettingVC : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailNewsFeedVC = SettingProfileImageVC()
-        
-        self.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
+        switch indexPath.row {
+        case 0:
+            let settingProfileImageVC = SettingProfileImageVC()
+            self.navigationController?.pushViewController(settingProfileImageVC, animated: true)
+        case 1:
+            let settingNicknameVC = SettingNicknameVC()
+            self.navigationController?.pushViewController(settingNicknameVC, animated: true)
+        default:
+            simpleAlert(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
+        }
     }
 
 }

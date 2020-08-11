@@ -53,7 +53,7 @@ class SettingProfileImageVC : UIViewController {
         
         _ = saveButton.then {
             $0.setTitle("저장하기", for: .normal)
-            $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17.0)
+            $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
         }
     }
