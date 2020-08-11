@@ -59,6 +59,7 @@
 		D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92A24D3F9C600D49F62 /* HomeVC.swift */; };
 		D592A92F24D437F300D49F62 /* MenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92E24D437F300D49F62 /* MenuBarCV.swift */; };
 		D59EEDFA24DFF55C00BC028C /* Search.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D59EEDF824DFF55B00BC028C /* Search.xcdatamodeld */; };
+		D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A18AFD24E12FD60075B886 /* SettingVC.swift */; };
 		D5C9C31E24DE430E006621D6 /* SearchTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
 /* End PBXBuildFile section */
@@ -144,6 +145,7 @@
 		D592A92A24D3F9C600D49F62 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		D592A92E24D437F300D49F62 /* MenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCV.swift; sourceTree = "<group>"; };
 		D59EEDF924DFF55B00BC028C /* Search.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Search.xcdatamodel; sourceTree = "<group>"; };
+		D5A18AFD24E12FD60075B886 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6B524C6D5DC00A58F43 /* ProfileVC.swift */,
+				D5A18AFC24E12F920075B886 /* Setting */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -479,6 +482,14 @@
 				D58C93DD24CAE556005570D4 /* ReplyCell.swift */,
 			);
 			path = DetailNewsFeed;
+			sourceTree = "<group>";
+		};
+		D5A18AFC24E12F920075B886 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				D5A18AFD24E12FD60075B886 /* SettingVC.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -702,6 +713,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
+				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D59EEDFA24DFF55C00BC028C /* Search.xcdatamodeld in Sources */,
 				D17150D924D7288C009E743E /* NoticePageCVCell.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,

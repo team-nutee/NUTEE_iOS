@@ -38,6 +38,7 @@ class ProfileVC: UIViewController {
         self.navigationItem.title = "NUTEE"
         view.backgroundColor = .white
         
+        setNavigationBarItem()
         setUserInfoView()
         setMenuBar()
         setUserFeedContainerCollectionView()
@@ -53,6 +54,11 @@ class ProfileVC: UIViewController {
     }
     
     // MARK: - Helper
+    
+    func setNavigationBarItem() {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "설정", style: .plain, target: self, action: #selector(didTapSetting))
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+    }
     
     func setUserInfoView() {
         _ = userProfileImageImageView.then {
@@ -201,6 +207,12 @@ class ProfileVC: UIViewController {
     func scrollToMenuIndex(menuIndex: Int) {
         let indexPath = IndexPath(item: menuIndex, section: 0)
         userFeedContainerCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
+    @objc func didTapSetting() {
+        let settingVC = SettingVC()
+        
+        self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
 }

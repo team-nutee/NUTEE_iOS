@@ -18,4 +18,6 @@ enum Identify {
     static let noticeTabCVCell = "noticeTabCVCell"
     static let noticePageCVCell = "noticePageCVCell"
     
+    static let SettingTVCell = "SettingTVCell"
+    
 }
