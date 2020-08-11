@@ -64,6 +64,7 @@
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
 		D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */; };
 		D5FFA5A624E2C189005B3C33 /* SettingNicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */; };
+		D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +153,7 @@
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
 		D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileImageVC.swift; sourceTree = "<group>"; };
 		D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingNicknameVC.swift; sourceTree = "<group>"; };
+		D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPasswordVC.swift; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -494,6 +496,7 @@
 				D5A18AFD24E12FD60075B886 /* SettingVC.swift */,
 				D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */,
 				D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */,
+				D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -763,6 +766,7 @@
 				5E8BA69824C6D2CC00A58F43 /* User.swift in Sources */,
 				D12D8BE424D14C4D005F4580 /* UITextView+Extension.swift in Sources */,
 				D58C93DC24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift in Sources */,
+				D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */,
 				5E8BA69624C6D2C600A58F43 /* LinkTextView.swift in Sources */,
 				D12D8BEE24D14CC4005F4580 /* String+Extension.swift in Sources */,
 				5E8BA6AE24C6D37700A58F43 /* SplashVC.swift in Sources */,

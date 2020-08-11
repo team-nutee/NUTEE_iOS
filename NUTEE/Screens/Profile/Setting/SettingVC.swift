@@ -105,6 +105,9 @@ extension SettingVC : UITableViewDataSource {
         case 1:
             let settingNicknameVC = SettingNicknameVC()
             self.navigationController?.pushViewController(settingNicknameVC, animated: true)
+        case 2:
+            let settingPasswordVC = SettingPasswordVC()
+            self.navigationController?.pushViewController(settingPasswordVC, animated: true)
         default:
             simpleAlert(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
         }

@@ -70,6 +70,7 @@ class SettingNicknameVC : UIViewController {
             $0.left.equalTo(view.snp.left).offset(15)
         }
         saveButton.snp.makeConstraints {
+            $0.width.equalTo(saveButton.intrinsicContentSize.width)
             $0.height.equalTo(40)
             
             $0.centerY.equalTo(nicknameLabel)
