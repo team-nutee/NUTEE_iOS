@@ -90,8 +90,8 @@ class SettingPasswordVC : UIViewController {
         
         
         passwordLabel.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top).offset(20)
-            $0.left.equalTo(view.snp.left).offset(15)
+            $0.top.equalTo(view.snp.top).offset(45)
+            $0.left.equalTo(view.snp.left).offset(20)
         }
         saveButton.snp.makeConstraints {
             $0.width.equalTo(saveButton.intrinsicContentSize.width)
@@ -99,7 +99,7 @@ class SettingPasswordVC : UIViewController {
             
             $0.centerY.equalTo(passwordLabel)
             $0.left.equalTo(passwordTextField.snp.right).offset(5)
-            $0.right.equalTo(view.snp.right).inset(15)
+            $0.right.equalTo(view.snp.right).inset(20)
         }
         
         passwordTextField.snp.makeConstraints {

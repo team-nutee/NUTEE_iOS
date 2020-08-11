@@ -108,6 +108,9 @@ extension SettingVC : UITableViewDataSource {
         case 2:
             let settingPasswordVC = SettingPasswordVC()
             self.navigationController?.pushViewController(settingPasswordVC, animated: true)
+        case 3:
+            let settingCategoryVC = SettingCategoryVC()
+            self.navigationController?.pushViewController(settingCategoryVC, animated: true)
         case 4:
             let settingMajorVC = SettingMajorVC()
             self.navigationController?.pushViewController(settingMajorVC, animated: true)
