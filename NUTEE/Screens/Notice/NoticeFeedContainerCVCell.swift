@@ -9,7 +9,6 @@
 import UIKit
 
 import SafariServices
-import SkeletonView
 
 class NoticeFeedContainerCVCell : UICollectionViewCell {
     

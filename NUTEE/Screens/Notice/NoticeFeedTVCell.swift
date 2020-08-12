@@ -25,18 +25,9 @@ class NoticeFeedTVCell: UITableViewCell {
     
     // MARK: - Variables and Properties
     
+    var noticeContent: NoticeElement?
+    
     // MARK: - Life Cycle
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        initCell()
-        addContentView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     // MARK: - Helper
     
@@ -45,21 +36,25 @@ class NoticeFeedTVCell: UITableViewCell {
             $0.image = UIImage(systemName: "pin")
             $0.tintColor = .red
             
-            $0.isHidden = true
+            if noticeContent?.no == "공지" {
+                $0.isHidden = false
+            } else {
+                $0.isHidden = true
+            }
         }
         
         _ = titleLabel.then {
-            $0.text = "제목제목제목"
+            $0.text = noticeContent?.title
             $0.font = .boldSystemFont(ofSize: 17)
         }
         
         _ = dateLabel.then {
-            $0.text = "2020-08-12"
+            $0.text = noticeContent?.date
             $0.font = .systemFont(ofSize: 11)
             $0.textColor = .gray
         }
         _ = authorLabel.then {
-            $0.text = "교무처"
+            $0.text = noticeContent?.author
             $0.font = .systemFont(ofSize: 11)
             $0.textColor = .gray
             $0.sizeToFit()

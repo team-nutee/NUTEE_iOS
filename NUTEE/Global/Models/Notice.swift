@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+// MARK: - Notice
+
+struct NoticeElement: Codable {
+    let no, title: String
+    let href: String
+    let author: String
+    let date: String
+}
+
+typealias Notice = [NoticeElement]
