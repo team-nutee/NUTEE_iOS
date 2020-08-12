@@ -62,5 +62,20 @@
 	<string>게시판, 프로필 동영상 업로드를 위해 위해 카메라 사용이 필요합니다</string>
 	<key>NSCameraUsageDescription</key>
 	<string>게시판, 프로필 이미지 업로드를 위해 카메라 사용이 필요합니다</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>example.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>
