@@ -321,8 +321,8 @@
 		5E8BA68B24C6D1F500A58F43 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
+				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -369,9 +369,9 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6C524C6D64300A58F43 /* SearchVC.swift */,
-				5E8BA6BB24C6D60D00A58F43 /* SearchResultVC.swift */,
 				D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */,
 				D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */,
+				D5FD580D24E454CC0021D869 /* SearchResult */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -489,6 +489,14 @@
 				D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */,
 			);
 			path = Setting;
+			sourceTree = "<group>";
+		};
+		D5FD580D24E454CC0021D869 /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				5E8BA6BB24C6D60D00A58F43 /* SearchResultVC.swift */,
+			);
+			path = SearchResult;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
