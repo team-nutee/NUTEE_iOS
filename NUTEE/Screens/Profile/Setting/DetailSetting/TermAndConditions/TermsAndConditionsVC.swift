@@ -30,5 +30,4 @@ class TermsAndConditionsVC : UIViewController {
     }
     
     // MARK: - Helper
-     
 }

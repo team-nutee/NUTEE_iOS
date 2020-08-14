@@ -62,6 +62,10 @@
 		D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A18AFD24E12FD60075B886 /* SettingVC.swift */; };
 		D5C9C31E24DE430E006621D6 /* SearchTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
+		D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */; };
+		D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */; };
+		D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC689624E6F58900274451 /* DeveloperInfoVC.swift */; };
+		D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC689824E6F67D00274451 /* DeveloperInfoTVCell.swift */; };
 		D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */; };
 		D5FFA5A624E2C189005B3C33 /* SettingNicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */; };
 		D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */; };
@@ -153,6 +157,10 @@
 		D5A18AFD24E12FD60075B886 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		D5C9C31D24DE430E006621D6 /* SearchTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
+		D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsVC.swift; sourceTree = "<group>"; };
+		D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TermsAndConditions.storyboard; sourceTree = "<group>"; };
+		D5CC689624E6F58900274451 /* DeveloperInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperInfoVC.swift; sourceTree = "<group>"; };
+		D5CC689824E6F67D00274451 /* DeveloperInfoTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperInfoTVCell.swift; sourceTree = "<group>"; };
 		D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingProfileImageVC.swift; sourceTree = "<group>"; };
 		D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingNicknameVC.swift; sourceTree = "<group>"; };
 		D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPasswordVC.swift; sourceTree = "<group>"; };
@@ -482,13 +490,41 @@
 			isa = PBXGroup;
 			children = (
 				D5A18AFD24E12FD60075B886 /* SettingVC.swift */,
+				D5CC689324E6F46100274451 /* DetailSetting */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		D5CC689324E6F46100274451 /* DetailSetting */ = {
+			isa = PBXGroup;
+			children = (
 				D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */,
 				D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */,
 				D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */,
 				D5FFA5AB24E2E027005B3C33 /* SettingCategory.swift */,
 				D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */,
+				D5CC689424E6F47C00274451 /* TermAndConditions */,
+				D5CC689524E6F55000274451 /* DeveloperInfo */,
 			);
-			path = Setting;
+			path = DetailSetting;
+			sourceTree = "<group>";
+		};
+		D5CC689424E6F47C00274451 /* TermAndConditions */ = {
+			isa = PBXGroup;
+			children = (
+				D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */,
+				D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */,
+			);
+			path = TermAndConditions;
+			sourceTree = "<group>";
+		};
+		D5CC689524E6F55000274451 /* DeveloperInfo */ = {
+			isa = PBXGroup;
+			children = (
+				D5CC689624E6F58900274451 /* DeveloperInfoVC.swift */,
+				D5CC689824E6F67D00274451 /* DeveloperInfoTVCell.swift */,
+			);
+			path = DeveloperInfo;
 			sourceTree = "<group>";
 		};
 		D5FD580D24E454CC0021D869 /* SearchResult */ = {
@@ -607,6 +643,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */,
 				5E8BA66124C6D1AC00A58F43 /* LaunchScreen.storyboard in Resources */,
 				5E8BA65E24C6D1AC00A58F43 /* Assets.xcassets in Resources */,
 			);
@@ -719,8 +756,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */,
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
+				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D59EEDFA24DFF55C00BC028C /* Search.xcdatamodeld in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
@@ -755,6 +794,7 @@
 				D12D8BEA24D14C90005F4580 /* Date+Extension.swift in Sources */,
 				D5C9C31E24DE430E006621D6 /* SearchTVCell.swift in Sources */,
 				D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */,
+				D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */,
 				5E8BA6BA24C6D5FF00A58F43 /* LoginCVCell.swift in Sources */,
 				D588072824E419FE0037384F /* NoticeService.swift in Sources */,
 				D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */,

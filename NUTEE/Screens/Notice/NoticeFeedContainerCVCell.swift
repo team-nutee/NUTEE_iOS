@@ -123,6 +123,8 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NoticeFeedTVCell, for: indexPath) as! NoticeFeedTVCell
+        cell.selectionStyle = .none
+        
         cell.noticeContent = notices?[indexPath.row]
 
         cell.addContentView()
