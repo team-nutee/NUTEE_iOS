@@ -31,7 +31,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.isSkeletonable = true
         $0.showAnimatedGradientSkeleton()
     }
-    let dateLabel = UILabel().then {
+    var dateLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 178, green: 178, blue: 178)
         
@@ -44,14 +44,14 @@ class NewsFeedTVCell: UITableViewCell {
         $0.isUserInteractionEnabled = false
     }
     
-    let titleLabel = UILabel().then {
+    var titleLabel = UILabel().then {
         $0.font = .boldSystemFont(ofSize: 20)
 //        $0.text = "제목"
         
         $0.isSkeletonable = true
         $0.showAnimatedGradientSkeleton()
     }
-    let contentTextView = UITextView().then {
+    var contentTextView = UITextView().then {
 //        $0.text = "간단한 내용"
         
         $0.textContainer.maximumNumberOfLines = 3
@@ -75,7 +75,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
         $0.isUserInteractionEnabled = false
     }
-    let viewCountLabel = UILabel().then {
+    var viewCountLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 134, green: 134, blue: 134)
         $0.sizeToFit()
@@ -85,7 +85,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
         $0.isUserInteractionEnabled = false
     }
-    let likeLabel = UILabel().then {
+    var likeLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 134, green: 134, blue: 134)
         $0.sizeToFit()
@@ -95,7 +95,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
         $0.isUserInteractionEnabled = false
     }
-    let imageLabel = UILabel().then {
+    var imageLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 134, green: 134, blue: 134)
         $0.sizeToFit()
@@ -105,7 +105,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
         $0.isUserInteractionEnabled = false
     }
-    let replyLabel = UILabel().then {
+    var replyLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 134, green: 134, blue: 134)
         $0.sizeToFit()
