@@ -8,6 +8,7 @@
 
 import UIKit
 
+import SkeletonView
 import SafariServices
 
 class NoticeFeedContainerCVCell : UICollectionViewCell {
@@ -58,10 +59,54 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
 
 }
 
+// MARK: - NoticeFeed TableView with SkeletonView
+
+//extension NoticeFeedContainerCVCell : SkeletonTableViewDelegate { }
+//extension NoticeFeedContainerCVCell : SkeletonTableViewDataSource {
+//
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return notices?.count ?? 0
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NoticeFeedTVCell, for: indexPath) as! NoticeFeedTVCell
+//        cell.noticeContent = notices?[indexPath.row]
+//
+//        cell.addContentView()
+//        cell.initCell()
+//
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let url = URL(string: notices?[indexPath.row].href ?? "")
+//        let safariViewController = SFSafariViewController(url: url!)
+//        safariViewController.preferredControlTintColor = .nuteeGreen
+//
+//        noticeVC?.present(safariViewController, animated: true, completion: nil)
+//    }
+//
+//    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return notices?.count ?? 0
+//    }
+//
+//    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+//        return Identify.NoticeFeedTVCell
+//    }
+//
+//}
+
 // MARK: - NoticeFeed TableView
 
 extension NoticeFeedContainerCVCell : UITableViewDelegate { }
-
 extension NoticeFeedContainerCVCell : UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -78,11 +123,13 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NoticeFeedTVCell, for: indexPath) as! NoticeFeedTVCell
-        cell.noticeContent = notices?[indexPath.row]
+        cell.selectionStyle = .none
         
+        cell.noticeContent = notices?[indexPath.row]
+
         cell.addContentView()
         cell.initCell()
-        
+
         return cell
     }
 
@@ -90,10 +137,10 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
         let url = URL(string: notices?[indexPath.row].href ?? "")
         let safariViewController = SFSafariViewController(url: url!)
         safariViewController.preferredControlTintColor = .nuteeGreen
-        
+
         noticeVC?.present(safariViewController, animated: true, completion: nil)
     }
-    
+
 }
 
 // MARK: - Notice Service

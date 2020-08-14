@@ -86,7 +86,7 @@ class NoticeFeedTVCell: UITableViewCell {
         }
         
         dateLabel.snp.makeConstraints {
-            $0.width.equalTo(65)
+            $0.width.equalTo(80)
             
             $0.top.equalTo(titleLabel.snp.bottom).offset(10)
             $0.left.equalTo(titleLabel.snp.left)
@@ -94,7 +94,7 @@ class NoticeFeedTVCell: UITableViewCell {
         }
         authorLabel.snp.makeConstraints {
             $0.centerY.equalTo(dateLabel)
-            $0.left.equalTo(dateLabel.snp.right).offset(20)
+            $0.left.equalTo(dateLabel.snp.right).offset(5)
         }
         
     }

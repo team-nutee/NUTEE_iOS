@@ -18,5 +18,6 @@ enum Identify {
     static let NoticeFeedTVCell = "NoticeFeedTVCell"
     
     static let SettingTVCell = "SettingTVCell"
+    static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     
 }
