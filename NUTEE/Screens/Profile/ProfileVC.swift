@@ -22,7 +22,7 @@ class ProfileVC: UIViewController {
         $0.clipsToBounds = true
         
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
         }
     let userNickNameButton = UIButton().then {
         $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
@@ -30,12 +30,12 @@ class ProfileVC: UIViewController {
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     
     let containerTextViewsView = UIView().then {
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     
     let postsTextView = UITextView().then {
@@ -88,22 +88,7 @@ class ProfileVC: UIViewController {
         
         setNavigationBarItem()
         makeConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(false)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            self.fillDataToView()
-            
-            self.hideSkeletonView()
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
-        
-        showSkeletonView()
+        fillDataToView()
     }
     
     // MARK: - Helper

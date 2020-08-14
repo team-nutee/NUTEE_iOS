@@ -84,10 +84,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         cell.fillDataToView()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            cell.hideSkeletonView()
-        }
-        
         return cell
     }
     

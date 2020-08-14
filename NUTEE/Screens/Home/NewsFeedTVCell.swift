@@ -29,13 +29,13 @@ class NewsFeedTVCell: UITableViewCell {
         $0.isUserInteractionEnabled = false
         
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     var dateLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 178, green: 178, blue: 178)
         
-        $0.isHidden = true
+//        $0.isHidden = true
     }
     let moreButton = UIButton().then {
         $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
@@ -49,7 +49,7 @@ class NewsFeedTVCell: UITableViewCell {
 //        $0.text = "제목"
         
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     var contentTextView = UITextView().then {
 //        $0.text = "간단한 내용"
@@ -62,12 +62,12 @@ class NewsFeedTVCell: UITableViewCell {
         $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
         
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     
     let postCountInfoContainerView = UIView().then {
         $0.isSkeletonable = true
-        $0.showAnimatedGradientSkeleton()
+//        $0.showAnimatedGradientSkeleton()
     }
     let viewCountButton = UIButton().then {
         $0.contentHorizontalAlignment = .left
@@ -292,9 +292,9 @@ class NewsFeedTVCell: UITableViewCell {
         categoryButton.setTitle("카테고리", for: .normal)
         dateLabel.text = "11일 전"
         
-        titleLabel.text = "제모오옥"
+        titleLabel.text = "제목"
         titleLabel.sizeToFit()
-        contentTextView.text = "간단한 내오오옹"
+        contentTextView.text = "간단한 내용"
         
         viewCountButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
         viewCountLabel.text = "33"
@@ -311,7 +311,7 @@ class NewsFeedTVCell: UITableViewCell {
     
     func hideSkeletonView() {
         categoryButton.hideSkeleton()
-        dateLabel.isHidden = false
+//        dateLabel.isHidden = false
         
         titleLabel.hideSkeleton()
         contentTextView.hideSkeleton()
