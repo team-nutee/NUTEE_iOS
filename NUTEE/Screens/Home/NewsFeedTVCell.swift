@@ -15,21 +15,101 @@ class NewsFeedTVCell: UITableViewCell {
     
     static let identifier = Identify.NewsFeedTVCell
     
-    let categoryButton = UIButton()
-    let dateLabel = UILabel()
-    let moreButton = UIButton()
+    // MARK: - UI components
     
-    let titleLabel = UILabel()
-    let contentTextView = UITextView()
+    let categoryButton = UIButton().then {
+        $0.layer.cornerRadius = 7
+        $0.backgroundColor = UIColor(red: 178, green: 178, blue: 178)
+
+        $0.titleLabel?.adjustsFontSizeToFitWidth = true
+        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+        $0.titleLabel?.font = .systemFont(ofSize: 11)
+        $0.setTitleColor(.white, for: .normal)
+        
+        $0.isUserInteractionEnabled = false
+        
+        $0.isSkeletonable = true
+        $0.showAnimatedGradientSkeleton()
+    }
+    let dateLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 11)
+        $0.textColor = UIColor(red: 178, green: 178, blue: 178)
+        
+        $0.isHidden = true
+    }
+    let moreButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        $0.contentHorizontalAlignment = .left
+        $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.isUserInteractionEnabled = false
+    }
     
-    let viewCountButton = UIButton()
-    let viewCountLabel = UILabel()
-    let likeButton = UIButton()
-    let likeLabel = UILabel()
-    let imageButton = UIButton()
-    let imageLabel = UILabel()
-    let replyButton = UIButton()
-    let replyLabel = UILabel()
+    let titleLabel = UILabel().then {
+        $0.font = .boldSystemFont(ofSize: 20)
+//        $0.text = "제목"
+        
+        $0.isSkeletonable = true
+        $0.showAnimatedGradientSkeleton()
+    }
+    let contentTextView = UITextView().then {
+//        $0.text = "간단한 내용"
+        
+        $0.textContainer.maximumNumberOfLines = 3
+        $0.textContainer.lineBreakMode = .byTruncatingTail
+        $0.font = .systemFont(ofSize: 13)
+        $0.isUserInteractionEnabled = false
+        $0.isScrollEnabled = false
+        $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
+        
+        $0.isSkeletonable = true
+        $0.showAnimatedGradientSkeleton()
+    }
+    
+    let postCountInfoContainerView = UIView().then {
+        $0.isSkeletonable = true
+        $0.showAnimatedGradientSkeleton()
+    }
+    let viewCountButton = UIButton().then {
+        $0.contentHorizontalAlignment = .left
+        $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.isUserInteractionEnabled = false
+    }
+    let viewCountLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 11)
+        $0.textColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.sizeToFit()
+    }
+    let likeButton = UIButton().then {
+        $0.contentHorizontalAlignment = .left
+        $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.isUserInteractionEnabled = false
+    }
+    let likeLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 11)
+        $0.textColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.sizeToFit()
+    }
+    let imageButton = UIButton().then {
+        $0.contentHorizontalAlignment = .left
+        $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.isUserInteractionEnabled = false
+    }
+    let imageLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 11)
+        $0.textColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.sizeToFit()
+    }
+    let replyButton = UIButton().then {
+        $0.contentHorizontalAlignment = .left
+        $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.isUserInteractionEnabled = false
+    }
+    let replyLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 11)
+        $0.textColor = UIColor(red: 134, green: 134, blue: 134)
+        $0.sizeToFit()
+    }
     
 //    @IBOutlet weak var userImg: UIImageView!
 //    @IBOutlet weak var userNAMEButton: UIButton!
@@ -65,10 +145,22 @@ class NewsFeedTVCell: UITableViewCell {
 //    let selectedRepostAttributes = [NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen]
 //    // .selected 상태에서의 Like버튼 AttributedStringTitle의 색깔 지정
 //    let selectedLikeAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemPink]
-//
-//
-//
-//    override func awakeFromNib() {
+
+    // MARK: - Variables and Properties
+    
+    // MARK: - Life Cycle
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        makeConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    //    override func awakeFromNib() {
 //        super.awakeFromNib()
 //
 //        likeBtn.setTitleColor(.veryLightPink, for: .normal)
@@ -84,102 +176,8 @@ class NewsFeedTVCell: UITableViewCell {
     
     // MARK: - Helper
     
-    func initCell () {
-
-        _ = categoryButton.then {
-            $0.layer.cornerRadius = 7
-            $0.backgroundColor = UIColor(red: 178, green: 178, blue: 178)
-
-            $0.setTitle("카테고리", for: .normal)
-            $0.titleLabel?.adjustsFontSizeToFitWidth = true
-            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
-            $0.titleLabel?.font = .systemFont(ofSize: 11)
-            $0.setTitleColor(.white, for: .normal)
-            
-            $0.isUserInteractionEnabled = false
-        }
-        _ = dateLabel.then {
-            $0.text = "11일 전"
-            $0.font = .systemFont(ofSize: 11)
-            $0.textColor = UIColor(red: 178, green: 178, blue: 178)
-            $0.sizeToFit()
-        }
-        _ = moreButton.then {
-            $0.contentHorizontalAlignment = .left
-            $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
-            $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
-        }
-        
-        _ = titleLabel.then {
-            $0.text = "제목"
-            $0.font = .boldSystemFont(ofSize: 20)
-            $0.sizeToFit()
-        }
-        _ = contentTextView.then {
-            $0.text = "간단한 내용"
-            $0.textContainer.maximumNumberOfLines = 3
-            $0.textContainer.lineBreakMode = .byTruncatingTail
-            $0.font = .systemFont(ofSize: 13)
-            $0.isUserInteractionEnabled = false
-            $0.isScrollEnabled = false
-            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
-        }
-        
-        let buttonFontSize = CGFloat(11.0)
-        _ = viewCountButton.then {
-            $0.contentHorizontalAlignment = .left
-            $0.setImage(UIImage(systemName: "eye.fill"), for: .normal)
-            $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
-        }
-        _ = viewCountLabel.then {
-            $0.text = "33"
-            $0.font = .systemFont(ofSize: buttonFontSize)
-            $0.textColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.sizeToFit()
-        }
-        _ = likeButton.then {
-            $0.contentHorizontalAlignment = .left
-            $0.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
-        }
-        _ = likeLabel.then {
-            $0.text = "22"
-            $0.font = .systemFont(ofSize: buttonFontSize)
-            $0.textColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.sizeToFit()
-        }
-        _ = imageButton.then {
-            $0.contentHorizontalAlignment = .left
-            $0.setImage(UIImage(systemName: "photo.fill"), for: .normal)
-            $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
-        }
-        _ = imageLabel.then {
-            $0.text = "7"
-            $0.font = .systemFont(ofSize: buttonFontSize)
-            $0.textColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.sizeToFit()
-        }
-        _ = replyButton.then {
-            $0.contentHorizontalAlignment = .left
-            $0.setImage(UIImage(systemName: "message.fill"), for: .normal)
-            $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
-        }
-        _ = replyLabel.then {
-            $0.text = "30"
-            $0.font = .systemFont(ofSize: buttonFontSize)
-            $0.textColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.sizeToFit()
-        }
-    }
-    
-    func addContentView() {
-        
+    func makeConstraints() {
+        // Add SubViews
         contentView.addSubview(categoryButton)
         contentView.addSubview(dateLabel)
         contentView.addSubview(moreButton)
@@ -187,23 +185,25 @@ class NewsFeedTVCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(contentTextView)
         
-        contentView.addSubview(viewCountButton)
-        contentView.addSubview(viewCountLabel)
-        contentView.addSubview(likeButton)
-        contentView.addSubview(likeLabel)
-        contentView.addSubview(imageButton)
-        contentView.addSubview(imageLabel)
-        contentView.addSubview(replyButton)
-        contentView.addSubview(replyLabel)
+        contentView.addSubview(postCountInfoContainerView)
+        postCountInfoContainerView.addSubview(viewCountButton)
+        postCountInfoContainerView.addSubview(viewCountLabel)
+        postCountInfoContainerView.addSubview(likeButton)
+        postCountInfoContainerView.addSubview(likeLabel)
+        postCountInfoContainerView.addSubview(imageButton)
+        postCountInfoContainerView.addSubview(imageLabel)
+        postCountInfoContainerView.addSubview(replyButton)
+        postCountInfoContainerView.addSubview(replyLabel)
         
-        
+        // Make Constraints
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 20
         categoryButton.snp.makeConstraints {
             $0.width.equalTo(56)
             $0.height.equalTo(24)
-            $0.top.equalToSuperview().offset(TopAndBottomSpace)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
+            
+            $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
         }
         dateLabel.snp.makeConstraints {
             $0.centerY.equalTo(categoryButton)
@@ -212,31 +212,42 @@ class NewsFeedTVCell: UITableViewCell {
         moreButton.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(12)
+            
             $0.centerY.equalTo(categoryButton)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(categoryButton.snp.bottom).offset(10)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         contentTextView.snp.makeConstraints {
+            
             $0.top.equalTo(titleLabel.snp.bottom).offset(5)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         
         let buttonWidth = 15
         let buttonHeight = 11
         let betweenButtons = 10
         let betweenButtonAndLabel = 5
+        postCountInfoContainerView.snp.makeConstraints {
+            $0.height.equalTo(buttonHeight)
+            
+            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.bottom.equalTo(contentView.snp.bottom).inset(TopAndBottomSpace)
+        }
         viewCountButton.snp.makeConstraints {
             $0.width.equalTo(buttonWidth)
             $0.height.equalTo(buttonHeight)
-            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
+            
+            $0.top.equalTo(postCountInfoContainerView.snp.top)
+            $0.left.equalTo(postCountInfoContainerView.snp.left)
+            $0.bottom.equalTo(postCountInfoContainerView.snp.bottom)
         }
         viewCountLabel.snp.makeConstraints{
             $0.centerY.equalTo(viewCountButton)
@@ -245,6 +256,7 @@ class NewsFeedTVCell: UITableViewCell {
         likeButton.snp.makeConstraints {
             $0.width.equalTo(buttonWidth)
             $0.height.equalTo(buttonHeight)
+            
             $0.centerY.equalTo(viewCountButton)
             $0.left.equalTo(viewCountLabel.snp.right).offset(betweenButtons)
         }
@@ -255,6 +267,7 @@ class NewsFeedTVCell: UITableViewCell {
         imageButton.snp.makeConstraints {
             $0.width.equalTo(buttonWidth)
             $0.height.equalTo(buttonHeight)
+            
             $0.centerY.equalTo(viewCountButton)
             $0.left.equalTo(likeLabel.snp.right).offset(betweenButtons)
         }
@@ -265,6 +278,7 @@ class NewsFeedTVCell: UITableViewCell {
         replyButton.snp.makeConstraints {
             $0.width.equalTo(buttonWidth)
             $0.height.equalTo(buttonHeight)
+            
             $0.centerY.equalTo(viewCountButton)
             $0.left.equalTo(imageLabel.snp.right).offset(betweenButtons)
         }
@@ -272,6 +286,37 @@ class NewsFeedTVCell: UITableViewCell {
             $0.centerY.equalTo(replyButton)
             $0.left.equalTo(replyButton.snp.right).offset(betweenButtonAndLabel)
         }
+    }
+    
+    func fillDataToView () {
+        categoryButton.setTitle("카테고리", for: .normal)
+        dateLabel.text = "11일 전"
+        
+        titleLabel.text = "제모오옥"
+        titleLabel.sizeToFit()
+        contentTextView.text = "간단한 내오오옹"
+        
+        viewCountButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        viewCountLabel.text = "33"
+        
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        likeLabel.text = "22"
+        
+        imageButton.setImage(UIImage(systemName: "photo.fill"), for: .normal)
+        imageLabel.text = "7"
+        
+        replyButton.setImage(UIImage(systemName: "message.fill"), for: .normal)
+        replyLabel.text = "30"
+    }
+    
+    func hideSkeletonView() {
+        categoryButton.hideSkeleton()
+        dateLabel.isHidden = false
+        
+        titleLabel.hideSkeleton()
+        contentTextView.hideSkeleton()
+        
+        postCountInfoContainerView.hideSkeleton()
     }
     
 //    func initPosting() {

@@ -82,11 +82,9 @@ extension SearchResultVC: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = searchResultTableView.dequeueReusableCell(withIdentifier: "NewsFeedTVCell", for: indexPath) as! NewsFeedTVCell
-        
-        cell.initCell()
-        cell.addContentView()
-        
         cell.selectionStyle = .none
+        
+        cell.fillDataToView()
 
 //        let studyInfo = responseStudyInfo
 //        cell.addContentView()
