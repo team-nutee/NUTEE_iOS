@@ -36,7 +36,7 @@ class DeveloperInfoTVCell: UITableViewCell {
     func initCell () {
         _ = nameLabel.then {
             $0.text = developer[0]
-            $0.font = UIFont(name: "AppleSDGothicNeo-Heavy", size: 18.0)
+            $0.font = .boldSystemFont(ofSize: 18)
         }
         
         _ = partLabel.then {

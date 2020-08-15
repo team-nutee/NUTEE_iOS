@@ -18,7 +18,8 @@ class SettingVC : UIViewController {
     
     let settingList = [
         ["프로필 이미지를 설정하고 싶으신가요?", "닉네임을 변경하고 싶으신가요?", "비밀번호를 변경하고 싶으신가요?", "카테고리를 변경하고 싶으신가요?", "전공을 변경하고 싶으신가요?"],
-        ["NUTEE 서비스 이용약관", "개발자 정보"]
+        ["NUTEE 서비스 이용약관", "개발자 정보"],
+        ["로그아웃"]
     ]
     
     // MARK: - Dummy data
@@ -54,7 +55,7 @@ class SettingVC : UIViewController {
             
             $0.separatorStyle = .none
             $0.backgroundColor = .white
-            $0.contentInset = UIEdgeInsets(top: view.frame.size.height / 5, left: 0, bottom: 0, right: 0)
+            $0.contentInset = UIEdgeInsets(top: view.frame.size.height / 8, left: 0, bottom: 0, right: 0)
         }
         
         view.addSubview(settingListTableView)
@@ -210,6 +211,11 @@ class SettingTVCell : UITableViewCell {
             $0.image = UIImage(systemName: "chevron.right")
             $0.tintColor = .black
             $0.contentMode = .scaleAspectFit
+        }
+        
+        if settingItemLabel.text == "로그아웃" {
+            settingItemLabel.textColor = .red
+            arrowImageView.isHidden = true
         }
     }
     

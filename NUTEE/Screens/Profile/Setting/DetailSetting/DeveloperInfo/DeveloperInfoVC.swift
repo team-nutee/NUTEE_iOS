@@ -19,7 +19,7 @@ class DeveloperInfoVC : UIViewController {
     // MARK: - Variables and Properties
     
     let developerList = [
-        ["이문혁", "FrontEnd & BackEnd", "2019 ~", "MoonHKLee"],
+        ["이문혁", "FrontEnd, BackEnd", "2019 ~", "MoonHKLee"],
         ["오준현", "iOS", "2019 ~ ", "5anniversary"],
         ["임우찬", "BackEnd", "2019 ~ 2020", "dladncks1217"],
         ["김희재", "iOS", "2019 ~ ", "iowa329"],
