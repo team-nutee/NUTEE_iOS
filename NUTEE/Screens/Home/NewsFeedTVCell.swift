@@ -41,7 +41,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         $0.contentHorizontalAlignment = .left
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-        $0.isUserInteractionEnabled = false
+//        $0.isUserInteractionEnabled = false
     }
     
     var titleLabel = UILabel().then {
@@ -148,6 +148,8 @@ class NewsFeedTVCell: UITableViewCell {
 
     // MARK: - Variables and Properties
     
+    var homeVC: UIViewController?
+    
     // MARK: - Life Cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -177,6 +179,9 @@ class NewsFeedTVCell: UITableViewCell {
     // MARK: - Helper
     
     func makeConstraints() {
+        moreButton.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
+        
+        
         // Add SubViews
         contentView.addSubview(categoryButton)
         contentView.addSubview(dateLabel)
@@ -317,6 +322,14 @@ class NewsFeedTVCell: UITableViewCell {
         contentTextView.hideSkeleton()
         
         postCountInfoContainerView.hideSkeleton()
+    }
+    
+    @objc func didTapMoreButton() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.modalPresentationStyle = .custom
+//        nuteeAlertSheet.backgroundImage = homeVC?.tabBarController?.view.asImage()
+        homeVC?.tabBarController?.view.alpha = 0.7
+        homeVC?.tabBarController?.present(nuteeAlertSheet, animated: true)
     }
     
 //    func initPosting() {
