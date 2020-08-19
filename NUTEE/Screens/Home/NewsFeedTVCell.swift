@@ -215,11 +215,11 @@ class NewsFeedTVCell: UITableViewCell {
             $0.left.equalTo(categoryButton.snp.right).offset(10)
         }
         moreButton.snp.makeConstraints {
-            $0.width.equalTo(24)
-            $0.height.equalTo(12)
+            $0.width.equalTo(40)
+            $0.height.equalTo(40)
             
             $0.centerY.equalTo(categoryButton)
-            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(4)
         }
         
         titleLabel.snp.makeConstraints {
@@ -326,10 +326,13 @@ class NewsFeedTVCell: UITableViewCell {
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                      ["삭제", UIColor.red, "deletePost"],
+                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
         nuteeAlertSheet.modalPresentationStyle = .custom
-//        nuteeAlertSheet.backgroundImage = homeVC?.tabBarController?.view.asImage()
-        homeVC?.tabBarController?.view.alpha = 0.7
-        homeVC?.tabBarController?.present(nuteeAlertSheet, animated: true)
+        
+        homeVC?.present(nuteeAlertSheet, animated: true)
     }
     
 //    func initPosting() {

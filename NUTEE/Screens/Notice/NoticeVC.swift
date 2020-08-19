@@ -140,7 +140,7 @@ extension NoticeVC : UICollectionViewDataSource {
             cell.getEventNoticeService(completionHandler: {(returnedData)-> Void in
             })
         default:
-            simpleAlert(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
+            simpleNuteeAlertDialogue(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
         }
         
         return cell

@@ -31,7 +31,7 @@ class PostVC: UIViewController {
     let imagePickerButton = UIButton()
     
     // MARK: - Variables and Properties
-    
+
     var pickedIMG : [UIImage] = []
     
     var selectedItems = [YPMediaItem]()
@@ -215,15 +215,23 @@ class PostVC: UIViewController {
         
         // 빈칸이나 줄바꿈으로만 입력된 경우 포스팅 창 바로 나가기
         if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
-            var title = ""
+            var content = ""
             if isEditMode == true {
-                title = "수정을 취소하시겠습니까?"
+                content = "수정을 취소하시겠습니까?"
             } else {
-                title = "작성을 취소하시겠습니까?"
+                content = "작성을 취소하시겠습니까?"
             }
-            simpleAlertWithHandler(title: title, msg: "") { (action) in
-                self.dismiss(animated: true, completion: nil)
-            }
+            let nuteeAlertDialogue = NuteeAlertDialogue()
+            nuteeAlertDialogue.dialogueData = ["나가기", content]
+            nuteeAlertDialogue.okButtonData = ["예", UIColor.red, UIColor.white]
+            nuteeAlertDialogue.cancelButtonData[0] = "아니오"
+            
+            nuteeAlertDialogue.addCancelPostAction()
+
+            nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+            nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+            
+            present(nuteeAlertDialogue, animated: true)
         } else {
             self.dismiss(animated: true, completion: nil)
         }
