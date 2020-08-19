@@ -20,4 +20,6 @@ enum Identify {
     static let SettingTVCell = "SettingTVCell"
     static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     
+    static let OptionListTVCell = "OptionListTVCell"
+    
 }

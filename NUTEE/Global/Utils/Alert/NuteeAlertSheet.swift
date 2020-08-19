@@ -18,13 +18,17 @@ class NuteeAlertSheet : UIViewController {
     let cardView = UIView()
     let handleView = UIView()
     
-    let cancelButton = UIButton()
+    let optionTableView = UITableView()
     
     // MARK: - Variables and Properties
     
     // to store the card view top constraint value before the dragging start
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
+    var handleArea: CGFloat = 30
     
+    var optionList = [["", UIColor.self, ""]]
+    var optionHeight: CGFloat = 50
+
     var cardViewTopConstraint: Constraint?
     
     // MARK: - Dummy data
@@ -38,6 +42,18 @@ class NuteeAlertSheet : UIViewController {
         initView()
         
         addPanGestureRecognizer()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.presentingViewController?.view.alpha = 0.7
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+     
+        self.presentingViewController?.view.alpha = 1.0
     }
     
     // MARK: - Helper
@@ -61,16 +77,16 @@ class NuteeAlertSheet : UIViewController {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 3
             $0.backgroundColor = .lightGray
+            $0.alpha = 0.5
         }
-        _ = cancelButton.then {
-            $0.setTitle("취소", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 17)
-            $0.tintColor = .white
+        _ = optionTableView.then {
+            $0.delegate = self
+            $0.dataSource = self
             
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 0.5 * $0.frame.size.width
-            print("2", $0.frame.size.width)
-            $0.backgroundColor = .nuteeGreen
+            $0.register(OptionListTVCell.self, forCellReuseIdentifier: Identify.OptionListTVCell)
+            
+            $0.separatorStyle = .none
+            $0.isScrollEnabled = false
         }
         
     }
@@ -81,7 +97,7 @@ class NuteeAlertSheet : UIViewController {
         
         view.addSubview(cardView)
         cardView.addSubview(handleView)
-        cardView.addSubview(cancelButton)
+        cardView.addSubview(optionTableView)
         
         
         // Make Constraints
@@ -93,9 +109,8 @@ class NuteeAlertSheet : UIViewController {
         }
 
         let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
-        let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
         cardView.snp.makeConstraints {
-            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset((safeAreaHeight + bottomPadding) / 2).constraint
+            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)).constraint
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
@@ -107,17 +122,11 @@ class NuteeAlertSheet : UIViewController {
             $0.centerX.equalTo(cardView)
             $0.top.equalTo(cardView.snp.top).offset(10)
         }
-        
-        cancelButton.snp.makeConstraints {
-            let width = cardView.frame.size.width - 20
-            print("1", cardView.frame.size.width - 20)
-            $0.width.equalTo(width)
-            $0.height.equalTo(40)
-            
-            $0.centerX.equalTo(cardView)
-            $0.left.equalTo(cardView.snp.left).offset(20)
-            $0.right.equalTo(cardView.snp.right).inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        optionTableView.snp.makeConstraints {
+            $0.top.equalTo(cardView.snp.top).offset(handleArea)
+            $0.left.equalTo(cardView.snp.left)
+            $0.right.equalTo(cardView.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
     
@@ -154,7 +163,7 @@ class NuteeAlertSheet : UIViewController {
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
             let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
             
-            let standardPos = (safeAreaHeight + bottomPadding) / 2
+            let standardPos = safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)
             
             let swipeDownSensitivity: CGFloat = 1.5
             if self.cardPanStartingTopConstant + translation.y > standardPos {
@@ -188,7 +197,7 @@ class NuteeAlertSheet : UIViewController {
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
           let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
           
-            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight + bottomPadding) * 0.25 {
+            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)) * 0.25 {
             // show the card at normal state
                 setRegularPosition()
           } else if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight) - 200 {
@@ -214,8 +223,9 @@ class NuteeAlertSheet : UIViewController {
         // to tell the app to refresh the frame/position of card view
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
             let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
+            
             cardView.snp.updateConstraints {
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset((safeAreaHeight + bottomPadding) / 2)
+                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
             }
         }
         
@@ -241,7 +251,7 @@ class NuteeAlertSheet : UIViewController {
       }
       
       // when card view top constraint value is equal to this, the darkest alpha (0.7)
-      let fullDimPosition = (safeAreaHeight + bottomPadding) / 2.0
+      let fullDimPosition = (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
       
       // when card view top constraint value is equal to this, the lightest alpha (0.0)
       let noDimPosition = safeAreaHeight + bottomPadding
@@ -257,7 +267,139 @@ class NuteeAlertSheet : UIViewController {
       }
       
       // else return an alpha value in between 0.0 and 0.7 based on the top constraint value
-        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) * 0.4
+        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) //* 0.4
+    }
+    
+// MARK: - Custom Settings
+    
+    func editPost() {
+        let postVC = PostVC()
+        postVC.isEditMode = true
+        
+        let navigationController = UINavigationController(rootViewController: postVC)
+        navigationController.modalPresentationStyle = .currentContext
+        
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.present(navigationController, animated: true, completion: nil)
+        })
+    }
+    
+    func deletePost() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.red, UIColor.white]
+        
+        nuteeAlertDialogue.addDeletePostAction()
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.present(nuteeAlertDialogue, animated: true)
+        })
     }
    
+}
+
+// MARK: - optionList TableView
+
+extension NuteeAlertSheet : UITableViewDelegate { }
+extension NuteeAlertSheet : UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return optionHeight
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return optionHeight
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return optionList.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Identify.OptionListTVCell, for: indexPath) as! OptionListTVCell
+        cell.selectionStyle = .none
+        
+        cell.optionItem = optionList[indexPath.row]
+        
+        cell.initCell()
+        cell.addContentView()
+
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch optionList[indexPath.row][2] as? String {
+        case "editPost":
+            editPost()
+        case "deletePost":
+            deletePost()
+        default:
+            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
+        }
+    }
+
+}
+
+// MARK: - Setting TableViewCell
+
+class OptionListTVCell : UITableViewCell {
+    
+    static let identifier = Identify.OptionListTVCell
+    
+    // MARK: - UI components
+    
+    let optionItemLabel = UILabel()
+    
+    // MARK: - Variables and Properties
+    
+    var optionItem = ["", UIColor.self] as [Any]
+    
+    // MARK: - Life Cycle
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    // MARK: - Helper
+    
+    func initCell() {
+        _ = optionItemLabel.then {
+            $0.text = optionItem[0] as? String
+            $0.font = .systemFont(ofSize: 20)
+            $0.textColor = optionItem[1] as? UIColor
+        }
+    }
+    
+    func addContentView() {
+        contentView.addSubview(optionItemLabel)
+        
+        optionItemLabel.snp.makeConstraints {
+            $0.centerX.equalTo(contentView)
+            $0.centerY.equalTo(contentView)
+        }
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        
+        if isHighlighted == true {
+            contentView.backgroundColor = UIColor(red: 227 / 255.0, green: 241 / 255.0, blue: 223 / 255.0 , alpha: 1.0)
+        } else {
+            contentView.backgroundColor = .white
+        }
+    }
+    
 }
