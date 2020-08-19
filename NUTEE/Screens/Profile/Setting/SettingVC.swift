@@ -159,7 +159,7 @@ extension SettingVC : UITableViewDataSource {
             self.navigationController?.pushViewController(developerInfoVC, animated: true)
         
         default:
-            simpleAlert(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
+            simpleNuteeAlertDialogue(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
         }
     }
 

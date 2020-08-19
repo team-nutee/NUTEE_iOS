@@ -10,6 +10,17 @@ import UIKit
 
 extension UIViewController {
 
+    func simpleNuteeAlertDialogue(title: String, message: String) {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = [title, message]
+        nuteeAlertDialogue.cancelButton.isHidden = true
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overFullScreen
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        present(nuteeAlertDialogue, animated: true)
+    }
+    
     // 2칸인 alert title - up, message - down
     func simpleAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

@@ -228,7 +228,8 @@ extension DetailNewsFeedVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // Dequeue with the reuse identifier
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
-
+        headerView?.detailNewsFeedVC = self
+        
         headerView?.initHeaderView()
         headerView?.addContentView()
         

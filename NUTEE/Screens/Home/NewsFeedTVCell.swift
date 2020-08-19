@@ -41,7 +41,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         $0.contentHorizontalAlignment = .left
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-        $0.isUserInteractionEnabled = false
+//        $0.isUserInteractionEnabled = false
     }
     
     var titleLabel = UILabel().then {
@@ -148,6 +148,8 @@ class NewsFeedTVCell: UITableViewCell {
 
     // MARK: - Variables and Properties
     
+    var homeVC: UIViewController?
+    
     // MARK: - Life Cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -177,6 +179,9 @@ class NewsFeedTVCell: UITableViewCell {
     // MARK: - Helper
     
     func makeConstraints() {
+        moreButton.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
+        
+        
         // Add SubViews
         contentView.addSubview(categoryButton)
         contentView.addSubview(dateLabel)
@@ -210,11 +215,11 @@ class NewsFeedTVCell: UITableViewCell {
             $0.left.equalTo(categoryButton.snp.right).offset(10)
         }
         moreButton.snp.makeConstraints {
-            $0.width.equalTo(24)
-            $0.height.equalTo(12)
+            $0.width.equalTo(40)
+            $0.height.equalTo(40)
             
             $0.centerY.equalTo(categoryButton)
-            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(4)
         }
         
         titleLabel.snp.makeConstraints {
@@ -317,6 +322,17 @@ class NewsFeedTVCell: UITableViewCell {
         contentTextView.hideSkeleton()
         
         postCountInfoContainerView.hideSkeleton()
+    }
+    
+    @objc func didTapMoreButton() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                      ["삭제", UIColor.red, "deletePost"],
+                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        homeVC?.present(nuteeAlertSheet, animated: true)
     }
     
 //    func initPosting() {

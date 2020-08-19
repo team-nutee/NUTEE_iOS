@@ -158,16 +158,16 @@ extension NoticeFeedContainerCVCell {
             completionHandler(self.notices!)
 
         case .requestErr(let message):
-            self.noticeVC?.simpleAlert(title: "공지사항 조회 실패", message: "\(message)")
+            self.noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "\(message)")
             
         case .pathErr:
-            print(".pathErr")
+            self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 연결 오류", message: "")
             
         case .serverErr:
-            print(".serverErr")
+            self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 오류", message: "")
             
         case .networkFail :
-            self.noticeVC?.simpleAlert(title: "카테고리 조회 실패", message: "네트워크 상태를 확인해주세요.")
+            self.noticeVC?.simpleNuteeAlertDialogue(title: "카테고리 조회 실패", message: "네트워크 상태를 확인해주세요.")
         }
         
     }

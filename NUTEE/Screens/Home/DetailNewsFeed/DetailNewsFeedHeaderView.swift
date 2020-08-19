@@ -26,6 +26,11 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     let contentImageView = UIImageView()
     
     let likeButton = UIButton()
+    
+    // MARK: - Variables and Properties
+   
+   var detailNewsFeedVC: UIViewController?
+   
 //
 //    // User Information
 //    @IBOutlet var userIMG: UIImageView!
@@ -115,7 +120,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.contentHorizontalAlignment = .left
             $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
             $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
+            
+            $0.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
         }
         
         _ = contentTextView.then {
@@ -207,6 +213,18 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
         }
     }
+    
+    @objc func didTapMoreButton() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                      ["삭제", UIColor.red, "deletePost"],
+                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
+    }
+    
 //
 //    func initTextView() {
 //        contentTextView.delegate = self
