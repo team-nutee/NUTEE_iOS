@@ -76,7 +76,11 @@ class PostVC: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(didTapClosePosting))
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "게시", style: .plain, target: self, action: #selector(didTapClosePosting))
+        var rightBarTitle = "게시"
+        if isEditMode == true {
+            rightBarTitle = "수정"
+        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapClosePosting))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
     }
     
