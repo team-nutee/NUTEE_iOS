@@ -27,6 +27,7 @@ class TermsAndConditionsVC : UIViewController {
         view.backgroundColor = .white
         
         contentsTextView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        contentsTextView.tintColor = .nuteeGreen
     }
     
     // MARK: - Helper
