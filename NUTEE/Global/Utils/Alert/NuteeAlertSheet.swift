@@ -160,8 +160,7 @@ class NuteeAlertSheet : UIViewController {
         
       case .changed :
         
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
-            let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
+        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
             
             let standardPos = safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)
             
@@ -194,8 +193,7 @@ class NuteeAlertSheet : UIViewController {
         }
          
       case .ended :
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
-          let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
+        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
           
             if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)) * 0.25 {
             // show the card at normal state
@@ -221,8 +219,7 @@ class NuteeAlertSheet : UIViewController {
         // set the new top constraint value for card view
         // card view won't move up just yet, we need to call layoutIfNeeded()
         // to tell the app to refresh the frame/position of card view
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
-            let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom {
+        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
             
             cardView.snp.updateConstraints {
                 $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
