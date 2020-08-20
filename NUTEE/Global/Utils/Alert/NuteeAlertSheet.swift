@@ -31,6 +31,8 @@ class NuteeAlertSheet : UIViewController {
 
     var cardViewTopConstraint: Constraint?
     
+    weak var settingProfileImageVCDelegate: SettingProfileImageVCDelegate?
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -285,7 +287,7 @@ class NuteeAlertSheet : UIViewController {
     func deletePost() {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.red, UIColor.white]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
         
         nuteeAlertDialogue.addDeletePostAction()
         
@@ -297,7 +299,37 @@ class NuteeAlertSheet : UIViewController {
             beforeVC?.present(nuteeAlertDialogue, animated: true)
         })
     }
+    
+    func reportPost() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["신고하기", "해당 게시글을 신고하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        
+        nuteeAlertDialogue.addCancelPostAction()
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.present(nuteeAlertDialogue, animated: true)
+        })
+    }
+    
+    func openLibrary() {
+        settingProfileImageVCDelegate?.openSettingProfileImageVCLibrary()
+    }
    
+    func openCamera() {
+        settingProfileImageVCDelegate?.openSettingProfileImageVCCamera()
+    }
+}
+
+// MARK: - SettingProfileImageVC와 통신하기 위한 프로토콜 정의
+
+protocol SettingProfileImageVCDelegate: class {
+    func openSettingProfileImageVCLibrary()
+    func openSettingProfileImageVCCamera()
 }
 
 // MARK: - optionList TableView
@@ -335,6 +367,12 @@ extension NuteeAlertSheet : UITableViewDataSource {
             editPost()
         case "deletePost":
             deletePost()
+        case "reportPost":
+            reportPost()
+        case "openLibrary":
+            openLibrary()
+        case "openCamera":
+            openCamera()
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
         }

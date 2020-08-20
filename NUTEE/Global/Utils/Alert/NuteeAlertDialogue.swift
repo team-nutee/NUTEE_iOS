@@ -20,8 +20,8 @@ class NuteeAlertDialogue: UIViewController {
     let titleLabel = UILabel()
     let contentTextView = UITextView()
     
-    let okButton = UIButton(frame: CGRect(x: 0, y: 0, width: 45, height: 30))
-    let cancelButton = UIButton(frame: CGRect(x: 0, y: 0, width: 45, height: 30))
+    let okButton = UIButton()
+    let cancelButton = UIButton()
     
     // MARK: - Variables and Properties
     
@@ -136,6 +136,8 @@ class NuteeAlertDialogue: UIViewController {
         }
         
         okButton.snp.makeConstraints {
+            $0.width.greaterThanOrEqualTo(45)
+            
             $0.top.equalTo(contentTextView.snp.bottom).offset(20)
             $0.left.equalTo(cancelButton.snp.right).offset(15)
             $0.right.equalTo(contentTextView.snp.right)
