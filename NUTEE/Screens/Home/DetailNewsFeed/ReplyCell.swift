@@ -48,7 +48,11 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 ////        initComments()
 //        txtvwCommentContents.font = .systemFont(ofSize: 13)
 //    }
-//
+
+    // MARK: - Variables and Properties
+    
+    var detailNewsFeedVC: UIViewController?
+    
     //MARK: - Helper
     
     func initCell () {
@@ -75,7 +79,8 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
             $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
             $0.contentHorizontalAlignment = .center
             $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-            $0.isUserInteractionEnabled = false
+            
+            $0.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
         }
         
         _ = replyTextView.then {
@@ -133,6 +138,18 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         }
         
     }
+    
+    @objc func didTapMoreButton() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                      ["삭제", UIColor.red, "deletePost"],
+                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
+    }
+    
 //
 //    func initTextView() {
 //        txtvwCommentContents.delegate = self

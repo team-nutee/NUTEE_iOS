@@ -102,25 +102,54 @@ class SettingProfileImageVC : UIViewController {
     }
     
     @objc func didTapProfileImageView() {
-        let profileImageAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        profileImageAlert.view.tintColor = .nuteeGreen
-        
-        let albumAction = UIAlertAction(title: "앨범에서 프로필 사진 선택", style: .default) { action in
-            self.openLibrary()
-        }
-        let cameraAction = UIAlertAction(title: "카메라로 프로필 사진 찍기", style: .default) { action in
-            self.openCamera()
-        }
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
-        
-        profileImageAlert.addAction(albumAction)
-        profileImageAlert.addAction(cancel)
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen, "openLibrary"]]
         
         if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-            profileImageAlert.addAction(cameraAction)
+            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen, "openCamera"]])
         }
         
-        present(profileImageAlert, animated: true)
+        nuteeAlertSheet.settingProfileImageVCDelegate = self
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        present(nuteeAlertSheet, animated: true)
+        
+        
+        
+        
+        
+//        let profileImageAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+//        profileImageAlert.view.tintColor = .nuteeGreen
+//
+//        let albumAction = UIAlertAction(title: "앨범에서 프로필 사진 선택", style: .default) { action in
+//            self.openLibrary()
+//        }
+//        let cameraAction = UIAlertAction(title: "카메라로 프로필 사진 찍기", style: .default) { action in
+//            self.openCamera()
+//        }
+//        let cancel = UIAlertAction(title: "취소", style: .cancel)
+//
+//        profileImageAlert.addAction(albumAction)
+//        profileImageAlert.addAction(cancel)
+//
+//        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
+//            profileImageAlert.addAction(cameraAction)
+//        }
+//
+//        present(profileImageAlert, animated: true)
+    }
+}
+
+extension SettingProfileImageVC : SettingProfileImageVCDelegate {
+    func openSettingProfileImageVCLibrary() {
+        dismiss(animated: true)
+        openLibrary()
+    }
+    
+    func openSettingProfileImageVCCamera() {
+        dismiss(animated: true)
+        openCamera()
     }
 }
 

@@ -227,7 +227,7 @@ class PostVC: UIViewController {
             }
             let nuteeAlertDialogue = NuteeAlertDialogue()
             nuteeAlertDialogue.dialogueData = ["나가기", content]
-            nuteeAlertDialogue.okButtonData = ["예", UIColor.red, UIColor.white]
+            nuteeAlertDialogue.okButtonData = ["예", UIColor.white, UIColor.red]
             nuteeAlertDialogue.cancelButtonData[0] = "아니오"
             
             nuteeAlertDialogue.addCancelPostAction()

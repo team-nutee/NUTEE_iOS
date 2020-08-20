@@ -297,12 +297,13 @@ extension DetailNewsFeedVC : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //Custom셀인 'ReplyCell' 형식으로 변환
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as! ReplyCell
+        cell.selectionStyle = .none
+
+        cell.detailNewsFeedVC = self
         
         cell.initCell()
         cell.addContentView()
 
-        cell.selectionStyle = .none
-        
 //        cell.initTextView()
 //        if content?.comments.count == 0 {
 //            replyTV.allowsSelection = false

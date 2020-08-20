@@ -29,7 +29,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     // MARK: - Variables and Properties
    
-   var detailNewsFeedVC: UIViewController?
+    var detailNewsFeedVC: UIViewController?
    
 //
 //    // User Information
@@ -187,8 +187,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         moreButton.snp.makeConstraints {
-            $0.width.equalTo(24)
-            $0.height.equalTo(12)
+            $0.width.equalTo(40)
+            $0.height.equalTo(40)
             $0.centerY.equalTo(profileImageView)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
