@@ -272,6 +272,63 @@ class LoginVC: UIViewController {
         idErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
         pwErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
         errorAnimate()
+        
+        var navigationController: UINavigationController
+        
+        // HomeTab
+        let homeVC = HomeVC()
+        navigationController = UINavigationController(rootViewController: homeVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "house")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
+
+        let HomeTab = navigationController
+        
+        // SearchTab
+        let searchVC = SearchVC()
+        navigationController = UINavigationController(rootViewController: searchVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
+
+        let SearchTab = navigationController
+        
+        // PostTab
+        let postVC = UIViewController()
+        postVC.view.backgroundColor = .white
+        navigationController = UINavigationController(rootViewController: postVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "plus")
+        
+        let PostTab = navigationController
+        
+        // NoticeTab
+        let noticeVC = NoticeVC()
+        navigationController = UINavigationController(rootViewController: noticeVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "pin")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+
+        let NoticeTab = navigationController
+        
+        // ProfileTab
+        let profileVC = ProfileVC()
+        navigationController = UINavigationController(rootViewController: profileVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "person")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+
+        let ProfileTab = navigationController
+        
+        // TabBarController Settings
+        let tabBarController = TabBarController()
+        tabBarController.viewControllers = [HomeTab, SearchTab, PostTab, NoticeTab, ProfileTab]
+
+        tabBarController.tabBar.tintColor = .nuteeGreen
+        
+        tabBarController.modalPresentationStyle = .overFullScreen
+        tabBarController.modalTransitionStyle = .crossDissolve
+        
+        present(tabBarController, animated: true)
     }
     
     @objc func didTapSignUpButton() {
