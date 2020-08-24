@@ -159,7 +159,11 @@ extension SettingVC : UITableViewDataSource {
             self.navigationController?.pushViewController(developerInfoVC, animated: true)
         
         default:
-            simpleNuteeAlertDialogue(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
+            let rootVC = view.window?.rootViewController
+            self.view.window!.rootViewController?.dismiss(animated: true, completion: {
+                rootVC?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
+            })
+//            simpleNuteeAlertDialogue(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
         }
     }
 

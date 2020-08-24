@@ -101,7 +101,7 @@ class SplashVC: UIViewController {
         tabBarController.tabBar.tintColor = .nuteeGreen
         
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = tabBarController
+        sceneDelegate.window?.rootViewController = LoginVC()//tabBarController
     }
     
 }

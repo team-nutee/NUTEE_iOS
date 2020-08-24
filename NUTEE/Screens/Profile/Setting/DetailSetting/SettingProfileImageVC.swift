@@ -159,16 +159,29 @@ extension SettingProfileImageVC : UIImagePickerControllerDelegate, UINavigationC
     
     func openLibrary(){
         profileImagePicker.sourceType = .photoLibrary
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        
+        profileImagePicker.modalPresentationStyle = .overFullScreen
         
         present(profileImagePicker, animated: true, completion: nil)
     }
     func openCamera(){
         profileImagePicker.sourceType = .camera
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        
+        profileImagePicker.modalPresentationStyle = .overFullScreen
         
         present(profileImagePicker, animated: true, completion: nil)
     }
     
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
+        dismiss(animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
+        
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             profileImageView.image = image
             profileImageView.contentMode = .scaleAspectFill
