@@ -9,6 +9,7 @@
 struct APIConstants {
     
     static let BaseURL = "http://13.124.232.115:9596"
+    static let TestURL = "http://13.124.232.115:9425"
     
     // Notice
     static let NoticeBaseURL = "http://nutee.kr:9709/crawl"
