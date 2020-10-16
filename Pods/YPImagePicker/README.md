@@ -41,8 +41,15 @@ And many more...
 
 ## Installation
 
-Drop in the Classes folder to your Xcode project.  
-You can also use CocoaPods or Carthage.
+## Experimental Swift Package Manager (SPM) Support
+A first version of SPM support is available :
+package `https://github.com/Yummypets/YPImagePicker` branch `spm`.  
+This has a minimum target iOS version of `12.0`.  
+This is an early release so be sure to thoroughly test the integration and report any issues you'd encounter.
+
+Side note:  
+Swift package manager is the future and I would strongly recommend you to migrate as soon as possible.
+Once this integration is stable, the other packager managers will be deprecated.
 
 #### Using [CocoaPods](http://cocoapods.org/)
 
@@ -110,11 +117,14 @@ config.targetImageSize = YPImageSize.original
 config.overlayView = UIView()
 config.hidesStatusBar = true
 config.hidesBottomBar = false
+config.hidesCancelButton = false
 config.preferredStatusBarStyle = UIStatusBarStyle.default
 config.bottomMenuItemSelectedColour = UIColor(r: 38, g: 38, b: 38)
 config.bottomMenuItemUnSelectedColour = UIColor(r: 153, g: 153, b: 153)
 config.filters = [DefaultYPFilters...]
 config.maxCameraZoomFactor = 1.0
+config.preSelectItemOnMultipleSelection = true
+config.fonts..
 ```
 
 ### Library
@@ -157,6 +167,15 @@ YPImagePickerConfiguration.shared = config
 
 // And then use the default configuration like so:
 let picker = YPImagePicker()
+```
+
+When displaying picker on iPad, picker will support one size only you should set it before displaying it: 
+```
+let preferredContentSize = CGSize(width: 500, height: 600);
+YPImagePickerConfiguration.widthOniPad = preferredContentSize.width;
+
+// Now you can Display the picker with preferred size in dialog, popup etc
+
 ```
 
 ## Usage
@@ -236,7 +255,7 @@ picker.didFinishPicking { [unowned picker] items, cancelled in
 That's it !
 
 ## Languages
-🇺🇸 English, 🇪🇸 Spanish, 🇫🇷 French 🇷🇺 Russian, 🇳🇱 Dutch, 🇧🇷 Brazilian, 🇹🇷 Turkish, 🇸🇾 Arabic, 🇩🇪 German, 🇮🇹 Italian, 🇯🇵 Japanese, 🇨🇳 Chinese, 🇮🇩 Indonesian, 🇰🇷 Korean, 🇹🇼 Traditional Chinese（Taiwan), 🇻🇳 Vietnamese, 🇹🇭 Thai. 
+🇺🇸 English, 🇪🇸 Spanish, 🇫🇷 French 🇷🇺 Russian, 🇵🇱 Polish, 🇳🇱 Dutch, 🇧🇷 Brazilian, 🇹🇷 Turkish, 🇸🇾 Arabic, 🇩🇪 German, 🇮🇹 Italian, 🇯🇵 Japanese, 🇨🇳 Chinese, 🇮🇩 Indonesian, 🇰🇷 Korean, 🇹🇼 Traditional Chinese（Taiwan), 🇻🇳 Vietnamese, 🇹🇭 Thai. 
 
 If your language is not supported, you can still customize the wordings via the `configuration.wordings` api:
 
@@ -364,3 +383,4 @@ See [LICENSE](LICENSE) for details.
 releases/tag/3.4.0)
 - Swift 5.0 -> version [**4.0.0**](https://github.com/Yummypets/YPImagePicker/releases/tag/4.0.0)
 - Swift 5.1 -> version [**4.1.2**](https://github.com/Yummypets/YPImagePicker/releases/tag/4.1.2)
+- Swift 5.3 -> version [**4.4.0**](https://github.com/Yummypets/YPImagePicker/releases/tag/4.4.0)
