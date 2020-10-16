@@ -14,7 +14,7 @@ target 'NUTEE' do
   pod 'Alamofire', '~> 4.8.2'
   pod 'YPImagePicker'
   pod 'Then'
-  pod 'Toaster'
+# pod 'Toaster'
   pod 'SwiftKeychainWrapper'
 
   # Pods for NUTEE
