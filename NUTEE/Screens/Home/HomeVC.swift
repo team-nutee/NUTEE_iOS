@@ -33,6 +33,7 @@ class HomeVC: UIViewController {
         self.navigationItem.title = "NUTEE"
         view.backgroundColor = .white
         
+        setNavigationBarItem()
         setMenuBar()
         setNewsFeedContainerCollectionView()
     }
@@ -47,6 +48,11 @@ class HomeVC: UIViewController {
     }
     
     // MARK: - Helper
+    
+    func setNavigationBarItem() {
+        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
+        self.navigationItem.rightBarButtonItem = rightBarButton
+    }
     
     func setMenuBar() {
         _ = menuBar.then {
@@ -96,6 +102,12 @@ class HomeVC: UIViewController {
     func scrollToMenuIndex(menuIndex: Int) {
         let indexPath = IndexPath(item: menuIndex, section: 0)
         newsFeedContainerCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
+    @objc func didTapSearchBarItem() {
+        let searchVC = SearchVC()
+        
+        self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
 }

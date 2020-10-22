@@ -36,7 +36,7 @@ class SearchVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        searchTextField.becomeFirstResponder()
+//        searchTextField.becomeFirstResponder()
     }
     
     override func viewDidLayoutSubviews() {
@@ -64,7 +64,7 @@ class SearchVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             $0.tintColor = .nuteeGreen
             
-            $0.becomeFirstResponder()
+//            $0.becomeFirstResponder()
         }
         
         _ = searchButton.then {
