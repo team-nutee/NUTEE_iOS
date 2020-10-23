@@ -48,6 +48,8 @@
 		D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
 		D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D526E55A24D5B02600B80D37 /* TabBarController.swift */; };
+		D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CF725418B5A009A1DC2 /* NotificationVC.swift */; };
+		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
@@ -147,6 +149,8 @@
 		D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedTVCell.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
 		D526E55A24D5B02600B80D37 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		D5310CF725418B5A009A1DC2 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
+		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
@@ -290,7 +294,7 @@
 				5E8BA68F24C6D23000A58F43 /* Splash */,
 				5E8BA68E24C6D21500A58F43 /* Login */,
 				5E8BA68C24C6D20700A58F43 /* Home */,
-				5E8BA69024C6D24400A58F43 /* Search */,
+				D5310CF325418A6E009A1DC2 /* Notification */,
 				5E8BA69124C6D24900A58F43 /* Post */,
 				5E8BA69224C6D25B00A58F43 /* Notice */,
 				5E8BA68D24C6D21000A58F43 /* Profile */,
@@ -350,6 +354,7 @@
 				D592A92A24D3F9C600D49F62 /* HomeVC.swift */,
 				D576A86D24D4456100202135 /* FeedContainerCVCell.swift */,
 				D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */,
+				5E8BA69024C6D24400A58F43 /* Search */,
 				D58C93D724CAE4FA005570D4 /* DetailNewsFeed */,
 			);
 			path = Home;
@@ -469,6 +474,15 @@
 				588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D5310CF325418A6E009A1DC2 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				D5310CF725418B5A009A1DC2 /* NotificationVC.swift */,
+				D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */,
+			);
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		D58C93D724CAE4FA005570D4 /* DetailNewsFeed */ = {
@@ -772,7 +786,9 @@
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
 				D12D8BE024D14850005F4580 /* KeyChainKeys+Enum.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
+				D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */,
 				D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */,
+				D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */,
 				D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* ProfileVC.swift in Sources */,
 				5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */,
