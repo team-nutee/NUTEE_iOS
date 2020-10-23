@@ -60,14 +60,23 @@ class SplashVC: UIViewController {
         let HomeTab = navigationController
         
         // SearchTab
-        let searchVC = SearchVC()
-        navigationController = UINavigationController(rootViewController: searchVC)
+//        let searchVC = SearchVC()
+//        navigationController = UINavigationController(rootViewController: searchVC)
+//
+//        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+//        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
+//
+//        let SearchTab = navigationController
         
-        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
+        // NotificationTab
+        let notificationVC = NotificationVC()
+        navigationController = UINavigationController(rootViewController: notificationVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "bell")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
 
-        let SearchTab = navigationController
+        let NotificationTab = navigationController
         
         // PostTab
         let postVC = UIViewController()
@@ -96,7 +105,7 @@ class SplashVC: UIViewController {
         
         // TabBarController Settings
         let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, SearchTab, PostTab, NoticeTab, ProfileTab]
+        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
 
         tabBarController.tabBar.tintColor = .nuteeGreen
         
