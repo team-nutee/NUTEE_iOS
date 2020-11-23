@@ -1,8 +1,8 @@
 //
-//  LoginVC.swift
+//  FindVC.swift
 //  NUTEE
 //
-//  Created by Junhyeon on 2020/07/21.
+//  Created by eunwoo on 2020/11/18.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
 import UIKit
