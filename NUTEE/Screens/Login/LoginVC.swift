@@ -263,9 +263,10 @@ class LoginVC: UIViewController {
     }
     
     @objc func didTapFindAccountButton() {
-        self.idErrorLabel.text = "서버 에러입니다"
-        self.pwErrorLabel.text = "서버 에러입니다"
-        errorAnimate()
+        let findVC = FindVC()
+        findVC.modalPresentationStyle = .fullScreen
+        
+        present(findVC, animated: false)
     }
     
     @objc func didTapLoginButton() {
