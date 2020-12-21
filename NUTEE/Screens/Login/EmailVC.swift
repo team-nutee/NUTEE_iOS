@@ -268,8 +268,7 @@ class EmailVC: UIViewController {
     }
     
     @objc func didTapConfirmButton() {
-        errorAnimate(targetTextField: certificationNumberTextField, errorMessage: "인증번호가 틀렸습니다")
-        errorAnimate(targetTextField: emailTextField, errorMessage: "이미 인증된 이메일입니다")
+        checkOTP(certificationNumberTextField.text ?? "")
     }
     
     @objc func didTapNextButton() {
@@ -540,14 +539,13 @@ extension EmailVC {
 // MARK: - Server connect
 
 extension EmailVC {
+    
     func sendOTP(_ email : String){
         UserService.shared.sendOTP(email) { (responsedata) in
             switch responsedata {
             
             case .success(_):
                 self.certificationAnimate()
-                self.nextButton.isEnabled = true
-                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
                 
             case .requestErr(_):
                 self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "이미 인증된 이메일입니다.")
@@ -564,5 +562,30 @@ extension EmailVC {
         }
     }
     
+    func checkOTP(_ otp : String){
+        UserService.shared.checkOTP(otp) { (responsedata) in
+            switch responsedata {
+            
+            case .success(_):
+                self.successAnimate(targetTextField: self.certificationNumberTextField, successMessage: "인증번호가 확인되었습니다.")
+                
+                self.nextButton.isEnabled = true
+                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
+                
+            case .requestErr(_):
+                self.errorAnimate(targetTextField: self.certificationNumberTextField, errorMessage: "인증번호가 틀렸습니다.")
+                
+            case .pathErr:
+                self.errorAnimate(targetTextField: self.certificationNumberTextField, errorMessage: "인증번호가 틀렸습니다.")
+                
+            case .serverErr:
+                self.errorAnimate(targetTextField: self.certificationNumberTextField, errorMessage: "서버 에러가 발생했습니다.")
+                
+            case .networkFail:
+                self.errorAnimate(targetTextField: self.certificationNumberTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+            }
+        }
+    }
+
 }
 
