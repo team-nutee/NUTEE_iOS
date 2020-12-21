@@ -27,7 +27,7 @@ class EmailVC: UIViewController {
     let certificationResultLabel = UILabel()
     
     let certificationNumberTextField = UITextField()
-    let comfirmButton = HighlightedButton()
+    let confirmButton = HighlightedButton()
     let comfirmResultLabel = UILabel()
     
     let nextButton = HighlightedButton()
@@ -99,6 +99,8 @@ class EmailVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            
+            $0.addTarget(self, action: #selector(emailemailTextFieldDidChange(_:)), for: .editingChanged)
         }
         _ = certificationButton.then {
             $0.setTitle("인증하기", for: .normal)
@@ -106,6 +108,8 @@ class EmailVC: UIViewController {
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
             $0.alpha = 0
+            $0.isEnabled = false
+            $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapCertificationButton), for: .touchUpInside)
         }
@@ -123,15 +127,19 @@ class EmailVC: UIViewController {
             $0.keyboardType = .numberPad
             
             $0.alpha = 0
+            
+            $0.addTarget(self, action: #selector(certificationNumberTextFieldDidChange(_:)), for: .editingChanged)
         }
-        _ = comfirmButton.then {
+        _ = confirmButton.then {
             $0.setTitle("확인", for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 15)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
             $0.alpha = 0
+            $0.isEnabled = false
+            $0.setTitleColor(.veryLightPink, for: .normal)
             
-            $0.addTarget(self, action: #selector(didTapComfirmButton), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapConfirmButton), for: .touchUpInside)
         }
         _ = comfirmResultLabel.then {
             $0.text = "otpCheckLabel"
@@ -144,6 +152,9 @@ class EmailVC: UIViewController {
             $0.setTitle("다음", for: .normal)
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
+            
+            $0.isEnabled = false
+            $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
         }
@@ -164,7 +175,7 @@ class EmailVC: UIViewController {
         view.addSubview(certificationResultLabel)
         
         view.addSubview(certificationNumberTextField)
-        view.addSubview(comfirmButton)
+        view.addSubview(confirmButton)
         view.addSubview(comfirmResultLabel)
         
         view.addSubview(nextButton)
@@ -222,7 +233,7 @@ class EmailVC: UIViewController {
             $0.top.equalTo(certificationResultLabel.snp.bottom).offset(10)
             $0.left.equalTo(emailTextField.snp.left)
         }
-        comfirmButton.snp.makeConstraints {
+        confirmButton.snp.makeConstraints {
             $0.width.equalTo(certificationButton.snp.width)
             $0.height.equalTo(certificationButton.snp.height)
             
@@ -253,10 +264,10 @@ class EmailVC: UIViewController {
     }
     
     @objc func didTapCertificationButton() {
-        certificationAnimate()
+        sendOTP(emailTextField.text ?? "")
     }
     
-    @objc func didTapComfirmButton() {
+    @objc func didTapConfirmButton() {
         errorAnimate(targetTextField: certificationNumberTextField, errorMessage: "인증번호가 틀렸습니다")
         errorAnimate(targetTextField: emailTextField, errorMessage: "이미 인증된 이메일입니다")
     }
@@ -275,6 +286,39 @@ class EmailVC: UIViewController {
         view.endEditing(true)
     }
 }
+
+// MARK: - TextField Delegate
+
+extension EmailVC : UITextFieldDelegate {
+  
+    @objc func emailemailTextFieldDidChange(_ textField: UITextField) {
+        
+        if emailTextField.text != "" {
+            certificationButton.isEnabled = true
+            certificationButton.setTitleColor(.nuteeGreen, for: .normal)
+            
+        } else if emailTextField.text == "" {
+            certificationButton.isEnabled = false
+            certificationButton.setTitleColor(.veryLightPink, for: .normal)
+
+        }
+        
+    }
+    
+    @objc func certificationNumberTextFieldDidChange(_ textField: UITextField) {
+        
+        if certificationNumberTextField.text != "" {
+            confirmButton.isEnabled = true
+            confirmButton.setTitleColor(.nuteeGreen, for: .normal)
+            
+        } else if certificationNumberTextField.text == "" {
+            confirmButton.isEnabled = false
+            confirmButton.setTitleColor(.veryLightPink, for: .normal)
+        }
+    }
+    
+}
+
 
 // MARK: - EmailVC Animation
 
@@ -346,8 +390,8 @@ extension EmailVC {
                         self.certificationNumberTextField.alpha = 1
                         self.certificationNumberTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
-                        self.comfirmButton.alpha = 1
-                        self.comfirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        self.confirmButton.alpha = 1
+                        self.confirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
 
@@ -492,3 +536,33 @@ extension EmailVC {
     }
     
 }
+
+// MARK: - Server connect
+
+extension EmailVC {
+    func sendOTP(_ email : String){
+        UserService.shared.sendOTP(email) { (responsedata) in
+            switch responsedata {
+            
+            case .success(_):
+                self.certificationAnimate()
+                self.nextButton.isEnabled = true
+                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
+                
+            case .requestErr(_):
+                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "이미 인증된 이메일입니다.")
+                
+            case .pathErr:
+                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "에러가 발생했습니다.")
+                
+            case .serverErr:
+                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "서버 에러가 발생했습니다.")
+                
+            case .networkFail:
+                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+            }
+        }
+    }
+    
+}
+
