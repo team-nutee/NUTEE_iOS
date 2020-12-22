@@ -276,6 +276,7 @@ class EmailVC: UIViewController {
         certificationNumberTextField.resignFirstResponder()
         
         let idVC = IDVC()
+        idVC.email = emailTextField.text ?? ""
         idVC.modalPresentationStyle = .fullScreen
         
         present(idVC, animated: false)

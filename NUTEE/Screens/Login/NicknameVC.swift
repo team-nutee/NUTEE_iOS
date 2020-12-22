@@ -31,6 +31,9 @@ class NicknameVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var userId : String = ""
+    var email : String = ""
+    
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
     let yPosAnimationRange: CGFloat = 50
@@ -129,7 +132,7 @@ class NicknameVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = false
+            //$0.isEnabled = false
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -229,6 +232,9 @@ class NicknameVC: UIViewController {
         nicknameTextField.resignFirstResponder()
         
         let passwordVC = PasswordVC()
+        passwordVC.userId = self.userId
+        passwordVC.nickname = nicknameTextField.text ?? ""
+        passwordVC.email = self.email
         passwordVC.modalPresentationStyle = .fullScreen
         
         present(passwordVC, animated: false)

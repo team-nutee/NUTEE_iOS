@@ -37,6 +37,10 @@ class PasswordVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var userId : String = ""
+    var nickname : String = ""
+    var email : String = ""
+    
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
     let yPosAnimationRange: CGFloat = 50
@@ -103,6 +107,8 @@ class PasswordVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            
+            $0.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
         }
         _ = passwordIndicatorLabel.then {
             $0.text = "errorConditionArea"
@@ -124,6 +130,8 @@ class PasswordVC: UIViewController {
             $0.keyboardType = .numberPad
             
             $0.alpha = 0
+            
+            $0.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
         }
         _ = passwordCheckLabel.then {
             $0.text = "passwordAvailableLabel"
@@ -167,6 +175,9 @@ class PasswordVC: UIViewController {
             $0.setTitle("완료", for: .normal)
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
+            
+            $0.isEnabled = false
+            $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
         }
@@ -318,15 +329,45 @@ class PasswordVC: UIViewController {
     }
     
     @objc func didTapDoneButton() {
-        let rootVC = view.window?.rootViewController
-        self.view.window!.rootViewController?.dismiss(animated: true, completion: {
-            rootVC?.simpleNuteeAlertDialogue(title: "회원가입", message: "회원가입이 완료되었습니다😃")
-        })
+        //signUpService(<#T##userId: String##String#>, <#T##nickname: String##String#>, <#T##email: String##String#>, <#T##password: String##String#>, otp: <#T##String#>, interests: <#T##[String]#>, majors: <#T##[String]#>)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
+}
+
+// MARK: - TextField Delegate
+
+extension PasswordVC : UITextFieldDelegate {
+  
+    @objc func passwordTextFieldDidChange(_ textField: UITextField) {
+        
+        if passwordTextField.text == "" || passwordTextField.text != "" && passwordTextField.text?.validatePassword() == true {
+            successAnimate(targetTextField: passwordTextField, successMessage: "")
+            
+        } else if passwordTextField.text != "" && passwordTextField.text?.validatePassword() == false {
+            errorAnimate(targetTextField: passwordTextField, errorMessage: "8자 이상의 영어 대문자, 소문자, 숫자가 포함된 비밀번호를 입력해주세요")
+        }
+        
+        
+        if passwordCheckTextField.text != passwordTextField.text && passwordCheckTextField.text != ""  {
+            errorAnimate(targetTextField: passwordCheckTextField, errorMessage: "비밀번호를 확인해주세요")
+            
+        } else if passwordCheckTextField.text != "" && passwordCheckTextField.text?.validatePassword() == true {
+            successAnimate(targetTextField: passwordCheckTextField, successMessage: "비밀번호가 확인되었습니다")
+            if isAgree {
+                doneButton.isEnabled = true
+                doneButton.setTitleColor(.nuteeGreen, for: .normal)
+            } else {
+                doneButton.isEnabled = false
+                doneButton.setTitleColor(.veryLightPink, for: .normal)
+            }
+        }
+        
+    }
+    
 }
 
 // MARK: - passwordVC Animation
@@ -369,12 +410,12 @@ extension PasswordVC {
                         
                         self.passwordTextField.alpha = 1
                         self.passwordTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
-                        self.passwordIndicatorLabel.alpha = 1
+                        self.passwordIndicatorLabel.alpha = 0
                         self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.passwordCheckTextField.alpha = 1
                         self.passwordCheckTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
-                        self.passwordCheckLabel.alpha = 1
+                        self.passwordCheckLabel.alpha = 0
                         self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.agreeTermsAndConditionsButton.alpha = 1
@@ -395,118 +436,96 @@ extension PasswordVC {
 
         })
     }
-    
-//    private func certificationAnimate() {
-//
-//        // insert certificate code area
-//        UIView.animate(withDuration: 1,
-//                       delay: 0,
-//                       usingSpringWithDamping: 0.85,
-//                       initialSpringVelocity: 1,
-//                       options: [.curveEaseIn],
-//                       animations: {
-//                        self.successAnimate(targetTextField: self.passwordTextField, successMessage: "해당 이메일에서 인증번호를 확인해주세요")
-//
-//                        self.certificationNumberTextField.alpha = 1
-//                        self.certificationNumberTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
-//
-//                        self.comfirmButton.alpha = 1
-//                        self.comfirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
-//
-//                        self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
-//
-//        })
-//    }
-//
-//    private func successAnimate(targetTextField: UITextField, successMessage: String) {
-//
-//        targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-//
-//        if targetTextField == self.passwordTextField {
-//            _ = certificationResultLabel.then {
-//                $0.text = successMessage
-//                $0.textColor = .nuteeGreen
-//                $0.alpha = 0
-//            }
-//        } else {
-//            _ = comfirmResultLabel.then {
-//                $0.text = successMessage
-//                $0.textColor = .nuteeGreen
-//                $0.alpha = 0
-//            }
-//        }
-//
-//        UIView.animate(withDuration: 1,
-//                       delay: 0,
-//                       usingSpringWithDamping: 0.85,
-//                       initialSpringVelocity: 1,
-//                       options: [.curveEaseIn],
-//                       animations: {
-//                        if targetTextField == self.passwordTextField {
-//                            self.certificationResultLabel.alpha = 1
-//                        } else {
-//                            self.comfirmResultLabel.alpha = 1
-//                        }
-//        })
-//    }
-//
-//    private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
-//
-//        let errorColor = UIColor(red: 255, green: 67, blue: 57)
-//
-//        targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
-//
-//        if targetTextField == self.passwordTextField {
-//            _ = certificationResultLabel.then {
-//                $0.text = errorMessage
-//                $0.textColor = errorColor
-//                $0.alpha = 1
-//            }
-//        } else {
-//            _ = comfirmResultLabel.then {
-//                $0.text = errorMessage
-//                $0.textColor = errorColor
-//                $0.alpha = 1
-//            }
-//        }
-//
-//        UIView.animate(withDuration: 0.2,
-//                       delay: 0,
-//                       usingSpringWithDamping: 0.1,
-//                       initialSpringVelocity: 0.1,
-//                       options: [.curveEaseIn],
-//                       animations: {
-//                        if targetTextField == self.passwordTextField {
-//                            self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
-//                        } else {
-//                            self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
-//                        }
-//        })
-//        UIView.animate(withDuration: 0.2,
-//                       delay: 0.2,
-//                       usingSpringWithDamping: 0.1,
-//                       initialSpringVelocity: 0.1,
-//                       options: [.curveEaseIn],
-//                       animations: {
-//                        if targetTextField == self.passwordTextField {
-//                            self.certificationResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
-//                        } else {
-//                            self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
-//                        }
-//        })
-//        UIView.animate(withDuration: 0.5,
-//                       delay: 0.2,
-//                       usingSpringWithDamping: 0.1,
-//                       initialSpringVelocity: 0.1,
-//                       options: [.curveEaseIn],
-//                       animations: {
-//                        if targetTextField == self.passwordTextField {
-//                            self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
-//                        } else {
-//                            self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
-//                        }
-//        })
-//    }
+
+    private func successAnimate(targetTextField: UITextField, successMessage: String) {
+
+        targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
+
+        if targetTextField == self.passwordTextField {
+            _ = passwordIndicatorLabel.then {
+                $0.text = successMessage
+                $0.textColor = .nuteeGreen
+                $0.alpha = 0
+            }
+        } else {
+            _ = passwordCheckLabel.then {
+                $0.text = successMessage
+                $0.textColor = .nuteeGreen
+                $0.alpha = 0
+            }
+        }
+
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.85,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.passwordTextField {
+                            self.passwordIndicatorLabel.alpha = 0
+                        } else {
+                            self.passwordCheckLabel.alpha = 1
+                        }
+        })
+    }
+
+    private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
+
+        let errorColor = UIColor(red: 255, green: 67, blue: 57)
+
+        targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
+
+        if targetTextField == self.passwordTextField {
+            _ = passwordIndicatorLabel.then {
+                $0.text = errorMessage
+                $0.textColor = errorColor
+                $0.alpha = 1
+            }
+        } else {
+            _ = passwordCheckLabel.then {
+                $0.text = errorMessage
+                $0.textColor = errorColor
+                $0.alpha = 1
+            }
+        }
+
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.passwordTextField {
+                            self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                        }
+        })
+        UIView.animate(withDuration: 0.2,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.passwordTextField {
+                            self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                        }
+        })
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.passwordTextField {
+                            self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                        }
+        })
+    }
     
 }
 
@@ -552,6 +571,46 @@ extension PasswordVC {
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
             })
+        }
+    }
+}
+    
+// MARK: - Server connect
+
+extension PasswordVC {
+    
+    func error() {
+        self.errorAnimate(targetTextField: passwordTextField, errorMessage: "에러로 인해 회원가입이 진행되지 않았습니다")
+        self.errorAnimate(targetTextField: passwordCheckTextField, errorMessage: "에러로 인해 회원가입이 진행되지 않았습니다.")
+    }
+    
+    func signUpService(_ userId: String, _ nickname: String, _ email: String, _ password: String) {
+        UserService.shared.signUp(userId, nickname, email, password, otp) { responsedata in
+            
+            switch responsedata {
+            
+            // NetworkResult 의 요소들
+            case .success(_):
+                let rootVC = self.view.window?.rootViewController
+                self.view.window!.rootViewController?.dismiss(animated: true, completion: {
+                    rootVC?.simpleNuteeAlertDialogue(title: "회원가입", message: "회원가입이 완료되었습니다😃")
+                })
+                
+            case .requestErr(_):
+                self.error()
+                
+            case .pathErr:
+                self.error()
+                print(".pathErr")
+                
+            case .serverErr:
+                self.error()
+                print(".serverErr")
+                
+            case .networkFail :
+                self.error()
+                print("failure")
+            }
         }
     }
     

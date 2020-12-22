@@ -31,6 +31,8 @@ class IDVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var email : String = ""
+    
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
     let yPosAnimationRange: CGFloat = 50
@@ -233,6 +235,8 @@ class IDVC: UIViewController {
         idTextField.resignFirstResponder()
 
         let nicknameVC = NicknameVC()
+        nicknameVC.userId = idTextField.text ?? ""
+        nicknameVC.email = self.email
         nicknameVC.modalPresentationStyle = .fullScreen
         
         present(nicknameVC, animated: false)
