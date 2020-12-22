@@ -22,7 +22,8 @@ struct UserService {
         
         let URL = APIConstants.SignUp
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
         ]
         
         let body : Parameters = [
@@ -76,7 +77,8 @@ struct UserService {
         
         let URL = APIConstants.OTPSend
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
         ]
         
         let body : Parameters = [
@@ -115,7 +117,8 @@ struct UserService {
     func checkOTP(_ otpNumber : String, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.OTPCheck
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
         ]
         
         let body : Parameters = [
@@ -152,7 +155,8 @@ struct UserService {
         
         let URL = APIConstants.IDCheck
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
         ]
         
         let body : Parameters = [
@@ -186,4 +190,50 @@ struct UserService {
             }
         }
     }
+    
+// MARK: - 닉네임 중복 체크
+    
+    func checkNick(_ nick: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.NickCheck
+        
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
+        ]
+        
+        let body : Parameters = [
+            "nickname" : nick
+        ]
+        
+        Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                // parameter 위치
+                if let status = response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success(200))
+                    case 401:
+                        completion(.requestErr("현재 로그인 중입니다."))
+                    case 409:
+                        completion(.requestErr("이미 사용 중인 닉네임입니다."))
+                    case 500:
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                    
+                }
+                break
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+
 }

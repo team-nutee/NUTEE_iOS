@@ -91,7 +91,7 @@ class NicknameVC: UIViewController {
         }
         _ = nicknameTextField.then {
             $0.font = .systemFont(ofSize: 14)
-            $0.placeholder = "낙네임"
+            $0.placeholder = "닉네임"
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
