@@ -216,10 +216,7 @@ class NicknameVC: UIViewController {
     }
     
     @objc func didTapCheckNicknameButton() {
-        successAnimate()
-        
-        nextButton.isEnabled = true
-        nextButton.setTitleColor(.nuteeGreen, for: .normal)
+        checkNick(nicknameTextField.text ?? "")
     }
     
     @objc func didTapPreviousButton() {
@@ -250,18 +247,18 @@ extension NicknameVC : UITextFieldDelegate {
     @objc func textFieldDidChange(_ textField: UITextField) {
         
         if nicknameTextField.text != "" {
+            successAnimate()
+            
             checkNicknameButton.isEnabled = true
             checkNicknameButton.setTitleColor(.nuteeGreen, for: .normal)
             
-        } else {
+        } else if nicknameTextField.text == "" {
             
-            errorAnimate(errorMessage: "이미 사용중인 닉네임입니다")
+            successAnimate()
             
             checkNicknameButton.isEnabled = false
             checkNicknameButton.setTitleColor(.veryLightPink, for: .normal)
             
-            nextButton.isEnabled = false
-            nextButton.setTitleColor(.veryLightPink, for: .normal)
         }
         
     }
@@ -326,12 +323,6 @@ extension NicknameVC {
 
     private func successAnimate() {
         
-        _ = nicknameCheckLabel.then {
-            $0.text = "사용 할 수 있는 닉네임입니다"
-            $0.textColor = .nuteeGreen
-            $0.alpha = 0
-        }
-        
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        usingSpringWithDamping: 0.85,
@@ -339,7 +330,7 @@ extension NicknameVC {
                        options: [.curveEaseIn],
                        animations: {
                         self.nicknameTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-                        self.nicknameCheckLabel.alpha = 1
+                        self.nicknameCheckLabel.alpha = 0
         })
     }
     
@@ -425,6 +416,40 @@ extension NicknameVC {
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
             })
+        }
+    }
+    
+}
+
+// MARK: - Server connect
+
+extension NicknameVC {
+    @objc func checkNick(_ nick: String){
+        UserService.shared.checkNick(nick) { (responsedata) in
+            switch responsedata {
+            
+            case .success(_):
+                _ = self.nicknameCheckLabel.then {
+                    $0.text = "사용할 수 있는 닉네임입니다"
+                    $0.textColor = .nuteeGreen
+                    $0.alpha = 1
+                }
+                
+                self.nextButton.isEnabled = true
+                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
+                
+            case .requestErr(_):
+                self.errorAnimate(errorMessage: "이미 사용 중인 닉네임입니다.")
+                
+            case .pathErr:
+                self.errorAnimate(errorMessage: "에러가 발생했습니다.")
+
+            case .serverErr:
+                self.errorAnimate(errorMessage: "서버 에러가 발생했습니다.")
+
+            case .networkFail:
+                self.errorAnimate(errorMessage: "네트워크 에러가 발생했습니다.")
+            }
         }
     }
     
