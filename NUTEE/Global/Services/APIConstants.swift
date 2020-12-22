@@ -26,4 +26,5 @@ struct APIConstants {
     
     static let OTPSend = AuthURL + "/auth/sendotp"
     static let OTPCheck = AuthURL + "/auth/checkotp"
+    static let IDCheck = AuthURL + "/auth/checkid"
 }

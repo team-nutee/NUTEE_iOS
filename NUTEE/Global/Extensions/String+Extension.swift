@@ -48,9 +48,9 @@ extension String {
     }
     
     public func validateID() -> Bool {
-        let passwordRegEx = "^([0-9a-zA-Z_-]+){1,2}$"
+        let idRegEx = "^([0-9a-zA-Z_-]+){1,2}$"
         
-        let predicate = NSPredicate(format:"SELF MATCHES %@", passwordRegEx)
+        let predicate = NSPredicate(format:"SELF MATCHES %@", idRegEx)
         return predicate.evaluate(with: self)
     }
 

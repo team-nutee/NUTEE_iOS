@@ -153,7 +153,7 @@ class EmailVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = false
+            //$0.isEnabled = false
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -292,7 +292,7 @@ extension EmailVC : UITextFieldDelegate {
   
     @objc func emailemailTextFieldDidChange(_ textField: UITextField) {
         
-        if emailTextField.text != "" {
+        if emailTextField.text != "" && emailTextField.text?.validateOfficeEmail() == true {
             certificationButton.isEnabled = true
             certificationButton.setTitleColor(.nuteeGreen, for: .normal)
             

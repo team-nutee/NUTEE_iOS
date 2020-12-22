@@ -24,6 +24,7 @@ class IDVC: UIViewController {
     let idTitleLabel = UILabel()
     let idTextField = UITextField()
     let idCheckLabel = UILabel()
+    let idCheckButton = HighlightedButton()
     
     let nextButton = HighlightedButton()
     let previousButton = HighlightedButton()
@@ -96,6 +97,19 @@ class IDVC: UIViewController {
             
             $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         }
+        
+        _ = idCheckButton.then {
+            $0.setTitle("중복체크", for: .normal)
+            $0.titleLabel?.font = .systemFont(ofSize: 15)
+            $0.setTitleColor(.nuteeGreen, for: .normal)
+            
+            $0.alpha = 0
+            $0.isEnabled = false
+            $0.setTitleColor(.veryLightPink, for: .normal)
+            
+            $0.addTarget(self, action: #selector(didTapCheckButton), for: .touchUpInside)
+        }
+        
         _ = idCheckLabel.then {
             $0.text = "checkIDArea"
             $0.font = .systemFont(ofSize: 11)
@@ -117,7 +131,7 @@ class IDVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = false
+            //$0.isEnabled = false
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -134,6 +148,7 @@ class IDVC: UIViewController {
         view.addSubview(guideLabel)
         view.addSubview(idTitleLabel)
         view.addSubview(idTextField)
+        view.addSubview(idCheckButton)
         view.addSubview(idCheckLabel)
         
         view.addSubview(previousButton)
@@ -170,8 +185,17 @@ class IDVC: UIViewController {
             
             $0.top.equalTo(idTitleLabel.snp.bottom).offset(5 + yPosAnimationRange)
             $0.left.equalTo(idTitleLabel.snp.left).offset(xPosAnimationRange)
-            $0.right.equalTo(view.snp.right).inset(20 - xPosAnimationRange)
         }
+        
+        idCheckButton.snp.makeConstraints {
+            $0.width.equalTo(60)
+            $0.height.equalTo(40)
+            
+            $0.centerY.equalTo(idTextField)
+            $0.left.equalTo(idTextField.snp.right).offset(10)
+            $0.right.equalTo(view.snp.right).inset(15 - xPosAnimationRange)
+        }
+        
         idCheckLabel.snp.makeConstraints {
             $0.top.equalTo(idTextField.snp.bottom).offset(3)
             $0.left.equalTo(idTextField.snp.left)
@@ -195,6 +219,10 @@ class IDVC: UIViewController {
         
     }
     
+    @objc func didTapCheckButton() {
+        checkID(idTextField.text ?? "")
+    }
+    
     @objc func didTapPreviousButton() {
         self.modalTransitionStyle = .crossDissolve
         
@@ -203,7 +231,7 @@ class IDVC: UIViewController {
     
     @objc func didTapNextButton() {
         idTextField.resignFirstResponder()
-        
+
         let nicknameVC = NicknameVC()
         nicknameVC.modalPresentationStyle = .fullScreen
         
@@ -225,22 +253,22 @@ extension IDVC : UITextFieldDelegate {
         if idTextField.text != "" && idTextField.text?.validateID() == true {
             successAnimate()
             
-            nextButton.isEnabled = true
-            nextButton.setTitleColor(.nuteeGreen, for: .normal)
+            idCheckButton.isEnabled = true
+            idCheckButton.setTitleColor(.nuteeGreen, for: .normal)
             
         } else if idTextField.text == "" {
             
             successAnimate()
             
-            nextButton.isEnabled = false
-            nextButton.setTitleColor(.veryLightPink, for: .normal)
+            idCheckButton.isEnabled = false
+            idCheckButton.setTitleColor(.veryLightPink, for: .normal)
             
         } else {
             
-            errorAnimate(errorMessage: "영문 혹은 숫자만 이용가능합니다")
+            errorAnimate(errorMessage: "영문 혹은 숫자만 입력이 가능합니다")
             
-            nextButton.isEnabled = false
-            nextButton.setTitleColor(.veryLightPink, for: .normal)
+            idCheckButton.isEnabled = false
+            idCheckButton.setTitleColor(.veryLightPink, for: .normal)
         }
         
     }
@@ -284,6 +312,9 @@ extension IDVC {
                         
                         self.idTextField.alpha = 1
                         self.idTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        
+                        self.idCheckButton.alpha = 1
+                        self.idCheckButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.idCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
@@ -400,4 +431,37 @@ extension IDVC {
         }
     }
     
+}
+
+// MARK: - Server connect
+
+extension IDVC {
+    @objc func checkID(_ userId : String){
+        UserService.shared.checkID(userId) { (responsedata) in
+            switch responsedata {
+                
+            case .success(_):
+                self.successAnimate()
+                
+                self.idCheckLabel.alpha = 1
+                self.idCheckLabel.textColor = .nuteeGreen
+                self.idCheckLabel.text = "아이디 중복 체크 완료"
+                self.nextButton.isEnabled = true
+                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
+                
+            case .requestErr(_):
+                self.errorAnimate(errorMessage: "이미 사용 중인 아이디입니다.")
+                
+            case .pathErr:
+                self.errorAnimate(errorMessage: "에러가 발생했습니다.")
+
+            case .serverErr:
+                self.errorAnimate(errorMessage: "서버 에러가 발생했습니다.")
+
+            case .networkFail:
+                self.errorAnimate(errorMessage: "네트워크 에러가 발생했습니다.")
+            }
+        }
+    }
+
 }

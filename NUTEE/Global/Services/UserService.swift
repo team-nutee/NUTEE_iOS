@@ -145,4 +145,45 @@ struct UserService {
             }
         }
     }
+    
+// MARK: - id 중복체크
+    
+    func checkID(_ userId: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.IDCheck
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json"
+        ]
+        
+        let body : Parameters = [
+            "userId" : userId
+        ]
+        
+        Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                // parameter 위치
+                if let status = response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("아이디 중복체크 성공"))
+                    case 409:
+                        completion(.requestErr(409))
+                    case 500:
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                    
+                }
+                break
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
 }
