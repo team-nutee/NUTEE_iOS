@@ -46,8 +46,9 @@ struct UserService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(SignIn.self, from: value)
                                 // 로그인 시 토큰 저장
-                                KeychainWrapper.standard.set(result.accessToken, forKey: "token")
+                                KeychainWrapper.standard.set(result.body.accessToken, forKey: "token")
                                 completion(.success(result))
+                            
                             } catch {
                                 completion(.pathErr)
                             }

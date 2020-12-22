@@ -376,8 +376,8 @@ extension LoginVC: UITextFieldDelegate {
     @objc func textFieldDidChange(_ textField: UITextField) {
         
         // 로그인 입력 조건 확인
-        let email = idTextField.text
-        if email != "" && pwTextField.text?.count ?? 0 >= 1 {
+        let id = idTextField.text
+        if id != "" && pwTextField.text?.count ?? 0 >= 1 {
             loginButton.isEnabled = true
             
             loginButton.backgroundColor = .nuteeGreen
@@ -411,7 +411,7 @@ extension LoginVC {
             case .success(_):
                 Splash.hide()
                 LoadingHUD.hide()
-                print("토큰: \(KeychainWrapper.standard.string(forKey: "token") ?? "")")
+                
                 var navigationController: UINavigationController
                 
                 // HomeTab

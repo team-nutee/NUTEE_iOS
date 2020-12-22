@@ -9,16 +9,10 @@ import Foundation
 
 // MARK: - SignIn
 struct SignIn: Codable {
-    let accessToken, refreshToken: String
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken, refreshToken
-    }
+    let body: Body
     
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        accessToken = (try? values.decode(String.self, forKey: .accessToken)) ?? ""
-        refreshToken = (try? values.decode(String.self, forKey: .refreshToken)) ?? ""
-    }
+}
 
+struct Body: Codable {
+    let accessToken, refreshToken: String
 }
