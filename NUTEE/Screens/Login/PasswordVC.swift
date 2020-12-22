@@ -37,9 +37,10 @@ class PasswordVC: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var userId : String = ""
-    var nickname : String = ""
-    var email : String = ""
+    var userId: String = ""
+    var nickname: String = ""
+    var email: String = ""
+    var otp: String = ""
     
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50

@@ -51,6 +51,7 @@ struct UserService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(SignUp.self, from: value)
                                 completion(.success(result))
+                                print("회원가입 성공")
                             } catch {
                                 completion(.pathErr)
                             }
