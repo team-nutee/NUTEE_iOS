@@ -21,11 +21,17 @@ struct APIConstants {
     static let NoticeScholarship = NoticeBaseURL + "/janghak"
     static let NoticeGeneral = NoticeBaseURL + "/ilban"
     static let NoticeEvent = NoticeBaseURL + "/hangsa"
-    
+
     static let SignUp = AuthURL + "/auth/signup"
     
     static let OTPSend = AuthURL + "/auth/sendotp"
     static let OTPCheck = AuthURL + "/auth/checkotp"
     static let IDCheck = AuthURL + "/auth/checkid"
     static let NickCheck = AuthURL + "/auth/checknickname"
+
+    static let Login = AuthURL + "/auth/login"
+    // POST { userId : id , password: pw }
+    static let Logout = AuthURL + "/auth/logout"
+    // POST
+
 }
