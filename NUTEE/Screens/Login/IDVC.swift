@@ -262,7 +262,7 @@ extension IDVC : UITextFieldDelegate {
             idCheckButton.isEnabled = true
             idCheckButton.setTitleColor(.nuteeGreen, for: .normal)
             
-        } else if idTextField.text == "" {
+        } else if idTextField.text == "" || idTextField.text?.validateID() == false {
             
             successAnimate()
             

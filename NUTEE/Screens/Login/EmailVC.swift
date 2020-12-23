@@ -298,7 +298,7 @@ extension EmailVC : UITextFieldDelegate {
             certificationButton.isEnabled = true
             certificationButton.setTitleColor(.nuteeGreen, for: .normal)
             
-        } else if emailTextField.text == "" {
+        } else if emailTextField.text == "" || emailTextField.text?.validateOfficeEmail() == false {
             certificationButton.isEnabled = false
             certificationButton.setTitleColor(.veryLightPink, for: .normal)
 
