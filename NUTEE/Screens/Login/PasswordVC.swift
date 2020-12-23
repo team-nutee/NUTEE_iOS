@@ -41,6 +41,8 @@ class PasswordVC: UIViewController {
     var nickname: String = ""
     var email: String = ""
     var otp: String = ""
+    var interests: [String] = []
+    var majors: [String] = []
     
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
@@ -585,8 +587,8 @@ extension PasswordVC {
         self.errorAnimate(targetTextField: passwordCheckTextField, errorMessage: "에러로 인해 회원가입이 진행되지 않았습니다.")
     }
     
-    func signUpService(_ userId: String, _ nickname: String, _ email: String, _ password: String) {
-        UserService.shared.signUp(userId, nickname, email, password, otp) { responsedata in
+    func signUpService(_ userId: String, _ nickname: String, _ email: String, _ password: String, _ otp: String) {
+        UserService.shared.signUp(userId, nickname, email, password, otp, interests, majors) { responsedata in
             
             switch responsedata {
             
