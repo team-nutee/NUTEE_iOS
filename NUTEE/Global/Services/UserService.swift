@@ -5,8 +5,6 @@
 //  Created by eunwoo on 2020/12/21.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
-
 import Foundation
 import Alamofire
 import SwiftKeychainWrapper
@@ -36,7 +34,6 @@ struct UserService {
             "interests" : interests,
             "majors" : majors
         ]
-        
         
         Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
             response in
@@ -89,7 +86,8 @@ struct UserService {
             "password" : password
         ]
         
-        Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, 		headers: headers).responseData{
+        
+        Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
             response in
             
             switch response.result {
@@ -126,10 +124,8 @@ struct UserService {
             }
         }
     }
-
-
     
-// MARK: - sendOTP
+    // MARK: - sendOTP
     
     func sendOTP(_ email : String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -169,8 +165,8 @@ struct UserService {
             }
         }
     }
-        
-// MARK: - checkOTP
+    
+    // MARK: - checkOTP
     
     func checkOTP(_ otpNumber : String, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.OTPCheck
@@ -207,7 +203,7 @@ struct UserService {
         }
     }
     
-// MARK: - id 중복체크
+    // MARK: - id 중복체크
     
     func checkID(_ userId: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -249,7 +245,7 @@ struct UserService {
         }
     }
     
-// MARK: - 닉네임 중복 체크
+    // MARK: - 닉네임 중복 체크
     
     func checkNick(_ nick: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -293,6 +289,5 @@ struct UserService {
             }
         }
     }
-
-
+    
 }
