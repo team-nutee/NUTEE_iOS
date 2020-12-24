@@ -292,7 +292,7 @@ class EmailVC: UIViewController {
 
 extension EmailVC : UITextFieldDelegate {
   
-    @objc func emailemailTextFieldDidChange(_ textField: UITextField) {
+    @objc func emailTextFieldDidChange(_ textField: UITextField) {
         
         if emailTextField.text != "" && emailTextField.text?.validateOfficeEmail() == true {
             certificationButton.isEnabled = true
