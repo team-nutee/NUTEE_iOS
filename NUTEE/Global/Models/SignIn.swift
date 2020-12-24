@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - SignIn
 struct SignIn: Codable {
-    let body: Body
+    let body: SignInBody
     
 }
 
-struct Body: Codable {
+struct SignInBody: Codable {
     let accessToken, refreshToken: String
 }

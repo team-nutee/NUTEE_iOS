@@ -10,10 +10,10 @@ import Foundation
 
 // MARK: - SignUp
 struct SignUp: Codable {
-    let body: Body
+    let body: SignUpBody
 }
 
-struct Body: Codable {
+struct SignUpBody: Codable {
     let id: Int
     let nickname: String
     let image: UserProfileImage
