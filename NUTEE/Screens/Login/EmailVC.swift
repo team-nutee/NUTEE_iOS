@@ -100,7 +100,7 @@ class EmailVC: UIViewController {
             
             $0.alpha = 0
             
-            $0.addTarget(self, action: #selector(emailemailTextFieldDidChange(_:)), for: .editingChanged)
+            $0.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
         }
         _ = certificationButton.then {
             $0.setTitle("인증하기", for: .normal)
