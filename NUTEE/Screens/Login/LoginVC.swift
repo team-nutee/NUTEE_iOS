@@ -6,6 +6,8 @@
 //  Copyright © 2020 Nutee. All rights reserved.
 //
 import UIKit
+import Alamofire
+import SwiftKeychainWrapper
 
 class LoginVC: UIViewController {
     
@@ -35,6 +37,7 @@ class LoginVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var signin : SignIn?
     var autoLogin = false
     
     // MARK: - Life Cycle
@@ -259,76 +262,22 @@ class LoginVC: UIViewController {
         
     }
     
-    func login() {
-    }
-    
     @objc func didTapFindAccountButton() {
-        self.idErrorLabel.text = "서버 에러입니다"
-        self.pwErrorLabel.text = "서버 에러입니다"
-        errorAnimate()
+        let findVC = FindVC()
+        findVC.modalPresentationStyle = .fullScreen
+        
+        present(findVC, animated: false)
     }
     
     @objc func didTapLoginButton() {
-        idErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
-        pwErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
-        errorAnimate()
+        //LoadingHUD.show()
         
-        var navigationController: UINavigationController
+        if autoLogin == true {
+            KeychainWrapper.standard.set(idTextField.text ?? "", forKey: "userId")
+            KeychainWrapper.standard.set(pwTextField.text ?? "", forKey: "pw")
+        }
         
-        // HomeTab
-        let homeVC = HomeVC()
-        navigationController = UINavigationController(rootViewController: homeVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "house")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-        let HomeTab = navigationController
-        
-        // SearchTab
-        let searchVC = SearchVC()
-        navigationController = UINavigationController(rootViewController: searchVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
-
-        let SearchTab = navigationController
-        
-        // PostTab
-        let postVC = UIViewController()
-        postVC.view.backgroundColor = .white
-        navigationController = UINavigationController(rootViewController: postVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "plus")
-        
-        let PostTab = navigationController
-        
-        // NoticeTab
-        let noticeVC = NoticeVC()
-        navigationController = UINavigationController(rootViewController: noticeVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "pin")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
-
-        let NoticeTab = navigationController
-        
-        // ProfileTab
-        let profileVC = ProfileVC()
-        navigationController = UINavigationController(rootViewController: profileVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "person")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-
-        let ProfileTab = navigationController
-        
-        // TabBarController Settings
-        let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, SearchTab, PostTab, NoticeTab, ProfileTab]
-
-        tabBarController.tabBar.tintColor = .nuteeGreen
-        
-        tabBarController.modalPresentationStyle = .overFullScreen
-        tabBarController.modalTransitionStyle = .crossDissolve
-        
-        present(tabBarController, animated: true)
+        signInService(idTextField.text!, pwTextField.text!)
     }
     
     @objc func didTapSignUpButton() {
@@ -355,7 +304,6 @@ class LoginVC: UIViewController {
 }
 
 // MARK: - LoginVC Animation
-
 extension LoginVC {
     
     private func enterLoginVCAnimate() {
@@ -409,7 +357,6 @@ extension LoginVC {
 
 // MARK: - Custom Button
 // highlight 상황 시 tinColor나 alpha 값을 일반적인 방법으로는 변경 할 수 없어서 커스텀으로 버튼 설정
-
 class HighlightedButton: UIButton {
 
     override var isHighlighted: Bool {
@@ -421,14 +368,13 @@ class HighlightedButton: UIButton {
 }
 
 // MARK: - TextField Delegate
-
 extension LoginVC: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         
         // 로그인 입력 조건 확인
-        let email = idTextField.text
-        if email != "" && pwTextField.text?.count ?? 0 >= 1 {
+        let id = idTextField.text
+        if id != "" && pwTextField.text?.count ?? 0 >= 1 {
             loginButton.isEnabled = true
             
             loginButton.backgroundColor = .nuteeGreen
@@ -440,5 +386,122 @@ extension LoginVC: UITextFieldDelegate {
             loginButton.alpha = 0.5
         }
     }
+    
+}
+
+// MARK: - server service
+extension LoginVC {
+    func error(){
+        self.idErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
+        self.pwErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
+        self.idErrorLabel.sizeToFit()
+        self.pwErrorLabel.sizeToFit()
+        self.errorAnimate()
+    }
+    
+    func signInService(_ userId: String, _ password: String) {
+        UserService.shared.signIn(userId, password) { responsedata in
+            
+            switch responsedata {
+                
+            // NetworkResult 의 요소들
+            case .success(_):
+                Splash.hide()
+                LoadingHUD.hide()
+                
+                var navigationController: UINavigationController
+                
+                // HomeTab
+                let homeVC = HomeVC()
+                navigationController = UINavigationController(rootViewController: homeVC)
+                
+                navigationController.tabBarItem.image = UIImage(systemName: "house")
+                navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
+
+                let HomeTab = navigationController
+                
+                // SearchTab
+//                let searchVC = SearchVC()
+//                navigationController = UINavigationController(rootViewController: searchVC)
+//
+//                navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
+//                let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+//                navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
+//
+//                let SearchTab = navigationController
+                
+                // NotificationTab
+                let notificationVC = NotificationVC()
+                navigationController = UINavigationController(rootViewController: notificationVC)
+                
+                navigationController.tabBarItem.image = UIImage(systemName: "bell")
+                navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
+
+                let NotificationTab = navigationController
+                
+                // PostTab
+                let postVC = UIViewController()
+                postVC.view.backgroundColor = .white
+                navigationController = UINavigationController(rootViewController: postVC)
+                navigationController.tabBarItem.image = UIImage(systemName: "plus")
+                
+                let PostTab = navigationController
+                
+                // NoticeTab
+                let noticeVC = NoticeVC()
+                navigationController = UINavigationController(rootViewController: noticeVC)
+                
+                navigationController.tabBarItem.image = UIImage(systemName: "pin")
+                navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+
+                let NoticeTab = navigationController
+                
+                // ProfileTab
+                let profileVC = ProfileVC()
+                navigationController = UINavigationController(rootViewController: profileVC)
+                navigationController.tabBarItem.image = UIImage(systemName: "person")
+                navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+
+                let ProfileTab = navigationController
+                
+                // TabBarController Settings
+                let tabBarController = TabBarController()
+                tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
+
+                tabBarController.tabBar.tintColor = .nuteeGreen
+                
+                let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                sceneDelegate.window?.rootViewController = tabBarController
+              //  sceneDelegate.window?.rootViewController = LoginVC()
+        
+            case .requestErr(_):
+                LoadingHUD.hide()
+                self.error()
+                print("request error")
+                
+            case .pathErr:
+                LoadingHUD.hide()
+                self.error()
+                print(".pathErr")
+                
+            case .serverErr:
+                LoadingHUD.hide()
+                self.error()
+                self.idErrorLabel.text = "서버 에러입니다."
+                self.pwErrorLabel.text = "서버 에러입니다."
+                print(".serverErr")
+                
+            case .networkFail :
+                LoadingHUD.hide()
+                self.error()
+                self.idErrorLabel.text = "서버 에러입니다."
+                self.pwErrorLabel.text = "서버 에러입니다."
+                print("failure")
+                
+            }
+        }
+        
+    }
+    
     
 }
