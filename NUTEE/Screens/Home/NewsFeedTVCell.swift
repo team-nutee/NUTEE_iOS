@@ -110,41 +110,6 @@ class NewsFeedTVCell: UITableViewCell {
         $0.textColor = UIColor(red: 134, green: 134, blue: 134)
         $0.sizeToFit()
     }
-    
-//    @IBOutlet weak var userImg: UIImageView!
-//    @IBOutlet weak var userNAMEButton: UIButton!
-//    @IBOutlet weak var dateLabel: UILabel!
-//    @IBOutlet weak var contentLabel: UILabel!
-//
-//    @IBOutlet weak var imgCntLabel: UILabel!
-//    @IBOutlet weak var replyCntLabel: UILabel!
-//
-//    @IBOutlet weak var likeBtn: UIButton!
-//    @IBOutlet weak var actionBtn: UIButton!
-//
-//    //MARK: - Variables and Properties
-//
-//    // NewsFeedVC와 통신하기 위한 델리게이트 변수 선언
-//    weak var delegate: NewsFeedTVCellDelegate?
-//    weak var newsFeedVC: UIViewController?
-//
-//    var newsPost: NewsPostsContentElement?
-//
-//    var imgCnt: Int?
-//
-//    var numLike: Int?
-//    var numComment: Int?
-//
-//    var isClickedLike: Bool?
-//    var isClickedRepost: Bool?
-//    var isClickedComment: Bool?
-//
-//    // .normal 상태에서의 버튼 AttributedStringTitle의 색깔 지정
-//    let normalAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gray]
-//    // .selected 상태에서의 Repost버튼 AttributedStringTitle의 색깔 지정
-//    let selectedRepostAttributes = [NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen]
-//    // .selected 상태에서의 Like버튼 AttributedStringTitle의 색깔 지정
-//    let selectedLikeAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemPink]
 
     // MARK: - Variables and Properties
     
@@ -336,14 +301,7 @@ class NewsFeedTVCell: UITableViewCell {
     }
     
 //    func initPosting() {
-//        userImg.setRounded(radius: nil)
 //
-//        userImg.setImageNutee(newsPost?.user.image?.src)
-//        userImg.setImageContentMode(newsPost?.user.image?.src, imgvw: userImg)
-//
-//        // 사용자 이름 설정
-//        userNAMEButton.setTitle(newsPost?.user.nickname, for: .normal)
-//        userNAMEButton.sizeToFit()
 //        // 게시글 게시 시간 설정
 //        if newsPost?.createdAt == newsPost?.updatedAt {
 //            let originPostTime = newsPost?.createdAt ?? ""

@@ -75,6 +75,16 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        let postItems = newsPostsArr?.count ?? 0
+//
+//        if postItems == 0 {
+//            newsFeedTableView.setEmptyView(title: "게시글이 없습니다", message: "게시글을 작성해주세요✏️")
+//        } else {
+//            newsFeedTableView.restore()
+//        }
+//
+//        return postItems
+        
         return 10
     }
     
