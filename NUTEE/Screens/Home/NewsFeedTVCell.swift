@@ -114,6 +114,9 @@ class NewsFeedTVCell: UITableViewCell {
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
+    var delegate: NewsFeedTVCellDelegate?
+    
+    var newsPost: Post?
     
     // MARK: - Life Cycle
     
@@ -126,20 +129,6 @@ class NewsFeedTVCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    //    override func awakeFromNib() {
-//        super.awakeFromNib()
-//
-//        likeBtn.setTitleColor(.veryLightPink, for: .normal)
-//        likeBtn.setTitleColor(.red, for: .selected)
-//
-//        likeBtn.setTitleColor(.veryLightPink, for: .normal)
-//        actionBtn.tintColor = .veryLightPink
-//    }
-//
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//    }
     
     // MARK: - Helper
     
@@ -300,124 +289,33 @@ class NewsFeedTVCell: UITableViewCell {
         homeVC?.present(nuteeAlertSheet, animated: true)
     }
     
-//    func initPosting() {
-//
-//        // 게시글 게시 시간 설정
-//        if newsPost?.createdAt == newsPost?.updatedAt {
-//            let originPostTime = newsPost?.createdAt ?? ""
-//            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-//            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-//        } else {
-//            let originPostTime = newsPost?.updatedAt ?? ""
-//            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-//            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-//            dateLabel.text = "수정 " + (updatePostTime ?? "")
-//        }
-//
-//        // Posting 내용 설정
-//        contentLabel.text = newsPost?.content
-//        contentLabel.centerVertically()
-//
-//        imgCnt = newsPost?.images.count
-//
-//        var containLoginUser = false
-//        // Repost 버튼
-//        isClickedRepost = false
-//        //        if containLoginUser {
-//        //            // 로그인 한 사용자가 좋아요를 누른 상태일 경우
-//        //            likeBtn.isSelected = true
-//        //            numLike = newsPost?.likers.count ?? 0
-//        //            likeBtn.setTitle(" " + String(numLike!), for: .selected)
-//        //            likeBtn.tintColor = .systemPink
-//        //            isClickedLike = true
-//        //        } else {
-//        // 로그인 한 사용자가 좋아요를 누르지 않은 상태일 경우
-//        likeBtn.isSelected = false
-//        numLike = newsPost?.likers.count ?? 0
-//        likeBtn.setTitle(" " + String(numLike!), for: .normal)
-//        likeBtn.tintColor = .gray
-//        isClickedLike = false
-//        //        }
-//        // Like 버튼
-//        containLoginUser = false
-//        for arrSearch in newsPost?.likers ?? [] {
-//            if arrSearch.like.userID == KeychainWrapper.standard.integer(forKey: "id") {
-//                containLoginUser = true
-//            }
-//        }
-//        if containLoginUser {
-//            // 로그인 한 사용자가 좋아요를 누른 상태일 경우
-//            likeBtn.isSelected = true
-//            numLike = newsPost?.likers.count ?? 0
-//            likeBtn.setTitle(" " + String(numLike!), for: .selected)
-//            likeBtn.tintColor = .systemPink
-//            isClickedLike = true
-//        } else {
-//            // 로그인 한 사용자가 좋아요를 누르지 않은 상태일 경우
-//            likeBtn.isSelected = false
-//            numLike = newsPost?.likers.count ?? 0
-//            likeBtn.setTitle(" " + String(numLike!), for: .normal)
-//            likeBtn.tintColor = .gray
-//            isClickedLike = false
-//        }
-//        // Comment 버튼
-//        replyCntLabel.text = String(newsPost?.comments.count ?? 0)
-//        imgCntLabel.text = String(newsPost?.images.count ?? 0)
-//
-//    }
-//
-//    @IBAction func btnLike(_ sender: UIButton) {
-//        // .selected State를 활성화 하기 위한 코드
-//        //        btnLike.isSelected = !btnLike.isSelected
-//        if isClickedLike! {
-//            setNormalLikeBtn()
-//            likeDeleteService(postId: newsPost?.id ?? 0)
-//        } else {
-//            setSelectedLikeBtn()
-//            likePostService(postId: newsPost?.id ?? 0)
-//        }
-//    }
-//
-//    func setNormalLikeBtn() {
-//        likeBtn.isSelected = false
-//        numLike! -= 1
-//        likeBtn.setTitle(" " + String(numLike!), for: .normal)
-//        likeBtn.tintColor = .gray
-//        isClickedLike = false
-//    }
-//
-//    func setSelectedLikeBtn() {
-//        likeBtn.isSelected = true
-//        numLike! += 1
-//        likeBtn.setTitle(" " + String(numLike!), for: .selected)
-//        likeBtn.tintColor = .systemPink
-//        isClickedLike = true
-//    }
-//
-//    @IBAction func showDetailProfile(_ sender: UIButton) {
-//        showProfile()
-//    }
-//
-//    // 프로필 이미지에 탭 인식하게 만들기
-//    func setClickActions() {
-//        userImg.tag = 1
-//        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-//        tapGestureRecognizer1.numberOfTapsRequired = 1
-//        userImg.isUserInteractionEnabled = true
-//        userImg.addGestureRecognizer(tapGestureRecognizer1)
-//    }
-//
-//    // 프로필 이미지 클릭시 실행 함수
-//    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-//        let imgView = tapGestureRecognizer.view as! UIImageView
-//        print("your taped image view tag is : \(imgView.tag)")
-//
-//        //Give your image View tag
-//        if (imgView.tag == 1) {
-//            showProfile()
-//        }
-//    }
-//
+    func initPosting() {
+        // 카테고리 종류
+        categoryButton.setTitle(newsPost?.body.category, for: .normal)
+
+        // 게시글 게시 시간 설정
+        if newsPost?.body.createdAt == newsPost?.body.updatedAt {
+            let originPostTime = newsPost?.body.createdAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+        } else {
+            let originPostTime = newsPost?.body.updatedAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+            dateLabel.text = "수정 " + (updatePostTime ?? "")
+        }
+
+        // Posting 내용 설정
+        titleLabel.text = newsPost?.body.title
+        contentTextView.text = newsPost?.body.content
+        
+        viewCountLabel.text = String(newsPost?.body.hits ?? 0)
+        imageLabel.text = String(newsPost?.body.images.count ?? 0)
+        likeLabel.text = String(newsPost?.body.likers.count ?? 0)
+        replyLabel.text = String(newsPost?.body.comments.count ?? 0)
+    
+    }
+
 //    @IBAction func btnMore(sender: AnyObject) {
 //        let moreAlert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
 //        let editAction = UIAlertAction(title: "수정", style: .default){
@@ -499,19 +397,7 @@ class NewsFeedTVCell: UITableViewCell {
 //        newsFeedVC?.navigationController?.pushViewController(showDetailNewsFeedVC, animated: true)
 //    }
 //
-//    func showProfile() {
-//        let vc = UIStoryboard.init(name: "Profile", bundle: Bundle.main).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileVC
-//
-//        // 해당 글이 공유글인지 아닌지 판단
-//        if newsPost?.retweet == nil {
-//            vc?.userId = newsPost?.user.id ?? KeychainWrapper.standard.integer(forKey: "id")
-//        } else {
-//            vc?.userId = newsPost?.retweet?.user.id ?? KeychainWrapper.standard.integer(forKey: "id")
-//        }
-//
-//        newsFeedVC?.navigationController?.pushViewController(vc!, animated: true)
-//    }
-//
+
 //    func setButtonAttributed(btn: UIButton, num: Int, color: UIColor, state: UIControl.State) {
 //        let stateAttributes = [NSAttributedString.Key.foregroundColor: color]
 //        btn.setAttributedTitle(NSAttributedString(string: " " + String(num), attributes: stateAttributes), for: state)
