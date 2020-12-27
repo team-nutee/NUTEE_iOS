@@ -41,6 +41,8 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(Posts.self, from: value)
                                 completion(.success(result))
+                                print(KeychainWrapper.standard.string(forKey: "token")!)
+                                print(URL)
                             } catch {
                                 completion(.pathErr)
                             }

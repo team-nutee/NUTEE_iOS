@@ -21,7 +21,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
-    var category: String = ""
+    var category: String = "INTER2"
     var posts: Posts? //newsPosts
     var newsPosts: Posts? // newsPostsArr
     var newsPost: Post?
@@ -94,17 +94,15 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         
-        cell.addBorder((.bottom), color: .lightGray, thickness: 0.1)
-        
         newsPost = newsPosts?[indexPath.row]
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.newsPost
-        cell.initPosting()
-        
         cell.homeVC = homeVC
-        cell.fillDataToView()
         cell.delegate = self
+        
+        cell.fillDataToView()
+        cell.initPosting()
         
         return cell
     }
@@ -113,40 +111,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         let detailNewsFeedVC = DetailNewsFeedVC()
         
         homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
-    }
-    
-    // 마지막 셀일 때 ActivateIndicator와 함께 새로운 cell 정보 로딩
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        // 로딩된 cell 중 마지막 셀 찾기
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-        if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
-            
-            let spinner = UIActivityIndicatorView()
-            
-            newsFeedTableView.tableFooterView = spinner
-            newsFeedTableView.tableFooterView?.isHidden = false
-            
-            if newsPosts?.count != 0 && newsPosts?.count != nil {
-                // 불러올 포스팅이 있을 경우
-                spinner.startAnimating()
-                spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: newsFeedTableView.bounds.width, height: CGFloat(44))
-                spinner.hidesWhenStopped = true
-                newsFeedTableView.tableFooterView = spinner
-                newsFeedTableView.tableFooterView?.isHidden = false
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.loadMorePosts(lastId: self.newsPost?.body.id ?? 0)
-                }
-            } else {
-                // 사용자 NewsFeed의 마지막 포스팅일 경우
-                self.newsFeedTableView.tableFooterView?.isHidden = true
-                spinner.stopAnimating()
-                //                newsTV.tableFooterView = nil
-            }
-            
-            
-        }
     }
     
 }
