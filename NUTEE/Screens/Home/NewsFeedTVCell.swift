@@ -248,24 +248,37 @@ class NewsFeedTVCell: UITableViewCell {
     }
     
     func fillDataToView () {
-        categoryButton.setTitle("카테고리", for: .normal)
-        dateLabel.text = "11일 전"
-        
-        titleLabel.text = "제목"
+        // 카테고리 종류
+        categoryButton.setTitle(newsPost?.body[0].category, for: .normal)
+
+        // 게시글 게시 시간 설정
+        if newsPost?.body[0].createdAt == newsPost?.body[0].updatedAt {
+            let originPostTime = newsPost?.body[0].createdAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+        } else {
+            let originPostTime = newsPost?.body[0].updatedAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+            dateLabel.text = "수정 " + (updatePostTime ?? "")
+        }
+
+        // Posting 내용 설정
+        titleLabel.text = newsPost?.body[0].title
         titleLabel.sizeToFit()
-        contentTextView.text = "간단한 내용"
+        contentTextView.text = newsPost?.body[0].content
         
         viewCountButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
-        viewCountLabel.text = "33"
-        
-        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        likeLabel.text = "22"
+        viewCountLabel.text = String(newsPost?.body[0].hits ?? 0)
         
         imageButton.setImage(UIImage(systemName: "photo.fill"), for: .normal)
-        imageLabel.text = "7"
+        imageLabel.text = String(newsPost?.body[0].images?.count ?? 0)
+        
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        likeLabel.text = String(newsPost?.body[0].likers?.count ?? 0)
         
         replyButton.setImage(UIImage(systemName: "message.fill"), for: .normal)
-        replyLabel.text = "30"
+        replyLabel.text = String(newsPost?.body[0].commentNum ?? 0)
     }
     
     func hideSkeletonView() {
@@ -287,33 +300,6 @@ class NewsFeedTVCell: UITableViewCell {
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         homeVC?.present(nuteeAlertSheet, animated: true)
-    }
-    
-    func initPosting() {
-        // 카테고리 종류
-        categoryButton.setTitle(newsPost?.body.category, for: .normal)
-
-        // 게시글 게시 시간 설정
-        if newsPost?.body.createdAt == newsPost?.body.updatedAt {
-            let originPostTime = newsPost?.body.createdAt ?? ""
-            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-        } else {
-            let originPostTime = newsPost?.body.updatedAt ?? ""
-            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-            dateLabel.text = "수정 " + (updatePostTime ?? "")
-        }
-
-        // Posting 내용 설정
-        titleLabel.text = newsPost?.body.title
-        contentTextView.text = newsPost?.body.content
-        
-        viewCountLabel.text = String(newsPost?.body.hits ?? 0)
-        imageLabel.text = String(newsPost?.body.images.count ?? 0)
-        likeLabel.text = String(newsPost?.body.likers.count ?? 0)
-        replyLabel.text = String(newsPost?.body.comments.count ?? 0)
-    
     }
 
 //    @IBAction func btnMore(sender: AnyObject) {

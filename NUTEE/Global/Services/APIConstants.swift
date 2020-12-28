@@ -34,6 +34,6 @@ struct APIConstants {
     static let Logout = AuthURL + "/logout"
     // POST
     
-    static let Posts = BackURL + "/post/"
+    static let CategoryPosts = BackURL + "/post/category/"
 
 }

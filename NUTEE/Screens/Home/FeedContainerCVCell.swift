@@ -24,7 +24,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     var category: String = "INTER2"
     var posts: Posts? //newsPosts
     var newsPosts: Posts? // newsPostsArr
-    var newsPost: Post?
+    var newsPost: PostBody?
     
     // MARK: - Life Cycle
     
@@ -32,7 +32,7 @@ class FeedContainerCVCell : UICollectionViewCell {
         super.init(frame: frame)
         
         setTableView()
-        getCategoryPostsService(category: category, limit: 10, lastId: 0) { (Posts) in
+        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
             print("성공")
         }
         
@@ -101,12 +101,11 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         newsPost = newsPosts?[indexPath.row]
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
-        cell.newsPost = self.newsPost
+        cell.newsPost? = self.newsPost ?? nil
         cell.homeVC = homeVC
         cell.delegate = self
         
         cell.fillDataToView()
-        cell.initPosting()
         
         return cell
     }
@@ -124,14 +123,16 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
 
 extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
     func updateNewsTV() {
-        getCategoryPostsService(category: category, limit: 10, lastId: 0, completionHandler: {returnedData -> Void in
+        getCategoryPostsService(category: category, lastId: 0, limit: 10,
+            completionHandler: {returnedData -> Void in
             self.posts = self.newsPosts
             self.newsFeedTableView.reloadData()
         })
     }
     
     func backToUpdateNewsTV() {
-        getCategoryPostsService(category: category, limit: 10, lastId: 0, completionHandler: {returnedData -> Void in
+        getCategoryPostsService(category: category, lastId: 0, limit: 10,
+            completionHandler: {returnedData -> Void in
             self.posts = self.newsPosts
             self.newsFeedTableView.reloadData()
         })
@@ -142,7 +143,7 @@ extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate 
 
 extension FeedContainerCVCell{
     
-    func getCategoryPostsService(category: String, limit: Int, lastId: Int, completionHandler: @escaping (_ returnedData: Posts) -> Void ) {
+    func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Posts) -> Void ) {
         ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
             
             switch responsedata {

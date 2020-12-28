@@ -10,107 +10,51 @@ import Foundation
 
 // MARK: - Post
 struct Post: Codable {
-    let body: PostBody
-}
-
-struct PostBody: Codable {
-    let id: Int?
-    let title, content, createdAt, updatedAt: String?
-    let deleted, blocked: Bool
-    let user: User
-    let images: [PostImage]
-    let likers: [Liker]
-    let retweet: Retweet?
-    let comments: [Comment]
-    let category: String?
-    let hits: Int?
+    let code: Int
+    let message: String
+    let body: [PostBody]
+    let links: Links
 
     enum CodingKeys: String, CodingKey {
-        case id, title, content, createdAt, updatedAt, deleted, blocked
-        case user
-        case images
-        case likers
-        case retweet
-        case comments
-        case category
-        case hits
+        case code, message, body
+        case links //= "_links"
     }
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = (try? values.decode(Int.self, forKey: .id)) ?? 0
-        title = (try? values.decode(String.self, forKey: .title)) ?? ""
-        content = (try? values.decode(String.self, forKey: .content)) ?? ""
-        createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
-        updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
-        deleted = (try? values.decode(Bool.self, forKey: .deleted)) ?? false
-        blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
-        user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
-        images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
-        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? [Liker.init(id: 0, nickname: "", image: nil)]
-        retweet = (try? values.decode(Retweet.self, forKey: .retweet)) ?? nil
-        comments = (try? values.decode([Comment].self, forKey: .comments)) ?? []
-        category = (try? values.decode(String.self, forKey: .category)) ?? ""
-        hits = (try? values.decode(Int.self, forKey: .hits)) ?? 0
+        code = (try? values.decode(Int.self, forKey: .code)) ?? 0
+        message = (try? values.decode(String.self, forKey: .message)) ?? ""
+        body = (try? values.decode([PostBody].self, forKey: .body)) ?? []
+        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, getFavoritePosts: nil, getCategoryPosts: nil)
     }
 }
 
-struct PostImage: Codable {
-    let src: String?
-
-    enum CodingKeys: String, CodingKey {
-        case src
-    }
-}
-
-// MARK: - Comment
-struct Comment: Codable {
-    let id: Int
-    let content, createdAt, updatedAt: String
-    let user: User
-    let reComment: [ReComment]?
-
-    enum CodingKeys: String, CodingKey {
-        case id, content, createdAt, updatedAt
-        case user
-        case reComment
-    }
-}
-
-struct ReComment: Codable {
-    let id: Int
-    let content, createdAt, updatedAt: String
-    let user: User
-
-    enum CodingKeys: String, CodingKey {
-        case id, content, createdAt, updatedAt
-        case user
-    }
-}
-
-// MARK: - Retweet
-struct Retweet: Codable {
+// MARK: - Body
+class PostBody: Codable {
     let id: Int
     let title, content, createdAt, updatedAt: String
-    let deleted, blocked: Bool
     let user: User
-    let images: [PostImage]
-    let comments: [Comment]
-    let likers: [Liker]
-    let category: String?
-    let hits: Int?
-
+    let images: [PostImage]?
+    let likers: [Liker]?
+    let commentNum: Int
+    let retweet: PostBody?
+    let category: String
+    let hits: Int
+    let blocked: Bool
+    let deleted: Bool?
+    
     enum CodingKeys: String, CodingKey {
         case id, title, content, createdAt, updatedAt, deleted, blocked
         case user
         case images
-        case comments
+        case commentNum
+        case retweet
         case likers
         case category
         case hits
     }
-    
-    init(from decoder: Decoder) throws {
+
+    required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = (try? values.decode(Int.self, forKey: .id)) ?? 0
         title = (try? values.decode(String.self, forKey: .title)) ?? ""
@@ -121,11 +65,17 @@ struct Retweet: Codable {
         blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
         user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
         images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
-        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? [Liker.init(id: 0, nickname: "", image: nil)]
-        comments = (try? values.decode([Comment].self, forKey: .comments)) ?? []
+        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
+        retweet = (try? values.decode(PostBody.self, forKey: .retweet)) ?? nil
+        commentNum = (try? values.decode(Int.self, forKey: .commentNum)) ?? 0
         category = (try? values.decode(String.self, forKey: .category)) ?? ""
         hits = (try? values.decode(Int.self, forKey: .hits)) ?? 0
     }
+}
+
+// MARK: - Image
+struct PostImage: Codable {
+    let src: String?
 }
 
 // MARK: - Liker
@@ -158,5 +108,20 @@ struct UserImage: Codable {
 }
 
 
-typealias Posts = [Post]
+// MARK: - Links
+struct Links: Codable {
+    let linksSelf, getFavoritePosts, getCategoryPosts: Link?
 
+    enum CodingKeys: String, CodingKey {
+        case linksSelf = "self"
+        case getFavoritePosts = "get-favorite-posts"
+        case getCategoryPosts = "get-category-posts"
+    }
+}
+
+// MARK: - GetFavoritePosts
+struct Link: Codable {
+    let href: String
+}
+
+//typealias Posts = [Post]
