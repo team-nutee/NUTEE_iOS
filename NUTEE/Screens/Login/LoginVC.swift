@@ -51,6 +51,7 @@ class LoginVC: UIViewController {
         makeConstraints()
         
         enterLoginVCAnimate()
+        checkSignIn()
     }
     
     
@@ -301,6 +302,18 @@ class LoginVC: UIViewController {
         view.endEditing(true)
     }
     
+    func checkSignIn() {
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        let password = KeychainWrapper.standard.string(forKey: "pw")
+        
+        if userId != nil && password != nil {
+            signInService(userId!, password!)
+        } else {
+            Splash.hide()
+            return
+        }
+    }
+    
 }
 
 // MARK: - LoginVC Animation
@@ -385,6 +398,16 @@ extension LoginVC: UITextFieldDelegate {
             loginButton.backgroundColor = .veryLightPink
             loginButton.alpha = 0.5
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == idTextField {
+            pwTextField.becomeFirstResponder()
+        } else {
+            pwTextField.resignFirstResponder()
+        }
+        return true
     }
     
 }
