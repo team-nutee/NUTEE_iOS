@@ -22,9 +22,10 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     var homeVC: UIViewController?
     var category: String = "INTER2"
-    var posts: Posts? //newsPosts
-    var newsPosts: Posts? // newsPostsArr
-    var newsPost: PostBody?
+    
+    var newsPost: Post? // 초기에 전부 다 받아오는 애
+    var post: PostBody? // Body 요소 한 개
+    var postContent: [PostBody]? // 받아온 것 중에서 Body만
     
     // MARK: - Life Cycle
     
@@ -33,7 +34,7 @@ class FeedContainerCVCell : UICollectionViewCell {
         
         setTableView()
         getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
-            print("성공")
+            self.postContent = Posts.body
         }
         
     }
@@ -83,7 +84,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = posts?.count ?? 0
+        let postItems = postContent?.count ?? 0
 
         if postItems == 0 {
             newsFeedTableView.setEmptyView(title: "게시글이 없습니다", message: "게시글을 작성해주세요✏️")
@@ -98,12 +99,12 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         
-        newsPost = newsPosts?[indexPath.row]
+        post = postContent?[indexPath.row]
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
-        cell.newsPost? = self.newsPost ?? nil
+        cell.newsPost? = self.post!
         cell.homeVC = homeVC
-        cell.delegate = self
+        //cell.delegate = self
         
         cell.fillDataToView()
         
@@ -121,36 +122,36 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
 
 // MARK: - NewsFeedTVC과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
 
-extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
-    func updateNewsTV() {
-        getCategoryPostsService(category: category, lastId: 0, limit: 10,
-            completionHandler: {returnedData -> Void in
-            self.posts = self.newsPosts
-            self.newsFeedTableView.reloadData()
-        })
-    }
-    
-    func backToUpdateNewsTV() {
-        getCategoryPostsService(category: category, lastId: 0, limit: 10,
-            completionHandler: {returnedData -> Void in
-            self.posts = self.newsPosts
-            self.newsFeedTableView.reloadData()
-        })
-    }
-}
+//extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
+//    func updateNewsTV() {
+//        getCategoryPostsService(category: category, lastId: 0, limit: 10,
+//            completionHandler: {returnedData -> Void in
+//            self.post = self.newsPost?
+//            self.newsFeedTableView.reloadData()
+//        })
+//    }
+//
+//    func backToUpdateNewsTV() {
+//        getCategoryPostsService(category: category, lastId: 0, limit: 10,
+//            completionHandler: {returnedData -> Void in
+//            self.post = self.newsPost
+//            self.newsFeedTableView.reloadData()
+//        })
+//    }
+//}
 
 //MARK: - Server connect
 
 extension FeedContainerCVCell{
     
-    func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Posts) -> Void ) {
+    func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
         ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
             
             switch responsedata {
             case .success(let res):
-                let response = res as! Posts
-                self.newsPosts = response
-                completionHandler(self.newsPosts!)
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
                 
             case .requestErr(_):
                 print("request error")

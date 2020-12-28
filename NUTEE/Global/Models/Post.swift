@@ -17,7 +17,7 @@ struct Post: Codable {
 
     enum CodingKeys: String, CodingKey {
         case code, message, body
-        case links //= "_links"
+        case links
     }
     
     init(from decoder: Decoder) throws {

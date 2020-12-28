@@ -116,7 +116,8 @@ class NewsFeedTVCell: UITableViewCell {
     var homeVC: UIViewController?
     var delegate: NewsFeedTVCellDelegate?
     
-    var newsPost: Post?
+    var newsPost: PostBody?
+    var newsPosts: [PostBody]?
     
     // MARK: - Life Cycle
     
@@ -249,36 +250,36 @@ class NewsFeedTVCell: UITableViewCell {
     
     func fillDataToView () {
         // 카테고리 종류
-        categoryButton.setTitle(newsPost?.body[0].category, for: .normal)
+        categoryButton.setTitle(newsPost?.category, for: .normal)
 
         // 게시글 게시 시간 설정
-        if newsPost?.body[0].createdAt == newsPost?.body[0].updatedAt {
-            let originPostTime = newsPost?.body[0].createdAt ?? ""
+        if newsPost?.createdAt == newsPost?.updatedAt {
+            let originPostTime = newsPost?.createdAt ?? ""
             let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
             dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
         } else {
-            let originPostTime = newsPost?.body[0].updatedAt ?? ""
+            let originPostTime = newsPost?.updatedAt ?? ""
             let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
             let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
             dateLabel.text = "수정 " + (updatePostTime ?? "")
         }
 
         // Posting 내용 설정
-        titleLabel.text = newsPost?.body[0].title
+        titleLabel.text = newsPost?.title
         titleLabel.sizeToFit()
-        contentTextView.text = newsPost?.body[0].content
+        contentTextView.text = newsPost?.content
         
         viewCountButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
-        viewCountLabel.text = String(newsPost?.body[0].hits ?? 0)
+        viewCountLabel.text = String(newsPost?.hits ?? 0)
         
         imageButton.setImage(UIImage(systemName: "photo.fill"), for: .normal)
-        imageLabel.text = String(newsPost?.body[0].images?.count ?? 0)
+        imageLabel.text = String(newsPost?.images?.count ?? 0)
         
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        likeLabel.text = String(newsPost?.body[0].likers?.count ?? 0)
+        likeLabel.text = String(newsPost?.likers?.count ?? 0)
         
         replyButton.setImage(UIImage(systemName: "message.fill"), for: .normal)
-        replyLabel.text = String(newsPost?.body[0].commentNum ?? 0)
+        replyLabel.text = String(newsPost?.commentNum ?? 0)
     }
     
     func hideSkeletonView() {
