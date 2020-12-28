@@ -32,6 +32,10 @@ class FeedContainerCVCell : UICollectionViewCell {
         super.init(frame: frame)
         
         setTableView()
+        getCategoryPostsService(category: category, limit: 10, lastId: 0) { (Posts) in
+            print("성공")
+        }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -139,7 +143,7 @@ extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate 
 extension FeedContainerCVCell{
     
     func getCategoryPostsService(category: String, limit: Int, lastId: Int, completionHandler: @escaping (_ returnedData: Posts) -> Void ) {
-        ContentService.shared.getCategoryPosts(category: category, lastId: limit, limit: lastId) { responsedata in
+        ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
             
             switch responsedata {
             case .success(let res):
