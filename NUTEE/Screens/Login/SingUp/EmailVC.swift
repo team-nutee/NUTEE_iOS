@@ -34,6 +34,9 @@ class EmailVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var totalSignUpViews: Float = 0.0
+    var progressStatusCount: Float = 0.0
+    
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
     let yPosAnimationRange: CGFloat = 50
@@ -77,7 +80,8 @@ class EmailVC: UIViewController {
         _ = progressView.then {
             $0.progressViewStyle = .bar
             $0.tintColor = .nuteeGreen
-            $0.progress = 0/4
+            $0.progress = progressStatusCount / totalSignUpViews
+            progressStatusCount += 1
         }
         
         _ = guideLabel.then {
@@ -157,6 +161,9 @@ class EmailVC: UIViewController {
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+            
+            
+            $0.isEnabled = true
         }
         
     }
@@ -276,6 +283,9 @@ class EmailVC: UIViewController {
         certificationNumberTextField.resignFirstResponder()
         
         let idVC = IDVC()
+        idVC.totalSignUpViews = totalSignUpViews
+        idVC.progressStatusCount = progressStatusCount
+        
         idVC.email = emailTextField.text ?? ""
         idVC.otp = certificationNumberTextField.text ?? ""
         idVC.modalPresentationStyle = .fullScreen
@@ -371,8 +381,8 @@ extension EmailVC {
                        usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
-                        self.progressView.setProgress(1/4, animated: true)
+                       animations: { [self] in
+                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
 
         })
     }

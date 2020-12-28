@@ -31,6 +31,9 @@ class NicknameVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var totalSignUpViews: Float = 0.0
+    var progressStatusCount: Float = 0.0
+    
     var userId: String = ""
     var email: String = ""
     var otp: String = ""
@@ -77,7 +80,8 @@ class NicknameVC: UIViewController {
         _ = progressView.then {
             $0.progressViewStyle = .bar
             $0.tintColor = .nuteeGreen
-            $0.progress = 2/4
+            $0.progress = progressStatusCount / totalSignUpViews
+            progressStatusCount += 1
         }
         
         _ = guideLabel.then {
@@ -133,7 +137,7 @@ class NicknameVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            //$0.isEnabled = false
+            $0.isEnabled = true
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -233,6 +237,9 @@ class NicknameVC: UIViewController {
         nicknameTextField.resignFirstResponder()
         
         let passwordVC = PasswordVC()
+        passwordVC.totalSignUpViews = totalSignUpViews
+        passwordVC.progressStatusCount = progressStatusCount
+        
         passwordVC.userId = self.userId
         passwordVC.nickname = nicknameTextField.text ?? ""
         passwordVC.email = self.email
@@ -322,8 +329,8 @@ extension NicknameVC {
                        usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
-                        self.progressView.setProgress(3/4, animated: true)
+                       animations: { [self] in
+                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
         })
         
     }

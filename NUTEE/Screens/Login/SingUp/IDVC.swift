@@ -31,6 +31,9 @@ class IDVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var totalSignUpViews: Float = 0.0
+    var progressStatusCount: Float = 0.0
+    
     var email: String = ""
     var otp: String = ""
     
@@ -75,7 +78,8 @@ class IDVC: UIViewController {
         _ = progressView.then {
             $0.progressViewStyle = .bar
             $0.tintColor = .nuteeGreen
-            $0.progress = 1/4
+            $0.progress = progressStatusCount / totalSignUpViews
+            progressStatusCount += 1
         }
         
         _ = guideLabel.then {
@@ -134,7 +138,7 @@ class IDVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            //$0.isEnabled = false
+            $0.isEnabled = true
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -236,6 +240,9 @@ class IDVC: UIViewController {
         idTextField.resignFirstResponder()
 
         let nicknameVC = NicknameVC()
+        nicknameVC.totalSignUpViews = totalSignUpViews
+        nicknameVC.progressStatusCount = progressStatusCount
+        
         nicknameVC.userId = idTextField.text ?? ""
         nicknameVC.email = self.email
         nicknameVC.otp = self.otp
@@ -331,9 +338,9 @@ extension IDVC {
                        usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
+                       animations: { [self] in
                         self.closeButton.alpha = 0
-                        self.progressView.setProgress(2/4, animated: true)
+                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
                         self.previousButton.alpha = 1
         })
         

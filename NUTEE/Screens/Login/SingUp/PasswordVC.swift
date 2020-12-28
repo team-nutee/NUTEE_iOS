@@ -37,6 +37,9 @@ class PasswordVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    var totalSignUpViews: Float = 0.0
+    var progressStatusCount: Float = 0.0
+    
     var userId: String = ""
     var nickname: String = ""
     var email: String = ""
@@ -88,7 +91,8 @@ class PasswordVC: UIViewController {
         _ = progressView.then {
             $0.progressViewStyle = .bar
             $0.tintColor = .nuteeGreen
-            $0.progress = 3/4
+            $0.progress = progressStatusCount / totalSignUpViews
+            progressStatusCount += 1
         }
         
         _ = guideLabel.then {
@@ -434,8 +438,8 @@ extension PasswordVC {
                        usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
-                        self.progressView.setProgress(4/4, animated: true)
+                       animations: { [self] in
+                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
 
         })
     }
