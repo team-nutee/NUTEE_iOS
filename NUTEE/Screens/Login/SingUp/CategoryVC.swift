@@ -207,9 +207,12 @@ class CategoryVC: UIViewController {
     
     @objc func didTapSelectCategoryButton() {
         let selectCategorySheet = NuteeAlertSheet()
-        selectCategorySheet.optionList = [["카테고리1", UIColor.black, ""],
-                                           ["카테고리2", UIColor.black, ""],
-                                           ["카테고리3", UIColor.black, ""]]
+        selectCategorySheet.handleArea = 0
+        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+        selectCategorySheet.optionList = [["카테고리1", UIColor.gray, ""],
+                                           ["카테고리2", UIColor.gray, ""],
+                                           ["카테고리3", UIColor.gray, ""]]
+        selectCategorySheet.optionContentAligment = "left"
         
         selectCategorySheet.modalPresentationStyle = .custom
         

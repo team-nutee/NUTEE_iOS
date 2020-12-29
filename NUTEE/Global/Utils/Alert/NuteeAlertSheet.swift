@@ -17,6 +17,8 @@ class NuteeAlertSheet : UIViewController {
     
     let cardView = UIView()
     let handleView = UIView()
+    let titleLabel = UILabel()
+    let completeButton = HighlightedButton()
     
     let optionTableView = UITableView()
     
@@ -26,7 +28,11 @@ class NuteeAlertSheet : UIViewController {
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
     
+    var titleContent = ""
+    var titleHeight: CGFloat = 50
+    
     var optionList = [["", UIColor.self, ""]]
+    var optionContentAligment = "center"
     var optionHeight: CGFloat = 50
 
     var cardViewTopConstraint: Constraint?
@@ -81,6 +87,28 @@ class NuteeAlertSheet : UIViewController {
             $0.backgroundColor = .lightGray
             $0.alpha = 0.5
         }
+        _ = titleLabel.then {
+            $0.text = titleContent
+            $0.textColor = .black
+            $0.font = .boldSystemFont(ofSize: 18)
+            
+            $0.textAlignment = .center
+            
+            $0.backgroundColor = .white
+        }
+        _ = completeButton.then {
+            if titleHeight == 0 {
+                $0.isHidden = true
+                $0.isEnabled = false
+            }
+            
+            $0.setTitle("완료", for: .normal)
+            $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
+            
+            $0.addTarget(self, action: #selector(didTapOutsideCardSheet), for: .touchUpInside)
+        }
+        
         _ = optionTableView.then {
             $0.delegate = self
             $0.dataSource = self
@@ -99,6 +127,9 @@ class NuteeAlertSheet : UIViewController {
         
         view.addSubview(cardView)
         cardView.addSubview(handleView)
+        cardView.addSubview(titleLabel)
+        cardView.addSubview(completeButton)
+        
         cardView.addSubview(optionTableView)
         
         
@@ -112,7 +143,7 @@ class NuteeAlertSheet : UIViewController {
 
         let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
         cardView.snp.makeConstraints {
-            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)).constraint
+            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)).constraint
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
@@ -124,8 +155,23 @@ class NuteeAlertSheet : UIViewController {
             $0.centerX.equalTo(cardView)
             $0.top.equalTo(cardView.snp.top).offset(10)
         }
-        optionTableView.snp.makeConstraints {
+        titleLabel.snp.makeConstraints{
+            $0.height.equalTo(titleHeight)
+            
             $0.top.equalTo(cardView.snp.top).offset(handleArea)
+            $0.left.equalTo(cardView.snp.left)
+            $0.right.equalTo(cardView.snp.right)
+        }
+        completeButton.snp.makeConstraints{
+            $0.width.equalTo(70)
+            $0.height.equalTo(titleLabel.snp.height)
+            
+            $0.centerY.equalTo(titleLabel)
+            $0.right.equalTo(titleLabel.snp.right)
+        }
+        
+        optionTableView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom)
             $0.left.equalTo(cardView.snp.left)
             $0.right.equalTo(cardView.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
@@ -197,7 +243,7 @@ class NuteeAlertSheet : UIViewController {
       case .ended :
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
           
-            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)) * 0.25 {
+            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)) * 0.25 {
             // show the card at normal state
                 setRegularPosition()
           } else if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight) - 200 {
@@ -224,7 +270,7 @@ class NuteeAlertSheet : UIViewController {
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
             
             cardView.snp.updateConstraints {
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
+                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
             }
         }
         
@@ -250,7 +296,7 @@ class NuteeAlertSheet : UIViewController {
       }
       
       // when card view top constraint value is equal to this, the darkest alpha (0.7)
-      let fullDimPosition = (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
+      let fullDimPosition = (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
       
       // when card view top constraint value is equal to this, the lightest alpha (0.0)
       let noDimPosition = safeAreaHeight + bottomPadding
@@ -354,6 +400,7 @@ extension NuteeAlertSheet : UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.optionItem = optionList[indexPath.row]
+        cell.optionContentAligment = optionContentAligment
         
         cell.initCell()
         cell.addContentView()
@@ -393,6 +440,7 @@ class OptionListTVCell : UITableViewCell {
     // MARK: - Variables and Properties
     
     var optionItem = ["", UIColor.self] as [Any]
+    var optionContentAligment = "center"
     
     // MARK: - Life Cycle
     
@@ -415,6 +463,15 @@ class OptionListTVCell : UITableViewCell {
             $0.text = optionItem[0] as? String
             $0.font = .systemFont(ofSize: 20)
             $0.textColor = optionItem[1] as? UIColor
+            
+            switch optionContentAligment {
+            case "left" :
+                $0.textAlignment = .left
+            case "right" :
+                $0.textAlignment = .right
+            default :
+                $0.textAlignment = .center
+            }
         }
     }
     
@@ -422,8 +479,9 @@ class OptionListTVCell : UITableViewCell {
         contentView.addSubview(optionItemLabel)
         
         optionItemLabel.snp.makeConstraints {
-            $0.centerX.equalTo(contentView)
             $0.centerY.equalTo(contentView)
+            $0.left.equalTo(contentView.snp.left).offset(20)
+            $0.right.equalTo(contentView.snp.right).inset(20)
         }
     }
     
