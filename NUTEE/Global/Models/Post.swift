@@ -9,6 +9,7 @@
 import Foundation
 
 // MARK: - Post
+
 struct Post: Codable {
     let code: Int
     let message: String
@@ -30,6 +31,7 @@ struct Post: Codable {
 }
 
 // MARK: - Body
+
 class PostBody: Codable {
     let id: Int
     let title, content, createdAt, updatedAt: String
@@ -79,6 +81,7 @@ struct PostImage: Codable {
 }
 
 // MARK: - Liker
+
 struct Liker: Codable {
     let id: Int?
     let nickname: String?
@@ -92,6 +95,7 @@ struct Liker: Codable {
 }
 
 // MARK: - User
+
 struct User: Codable {
     let id: Int?
     let nickname: String?
@@ -109,6 +113,7 @@ struct UserImage: Codable {
 
 
 // MARK: - Links
+
 struct Links: Codable {
     let linksSelf, getFavoritePosts, getCategoryPosts: Link?
 
@@ -120,8 +125,7 @@ struct Links: Codable {
 }
 
 // MARK: - GetFavoritePosts
+
 struct Link: Codable {
     let href: String
 }
-
-//typealias Posts = [Post]

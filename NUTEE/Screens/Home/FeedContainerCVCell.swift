@@ -27,7 +27,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
-    var postContent: [PostBody]? // 받아온 것 중에서 Body드만
+    var postContent: [PostBody]? // 받아온 것 중에서 Body만
     
     // MARK: - Life Cycle
     
@@ -165,7 +165,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
             newsFeedTableView.tableFooterView = spinner
             newsFeedTableView.tableFooterView?.isHidden = false
             
-            if postContent?.count != 0 && postContent?.count != nil {
+            if newsPost?.body.count != 0 && newsPost?.body.count != nil {
                 // 불러올 포스팅이 있을 경우
                 spinner.startAnimating()
                 spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: newsFeedTableView.bounds.width, height: CGFloat(44))
@@ -174,14 +174,13 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
                 newsFeedTableView.tableFooterView?.isHidden = false
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.loadMorePosts(lastId: self.postContent?. ?? 0)
+                    self.loadMorePosts(lastId: self.post?.id ?? 0)
                 }
                 
             } else {
                 // 사용자 NewsFeed의 마지막 포스팅일 경우
                 self.newsFeedTableView.tableFooterView?.isHidden = true
                 spinner.stopAnimating()
-                //                newsTV.tableFooterView = nil
             }
             
             
