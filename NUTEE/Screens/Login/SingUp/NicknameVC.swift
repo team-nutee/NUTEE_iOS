@@ -236,16 +236,24 @@ class NicknameVC: UIViewController {
     @objc func didTapNextButton() {
         nicknameTextField.resignFirstResponder()
         
-        let passwordVC = PasswordVC()
-        passwordVC.totalSignUpViews = totalSignUpViews
-        passwordVC.progressStatusCount = progressStatusCount
+//        let passwordVC = PasswordVC()
+//        passwordVC.totalSignUpViews = totalSignUpViews
+//        passwordVC.progressStatusCount = progressStatusCount
+//
+//        passwordVC.userId = self.userId
+//        passwordVC.nickname = nicknameTextField.text ?? ""
+//        passwordVC.email = self.email
+//        passwordVC.modalPresentationStyle = .fullScreen
+//
+//        present(passwordVC, animated: false)
         
-        passwordVC.userId = self.userId
-        passwordVC.nickname = nicknameTextField.text ?? ""
-        passwordVC.email = self.email
-        passwordVC.modalPresentationStyle = .fullScreen
+        let categoryVC = CategoryVC()
+        categoryVC.totalSignUpViews = totalSignUpViews
+        categoryVC.progressStatusCount = progressStatusCount
         
-        present(passwordVC, animated: false)
+        categoryVC.modalPresentationStyle = .fullScreen
+        
+        present(categoryVC, animated: false)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

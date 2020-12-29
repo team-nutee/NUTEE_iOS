@@ -51,7 +51,7 @@ class LoginVC: UIViewController {
         makeConstraints()
         
         enterLoginVCAnimate()
-        checkSignIn()
+//        checkSignIn()
     }
     
     
@@ -283,6 +283,9 @@ class LoginVC: UIViewController {
     
     @objc func didTapSignUpButton() {
         let emailVC = EmailVC()
+        emailVC.totalSignUpViews = 6.0
+        emailVC.progressStatusCount = 0.0
+
         emailVC.modalPresentationStyle = .fullScreen
         
         present(emailVC, animated: false)

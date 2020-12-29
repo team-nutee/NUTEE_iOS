@@ -56,6 +56,7 @@
 		D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D526E55A24D5B02600B80D37 /* TabBarController.swift */; };
 		D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CF725418B5A009A1DC2 /* NotificationVC.swift */; };
 		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
+		D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* CategoryVC.swift */; };
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
@@ -163,6 +164,7 @@
 		D526E55A24D5B02600B80D37 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D5310CF725418B5A009A1DC2 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
+		D5381F102599EC8200C94A6F /* CategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
@@ -390,11 +392,8 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */,
-				5E8BA6B924C6D5FF00A58F43 /* EmailVC.swift */,
-				D54FE03624F16CE400BA0361 /* IDVC.swift */,
-				D54FE03824F180DC00BA0361 /* NicknameVC.swift */,
-				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
 				4559082F2564FBE9009A5F5C /* FindVC.swift */,
+				D5381F0F2599EAF600C94A6F /* SingUp */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -501,6 +500,18 @@
 				D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */,
 			);
 			path = Notification;
+			sourceTree = "<group>";
+		};
+		D5381F0F2599EAF600C94A6F /* SingUp */ = {
+			isa = PBXGroup;
+			children = (
+				5E8BA6B924C6D5FF00A58F43 /* EmailVC.swift */,
+				D54FE03624F16CE400BA0361 /* IDVC.swift */,
+				D54FE03824F180DC00BA0361 /* NicknameVC.swift */,
+				D5381F102599EC8200C94A6F /* CategoryVC.swift */,
+				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
+			);
+			path = SingUp;
 			sourceTree = "<group>";
 		};
 		D58C93D724CAE4FA005570D4 /* DetailNewsFeed */ = {
@@ -828,6 +839,7 @@
 				D50BB0AE24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift in Sources */,
 				D58C93DE24CAE556005570D4 /* ReplyCell.swift in Sources */,
 				D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */,
+				D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */,
 				D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */,
 				5E8BA69A24C6D2D800A58F43 /* APIConstants.swift in Sources */,
 				D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */,
