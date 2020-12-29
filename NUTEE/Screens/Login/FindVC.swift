@@ -303,7 +303,45 @@ class FindVC: UIViewController {
     }
 
 }
+
+//extension FindVC : UITextFieldDelegate {
+//
+//    @objc func textFieldDidChange(_ textField: UITextField) {
+//        if idTextField.text?.validateSkhuKrEmail() ?? false || idTextField.text?.validateSkhuCoKrEmail() ?? false || idTextField.text?.validateOfficeEmail() ?? false{
+//            idCertificateBtn.isEnabled = true
+//            idCertificateBtn.tintColor = .nuteeGreen
+//        } else {
+//            idCertificateBtn.tintColor = nil
+//            idCertificateBtn.isEnabled = false
+//        }
+//
+//        if (pwTextField.text?.validateSkhuKrEmail() ?? false || pwTextField.text?.validateSkhuCoKrEmail() ?? false || pwTextField.text?.validateOfficeEmail() ?? false) && pwIDTextField.text != ""  {
+//            pwCertificateBtn.isEnabled = true
+//            pwCertificateBtn.tintColor = .nuteeGreen
+//        } else {
+//            pwCertificateBtn.tintColor = nil
+//            pwCertificateBtn.isEnabled = false
+//        }
+//    }
+//
+//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+//
+//        if textField == pwTextField || textField == pwIDTextField {
+//            pwAnimate()
+//        }
+//
+//        idErrorLabel.alpha = 0
+//        pwErrorLabel.alpha = 0
+//        pwError2Label.alpha = 0
+//
+//        return true
+//    }
+//
+//
+//}
     
+// MARK: - animate
+
 extension FindVC {
     private func enterFindVCAnimate(){
         UIView.animate(withDuration: animationDuration,
@@ -315,7 +353,7 @@ extension FindVC {
                         // self를 항상 붙여줘야함 (클로저 안에서)
                         self.idForgetLabel.alpha = 1
                         self.idForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
-        })
+                       })
         
         UIView.animate(withDuration: animationDuration,
                        delay: animationDuration,
@@ -380,5 +418,118 @@ extension FindVC {
                         self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                        })
+        
+        private func certificationAnimate() {
+            
+            // insert certificate code area
+            UIView.animate(withDuration: 1,
+                           delay: 0,
+                           usingSpringWithDamping: 0.85,
+                           initialSpringVelocity: 1,
+                           options: [.curveEaseIn],
+                           animations: {
+                            self.successAnimate(targetTextField: self.emailTextField, successMessage: "해당 이메일에서 인증번호를 확인해주세요")
+                            
+                            self.certificationNumberTextField.alpha = 1
+                            self.certificationNumberTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            
+                            self.confirmButton.alpha = 1
+                            self.confirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            
+                            self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            
+                           })
+        }
+        
+        private func successAnimate(targetTextField: UITextField, successMessage: String) {
+            
+            targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
+            
+            if targetTextField == self.emailTextField {
+                _ = certificationResultLabel.then {
+                    $0.text = successMessage
+                    $0.textColor = .nuteeGreen
+                    $0.alpha = 0
+                }
+            } else {
+                _ = comfirmResultLabel.then {
+                    $0.text = successMessage
+                    $0.textColor = .nuteeGreen
+                    $0.alpha = 0
+                }
+            }
+            
+            UIView.animate(withDuration: 1,
+                           delay: 0,
+                           usingSpringWithDamping: 0.85,
+                           initialSpringVelocity: 1,
+                           options: [.curveEaseIn],
+                           animations: {
+                            if targetTextField == self.emailTextField {
+                                self.certificationResultLabel.alpha = 1
+                            } else {
+                                self.comfirmResultLabel.alpha = 1
+                            }
+                           })
+        }
+        
+        private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
+            
+            let errorColor = UIColor(red: 255, green: 67, blue: 57)
+            
+            targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
+            
+            if targetTextField == self.emailTextField {
+                _ = certificationResultLabel.then {
+                    $0.text = errorMessage
+                    $0.textColor = errorColor
+                    $0.alpha = 1
+                }
+            } else {
+                _ = comfirmResultLabel.then {
+                    $0.text = errorMessage
+                    $0.textColor = errorColor
+                    $0.alpha = 1
+                }
+            }
+            
+            UIView.animate(withDuration: 0.2,
+                           delay: 0,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: [.curveEaseIn],
+                           animations: {
+                            if targetTextField == self.emailTextField {
+                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                            } else {
+                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                            }
+                           })
+            UIView.animate(withDuration: 0.2,
+                           delay: 0.2,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: [.curveEaseIn],
+                           animations: {
+                            if targetTextField == self.emailTextField {
+                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                            } else {
+                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                            }
+                           })
+            UIView.animate(withDuration: 0.5,
+                           delay: 0.2,
+                           usingSpringWithDamping: 0.1,
+                           initialSpringVelocity: 0.1,
+                           options: [.curveEaseIn],
+                           animations: {
+                            if targetTextField == self.emailTextField {
+                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                            } else {
+                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                            }
+                           })
+        }
+        
     }
 }
