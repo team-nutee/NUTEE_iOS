@@ -117,7 +117,6 @@ class NewsFeedTVCell: UITableViewCell {
     var delegate: NewsFeedTVCellDelegate?
     
     var newsPost: PostBody?
-    var newsPosts: [PostBody]?
     
     // MARK: - Life Cycle
     

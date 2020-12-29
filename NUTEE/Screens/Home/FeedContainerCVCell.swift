@@ -21,7 +21,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
-    var category: String = "INTER2"
+    var category: String = "IT2"
     
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
@@ -32,11 +32,13 @@ class FeedContainerCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setTableView()
+        
         getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
             self.postContent = Posts.body
+            self.newsFeedTableView.reloadData()
         }
         
+        setTableView()
     }
     
     required init?(coder: NSCoder) {
@@ -84,7 +86,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = postContent?.count ?? 0
+        let postItems = self.postContent?.count ?? 0
 
         if postItems == 0 {
             newsFeedTableView.setEmptyView(title: "게시글이 없습니다", message: "게시글을 작성해주세요✏️")
@@ -98,11 +100,12 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
+        cell.selectionStyle = .none
         
         post = postContent?[indexPath.row]
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
-        cell.newsPost? = self.post!
+        cell.newsPost = self.post
         cell.homeVC = homeVC
         //cell.delegate = self
         
