@@ -438,52 +438,6 @@ protocol NewsFeedTVCellDelegate: class {
 //        }
 //    }
 //
-//    // MARK: - like
-//
-//    func likePostService(postId: Int) {
-//        ContentService.shared.likePost(postId) { (responsedata) in
-//
-//            switch responsedata {
-//            case .success(let res):
-//
-//                print("likePost succussful", res)
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//            }
-//        }
-//    }
-//
-//    func likeDeleteService(postId: Int) {
-//        ContentService.shared.likeDelete(postId) { (responsedata) in
-//
-//            switch responsedata {
-//            case .success(let res):
-//
-//                print("likePost succussful", res)
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//            }
-//        }
-//    }
-//
 //
 //    // MARK: - Post
 //    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void ) {
