@@ -18,6 +18,8 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     let newsFeedTableView = UITableView()
     
+    var refreshControl = UIRefreshControl()
+    
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
@@ -25,7 +27,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
-    var postContent: [PostBody]? // 받아온 것 중에서 Body만
+    var postContent: [PostBody]? // 받아온 것 중에서 Body드만
     
     // MARK: - Life Cycle
     
@@ -33,12 +35,13 @@ class FeedContainerCVCell : UICollectionViewCell {
         super.init(frame: frame)
         
         
-        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
-            self.postContent = Posts.body
+        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
             self.newsFeedTableView.reloadData()
         }
         
         setTableView()
+        setRefresh()
     }
     
     required init?(coder: NSCoder) {
@@ -68,7 +71,37 @@ class FeedContainerCVCell : UICollectionViewCell {
             }
         }
     
+    func setRefresh() {
+        newsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
+    }
+    
+    @objc func updatePosts() {
+        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.newsFeedTableView.reloadData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+    func loadMorePosts(lastId: Int) {
+        if postContent?.count != 0 {
+            getCategoryPostsService(category: category, lastId: lastId, limit: 10) { (Post) in
+                self.postContent?.append(contentsOf: Post.body)
+                self.newsFeedTableView.reloadData()
+                self.newsFeedTableView.tableFooterView = nil
+            }
+        } else {
+            print("더 이상 불러올 게시글이 없습니다.")
+        }
+    }
+    
 }
+
+// MARK: - TableView 
 
 extension FeedContainerCVCell : SkeletonTableViewDelegate { }
 extension FeedContainerCVCell : SkeletonTableViewDataSource {
@@ -107,7 +140,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.post
         cell.homeVC = homeVC
-        //cell.delegate = self
+        cell.delegate = self
         
         cell.fillDataToView()
         
@@ -120,28 +153,60 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
     }
     
+    // 마지막 셀일 때 ActivateIndicator와 함께 새로운 cell 정보 로딩
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // 로딩된 cell 중 마지막 셀 찾기
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        if indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex {
+            
+            let spinner = UIActivityIndicatorView()
+            
+            newsFeedTableView.tableFooterView = spinner
+            newsFeedTableView.tableFooterView?.isHidden = false
+            
+            if postContent?.count != 0 && postContent?.count != nil {
+                // 불러올 포스팅이 있을 경우
+                spinner.startAnimating()
+                spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: newsFeedTableView.bounds.width, height: CGFloat(44))
+                spinner.hidesWhenStopped = true
+                newsFeedTableView.tableFooterView = spinner
+                newsFeedTableView.tableFooterView?.isHidden = false
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.loadMorePosts(lastId: self.postContent?. ?? 0)
+                }
+                
+            } else {
+                // 사용자 NewsFeed의 마지막 포스팅일 경우
+                self.newsFeedTableView.tableFooterView?.isHidden = true
+                spinner.stopAnimating()
+                //                newsTV.tableFooterView = nil
+            }
+            
+            
+        }
+    }
 }
 
 
-// MARK: - NewsFeedTVC과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
+// MARK: - NewsFeedTVC과 통신하여 테이블뷰 정보 다시 로드하기
 
-//extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
-//    func updateNewsTV() {
-//        getCategoryPostsService(category: category, lastId: 0, limit: 10,
-//            completionHandler: {returnedData -> Void in
-//            self.post = self.newsPost?
-//            self.newsFeedTableView.reloadData()
-//        })
-//    }
-//
-//    func backToUpdateNewsTV() {
-//        getCategoryPostsService(category: category, lastId: 0, limit: 10,
-//            completionHandler: {returnedData -> Void in
-//            self.post = self.newsPost
-//            self.newsFeedTableView.reloadData()
-//        })
-//    }
-//}
+extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
+    func updateNewsTV() {
+        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
+            self.postContent = Posts.body
+            self.newsFeedTableView.reloadData()
+        }
+    }
+
+    func backToUpdateNewsTV() {
+        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
+            self.postContent = Posts.body
+            self.newsFeedTableView.reloadData()
+        }
+    }
+}
 
 //MARK: - Server connect
 
