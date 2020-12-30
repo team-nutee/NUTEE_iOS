@@ -18,7 +18,6 @@ class HomeVC: UIViewController {
     // MARK: - UI components
     
     let menuBar = MenuBarCV()
-    var category: String?
     
     let newsFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -66,7 +65,7 @@ class HomeVC: UIViewController {
                 $0.height.equalTo(50)
             }
             
-            $0.menuList = ["IT2", "IT3", "전체 게시글"]
+            $0.menuList = ["IT2", "IT3", "IT4"]
             $0.homeVC = self
         }
     }
@@ -142,12 +141,11 @@ extension HomeVC : UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
-
-        cell.homeVC = self
-        cell.setTableView()
         
         cell.category = menuBar.menuList[indexPath.row]
-        print(cell.category)
+        
+        cell.setTableView()
+        cell.homeVC = self
 
         return cell
     }

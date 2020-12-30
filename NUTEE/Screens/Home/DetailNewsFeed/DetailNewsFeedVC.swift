@@ -34,10 +34,11 @@ class DetailNewsFeedVC: UIViewController {
     //MARK: - Variables and Properties
     
     // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
-//    weak var delegate: DetailHeaderViewDelegate?
+    var delegate: DetailHeaderViewDelegate?
 //
-//    var content: NewsPostsContentElement?
-//    var postId: Int?
+    var post: Post?
+    var postBody: PostBody?
+    var postId: Int?
 //
 //    var isEditCommentMode = false
 //    var currentCommentId: Int?
@@ -356,6 +357,36 @@ extension DetailNewsFeedVC : UITableViewDataSource {
         return .leastNormalMagnitude
     }
 
+}
+
+// MARK: - Server connect
+
+extension DetailNewsFeedVC {
+    
+    // 게시글 한 개 가져오기
+    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.getPost(postId) { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.post = response
+                completionHandler(self.post!)
+                
+            case .requestErr(_):
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
 }
 
 //// MARK: - Reply KeyBoard PopUp
