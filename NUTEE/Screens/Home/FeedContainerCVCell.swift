@@ -17,13 +17,13 @@ class FeedContainerCVCell : UICollectionViewCell {
     // MARK: - UI components
     
     let newsFeedTableView = UITableView()
-    
-    var refreshControl = UIRefreshControl()
+    let refreshControl = UIRefreshControl()
+    let postsLoadButton = UIButton()
     
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
-    var category: String = "IT2"
+    var category: String?
     
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
@@ -34,14 +34,45 @@ class FeedContainerCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
-        }
-        
         setTableView()
         setRefresh()
+        
+        setPostLoadButton()
+        self.postsLoadButton.addTarget(self, action: #selector(postsLoadButtonDidTap), for: .touchUpInside)
+        
+        getCategoryPostsService(category: category ?? "" , lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.newsFeedTableView.reloadData()
+            
+            if Post.body.count > 0 {
+                var tmpNewsPost: PostBody?
+                
+                // 기존의 최신 게시글 id
+                tmpNewsPost = self.postContent?[0]
+                let lastestPostId = tmpNewsPost?.id
+                
+                // 업데이트 된 최신 게시글 id
+                tmpNewsPost = Post.body[0]
+                let updatedLastestPostId = tmpNewsPost?.id
+                
+                // 새로 올라온 게시글이 있을 경우
+                if(updatedLastestPostId ?? 0 > lastestPostId ?? 0){
+                    UIView.animate(withDuration: 1,
+                                   delay: 0,
+                                   usingSpringWithDamping: 0.6,
+                                   initialSpringVelocity: 1,
+                                   options: [.curveEaseIn],
+                                   animations: {
+                                    self.postsLoadButton.alpha = 1
+                                    self.postsLoadButton.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                                   })
+                    
+                }
+                
+            }
+            
+        }
+        
     }
     
     required init?(coder: NSCoder) {
@@ -71,13 +102,54 @@ class FeedContainerCVCell : UICollectionViewCell {
             }
         }
     
+    func setPostLoadButton() {
+        _ = postsLoadButton.then {
+            let buttonLabel = NSMutableAttributedString(string: "새 글 업데이트")
+            $0.setAttributedTitle(buttonLabel, for: .normal)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 13)
+            $0.makeRounded(cornerRadius: 15)
+            $0.borderColor = .nuteeGreen
+            $0.borderWidth = 0.5
+            
+            newsFeedTableView.addSubview($0)
+            
+            $0.snp.makeConstraints {
+                $0.top.equalTo(self.newsFeedTableView.snp.top)
+                $0.centerX.equalTo(self.newsFeedTableView.snp.centerX)
+                $0.height.equalTo(30)
+                $0.width.equalTo(100)
+            }
+            
+            $0.backgroundColor = .white
+            
+            $0.alpha = 0
+        }
+    }
+        
+    @objc func postsLoadButtonDidTap(){
+        updatePosts()
+        
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        self.postsLoadButton.alpha = 0
+                        self.postsLoadButton.transform = CGAffineTransform.init(translationX: 0, y: 0)
+                       })
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        newsFeedTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+    }
+    
     func setRefresh() {
         newsFeedTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
     }
     
     @objc func updatePosts() {
-        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
+        getCategoryPostsService(category: category ?? "", lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.newsFeedTableView.reloadData()
             
@@ -89,7 +161,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     func loadMorePosts(lastId: Int) {
         if postContent?.count != 0 {
-            getCategoryPostsService(category: category, lastId: lastId, limit: 10) { (Post) in
+            getCategoryPostsService(category: category ?? "", lastId: lastId, limit: 10) { (Post) in
                 self.postContent?.append(contentsOf: Post.body)
                 self.newsFeedTableView.reloadData()
                 self.newsFeedTableView.tableFooterView = nil
@@ -134,6 +206,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
+        cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
         
         post = postContent?[indexPath.row]
         
@@ -152,6 +225,22 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
     }
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        // DetailNewsFeed 창으로 전환
+//        let detailNewsFeedVC = DetailNewsFeedVC()
+//
+//        // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
+//        detailNewsFeedVC.postId = newsPostsArr?[indexPath.row].id
+//        detailNewsFeedVC.getPostService(postId: showDetailNewsFeedVC.postId!, completionHandler: {(returnedData)-> Void in
+//            detailNewsFeedVC.replyTV.reloadData()
+//        })
+//
+//        // NewsFeedVC와 중간 매개 델리게이트(DetailNewsFeed) 사이를 통신하기 위한 변수 연결작업
+//        detailNewsFeedVC.delegate = self
+//
+//        self.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
+//    }
     
     // 마지막 셀일 때 ActivateIndicator와 함께 새로운 cell 정보 로딩
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -193,14 +282,14 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
 
 extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
     func updateNewsTV() {
-        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
+        getCategoryPostsService(category: category ?? "", lastId: 0, limit: 10) { (Posts) in
             self.postContent = Posts.body
             self.newsFeedTableView.reloadData()
         }
     }
 
     func backToUpdateNewsTV() {
-        getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Posts) in
+        getCategoryPostsService(category: category ?? "" , lastId: 0, limit: 10) { (Posts) in
             self.postContent = Posts.body
             self.newsFeedTableView.reloadData()
         }
