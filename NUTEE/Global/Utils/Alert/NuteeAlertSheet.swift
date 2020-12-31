@@ -31,7 +31,10 @@ class NuteeAlertSheet : UIViewController {
     var titleContent = ""
     var titleHeight: CGFloat = 50
     
-    var optionList = [["", UIColor.self, ""]]
+    var categoryVC: CategoryVC?
+    var selectedOptionList: [String] = []
+    
+    var optionList = [["", UIColor.self, "", Bool.self]]
     var optionContentAligment = "center"
     var optionHeight: CGFloat = 50
 
@@ -106,7 +109,7 @@ class NuteeAlertSheet : UIViewController {
             $0.setTitleColor(.black, for: .normal)
             $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
             
-            $0.addTarget(self, action: #selector(didTapOutsideCardSheet), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
         }
         
         _ = optionTableView.then {
@@ -181,6 +184,38 @@ class NuteeAlertSheet : UIViewController {
     @objc func didTapOutsideCardSheet() {
         self.presentingViewController?.view.alpha = 1.0
         self.dismiss(animated: true)
+    }
+    
+    @objc func didTapCompleteButton() {
+        switch optionList[0][2] as? String {
+        case "selectCategory":
+            didTapSelectCategoryCompleteButton()
+        default:
+            didTapOutsideCardSheet()
+        }
+    }
+    
+    @objc func didTapSelectCategoryCompleteButton() {
+        for selectedOption in optionList {
+            if selectedOption[3] as? Bool == false {
+                selectedOptionList.append(selectedOption[0] as! String)
+            }
+        }
+        categoryVC?.selectedCategoryList = selectedOptionList
+        
+        categoryVC?.updateCategoryVC()
+        categoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
+        UIView.animate(withDuration: categoryVC?.animationDuration ?? 1.4,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        self.categoryVC?.selectCategoryButton.titleLabel?.alpha = 1
+        })
+        
+        didTapOutsideCardSheet()
+        
     }
     
     // MARK: - Pan Recognizer
@@ -399,7 +434,9 @@ extension NuteeAlertSheet : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.OptionListTVCell, for: indexPath) as! OptionListTVCell
         cell.selectionStyle = .none
         
-        cell.optionItem = optionList[indexPath.row]
+        cell.nuteeAlertSheet = self
+        cell.indexPathRow = indexPath.row
+        
         cell.optionContentAligment = optionContentAligment
         
         cell.initCell()
@@ -420,6 +457,15 @@ extension NuteeAlertSheet : UITableViewDataSource {
             openLibrary()
         case "openCamera":
             openCamera()
+        case "selectCategory" :
+            let cell = tableView.cellForRow(at: indexPath) as? OptionListTVCell
+            if optionList[indexPath.row][3] as? Bool == true {
+                cell?.selectedOptionImageView.isHidden = false
+                optionList[indexPath.row][3] = false
+            } else {
+                cell?.selectedOptionImageView.isHidden = true
+                optionList[indexPath.row][3] = true
+            }
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
         }
@@ -436,11 +482,15 @@ class OptionListTVCell : UITableViewCell {
     // MARK: - UI components
     
     let optionItemLabel = UILabel()
+    let selectedOptionImageView = UIImageView()
     
     // MARK: - Variables and Properties
     
-    var optionItem = ["", UIColor.self] as [Any]
+//    var optionItem = ["", UIColor.self, "", Bool.self] as [Any]
     var optionContentAligment = "center"
+    
+    var nuteeAlertSheet: NuteeAlertSheet?
+    var indexPathRow: Int?
     
     // MARK: - Life Cycle
     
@@ -460,31 +510,49 @@ class OptionListTVCell : UITableViewCell {
     
     func initCell() {
         _ = optionItemLabel.then {
-            $0.text = optionItem[0] as? String
+            $0.text = nuteeAlertSheet?.optionList[indexPathRow!][0] as? String
             $0.font = .systemFont(ofSize: 20)
-            $0.textColor = optionItem[1] as? UIColor
+            $0.textColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
             
             switch optionContentAligment {
             case "left" :
                 $0.textAlignment = .left
-            case "right" :
-                $0.textAlignment = .right
             default :
                 $0.textAlignment = .center
             }
+        }
+        _ = selectedOptionImageView.then {
+            let configuration = UIImage.SymbolConfiguration(weight: .bold)
+            $0.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
+            $0.tintColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
+            
+            if nuteeAlertSheet?.optionList[indexPathRow!][3] as? Bool == true {
+                $0.isHidden = true
+            } else {
+                $0.isHidden = false
+            }
+            
         }
     }
     
     func addContentView() {
         contentView.addSubview(optionItemLabel)
+        contentView.addSubview(selectedOptionImageView)
         
         optionItemLabel.snp.makeConstraints {
             $0.centerY.equalTo(contentView)
             $0.left.equalTo(contentView.snp.left).offset(20)
+        }
+        selectedOptionImageView.snp.makeConstraints {
+            $0.width.equalTo(selectedOptionImageView.snp.height)
+            $0.height.equalTo(20)
+            
+            $0.centerY.equalTo(optionItemLabel)
+            $0.left.equalTo(optionItemLabel.snp.right)
             $0.right.equalTo(contentView.snp.right).inset(20)
         }
     }
-    
+
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         
