@@ -47,8 +47,8 @@ class FindVC: UIViewController {
     
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         
         enterFindVCAnimate()
     }
@@ -346,7 +346,7 @@ extension FindVC : UITextFieldDelegate {
         }
 
         idCheckLabel.alpha = 0
-        passwordCheckLabel.alpha = 0
+        passwordCheckLabel.alpha = 1
 
         return true
     }
@@ -448,6 +448,8 @@ extension FindVC {
                 $0.textColor = .nuteeGreen
                 $0.alpha = 0
             }
+            
+            findPasswordByIdTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
         }
         
         UIView.animate(withDuration: 1,
@@ -460,7 +462,7 @@ extension FindVC {
                             self.idCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
                             self.idCheckLabel.alpha = 1
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: -180)
                             self.passwordCheckLabel.alpha = 1
                         }
                        })
@@ -484,6 +486,8 @@ extension FindVC {
                 $0.textColor = errorColor
                 $0.alpha = 1
             }
+            
+            findPasswordByIdTextField.addBorder(.bottom, color: errorColor, thickness: 1)
         }
         
         UIView.animate(withDuration: 0.2,
@@ -495,7 +499,7 @@ extension FindVC {
                         if targetTextField == self.findIdByEmailTextField {
                             self.idCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: -180)
                         }
                        })
         
@@ -508,7 +512,7 @@ extension FindVC {
                         if targetTextField == self.findIdByEmailTextField {
                             self.idCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: -180)
                         }
                        })
         
@@ -521,7 +525,7 @@ extension FindVC {
                         if targetTextField == self.findIdByEmailTextField {
                             self.idCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: -180)
                         }
                        })
     }
@@ -539,7 +543,7 @@ extension FindVC {
                         self.findIdByEmailTextField.alpha = 0
                         self.idFindButton.alpha = 0
                         self.lineView.alpha = 0
-                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: -180)
+                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: -180)
                         
                         self.passwordForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
                         self.findPasswordByIdTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
@@ -563,7 +567,7 @@ extension FindVC {
                         self.findIdByEmailTextField.alpha = 1
                         self.idFindButton.alpha = 1
                         self.lineView.alpha = 1
-                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: 0)
+                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
                         
                         self.passwordForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
                         self.findPasswordByIdTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
@@ -604,19 +608,24 @@ extension FindVC {
         UserService.shared.findPW(userId, email) { (responsedata) in
             switch responsedata {
             case .success(_):
-                self.successAnimate(targetTextField: self.findIdByEmailTextField, successMessage: "이메일 발신 처리되었습니다.")
+                self.successAnimate(targetTextField: self.findPasswordByEmailTextField, successMessage: "이메일 발신 처리되었습니다.")
+                
                 
             case .requestErr(_):
-                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+                self.errorAnimate(targetTextField: self.findPasswordByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+               
                 
             case .pathErr:
-                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+                self.errorAnimate(targetTextField: self.findPasswordByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+               
                 
             case .serverErr:
-                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "서버 에러가 발생했습니다.")
+                self.errorAnimate(targetTextField: self.findPasswordByEmailTextField, errorMessage: "서버 에러가 발생했습니다.")
+                
                 
             case .networkFail:
-                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+                self.errorAnimate(targetTextField: self.findPasswordByEmailTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+                
             }
         }
     }
