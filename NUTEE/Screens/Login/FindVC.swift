@@ -89,12 +89,14 @@ class FindVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         }
         
         _ = idFindButton.then {
             $0.setTitle("찾으러가기", for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
+            $0.setTitleColor(.veryLightPink, for: .normal)
+            $0.isEnabled = false
             
             $0.alpha = 0
             $0.addTarget(self, action: #selector(didTapFindIdButton), for: .touchUpInside)
@@ -104,7 +106,7 @@ class FindVC: UIViewController {
             $0.text = "errorConditionArea"
             $0.font = .systemFont(ofSize: 11)
             
-            $0.alpha = 1
+            $0.alpha = 0
         }
         
         _ = lineView.then {
@@ -132,6 +134,8 @@ class FindVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            $0.delegate = self
+            $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         }
         
         _ = findPasswordByEmailTitleLabel.then {
@@ -147,14 +151,17 @@ class FindVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            $0.delegate = self
+            $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         }
         
         _ = passwordFindButton.then {
             $0.setTitle("찾으러가기", for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
+            $0.setTitleColor(.veryLightPink, for: .normal)
             $0.alpha = 0
+            
+            $0.isEnabled = false
             $0.addTarget(self, action: #selector(didTapFindPasswordButton), for: .touchUpInside)
         }
         
@@ -162,7 +169,7 @@ class FindVC: UIViewController {
             $0.text = "errorConditionArea"
             $0.font = .systemFont(ofSize: 11)
             
-            $0.alpha = 1
+            $0.alpha = 0
         }
     }
     
@@ -278,7 +285,7 @@ class FindVC: UIViewController {
         
         passwordCheckLabel.snp.makeConstraints {
             $0.top.equalTo(findPasswordByEmailTextField.snp.bottom).offset(3)
-            $0.left.equalTo(findPasswordByEmailTextField.snp.left).offset(-xPosAnimationRange)
+            $0.left.equalTo(findPasswordByEmailTextField.snp.left)
             $0.right.equalTo(findPasswordByEmailTextField.snp.right)
         }
         
@@ -308,39 +315,42 @@ class FindVC: UIViewController {
 
 // MARK: - TextField Delegate
 
-//extension FindVC : UITextFieldDelegate {
-//
-//    @objc func textFieldDidChange(_ textField: UITextField) {
-//        if idTextField.text?.validateSkhuKrEmail() ?? false || idTextField.text?.validateSkhuCoKrEmail() ?? false || idTextField.text?.validateOfficeEmail() ?? false{
-//            idCertificateBtn.isEnabled = true
-//            idCertificateBtn.tintColor = .nuteeGreen
-//        } else {
-//            idCertificateBtn.tintColor = nil
-//            idCertificateBtn.isEnabled = false
-//        }
-//
-//        if (pwTextField.text?.validateSkhuKrEmail() ?? false || pwTextField.text?.validateSkhuCoKrEmail() ?? false || pwTextField.text?.validateOfficeEmail() ?? false) && pwIDTextField.text != ""  {
-//            pwCertificateBtn.isEnabled = true
-//            pwCertificateBtn.tintColor = .nuteeGreen
-//        } else {
-//            pwCertificateBtn.tintColor = nil
-//            pwCertificateBtn.isEnabled = false
-//        }
-//    }
-//
-//    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//
-//        if textField == pwTextField || textField == pwIDTextField {
-//            pwAnimate()
-//        }
-//
-//        idErrorLabel.alpha = 0
-//        pwErrorLabel.alpha = 0
-//        pwError2Label.alpha = 0
-//
-//        return true
-//    }
-//}
+extension FindVC : UITextFieldDelegate {
+
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        if (findIdByEmailTextField.text?.validateSkhuKrEmail() == true || findIdByEmailTextField.text?.validateSkhuCoKrEmail() == true || findIdByEmailTextField.text?.validateOfficeEmail() == true) && findIdByEmailTextField.text != "" {
+            
+            idFindButton.isEnabled = true
+            idFindButton.setTitleColor(.nuteeGreen, for: .normal)
+        } else if findIdByEmailTextField.text?.validateSkhuKrEmail() == false || findIdByEmailTextField.text?.validateSkhuCoKrEmail() == false || findIdByEmailTextField.text?.validateOfficeEmail() == false ||  findIdByEmailTextField.text == "" {
+            
+            idFindButton.isEnabled = false
+            idFindButton.setTitleColor(.veryLightPink, for: .normal)
+        }
+
+        if (findPasswordByEmailTextField.text?.validateSkhuKrEmail() == true || findPasswordByEmailTextField.text?.validateSkhuCoKrEmail() == true || findPasswordByEmailTextField.text?.validateOfficeEmail() == true) && findPasswordByEmailTextField.text != "" && findPasswordByIdTextField.text != "" {
+            
+            passwordFindButton.isEnabled = true
+            passwordFindButton.setTitleColor(.nuteeGreen, for: .normal)
+        } else if findPasswordByEmailTextField.text?.validateSkhuKrEmail() == false || findPasswordByEmailTextField.text?.validateSkhuCoKrEmail() == false || findPasswordByEmailTextField.text?.validateOfficeEmail() == false || findPasswordByEmailTextField.text == "" || findPasswordByIdTextField.text == "" {
+            
+            passwordFindButton.isEnabled = false
+            passwordFindButton.setTitleColor(.veryLightPink, for: .normal)
+        }
+    }
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+
+        if textField == findPasswordByIdTextField || textField == findPasswordByEmailTextField {
+            touchBeginAnimate()
+        }
+
+        idCheckLabel.alpha = 0
+        passwordCheckLabel.alpha = 0
+
+        return true
+    }
+}
     
 // MARK: - animate
 
@@ -526,7 +536,7 @@ extension FindVC {
                         // self를 항상 붙여줘야함 (클로저 안에서)
                         self.idForgetLabel.alpha = 0
                         self.findIdByEmailTitleLabel.alpha = 0
-                        self.findIdByEmailTitleLabel.alpha = 0
+                        self.findIdByEmailTextField.alpha = 0
                         self.idFindButton.alpha = 0
                         self.lineView.alpha = 0
                         self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: -180)
@@ -550,7 +560,7 @@ extension FindVC {
                         // self를 항상 붙여줘야함 (클로저 안에서)
                         self.idForgetLabel.alpha = 1
                         self.findIdByEmailTitleLabel.alpha = 1
-                        self.findIdByEmailTitleLabel.alpha = 1
+                        self.findIdByEmailTextField.alpha = 1
                         self.idFindButton.alpha = 1
                         self.lineView.alpha = 1
                         self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: 0)
