@@ -346,7 +346,7 @@ extension FindVC : UITextFieldDelegate {
         }
 
         idCheckLabel.alpha = 0
-        passwordCheckLabel.alpha = 1
+        passwordCheckLabel.alpha = 0
 
         return true
     }
