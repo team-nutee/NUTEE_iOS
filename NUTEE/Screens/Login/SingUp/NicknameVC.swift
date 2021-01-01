@@ -236,17 +236,6 @@ class NicknameVC: UIViewController {
     @objc func didTapNextButton() {
         nicknameTextField.resignFirstResponder()
         
-//        let passwordVC = PasswordVC()
-//        passwordVC.totalSignUpViews = totalSignUpViews
-//        passwordVC.progressStatusCount = progressStatusCount
-//
-//        passwordVC.userId = self.userId
-//        passwordVC.nickname = nicknameTextField.text ?? ""
-//        passwordVC.email = self.email
-//        passwordVC.modalPresentationStyle = .fullScreen
-//
-//        present(passwordVC, animated: false)
-        
         let categoryVC = CategoryVC()
         categoryVC.totalSignUpViews = totalSignUpViews
         categoryVC.progressStatusCount = progressStatusCount
@@ -287,7 +276,7 @@ extension NicknameVC : UITextFieldDelegate {
     
 }
 
-// MARK: - EmailVC Animation
+// MARK: - NicknameVC Animation
 
 extension NicknameVC {
     
