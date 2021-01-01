@@ -38,16 +38,14 @@ class CategoryVC: UIViewController {
 //    var email: String = ""
 //    var otp: String = ""
 
-    var categoryList = ["카테고리1", "카테고리2", "카테고리3"]
-    var selectedCategoryList: [String] = []
-    
     var animationDuration: TimeInterval = 1.4
     let xPosAnimationRange: CGFloat = 50
     let yPosAnimationRange: CGFloat = 50
     
     var categoryTVCellHeight: CGFloat = 50
     
-    var previousButtonBottomConstraint: Constraint?
+    var categoryList = ["카테고리1", "카테고리2", "카테고리3"]
+    var selectedCategoryList: [String] = []
     
     // MARK: - Life Cycle
     
@@ -140,7 +138,7 @@ class CategoryVC: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = false
+            $0.isEnabled = true
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -193,7 +191,7 @@ class CategoryVC: UIViewController {
             $0.left.equalTo(guideLabel.snp.left).offset(xPosAnimationRange)
             $0.right.equalTo(guideLabel.snp.right).inset(-xPosAnimationRange)
         }
-        selectCategoryUnderLineView.snp.makeConstraints{
+        selectCategoryUnderLineView.snp.makeConstraints {
             $0.height.equalTo(1)
             $0.width.equalTo(selectCategoryButton.snp.width)
             
@@ -214,7 +212,7 @@ class CategoryVC: UIViewController {
             $0.height.equalTo(50)
             
             $0.left.equalTo(view.snp.left)
-            previousButtonBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         nextButton.snp.makeConstraints {
             $0.width.equalTo(previousButton.snp.width)
@@ -284,14 +282,18 @@ class CategoryVC: UIViewController {
     }
     
     @objc func didTapNextButton() {
+        let majorVC = MajorVC()
+        majorVC.totalSignUpViews = totalSignUpViews
+        majorVC.progressStatusCount = progressStatusCount
+        
+        majorVC.modalPresentationStyle = .fullScreen
+        
+        present(majorVC, animated: false)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
-// MARK: - EmailVC Animation
+// MARK: - CategoryVC Animation
 
 extension CategoryVC {
     

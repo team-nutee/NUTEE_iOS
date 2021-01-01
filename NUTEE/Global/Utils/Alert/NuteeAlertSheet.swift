@@ -32,6 +32,8 @@ class NuteeAlertSheet : UIViewController {
     var titleHeight: CGFloat = 50
     
     var categoryVC: CategoryVC?
+    var majorVC: MajorVC?
+    
     var selectedOptionList: [String] = []
     
     var optionList = [["", UIColor.self, "", Bool.self]]
@@ -100,11 +102,6 @@ class NuteeAlertSheet : UIViewController {
             $0.backgroundColor = .white
         }
         _ = completeButton.then {
-            if titleHeight == 0 {
-                $0.isHidden = true
-                $0.isEnabled = false
-            }
-            
             $0.setTitle("완료", for: .normal)
             $0.setTitleColor(.black, for: .normal)
             $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
@@ -457,7 +454,7 @@ extension NuteeAlertSheet : UITableViewDataSource {
             openLibrary()
         case "openCamera":
             openCamera()
-        case "selectCategory" :
+        case "selectCategory":
             let cell = tableView.cellForRow(at: indexPath) as? OptionListTVCell
             if optionList[indexPath.row][3] as? Bool == true {
                 cell?.selectedOptionImageView.isHidden = false
@@ -466,6 +463,14 @@ extension NuteeAlertSheet : UITableViewDataSource {
                 cell?.selectedOptionImageView.isHidden = true
                 optionList[indexPath.row][3] = true
             }
+        case "selectFirstMajor":
+            majorVC?.firstMajor = optionList[indexPath.row][0] as? String ?? ""
+            majorVC?.updateFirstMajorButtonStatus()
+            didTapOutsideCardSheet()
+        case "selectSecondMajor":
+            majorVC?.secondMajor = optionList[indexPath.row][0] as? String ?? ""
+            majorVC?.updateSecondMajorButtonStatus()
+            didTapOutsideCardSheet()
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
         }
@@ -486,7 +491,6 @@ class OptionListTVCell : UITableViewCell {
     
     // MARK: - Variables and Properties
     
-//    var optionItem = ["", UIColor.self, "", Bool.self] as [Any]
     var optionContentAligment = "center"
     
     var nuteeAlertSheet: NuteeAlertSheet?
