@@ -377,7 +377,7 @@ extension PasswordVC : UITextFieldDelegate {
     
 }
 
-// MARK: - passwordVC Animation
+// MARK: - PasswordVC Animation
 
 extension PasswordVC {
     
