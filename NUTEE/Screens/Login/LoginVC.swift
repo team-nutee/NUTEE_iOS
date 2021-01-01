@@ -51,7 +51,7 @@ class LoginVC: UIViewController {
         makeConstraints()
         
         enterLoginVCAnimate()
-        checkSignIn()
+ //       checkSignIn()
     }
     
     
@@ -302,17 +302,17 @@ class LoginVC: UIViewController {
         view.endEditing(true)
     }
     
-    func checkSignIn() {
-        let userId = KeychainWrapper.standard.string(forKey: "userId")
-        let password = KeychainWrapper.standard.string(forKey: "pw")
-        
-        if userId != nil && password != nil {
-            signInService(userId!, password!)
-        } else {
-            Splash.hide()
-            return
-        }
-    }
+//    func checkSignIn() {
+//        let userId = KeychainWrapper.standard.string(forKey: "userId")
+//        let password = KeychainWrapper.standard.string(forKey: "pw")
+//
+//        if userId != nil && password != nil {
+//            signInService(userId!, password!)
+//        } else {
+//            Splash.hide()
+//            return
+//        }
+//    }
     
 }
 

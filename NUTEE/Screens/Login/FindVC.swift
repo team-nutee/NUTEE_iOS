@@ -44,7 +44,7 @@ class FindVC: UIViewController {
 
         initView()
         makeConstraints()
-        
+    
     }
     
     override func viewDidLayoutSubviews() {
@@ -97,7 +97,7 @@ class FindVC: UIViewController {
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
             $0.alpha = 0
-            $0.addTarget(self, action: #selector(didTapFindButton), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapFindIdButton), for: .touchUpInside)
         }
         
         _ = idCheckLabel.then {
@@ -155,7 +155,7 @@ class FindVC: UIViewController {
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
             $0.alpha = 0
-            $0.addTarget(self, action: #selector(didTapFindButton), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapFindPasswordButton), for: .touchUpInside)
         }
         
         _ = passwordCheckLabel.then {
@@ -224,7 +224,7 @@ class FindVC: UIViewController {
         
         idCheckLabel.snp.makeConstraints {
             $0.top.equalTo(findIdByEmailTextField.snp.bottom).offset(3)
-            $0.left.equalTo(findIdByEmailTextField.snp.left).offset(-xPosAnimationRange)
+            $0.left.equalTo(findIdByEmailTextField.snp.left)
             $0.right.equalTo(findIdByEmailTextField.snp.right)
         }
         
@@ -291,18 +291,22 @@ class FindVC: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc func didTapFindButton() {
-        let emailVC = EmailVC()
-        emailVC.modalPresentationStyle = .fullScreen
-        
-        present(emailVC, animated: false)
+    @objc func didTapFindIdButton() {
+        findIDServise(findIdByEmailTextField.text ?? "")
+    }
+    
+    @objc func didTapFindPasswordButton() {
+        findPWServise(findPasswordByIdTextField.text ?? "", findPasswordByEmailTextField.text ?? "")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+        touchEndAnimate()
     }
 
 }
+
+// MARK: - TextField Delegate
 
 //extension FindVC : UITextFieldDelegate {
 //
@@ -336,8 +340,6 @@ class FindVC: UIViewController {
 //
 //        return true
 //    }
-//
-//
 //}
     
 // MARK: - animate
@@ -418,118 +420,194 @@ extension FindVC {
                         self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                        })
+    }
+    
+    private func successAnimate(targetTextField: UITextField, successMessage: String) {
         
-        private func certificationAnimate() {
-            
-            // insert certificate code area
-            UIView.animate(withDuration: 1,
-                           delay: 0,
-                           usingSpringWithDamping: 0.85,
-                           initialSpringVelocity: 1,
-                           options: [.curveEaseIn],
-                           animations: {
-                            self.successAnimate(targetTextField: self.emailTextField, successMessage: "해당 이메일에서 인증번호를 확인해주세요")
-                            
-                            self.certificationNumberTextField.alpha = 1
-                            self.certificationNumberTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
-                            
-                            self.confirmButton.alpha = 1
-                            self.confirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
-                            
-                            self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
-                            
-                           })
-        }
+        targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
         
-        private func successAnimate(targetTextField: UITextField, successMessage: String) {
-            
-            targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-            
-            if targetTextField == self.emailTextField {
-                _ = certificationResultLabel.then {
-                    $0.text = successMessage
-                    $0.textColor = .nuteeGreen
-                    $0.alpha = 0
-                }
-            } else {
-                _ = comfirmResultLabel.then {
-                    $0.text = successMessage
-                    $0.textColor = .nuteeGreen
-                    $0.alpha = 0
-                }
+        if targetTextField == self.findIdByEmailTextField {
+            _ = idCheckLabel.then {
+                $0.text = successMessage
+                $0.textColor = .nuteeGreen
+                $0.alpha = 0
             }
-            
-            UIView.animate(withDuration: 1,
-                           delay: 0,
-                           usingSpringWithDamping: 0.85,
-                           initialSpringVelocity: 1,
-                           options: [.curveEaseIn],
-                           animations: {
-                            if targetTextField == self.emailTextField {
-                                self.certificationResultLabel.alpha = 1
-                            } else {
-                                self.comfirmResultLabel.alpha = 1
-                            }
-                           })
-        }
-        
-        private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
-            
-            let errorColor = UIColor(red: 255, green: 67, blue: 57)
-            
-            targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
-            
-            if targetTextField == self.emailTextField {
-                _ = certificationResultLabel.then {
-                    $0.text = errorMessage
-                    $0.textColor = errorColor
-                    $0.alpha = 1
-                }
-            } else {
-                _ = comfirmResultLabel.then {
-                    $0.text = errorMessage
-                    $0.textColor = errorColor
-                    $0.alpha = 1
-                }
+        } else {
+            _ = passwordCheckLabel.then {
+                $0.text = successMessage
+                $0.textColor = .nuteeGreen
+                $0.alpha = 0
             }
-            
-            UIView.animate(withDuration: 0.2,
-                           delay: 0,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: [.curveEaseIn],
-                           animations: {
-                            if targetTextField == self.emailTextField {
-                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
-                            } else {
-                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
-                            }
-                           })
-            UIView.animate(withDuration: 0.2,
-                           delay: 0.2,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: [.curveEaseIn],
-                           animations: {
-                            if targetTextField == self.emailTextField {
-                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
-                            } else {
-                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
-                            }
-                           })
-            UIView.animate(withDuration: 0.5,
-                           delay: 0.2,
-                           usingSpringWithDamping: 0.1,
-                           initialSpringVelocity: 0.1,
-                           options: [.curveEaseIn],
-                           animations: {
-                            if targetTextField == self.emailTextField {
-                                self.certificationResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
-                            } else {
-                                self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
-                            }
-                           })
         }
         
+        UIView.animate(withDuration: 1,
+                       delay: 0,
+                       usingSpringWithDamping: 0.85,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.findIdByEmailTextField {
+                            self.idCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            self.idCheckLabel.alpha = 1
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                            self.passwordCheckLabel.alpha = 1
+                        }
+                       })
+    }
+    
+    private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
+        
+        let errorColor = UIColor(red: 255, green: 67, blue: 57)
+        
+        targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
+        
+        if targetTextField == self.findIdByEmailTextField {
+            _ = idCheckLabel.then {
+                $0.text = errorMessage
+                $0.textColor = errorColor
+                $0.alpha = 1
+            }
+        } else {
+            _ = passwordCheckLabel.then {
+                $0.text = errorMessage
+                $0.textColor = errorColor
+                $0.alpha = 1
+            }
+        }
+        
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.findIdByEmailTextField {
+                            self.idCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                        }
+                       })
+        
+        UIView.animate(withDuration: 0.2,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.findIdByEmailTextField {
+                            self.idCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                        }
+                       })
+        
+        UIView.animate(withDuration: 0.5,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.1,
+                       initialSpringVelocity: 0.1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        if targetTextField == self.findIdByEmailTextField {
+                            self.idCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                        } else {
+                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                        }
+                       })
+    }
+    
+    private func touchBeginAnimate(){
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        // self를 항상 붙여줘야함 (클로저 안에서)
+                        self.idForgetLabel.alpha = 0
+                        self.findIdByEmailTitleLabel.alpha = 0
+                        self.findIdByEmailTitleLabel.alpha = 0
+                        self.idFindButton.alpha = 0
+                        self.lineView.alpha = 0
+                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: -180)
+                        
+                        self.passwordForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
+                        self.findPasswordByIdTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
+                        self.findPasswordByEmailTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
+                        self.findPasswordByIdTextField.transform = CGAffineTransform.init(translationX: -50, y: -180)
+                        self.findPasswordByEmailTextField.transform = CGAffineTransform.init(translationX: -50, y: -180)
+                        self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: -180)
+                       })
+    }
+    
+    private func touchEndAnimate(){
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        // self를 항상 붙여줘야함 (클로저 안에서)
+                        self.idForgetLabel.alpha = 1
+                        self.findIdByEmailTitleLabel.alpha = 1
+                        self.findIdByEmailTitleLabel.alpha = 1
+                        self.idFindButton.alpha = 1
+                        self.lineView.alpha = 1
+                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0, y: 0)
+                        
+                        self.passwordForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                        self.findPasswordByIdTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                        self.findPasswordByEmailTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                        self.findPasswordByIdTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        self.findPasswordByEmailTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                       })
+    }
+}
+
+// MARK: - Server connect
+
+extension FindVC {
+    func findIDServise(_ email : String) {
+        UserService.shared.findID(email) { (responsedata) in
+            switch responsedata {
+            case .success(_):
+                self.successAnimate(targetTextField: self.findIdByEmailTextField, successMessage: "이메일 발신 처리되었습니다.")
+                
+            case .requestErr(_):
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "에러가 발생했습니다.")
+                
+            case .pathErr:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "해당 이메일은 가입이 되어있지 않습니다.")
+                
+            case .serverErr:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "서버 에러가 발생했습니다.")
+                
+            case .networkFail:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+            }
+        }
+        
+    }
+    
+    func findPWServise(_ userId : String,_ email : String) {
+        UserService.shared.findPW(userId, email) { (responsedata) in
+            switch responsedata {
+            case .success(_):
+                self.successAnimate(targetTextField: self.findIdByEmailTextField, successMessage: "이메일 발신 처리되었습니다.")
+                
+            case .requestErr(_):
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+                
+            case .pathErr:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "아이디 혹은 이메일이 틀립니다.")
+                
+            case .serverErr:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "서버 에러가 발생했습니다.")
+                
+            case .networkFail:
+                self.errorAnimate(targetTextField: self.findIdByEmailTextField, errorMessage: "네트워크 에러가 발생했습니다.")
+            }
+        }
     }
 }

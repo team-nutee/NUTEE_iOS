@@ -33,5 +33,7 @@ struct APIConstants {
     // POST { userId : id , password: pw }
     static let Logout = AuthURL + "/auth/logout"
     // POST
-
+    static let FindID = AuthURL + "/auth/findid"
+    static let FindPW = AuthURL + "/auth/findpw"
+    
 }
