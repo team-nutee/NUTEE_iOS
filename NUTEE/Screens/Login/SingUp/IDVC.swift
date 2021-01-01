@@ -106,7 +106,7 @@ class IDVC: UIViewController {
         }
         
         _ = idCheckButton.then {
-            $0.setTitle("중복체크", for: .normal)
+            $0.setTitle("중복확인", for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 15)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
@@ -288,7 +288,7 @@ extension IDVC : UITextFieldDelegate {
     
 }
 
-// MARK: - EmailVC Animation
+// MARK: - IDVC Animation
 
 extension IDVC {
     
