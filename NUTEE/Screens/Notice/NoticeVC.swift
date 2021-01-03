@@ -120,28 +120,27 @@ extension NoticeVC : UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.NoticeFeedContainerCVCell, for: indexPath) as! NoticeFeedContainerCVCell
         cell.noticeVC = self
         
+        var URL = ""
         switch indexPath.row {
         case 0:
-            cell.getBachelorNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeBachelor
         case 1:
-            cell.getClassNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeClass
         case 2:
-            cell.getExchangeNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeExchange
         case 3:
-            cell.getScholarshipNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeScholarship
         case 4:
-            cell.getGeneralNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeGeneral
         case 5:
-            cell.getEventNoticeService(completionHandler: {(returnedData)-> Void in
-            })
+            URL = APIConstants.NoticeEvent
         default:
             simpleNuteeAlertDialogue(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
         }
+        
+        cell.getNoticeService(url: URL, completionHandler: {(returnedData)-> Void in
+            cell.noticeFeedTableView.reloadData()
+        })
         
         return cell
     }
