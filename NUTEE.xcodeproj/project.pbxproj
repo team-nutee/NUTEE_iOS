@@ -54,6 +54,7 @@
 		D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
 		D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D526E55A24D5B02600B80D37 /* TabBarController.swift */; };
+		D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E85325A18F89007D8585 /* HighlightedButton.swift */; };
 		D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CF725418B5A009A1DC2 /* NotificationVC.swift */; };
 		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
 		D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* CategoryVC.swift */; };
@@ -67,6 +68,7 @@
 		D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93D924CAE52A005570D4 /* DetailNewsFeedVC.swift */; };
 		D58C93DC24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93DB24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift */; };
 		D58C93DE24CAE556005570D4 /* ReplyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93DD24CAE556005570D4 /* ReplyCell.swift */; };
+		D58CEE6925A04DEB00AAE31F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */; };
 		D590451D259E09E40091FEC0 /* MajorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D590451C259E09E40091FEC0 /* MajorVC.swift */; };
 		D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92A24D3F9C600D49F62 /* HomeVC.swift */; };
 		D592A92F24D437F300D49F62 /* MenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92E24D437F300D49F62 /* MenuBarCV.swift */; };
@@ -163,6 +165,7 @@
 		D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedTVCell.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
 		D526E55A24D5B02600B80D37 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		D527E85325A18F89007D8585 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
 		D5310CF725418B5A009A1DC2 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
 		D5381F102599EC8200C94A6F /* CategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
@@ -176,6 +179,7 @@
 		D58C93D924CAE52A005570D4 /* DetailNewsFeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsFeedVC.swift; sourceTree = "<group>"; };
 		D58C93DB24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsFeedHeaderView.swift; sourceTree = "<group>"; };
 		D58C93DD24CAE556005570D4 /* ReplyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCell.swift; sourceTree = "<group>"; };
+		D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		D590451C259E09E40091FEC0 /* MajorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorVC.swift; sourceTree = "<group>"; };
 		D592A92A24D3F9C600D49F62 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		D592A92E24D437F300D49F62 /* MenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCV.swift; sourceTree = "<group>"; };
@@ -365,6 +369,7 @@
 				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 				45C92B002587993400828E8A /* LoadingHUD.swift */,
 				45C92B0525879A3900828E8A /* Splash.swift */,
+				D527E85325A18F89007D8585 /* HighlightedButton.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -395,7 +400,7 @@
 			children = (
 				5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */,
 				4559082F2564FBE9009A5F5C /* FindVC.swift */,
-				D5381F0F2599EAF600C94A6F /* SingUp */,
+				D5381F0F2599EAF600C94A6F /* SignUp */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -504,9 +509,10 @@
 			path = Notification;
 			sourceTree = "<group>";
 		};
-		D5381F0F2599EAF600C94A6F /* SingUp */ = {
+		D5381F0F2599EAF600C94A6F /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */,
 				5E8BA6B924C6D5FF00A58F43 /* EmailVC.swift */,
 				D54FE03624F16CE400BA0361 /* IDVC.swift */,
 				D54FE03824F180DC00BA0361 /* NicknameVC.swift */,
@@ -514,7 +520,7 @@
 				D590451C259E09E40091FEC0 /* MajorVC.swift */,
 				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
 			);
-			path = SingUp;
+			path = SignUp;
 			sourceTree = "<group>";
 		};
 		D58C93D724CAE4FA005570D4 /* DetailNewsFeed */ = {
@@ -813,6 +819,7 @@
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D59EEDFA24DFF55C00BC028C /* Search.xcdatamodeld in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
+				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
 				455908302564FBE9009A5F5C /* FindVC.swift in Sources */,
@@ -827,6 +834,7 @@
 				D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* ProfileVC.swift in Sources */,
 				5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */,
+				D58CEE6925A04DEB00AAE31F /* SignUpViewController.swift in Sources */,
 				D12D8BDE24D1483A005F4580 /* UserDefaultKeys+Enum.swift in Sources */,
 				D12D8BEC24D14CA4005F4580 /* UITableView+Extension.swift in Sources */,
 				D12D8BE224D14C28005F4580 /* UIViewController+Extension.swift in Sources */,
