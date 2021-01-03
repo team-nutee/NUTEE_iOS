@@ -147,71 +147,29 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
 
 extension NoticeFeedContainerCVCell {
     
-    func getNoticeService(responseData: NetworkResult<Any>, completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        
-        switch responseData {
-        case .success(let res):
-            
-            let response = res as! Notice
-            self.notices = response
-            
-            completionHandler(self.notices!)
+    func getNoticeService(url: String, completionHandler: @escaping (_ returnedData: Notice) -> Void) {
+        NoticeService.shared.getNoticeFromUrl(url: url, completion: {(returnedData)-> Void in
+            switch returnedData {
+            case .success(let res):
+                
+                let response = res as! Notice
+                self.notices = response
+                
+                completionHandler(self.notices!)
 
-        case .requestErr(let message):
-            self.noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "\(message)")
-            
-        case .pathErr:
-            self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 연결 오류", message: "")
-            
-        case .serverErr:
-            self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 오류", message: "")
-            
-        case .networkFail :
-            self.noticeVC?.simpleNuteeAlertDialogue(title: "카테고리 조회 실패", message: "네트워크 상태를 확인해주세요.")
-        }
-        
-    }
-    
-    func doAfterLoadData(responseData: NetworkResult<Any>) {
-        self.getNoticeService(responseData: responseData, completionHandler: {(returnedData)-> Void in
-            self.noticeFeedTableView.reloadData()
+            case .requestErr(let message):
+                self.noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "\(message)")
+                
+            case .pathErr:
+                self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 연결 오류", message: "")
+                
+            case .serverErr:
+                self.noticeVC?.simpleNuteeAlertDialogue(title: "서버 오류", message: "")
+                
+            case .networkFail :
+                self.noticeVC?.simpleNuteeAlertDialogue(title: "카테고리 조회 실패", message: "네트워크 상태를 확인해주세요.")
+            }
         })
-    }
-    
-    func getBachelorNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getBachelorNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
-    }
-    
-    func getClassNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getClassNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
-    }
-    
-    func getExchangeNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getExchangeNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
-    }
-    
-    func getScholarshipNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getScholarshipNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
-    }
-    
-    func getGeneralNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getGeneralNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
-    }
-    
-    func getEventNoticeService(completionHandler: @escaping (_ returnedData: Notice) -> Void) {
-        NoticeService.shared.getEventNotice() { responseData in
-            self.doAfterLoadData(responseData: responseData)
-        }
     }
     
 }
