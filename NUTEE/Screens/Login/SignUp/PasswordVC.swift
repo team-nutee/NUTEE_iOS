@@ -10,16 +10,9 @@ import UIKit
 
 import SnapKit
 
-class PasswordVC: UIViewController {
+class PasswordVC: SignUpViewController {
     
     // MARK: - UI components
-    
-    // 로그인 화면
-    let closeButton = HighlightedButton()
-    
-    let progressView = UIProgressView()
-    
-    let guideLabel = UILabel()
     
     let passwordTitleLabel = UILabel()
     let passwordTextField = UITextField()
@@ -32,13 +25,7 @@ class PasswordVC: UIViewController {
     let agreeTermsAndConditionsButton = HighlightedButton()
     let showTermsAndConditionsButton = HighlightedButton()
     
-    let previousButton = HighlightedButton()
-    let doneButton = HighlightedButton()
-    
     // MARK: - Variables and Properties
-    
-    var totalSignUpViews: Float = 0.0
-    var progressStatusCount: Float = 0.0
     
     var userId: String = ""
     var nickname: String = ""
@@ -49,13 +36,7 @@ class PasswordVC: UIViewController {
     
     var checkPasswordStatusLabelSize: CGFloat = 11.0
     
-    var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
-    
     var isAgree = false
-    
-    var previousButtonBottomConstraint: Constraint?
     
     // MARK: - Life Cycle
     
@@ -74,40 +55,11 @@ class PasswordVC: UIViewController {
         enterPasswordVCAnimate()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        progressViewAnimate()
-    }
-    
     // MARK: - Helper
     
     func initView() {
-        
-        _ = view.then {
-            $0.backgroundColor = .white
-            $0.tintColor = .nuteeGreen
-        }
-        
-        _ = closeButton.then {
-            $0.setTitle("닫기", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            $0.alpha = 0
-        }
-        
-        _ = progressView.then {
-            $0.progressViewStyle = .bar
-            $0.tintColor = .nuteeGreen
-            $0.progress = progressStatusCount / totalSignUpViews
-            progressStatusCount += 1
-        }
-        
         _ = guideLabel.then {
             $0.text = "다 왔어요!! 😄 비밀번호를 입력해주세요!!"
-            $0.font = .boldSystemFont(ofSize: 20)
-            
-            $0.alpha = 0
         }
         
         _ = passwordTitleLabel.then {
@@ -185,34 +137,16 @@ class PasswordVC: UIViewController {
             $0.addTarget(self, action: #selector(didTapShowTermsAndConditionsButton), for: .touchUpInside)
         }
         
-        _ = previousButton.then {
-            $0.setTitle("이전", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapPreviousButton), for: .touchUpInside)
-        }
-        _ = doneButton.then {
+        _ = nextButton.then {
             $0.setTitle("완료", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = false
-            $0.setTitleColor(.veryLightPink, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
+            $0.alpha = 0
         }
         
     }
     
     func makeConstraints() {
         // Add SubView
-        view.addSubview(closeButton)
-        
-        view.addSubview(progressView)
-        
-        view.addSubview(guideLabel)
-        
         view.addSubview(passwordTitleLabel)
         view.addSubview(passwordTextField)
         view.addSubview(passwordIndicatorLabel)
@@ -224,31 +158,7 @@ class PasswordVC: UIViewController {
         view.addSubview(agreeTermsAndConditionsButton)
         view.addSubview(showTermsAndConditionsButton)
         
-        view.addSubview(previousButton)
-        view.addSubview(doneButton)
-        
-        
         // Make Constraints
-        closeButton.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(closeButton.snp.width)
-            
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.left.equalTo(view.snp.left).offset(20)
-        }
-        
-        progressView.snp.makeConstraints {
-            $0.top.equalTo(closeButton.snp.bottom).offset(20)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-        }
-
-        guideLabel.snp.makeConstraints {
-            $0.top.equalTo(progressView.snp.bottom).offset(35 - yPosAnimationRange)
-            $0.left.equalTo(closeButton.snp.left)
-            $0.right.equalTo(view.snp.right).inset(20)
-        }
-        
         passwordTitleLabel.snp.makeConstraints {
             $0.top.equalTo(guideLabel.snp.bottom).offset(40)
             $0.left.equalTo(guideLabel.snp.left)
@@ -294,29 +204,6 @@ class PasswordVC: UIViewController {
             $0.left.equalTo(agreeTermsAndConditionsButton.snp.right).offset(10)
             $0.right.equalTo(passwordCheckTextField.snp.right)
         }
-        
-        previousButton.snp.makeConstraints {
-            $0.width.equalTo(view.frame.size.width / 2.0)
-            $0.height.equalTo(50)
-            
-            $0.left.equalTo(view.snp.left)
-            previousButtonBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
-        }
-        doneButton.snp.makeConstraints {
-            $0.width.equalTo(previousButton.snp.width)
-            $0.height.equalTo(previousButton.snp.height)
-            
-            $0.centerY.equalTo(previousButton)
-            $0.left.equalTo(previousButton.snp.right)
-        }
-        
-    }
-    
-    @objc func didTapCloseButton() {
-        self.modalPresentationStyle = .overFullScreen
-        self.modalTransitionStyle = .crossDissolve
-        
-        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapAgreeTermsAndConditionsButton() {
@@ -326,14 +213,14 @@ class PasswordVC: UIViewController {
             agreeTermsAndConditionsButton.setImage(UIImage(systemName: "largecircle.fill.circle"), for: .normal)
             
             if passwordCheckTextField.text?.validatePassword() == true && passwordCheckTextField.text == passwordTextField.text {
-                doneButton.isEnabled = true
-                doneButton.setTitleColor(.nuteeGreen, for: .normal)
+                nextButton.isEnabled = true
+                nextButton.setTitleColor(.nuteeGreen, for: .normal)
             }
         } else {
             agreeTermsAndConditionsButton.setImage(UIImage(systemName: "circle"), for: .normal)
             
-            doneButton.isEnabled = false
-            doneButton.setTitleColor(.veryLightPink, for: .normal)
+            nextButton.isEnabled = false
+            nextButton.setTitleColor(.veryLightPink, for: .normal)
         }
     }
     
@@ -353,13 +240,7 @@ class PasswordVC: UIViewController {
         present(navigationController, animated: true)
     }
     
-    @objc func didTapPreviousButton() {
-        self.modalTransitionStyle = .crossDissolve
-        
-        dismiss(animated: true)
-    }
-    
-    @objc func didTapDoneButton() {
+    @objc override func didTapNextButton() {
         let rootVC = view.window?.rootViewController
         self.view.window!.rootViewController?.dismiss(animated: true, completion: {
             rootVC?.simpleNuteeAlertDialogue(title: "회원가입 성공", message: "회원가입이 완료되었습니다😁")
@@ -368,9 +249,6 @@ class PasswordVC: UIViewController {
         //signUpService(<#T##userId: String##String#>, <#T##nickname: String##String#>, <#T##email: String##String#>, <#T##password: String##String#>, otp: <#T##String#>, interests: <#T##[String]#>, majors: <#T##[String]#>)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
 // MARK: - TextField Delegate
@@ -393,8 +271,8 @@ extension PasswordVC : UITextFieldDelegate {
             
             successAnimate(targetTextField: passwordCheckTextField, successMessage: "")
             
-            doneButton.isEnabled = false
-            doneButton.setTitleColor(.veryLightPink, for: .normal)
+            nextButton.isEnabled = false
+            nextButton.setTitleColor(.veryLightPink, for: .normal)
         }
         
         // 비밀번호 입력창 모드
@@ -411,14 +289,14 @@ extension PasswordVC : UITextFieldDelegate {
                 successAnimate(targetTextField: passwordCheckTextField, successMessage: "비밀번호가 확인되었습니다")
                 
                 if isAgree == true {
-                    doneButton.isEnabled = true
-                    doneButton.setTitleColor(.nuteeGreen, for: .normal)
+                    nextButton.isEnabled = true
+                    nextButton.setTitleColor(.nuteeGreen, for: .normal)
                 }
             } else {
                 successAnimate(targetTextField: passwordCheckTextField, successMessage: "")
                 
-                doneButton.isEnabled = false
-                doneButton.setTitleColor(.veryLightPink, for: .normal)
+                nextButton.isEnabled = false
+                nextButton.setTitleColor(.veryLightPink, for: .normal)
             }
         }
     }
@@ -453,16 +331,14 @@ extension PasswordVC : UITextFieldDelegate {
 extension PasswordVC {
     
     private func enterPasswordVCAnimate() {
-        
-        // guide title
+        // next button title changed
         UIView.animate(withDuration: animationDuration,
-                       delay: 1,
-                       usingSpringWithDamping: 0.6,
+                       delay: 0,
+                       usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
-                        self.guideLabel.alpha = 1
-                        self.guideLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                       animations: { [self] in
+                        self.nextButton.alpha = 1
         })
         
         // password title
@@ -504,21 +380,7 @@ extension PasswordVC {
         })
     }
     
-    private func progressViewAnimate() {
-        // progressView
-        UIView.animate(withDuration: animationDuration,
-                       delay: 0,
-                       usingSpringWithDamping: 0.85,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: { [self] in
-                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
-
-        })
-    }
-
     private func successAnimate(targetTextField: UITextField, successMessage: String) {
-
         targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
 
         if targetTextField == self.passwordTextField {
@@ -550,7 +412,6 @@ extension PasswordVC {
     }
 
     private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
-
         let errorColor = UIColor(red: 255, green: 67, blue: 57)
 
         targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
@@ -609,52 +470,6 @@ extension PasswordVC {
     
 }
 
-// MARK: - Keyboard
-
-extension PasswordVC {
-    
-    func addKeyboardNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification)  {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-            let keyboardHeight = keyboardFrame.height
-            let keyWindow = UIApplication.shared.connectedScenes
-            .filter({$0.activationState == .foregroundActive})
-            .map({$0 as? UIWindowScene})
-            .compactMap({$0})
-            .first?.windows
-            .filter({$0.isKeyWindow}).first
-            let bottomPadding = keyWindow?.safeAreaInsets.bottom
-            
-            previousButtonBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - (bottomPadding ?? 0))
-            
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            
-            previousButtonBottomConstraint?.layoutConstraints[0].constant = 0
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-}
-    
 // MARK: - Server connect
 
 extension PasswordVC {

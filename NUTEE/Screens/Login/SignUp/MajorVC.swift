@@ -10,17 +10,10 @@ import UIKit
 
 import SnapKit
 
-class MajorVC: UIViewController {
+class MajorVC: SignUpViewController {
     
     // MARK: - UI components
     
-    // 로그인 화면
-    let closeButton = HighlightedButton()
-    
-    let progressView = UIProgressView()
-    
-    let guideLabel = UILabel()
-
     let firstMajorTitleLabel = UILabel()
     let firstMajorButton = HighlightedButton()
     let firstMajorUnderLineView = UIView()
@@ -29,17 +22,7 @@ class MajorVC: UIViewController {
     let secondMajorButton = HighlightedButton()
     let secondMajorUnderLineView = UIView()
     
-    let previousButton = HighlightedButton()
-    let nextButton = HighlightedButton()
-    
     // MARK: - Variables and Properties
-    
-    var totalSignUpViews: Float = 0.0
-    var progressStatusCount: Float = 0.0
-    
-    var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
     
     let majorButtonPlaceHolder = "전공을 선택해주세요"
     
@@ -56,8 +39,8 @@ class MajorVC: UIViewController {
         makeConstraints()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         
         enterMajorVCAnimate()
     }
@@ -65,31 +48,8 @@ class MajorVC: UIViewController {
     // MARK: - Helper
     
     func initView() {
-        
-        _ = view.then {
-            $0.backgroundColor = .white
-            $0.tintColor = .nuteeGreen
-        }
-        
-        _ = closeButton.then {
-            $0.setTitle("닫기", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            $0.alpha = 0
-        }
-        
-        _ = progressView.then {
-            $0.progressViewStyle = .bar
-            $0.tintColor = .nuteeGreen
-            $0.progress = progressStatusCount / totalSignUpViews
-            progressStatusCount += 1
-        }
-        
         _ = guideLabel.then {
             $0.text = "전공을 설정해주세요!!"
-            $0.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 18.0)
-            
-            $0.alpha = 0
         }
         
         _ = firstMajorTitleLabel.then {
@@ -139,35 +99,10 @@ class MajorVC: UIViewController {
             
             $0.alpha = 0
         }
-        
-        _ = previousButton.then {
-            $0.setTitle("이전", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapPreviousButton), for: .touchUpInside)
-        }
-        _ = nextButton.then {
-            $0.setTitle("다음", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            $0.isEnabled = true
-            $0.setTitleColor(.veryLightPink, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
-        }
-        
     }
     
     func makeConstraints() {
         // Add SubView
-        view.addSubview(closeButton)
-        
-        view.addSubview(progressView)
-        
-        view.addSubview(guideLabel)
-        
         view.addSubview(firstMajorTitleLabel)
         view.addSubview(firstMajorButton)
         view.addSubview(firstMajorUnderLineView)
@@ -176,31 +111,7 @@ class MajorVC: UIViewController {
         view.addSubview(secondMajorButton)
         view.addSubview(secondMajorUnderLineView)
         
-        view.addSubview(previousButton)
-        view.addSubview(nextButton)
-        
-        
         // Make Constraints
-        closeButton.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(closeButton.snp.width)
-            
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.left.equalTo(view.snp.left).offset(20)
-        }
-        
-        progressView.snp.makeConstraints {
-            $0.top.equalTo(closeButton.snp.bottom).offset(20)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-        }
-
-        guideLabel.snp.makeConstraints {
-            $0.top.equalTo(progressView.snp.bottom).offset(35 - yPosAnimationRange)
-            $0.left.equalTo(closeButton.snp.left)
-            $0.right.equalTo(view.snp.right).inset(20)
-        }
-        
         firstMajorTitleLabel.snp.makeConstraints {
             $0.top.equalTo(guideLabel.snp.bottom).offset(25)
             $0.left.equalTo(guideLabel.snp.left)
@@ -240,22 +151,6 @@ class MajorVC: UIViewController {
             $0.left.equalTo(secondMajorButton.snp.left)
             $0.right.equalTo(secondMajorButton.snp.right)
         }
-        
-        previousButton.snp.makeConstraints {
-            $0.width.equalTo(view.frame.size.width / 2.0)
-            $0.height.equalTo(50)
-            
-            $0.left.equalTo(view.snp.left)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-        }
-        nextButton.snp.makeConstraints {
-            $0.width.equalTo(previousButton.snp.width)
-            $0.height.equalTo(previousButton.snp.height)
-            
-            $0.centerY.equalTo(previousButton)
-            $0.left.equalTo(previousButton.snp.right)
-        }
-        
     }
     
     func updateFirstMajorButtonStatus() {
@@ -304,9 +199,7 @@ class MajorVC: UIViewController {
         }
         selectFirstMajorSheet.optionList = optionList
         selectFirstMajorSheet.optionContentAligment = "left"
-        
-        selectFirstMajorSheet.modalPresentationStyle = .custom
-        
+
         present(selectFirstMajorSheet, animated: true)
     }
     
@@ -336,13 +229,7 @@ class MajorVC: UIViewController {
         }
     }
     
-    @objc func didTapPreviousButton() {
-        self.modalTransitionStyle = .crossDissolve
-        
-        dismiss(animated: true)
-    }
-    
-    @objc func didTapNextButton() {
+    @objc override func didTapNextButton() {
         let passwordVC = PasswordVC()
         passwordVC.totalSignUpViews = totalSignUpViews
         passwordVC.progressStatusCount = progressStatusCount
@@ -351,8 +238,6 @@ class MajorVC: UIViewController {
 //        passwordVC.nickname = nicknameTextField.text ?? ""
 //        passwordVC.email = self.email
         
-        passwordVC.modalPresentationStyle = .fullScreen
-
         present(passwordVC, animated: false)
     }
     
@@ -363,18 +248,6 @@ class MajorVC: UIViewController {
 extension MajorVC {
     
     private func enterMajorVCAnimate() {
-        
-        // guide title
-        UIView.animate(withDuration: animationDuration,
-                       delay: 1,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.guideLabel.alpha = 1
-                        self.guideLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
-        })
-        
         // major guide & first major title
         UIView.animate(withDuration: animationDuration,
                        delay: 1 + 0.4,
@@ -382,9 +255,6 @@ extension MajorVC {
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
                        animations: {
-                        self.guideLabel.alpha = 1
-                        self.guideLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
-                        
                         self.firstMajorTitleLabel.alpha = 1
                         self.firstMajorTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
         })
@@ -426,17 +296,6 @@ extension MajorVC {
                         self.secondMajorUnderLineView.alpha = 1
                         self.secondMajorUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
-        
-        // progressView
-        UIView.animate(withDuration: animationDuration,
-                       delay: 0,
-                       usingSpringWithDamping: 0.85,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: { [self] in
-                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
-        })
-        
     }
 
 }

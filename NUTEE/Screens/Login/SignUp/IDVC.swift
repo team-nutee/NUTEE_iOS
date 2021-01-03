@@ -10,38 +10,19 @@ import UIKit
 
 import SnapKit
 
-class IDVC: UIViewController {
+class IDVC: SignUpViewController {
     
     // MARK: - UI components
-    
-    // 로그인 화면
-    let closeButton = HighlightedButton()
-    
-    let progressView = UIProgressView()
-    
-    let guideLabel = UILabel()
     
     let idTitleLabel = UILabel()
     let idTextField = UITextField()
     let idCheckLabel = UILabel()
     let idCheckButton = HighlightedButton()
     
-    let nextButton = HighlightedButton()
-    let previousButton = HighlightedButton()
-    
     // MARK: - Variables and Properties
-    
-    var totalSignUpViews: Float = 0.0
-    var progressStatusCount: Float = 0.0
     
     var email: String = ""
     var otp: String = ""
-    
-    var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
-    
-    var previousButtonBottomConstraint: Constraint?
     
     // MARK: - Life Cycle
     
@@ -54,8 +35,8 @@ class IDVC: UIViewController {
         addKeyboardNotification()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         
         enterIDVCAnimate()
     }
@@ -63,30 +44,8 @@ class IDVC: UIViewController {
     // MARK: - Helper
     
     func initView() {
-        
-        _ = view.then {
-            $0.backgroundColor = .white
-            $0.tintColor = .nuteeGreen
-        }
-        
-        _ = closeButton.then {
-            $0.setTitle("닫기", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-        }
-        
-        _ = progressView.then {
-            $0.progressViewStyle = .bar
-            $0.tintColor = .nuteeGreen
-            $0.progress = progressStatusCount / totalSignUpViews
-            progressStatusCount += 1
-        }
-        
         _ = guideLabel.then {
             $0.text = "아이디를 입력해주세요!!"
-            $0.font = .boldSystemFont(ofSize: 20)
-            
-            $0.alpha = 0
         }
         
         _ = idTitleLabel.then {
@@ -125,34 +84,12 @@ class IDVC: UIViewController {
         }
         
         _ = previousButton.then {
-            $0.setTitle("이전", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
             $0.alpha = 0
-            
-            $0.addTarget(self, action: #selector(didTapPreviousButton), for: .touchUpInside)
         }
-        _ = nextButton.then {
-            $0.setTitle("다음", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            $0.isEnabled = true
-            $0.setTitleColor(.veryLightPink, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
-        }
-        
     }
     
     func makeConstraints() {
         // Add SubView
-        view.addSubview(closeButton)
-        
-        view.addSubview(progressView)
-        
-        view.addSubview(guideLabel)
         view.addSubview(idTitleLabel)
         view.addSubview(idTextField)
         view.addSubview(idCheckButton)
@@ -161,28 +98,7 @@ class IDVC: UIViewController {
         view.addSubview(previousButton)
         view.addSubview(nextButton)
         
-        
         // Make Constraints
-        closeButton.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(closeButton.snp.width)
-            
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.left.equalTo(view.snp.left).offset(20)
-        }
-        
-        progressView.snp.makeConstraints {
-            $0.top.equalTo(closeButton.snp.bottom).offset(20)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-        }
-
-        guideLabel.snp.makeConstraints {
-            $0.top.equalTo(progressView.snp.bottom).offset(35 - yPosAnimationRange)
-            $0.left.equalTo(closeButton.snp.left)
-            $0.right.equalTo(view.snp.right).inset(20)
-        }
-        
         idTitleLabel.snp.makeConstraints {
             $0.top.equalTo(guideLabel.snp.bottom).offset(40)
             $0.left.equalTo(guideLabel.snp.left)
@@ -208,35 +124,13 @@ class IDVC: UIViewController {
             $0.left.equalTo(idTextField.snp.left)
             $0.right.equalTo(idTextField.snp.right)
         }
-        
-        previousButton.snp.makeConstraints {
-            $0.width.equalTo(view.frame.size.width / 2.0)
-            $0.height.equalTo(50)
-            
-            $0.left.equalTo(view.snp.left)
-            previousButtonBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
-        }
-        nextButton.snp.makeConstraints {
-            $0.width.equalTo(previousButton.snp.width)
-            $0.height.equalTo(previousButton.snp.height)
-            
-            $0.centerY.equalTo(previousButton)
-            $0.left.equalTo(previousButton.snp.right)
-        }
-        
     }
     
     @objc func didTapCheckButton() {
         checkID(idTextField.text ?? "")
     }
     
-    @objc func didTapPreviousButton() {
-        self.modalTransitionStyle = .crossDissolve
-        
-        dismiss(animated: true)
-    }
-    
-    @objc func didTapNextButton() {
+    @objc override func didTapNextButton() {
         idTextField.resignFirstResponder()
 
         let nicknameVC = NicknameVC()
@@ -246,23 +140,17 @@ class IDVC: UIViewController {
         nicknameVC.userId = idTextField.text ?? ""
         nicknameVC.email = self.email
         nicknameVC.otp = self.otp
-        nicknameVC.modalPresentationStyle = .fullScreen
         
         present(nicknameVC, animated: false)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
-
 
 // MARK: - TextField Delegate
 
 extension IDVC : UITextFieldDelegate {
   
     @objc func textFieldDidChange(_ textField: UITextField) {
-        
         if idTextField.text != "" && idTextField.text?.validateID() == true {
             successAnimate()
             
@@ -283,7 +171,6 @@ extension IDVC : UITextFieldDelegate {
             idCheckButton.isEnabled = false
             idCheckButton.setTitleColor(.veryLightPink, for: .normal)
         }
-        
     }
     
 }
@@ -293,16 +180,14 @@ extension IDVC : UITextFieldDelegate {
 extension IDVC {
     
     private func enterIDVCAnimate() {
-        
-        // guide title
+        // provious button appear
         UIView.animate(withDuration: animationDuration,
-                       delay: 1,
-                       usingSpringWithDamping: 0.6,
+                       delay: 0,
+                       usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
-                        self.guideLabel.alpha = 1
-                        self.guideLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
+                       animations: { [self] in
+                        self.previousButton.alpha = 1
         })
         
         // id title
@@ -331,23 +216,9 @@ extension IDVC {
                         
                         self.idCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
-        
-        // progressView, close button disappear and provious button appear
-        UIView.animate(withDuration: animationDuration,
-                       delay: 0,
-                       usingSpringWithDamping: 0.85,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: { [self] in
-                        self.closeButton.alpha = 0
-                        progressView.setProgress(progressStatusCount / totalSignUpViews, animated: true)
-                        self.previousButton.alpha = 1
-        })
-        
     }
 
     private func successAnimate() {
-        
         UIView.animate(withDuration: 0.5,
                        delay: 0,
                        usingSpringWithDamping: 0.85,
@@ -360,7 +231,6 @@ extension IDVC {
     }
     
     private func errorAnimate(errorMessage: String) {
-        
         let errorColor = UIColor(red: 255, green: 67, blue: 57)
         
         idTextField.addBorder(.bottom, color: errorColor, thickness: 1)
@@ -399,56 +269,10 @@ extension IDVC {
     
 }
 
-// MARK: - Keyboard
-
-extension IDVC {
-    
-    func addKeyboardNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification)  {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-            let keyboardHeight = keyboardFrame.height
-            let keyWindow = UIApplication.shared.connectedScenes
-            .filter({$0.activationState == .foregroundActive})
-            .map({$0 as? UIWindowScene})
-            .compactMap({$0})
-            .first?.windows
-            .filter({$0.isKeyWindow}).first
-            let bottomPadding = keyWindow?.safeAreaInsets.bottom
-            
-            previousButtonBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - (bottomPadding ?? 0))
-            
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            
-            previousButtonBottomConstraint?.layoutConstraints[0].constant = 0
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
-}
-
 // MARK: - Server connect
 
 extension IDVC {
+    
     @objc func checkID(_ userId : String){
         UserService.shared.checkID(userId) { (responsedata) in
             switch responsedata {
