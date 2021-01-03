@@ -326,6 +326,8 @@ class NewsFeedTVCell: UITableViewCell {
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.titleHeight = 0
+        
         nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
                                       ["삭제", UIColor.red, "deletePost"],
                                       ["🚨신고하기", UIColor.red, "reportPost"]]

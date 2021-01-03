@@ -190,8 +190,6 @@ class MajorVC: SignUpViewController {
         
         selectFirstMajorSheet.handleArea = 0
         selectFirstMajorSheet.titleContent = majorButtonPlaceHolder
-        selectFirstMajorSheet.completeButton.isEnabled = false
-        selectFirstMajorSheet.completeButton.isHidden = true
         
         var optionList = [[Any]]()
         for major in majorList {

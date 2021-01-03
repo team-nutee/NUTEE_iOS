@@ -167,6 +167,7 @@ class CategoryVC: SignUpViewController {
         
         selectCategorySheet.handleArea = 0
         selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+        selectCategorySheet.isNeedCompleteButton = true
         
         var optionList = [[Any]]()
         for category in categoryList {

@@ -103,6 +103,8 @@ class SettingProfileImageVC : UIViewController {
     
     @objc func didTapProfileImageView() {
         let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.titleHeight = 0
+        
         nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen, "openLibrary"]]
         
         if (UIImagePickerController .isSourceTypeAvailable(.camera)) {

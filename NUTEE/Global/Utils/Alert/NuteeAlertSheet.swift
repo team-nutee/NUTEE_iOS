@@ -31,6 +31,8 @@ class NuteeAlertSheet : UIViewController {
     var titleContent = ""
     var titleHeight: CGFloat = 50
     
+    var isNeedCompleteButton = false
+    
     var categoryVC: CategoryVC?
     var majorVC: MajorVC?
     
@@ -102,11 +104,13 @@ class NuteeAlertSheet : UIViewController {
             $0.backgroundColor = .white
         }
         _ = completeButton.then {
-            $0.setTitle("완료", for: .normal)
-            $0.setTitleColor(.black, for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
-            
-            $0.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
+            if isNeedCompleteButton == true {
+                $0.setTitle("완료", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
+                
+                $0.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
+            }
         }
         
         _ = optionTableView.then {
@@ -530,12 +534,10 @@ class OptionListTVCell : UITableViewCell {
             $0.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
             $0.tintColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
             
-            if nuteeAlertSheet?.optionList[indexPathRow!][3] as? Bool == true {
-                $0.isHidden = true
-            } else {
+            $0.isHidden = true
+            if nuteeAlertSheet?.optionList[indexPathRow!].count ?? 0 >= 4 && nuteeAlertSheet?.optionList[indexPathRow!][3] as? Bool == false {
                 $0.isHidden = false
             }
-            
         }
     }
     
@@ -546,14 +548,15 @@ class OptionListTVCell : UITableViewCell {
         optionItemLabel.snp.makeConstraints {
             $0.centerY.equalTo(contentView)
             $0.left.equalTo(contentView.snp.left).offset(20)
+            $0.right.equalTo(contentView.snp.right).inset(20)
         }
         selectedOptionImageView.snp.makeConstraints {
             $0.width.equalTo(selectedOptionImageView.snp.height)
             $0.height.equalTo(20)
             
             $0.centerY.equalTo(optionItemLabel)
-            $0.left.equalTo(optionItemLabel.snp.right)
-            $0.right.equalTo(contentView.snp.right).inset(20)
+//            $0.left.equalTo(optionItemLabel.snp.right)
+            $0.right.equalTo(optionItemLabel.snp.right)
         }
     }
 
