@@ -10,17 +10,11 @@ import UIKit
 
 import SnapKit
 
-class EmailVC: UIViewController {
+class EmailVC: SignUpViewController {
     
     // MARK: - UI components
     
     // 로그인 화면
-    let closeButton = HighlightedButton()
-    
-    let progressView = UIProgressView()
-    
-    let guideLabel = UILabel()
-    
     let emailTitleLabel = UILabel()
     let emailTextField = UITextField()
     let certificationButton = HighlightedButton()
@@ -30,15 +24,7 @@ class EmailVC: UIViewController {
     let confirmButton = HighlightedButton()
     let comfirmResultLabel = UILabel()
     
-    let nextButton = HighlightedButton()
-    
     // MARK: - Variables and Properties
-    
-    var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
-    
-    var nextButtonBottomConstraint: Constraint?
     
     // MARK: - Life Cycle
     
@@ -51,8 +37,8 @@ class EmailVC: UIViewController {
         addKeyboardNotification()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         
         enterEmailVCAnimate()
     }
@@ -60,31 +46,13 @@ class EmailVC: UIViewController {
     // MARK: - Helper
     
     func initView() {
-        
-        _ = view.then {
-            $0.backgroundColor = .white
-            $0.tintColor = .nuteeGreen
-        }
-        
         _ = closeButton.then {
-            $0.setTitle("닫기", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 15)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        }
-        
-        _ = progressView.then {
-            $0.progressViewStyle = .bar
-            $0.tintColor = .nuteeGreen
-            $0.progress = 0/4
+            $0.removeTarget(self, action: #selector(didTapCloseButton), for: .allEvents)
+            $0.addTarget(self, action: #selector(didTapPreviousButton), for: .touchUpInside)
         }
         
         _ = guideLabel.then {
             $0.text = "인증을 위해 학교 이메일이 필요해요! 😄"
-            $0.font = .boldSystemFont(ofSize: 20)
-            
-            $0.alpha = 0
         }
         
         _ = emailTitleLabel.then {
@@ -148,27 +116,14 @@ class EmailVC: UIViewController {
             $0.alpha = 0
         }
         
-        _ = nextButton.then {
-            $0.setTitle("다음", for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
-            $0.setTitleColor(.nuteeGreen, for: .normal)
-            
-            //$0.isEnabled = false
-            $0.setTitleColor(.veryLightPink, for: .normal)
-            
-            $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+        _ = previousButton.then {
+            $0.isEnabled = false
+            $0.isHidden = true
         }
-        
     }
     
     func makeConstraints() {
         // Add SubView
-        view.addSubview(closeButton)
-        
-        view.addSubview(progressView)
-        
-        view.addSubview(guideLabel)
-        
         view.addSubview(emailTitleLabel)
         view.addSubview(emailTextField)
         view.addSubview(certificationButton)
@@ -178,30 +133,7 @@ class EmailVC: UIViewController {
         view.addSubview(confirmButton)
         view.addSubview(comfirmResultLabel)
         
-        view.addSubview(nextButton)
-        
-        
         // Make Constraints
-        closeButton.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(closeButton.snp.width)
-            
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            $0.left.equalTo(view.snp.left).offset(20)
-        }
-        
-        progressView.snp.makeConstraints {
-            $0.top.equalTo(closeButton.snp.bottom).offset(20)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-        }
-
-        guideLabel.snp.makeConstraints {
-            $0.top.equalTo(progressView.snp.bottom).offset(35 - yPosAnimationRange)
-            $0.left.equalTo(closeButton.snp.left)
-            $0.right.equalTo(view.snp.right).inset(20)
-        }
-        
         emailTitleLabel.snp.makeConstraints {
             $0.top.equalTo(guideLabel.snp.bottom).offset(40)
             $0.left.equalTo(guideLabel.snp.left)
@@ -245,22 +177,6 @@ class EmailVC: UIViewController {
             $0.left.equalTo(certificationNumberTextField.snp.left)
             $0.right.equalTo(certificationNumberTextField.snp.right)
         }
-        
-        nextButton.snp.makeConstraints {
-            $0.width.equalTo(view.frame.size.width / 2.0)
-            $0.height.equalTo(50)
-            
-            $0.right.equalTo(view.snp.right)
-            nextButtonBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
-        }
-        
-    }
-    
-    @objc func didTapCloseButton() {
-        self.modalPresentationStyle = .overFullScreen
-        self.modalTransitionStyle = .crossDissolve
-        
-        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapCertificationButton() {
@@ -271,21 +187,20 @@ class EmailVC: UIViewController {
         checkOTP(certificationNumberTextField.text ?? "")
     }
     
-    @objc func didTapNextButton() {
+    @objc override func didTapNextButton() {
         emailTextField.resignFirstResponder()
         certificationNumberTextField.resignFirstResponder()
         
         let idVC = IDVC()
+        idVC.totalSignUpViews = totalSignUpViews
+        idVC.progressStatusCount = progressStatusCount
+        
         idVC.email = emailTextField.text ?? ""
         idVC.otp = certificationNumberTextField.text ?? ""
-        idVC.modalPresentationStyle = .fullScreen
         
         present(idVC, animated: false)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
 }
 
 // MARK: - TextField Delegate
@@ -293,7 +208,6 @@ class EmailVC: UIViewController {
 extension EmailVC : UITextFieldDelegate {
   
     @objc func emailTextFieldDidChange(_ textField: UITextField) {
-        
         if emailTextField.text != "" && emailTextField.text?.validateOfficeEmail() == true {
             certificationButton.isEnabled = true
             certificationButton.setTitleColor(.nuteeGreen, for: .normal)
@@ -303,11 +217,9 @@ extension EmailVC : UITextFieldDelegate {
             certificationButton.setTitleColor(.veryLightPink, for: .normal)
 
         }
-        
     }
     
     @objc func certificationNumberTextFieldDidChange(_ textField: UITextField) {
-        
         if certificationNumberTextField.text != "" {
             confirmButton.isEnabled = true
             confirmButton.setTitleColor(.nuteeGreen, for: .normal)
@@ -326,18 +238,6 @@ extension EmailVC : UITextFieldDelegate {
 extension EmailVC {
     
     private func enterEmailVCAnimate() {
-        
-        // guide title
-        UIView.animate(withDuration: animationDuration,
-                       delay: 1,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.guideLabel.alpha = 1
-                        self.guideLabel.transform = CGAffineTransform.init(translationX: 0, y: 50)
-        })
-        
         // email title
         UIView.animate(withDuration: animationDuration,
                        delay: 1 + 0.4,
@@ -364,21 +264,9 @@ extension EmailVC {
                         
                         self.certificationResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
-        
-        // progressView
-        UIView.animate(withDuration: animationDuration,
-                       delay: 0,
-                       usingSpringWithDamping: 0.85,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.progressView.setProgress(1/4, animated: true)
-
-        })
     }
     
     private func certificationAnimate() {
-   
         // insert certificate code area
         UIView.animate(withDuration: 1,
                        delay: 0,
@@ -395,12 +283,10 @@ extension EmailVC {
                         self.confirmButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
-
         })
     }
     
     private func successAnimate(targetTextField: UITextField, successMessage: String) {
-        
         targetTextField.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
         
         if targetTextField == self.emailTextField {
@@ -432,7 +318,6 @@ extension EmailVC {
     }
     
     private func errorAnimate(targetTextField: UITextField, errorMessage: String) {
-        
         let errorColor = UIColor(red: 255, green: 67, blue: 57)
         
         targetTextField.addBorder(.bottom, color: errorColor, thickness: 1)
@@ -487,53 +372,6 @@ extension EmailVC {
                             self.comfirmResultLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
                         }
         })
-    }
-    
-}
-
-// MARK: - Keyboard
-
-extension EmailVC {
-    
-    func addKeyboardNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification)  {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-            let keyboardHeight = keyboardFrame.height
-            let keyWindow = UIApplication.shared.connectedScenes
-            .filter({$0.activationState == .foregroundActive})
-            .map({$0 as? UIWindowScene})
-            .compactMap({$0})
-            .first?.windows
-            .filter({$0.isKeyWindow}).first
-            let bottomPadding = keyWindow?.safeAreaInsets.bottom
-            
-            nextButtonBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - (bottomPadding ?? 0))
-            
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
-    }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        if let info = notification.userInfo {
-            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-            
-            nextButtonBottomConstraint?.layoutConstraints[0].constant = 0
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
-        }
     }
     
 }

@@ -17,6 +17,8 @@ class NuteeAlertSheet : UIViewController {
     
     let cardView = UIView()
     let handleView = UIView()
+    let titleLabel = UILabel()
+    let completeButton = HighlightedButton()
     
     let optionTableView = UITableView()
     
@@ -26,7 +28,16 @@ class NuteeAlertSheet : UIViewController {
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
     
-    var optionList = [["", UIColor.self, ""]]
+    var titleContent = ""
+    var titleHeight: CGFloat = 50
+    
+    var categoryVC: CategoryVC?
+    var majorVC: MajorVC?
+    
+    var selectedOptionList: [String] = []
+    
+    var optionList = [["", UIColor.self, "", Bool.self]]
+    var optionContentAligment = "center"
     var optionHeight: CGFloat = 50
 
     var cardViewTopConstraint: Constraint?
@@ -81,6 +92,23 @@ class NuteeAlertSheet : UIViewController {
             $0.backgroundColor = .lightGray
             $0.alpha = 0.5
         }
+        _ = titleLabel.then {
+            $0.text = titleContent
+            $0.textColor = .black
+            $0.font = .boldSystemFont(ofSize: 18)
+            
+            $0.textAlignment = .center
+            
+            $0.backgroundColor = .white
+        }
+        _ = completeButton.then {
+            $0.setTitle("완료", for: .normal)
+            $0.setTitleColor(.black, for: .normal)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
+            
+            $0.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
+        }
+        
         _ = optionTableView.then {
             $0.delegate = self
             $0.dataSource = self
@@ -99,6 +127,9 @@ class NuteeAlertSheet : UIViewController {
         
         view.addSubview(cardView)
         cardView.addSubview(handleView)
+        cardView.addSubview(titleLabel)
+        cardView.addSubview(completeButton)
+        
         cardView.addSubview(optionTableView)
         
         
@@ -112,7 +143,7 @@ class NuteeAlertSheet : UIViewController {
 
         let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
         cardView.snp.makeConstraints {
-            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)).constraint
+            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)).constraint
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
@@ -124,8 +155,23 @@ class NuteeAlertSheet : UIViewController {
             $0.centerX.equalTo(cardView)
             $0.top.equalTo(cardView.snp.top).offset(10)
         }
-        optionTableView.snp.makeConstraints {
+        titleLabel.snp.makeConstraints{
+            $0.height.equalTo(titleHeight)
+            
             $0.top.equalTo(cardView.snp.top).offset(handleArea)
+            $0.left.equalTo(cardView.snp.left)
+            $0.right.equalTo(cardView.snp.right)
+        }
+        completeButton.snp.makeConstraints{
+            $0.width.equalTo(70)
+            $0.height.equalTo(titleLabel.snp.height)
+            
+            $0.centerY.equalTo(titleLabel)
+            $0.right.equalTo(titleLabel.snp.right)
+        }
+        
+        optionTableView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom)
             $0.left.equalTo(cardView.snp.left)
             $0.right.equalTo(cardView.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
@@ -135,6 +181,38 @@ class NuteeAlertSheet : UIViewController {
     @objc func didTapOutsideCardSheet() {
         self.presentingViewController?.view.alpha = 1.0
         self.dismiss(animated: true)
+    }
+    
+    @objc func didTapCompleteButton() {
+        switch optionList[0][2] as? String {
+        case "selectCategory":
+            didTapSelectCategoryCompleteButton()
+        default:
+            didTapOutsideCardSheet()
+        }
+    }
+    
+    @objc func didTapSelectCategoryCompleteButton() {
+        for selectedOption in optionList {
+            if selectedOption[3] as? Bool == false {
+                selectedOptionList.append(selectedOption[0] as! String)
+            }
+        }
+        categoryVC?.selectedCategoryList = selectedOptionList
+        
+        categoryVC?.updateCategoryVC()
+        categoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
+        UIView.animate(withDuration: categoryVC?.animationDuration ?? 1.4,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: {
+                        self.categoryVC?.selectCategoryButton.titleLabel?.alpha = 1
+        })
+        
+        didTapOutsideCardSheet()
+        
     }
     
     // MARK: - Pan Recognizer
@@ -197,7 +275,7 @@ class NuteeAlertSheet : UIViewController {
       case .ended :
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
           
-            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)) * 0.25 {
+            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)) * 0.25 {
             // show the card at normal state
                 setRegularPosition()
           } else if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight) - 200 {
@@ -224,7 +302,7 @@ class NuteeAlertSheet : UIViewController {
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
             
             cardView.snp.updateConstraints {
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
+                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
             }
         }
         
@@ -250,7 +328,7 @@ class NuteeAlertSheet : UIViewController {
       }
       
       // when card view top constraint value is equal to this, the darkest alpha (0.7)
-      let fullDimPosition = (safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count))
+      let fullDimPosition = (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
       
       // when card view top constraint value is equal to this, the lightest alpha (0.0)
       let noDimPosition = safeAreaHeight + bottomPadding
@@ -353,7 +431,10 @@ extension NuteeAlertSheet : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.OptionListTVCell, for: indexPath) as! OptionListTVCell
         cell.selectionStyle = .none
         
-        cell.optionItem = optionList[indexPath.row]
+        cell.nuteeAlertSheet = self
+        cell.indexPathRow = indexPath.row
+        
+        cell.optionContentAligment = optionContentAligment
         
         cell.initCell()
         cell.addContentView()
@@ -373,6 +454,23 @@ extension NuteeAlertSheet : UITableViewDataSource {
             openLibrary()
         case "openCamera":
             openCamera()
+        case "selectCategory":
+            let cell = tableView.cellForRow(at: indexPath) as? OptionListTVCell
+            if optionList[indexPath.row][3] as? Bool == true {
+                cell?.selectedOptionImageView.isHidden = false
+                optionList[indexPath.row][3] = false
+            } else {
+                cell?.selectedOptionImageView.isHidden = true
+                optionList[indexPath.row][3] = true
+            }
+        case "selectFirstMajor":
+            majorVC?.firstMajor = optionList[indexPath.row][0] as? String ?? ""
+            majorVC?.updateFirstMajorButtonStatus()
+            didTapOutsideCardSheet()
+        case "selectSecondMajor":
+            majorVC?.secondMajor = optionList[indexPath.row][0] as? String ?? ""
+            majorVC?.updateSecondMajorButtonStatus()
+            didTapOutsideCardSheet()
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
         }
@@ -389,10 +487,14 @@ class OptionListTVCell : UITableViewCell {
     // MARK: - UI components
     
     let optionItemLabel = UILabel()
+    let selectedOptionImageView = UIImageView()
     
     // MARK: - Variables and Properties
     
-    var optionItem = ["", UIColor.self] as [Any]
+    var optionContentAligment = "center"
+    
+    var nuteeAlertSheet: NuteeAlertSheet?
+    var indexPathRow: Int?
     
     // MARK: - Life Cycle
     
@@ -412,21 +514,49 @@ class OptionListTVCell : UITableViewCell {
     
     func initCell() {
         _ = optionItemLabel.then {
-            $0.text = optionItem[0] as? String
+            $0.text = nuteeAlertSheet?.optionList[indexPathRow!][0] as? String
             $0.font = .systemFont(ofSize: 20)
-            $0.textColor = optionItem[1] as? UIColor
+            $0.textColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
+            
+            switch optionContentAligment {
+            case "left" :
+                $0.textAlignment = .left
+            default :
+                $0.textAlignment = .center
+            }
+        }
+        _ = selectedOptionImageView.then {
+            let configuration = UIImage.SymbolConfiguration(weight: .bold)
+            $0.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
+            $0.tintColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
+            
+            if nuteeAlertSheet?.optionList[indexPathRow!][3] as? Bool == true {
+                $0.isHidden = true
+            } else {
+                $0.isHidden = false
+            }
+            
         }
     }
     
     func addContentView() {
         contentView.addSubview(optionItemLabel)
+        contentView.addSubview(selectedOptionImageView)
         
         optionItemLabel.snp.makeConstraints {
-            $0.centerX.equalTo(contentView)
             $0.centerY.equalTo(contentView)
+            $0.left.equalTo(contentView.snp.left).offset(20)
+        }
+        selectedOptionImageView.snp.makeConstraints {
+            $0.width.equalTo(selectedOptionImageView.snp.height)
+            $0.height.equalTo(20)
+            
+            $0.centerY.equalTo(optionItemLabel)
+            $0.left.equalTo(optionItemLabel.snp.right)
+            $0.right.equalTo(contentView.snp.right).inset(20)
         }
     }
-    
+
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         

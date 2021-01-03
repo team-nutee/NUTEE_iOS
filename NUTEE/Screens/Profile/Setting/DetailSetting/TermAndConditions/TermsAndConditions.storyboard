@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,10 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="YU7-m1-ocz">
-                                <rect key="frame" x="10" y="88" width="404" height="725"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <mutableString key="text">제1조(목적)
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="YU7-m1-ocz">
+                                <rect key="frame" x="0.0" y="138" width="414" height="676"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <string key="text">제1조(목적)
 NUTEE(이하 누티) 서비스 이용약관은 S&amp;N(이하 소울)이 서비스를 제공함에 있어, 소울와 이용자 간의 권리, 의무 및 책임 사항 등을 규정함을 목적으로 합니다.
 
 제2조(정의)
@@ -125,20 +128,14 @@ NUTEE(이하 누티) 서비스 이용약관은 S&amp;N(이하 소울)이 서비�
 제13조(기타)
    • 이 약관은 2020년 4월 7일에 마지막으로 작성했습니다.
    • 이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 관련법 또는 관례에 따릅니다.
-   • 이 약관에도 불구하고 다른 약관이나 서비스 이용 중 안내 문구 등으로 달리 정함이 있는 경우에는 해당 내용을 우선으로 합니다.</mutableString>
-                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+   • 이 약관에도 불구하고 다른 약관이나 서비스 이용 중 안내 문구 등으로 달리 정함이 있는 경우에는 해당 내용을 우선으로 합니다.</string>
+                                <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="YU7-m1-ocz" firstAttribute="top" secondItem="kCx-3g-kJv" secondAttribute="top" id="JZN-jt-bAM"/>
-                            <constraint firstItem="YU7-m1-ocz" firstAttribute="leading" secondItem="kCx-3g-kJv" secondAttribute="leading" constant="10" id="Qt7-vC-Cvx"/>
-                            <constraint firstItem="kCx-3g-kJv" firstAttribute="trailing" secondItem="YU7-m1-ocz" secondAttribute="trailing" id="iNO-kg-wrm"/>
-                            <constraint firstItem="kCx-3g-kJv" firstAttribute="bottom" secondItem="YU7-m1-ocz" secondAttribute="bottom" id="mpA-xI-1t4"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="kCx-3g-kJv"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="MDs-jv-42z"/>
                     <connections>
@@ -149,41 +146,13 @@ NUTEE(이하 누티) 서비스 이용약관은 S&amp;N(이하 소울)이 서비�
             </objects>
             <point key="canvasLocation" x="6126.0869565217399" y="797.54464285714278"/>
         </scene>
-        <!--Item-->
-        <scene sceneID="143-wH-5gf">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nSF-EO-kWz" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="CgP-hr-Lg3"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bzK-tK-kSD">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="WL2-dl-fbc" kind="relationship" relationship="rootViewController" id="vNU-MS-ADQ"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="d8n-YD-bmI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5215.9420289855079" y="797.54464285714278"/>
-        </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="Kjx-Tv-47y">
-            <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="iMI-Mp-s9Y" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Llz-Qu-cFt">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="nSF-EO-kWz" kind="relationship" relationship="viewControllers" id="8Z2-py-6IA"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2mQ-Zm-S8E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4305.7971014492759" y="797.54464285714278"/>
-        </scene>
     </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
