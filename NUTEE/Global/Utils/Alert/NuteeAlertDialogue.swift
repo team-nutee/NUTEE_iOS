@@ -20,10 +20,12 @@ class NuteeAlertDialogue: UIViewController {
     let titleLabel = UILabel()
     let contentTextView = UITextView()
     
-    let okButton = UIButton()
-    let cancelButton = UIButton()
+    let okButton = HighlightedButton()
+    let cancelButton = HighlightedButton()
     
     // MARK: - Variables and Properties
+    
+    var windowWidth: CGFloat = 245
     
     var dialogueData = ["", ""]
     var okButtonData = ["확인", UIColor.white, UIColor.nuteeGreen] as [Any] // title: 0, textColor: 1, backgroundColor: 2
@@ -118,7 +120,7 @@ class NuteeAlertDialogue: UIViewController {
         }
         
         windowView.snp.makeConstraints {
-            $0.width.equalTo(245)
+            $0.width.equalTo(windowWidth)
             
             $0.centerX.equalTo(view)
             $0.centerY.equalTo(view)
@@ -157,6 +159,10 @@ class NuteeAlertDialogue: UIViewController {
         okButton.addTarget(self, action: #selector(didTapEditOkButton), for: .touchUpInside)
     }
     
+    func addCancelSigUpAction() {
+        okButton.addTarget(self, action: #selector(didTapCancelSignUp), for: .touchUpInside)
+    }
+    
     @objc func didTapEditOkButton() {
         self.dismiss(animated: true)
     }
@@ -170,6 +176,11 @@ class NuteeAlertDialogue: UIViewController {
         dismiss(animated: true, completion: {
             beforeVC?.dismiss(animated: true)
         })
+    }
+    
+    @objc func didTapCancelSignUp() {
+        let rootVC = self.view.window!.rootViewController
+        rootVC?.dismiss(animated: true, completion: nil)
     }
     
 }
