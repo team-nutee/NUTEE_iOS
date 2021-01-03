@@ -106,6 +106,7 @@ struct UserService {
                                 completion(.success(result))
                                 
                             } catch {
+                                print("response code: ", status, "\ndecode fail")
                                 completion(.pathErr)
                             }
                         case 401:
