@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SwiftKeychainWrapper
+
 class SettingVC : UIViewController {
     
     // MARK: - UI components
@@ -154,16 +156,22 @@ extension SettingVC : UITableViewDataSource {
             let termsAndConditionsVC = termsAndConditionsSB.instantiateViewController(withIdentifier: "TermsAndConditions") as! TermsAndConditionsVC
             
             self.navigationController?.pushViewController(termsAndConditionsVC, animated: true)
+            
         case IndexPath(row: 1, section: 1):
             let developerInfoVC = DeveloperInfoVC()
             self.navigationController?.pushViewController(developerInfoVC, animated: true)
         
-        default:
+        case IndexPath(row: 0, section: 2):
+            KeychainWrapper.standard.remove(forKey: "userId")
+            KeychainWrapper.standard.remove(forKey: "pw")
+            
             let rootVC = view.window?.rootViewController
             self.view.window!.rootViewController?.dismiss(animated: true, completion: {
                 rootVC?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
             })
-//            simpleNuteeAlertDialogue(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
+            
+        default:
+            simpleNuteeAlertDialogue(title: "오류발생😢", message: "해당 설정을 찾을 수 없습니다")
         }
     }
 

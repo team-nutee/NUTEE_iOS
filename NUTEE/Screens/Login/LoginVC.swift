@@ -107,6 +107,7 @@ class LoginVC: UIViewController {
             
             $0.tintColor = .nuteeGreen
             
+            autoLogin = true
             didTapAutoLoginButton()
             
             $0.contentHorizontalAlignment = .left
@@ -296,13 +297,13 @@ class LoginVC: UIViewController {
     }
     
     @objc func didTapAutoLoginButton() {
+        autoLogin = !autoLogin
+        
         if autoLogin == true {
             autoLoginButton.setImage(UIImage(systemName: "largecircle.fill.circle"), for: .normal)
         } else {
             autoLoginButton.setImage(UIImage(systemName: "circle"), for: .normal)
         }
-        autoLogin = !autoLogin
-        
     }
     
     func checkSignIn() {
@@ -317,7 +318,7 @@ class LoginVC: UIViewController {
         }
     }
     
-    func startNuteeApp() {
+    func buildNuteeApp() -> TabBarController {
         var navigationController: UINavigationController
         
         // HomeTab
@@ -369,8 +370,10 @@ class LoginVC: UIViewController {
 
         tabBarController.tabBar.tintColor = .nuteeGreen
         
-        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = tabBarController
+        tabBarController.modalPresentationStyle = .fullScreen
+        tabBarController.modalTransitionStyle = .crossDissolve
+        
+        return tabBarController
     }
     
 }
@@ -479,7 +482,16 @@ extension LoginVC {
                 Splash.hide()
                 LoadingHUD.hide()
                 
-                startNuteeApp()
+                let nuteeApp = buildNuteeApp()
+                present(nuteeApp, animated: true, completion: { [self] in
+                    // LoginVC 초기화
+                    idTextField.text = ""
+                    pwTextField.text = ""
+                    textFieldDidChange(idTextField)
+                    
+                    autoLogin = true
+                    didTapAutoLoginButton()
+                })
         
             case .requestErr(let res):
                 let responseData = res as! SignIn
