@@ -89,6 +89,7 @@ class FindVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             
             $0.alpha = 0
+            $0.delegate = self
             $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         }
         
@@ -308,7 +309,7 @@ class FindVC: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        touchEndAnimate()
+        forgotPWExitAnimate()
     }
 
 }
@@ -342,13 +343,23 @@ extension FindVC : UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 
         if textField == findPasswordByIdTextField || textField == findPasswordByEmailTextField {
-            touchBeginAnimate()
+            forgotPWEnterAnimate()
         }
 
         idCheckLabel.alpha = 0
         passwordCheckLabel.alpha = 0
 
+        if textField == findIdByEmailTextField {
+            forgotIDEnterAnimate()
+        }
+        
         return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == findIdByEmailTextField {
+            forgotIDExitAnimate()
+        }
     }
 }
     
@@ -530,7 +541,57 @@ extension FindVC {
                        })
     }
     
-    private func touchBeginAnimate(){
+    private func forgotIDEnterAnimate(){
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: { [self] in
+                        let downRange: CGFloat = 120
+                        idForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: downRange + yPosAnimationRange)
+                        findIdByEmailTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: downRange + yPosAnimationRange)
+                        findIdByEmailTextField.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: downRange)
+                        idFindButton.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: downRange)
+                        idCheckLabel.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: downRange)
+                        passwordCheckLabel.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: 0)
+                        
+                        lineView.alpha = 0
+                        
+                        passwordForgetLabel.alpha = 0
+                        findPasswordByIdTitleLabel.alpha = 0
+                        findPasswordByEmailTitleLabel.alpha = 0
+                        findPasswordByIdTextField.alpha = 0
+                        findPasswordByEmailTextField.alpha = 0
+                        passwordFindButton.alpha = 0
+                       })
+    }
+    private func forgotIDExitAnimate(){
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: { [self] in
+                        idForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: yPosAnimationRange)
+                        findIdByEmailTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: yPosAnimationRange)
+                        findIdByEmailTextField.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: 0)
+                        idFindButton.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: 0)
+                        idCheckLabel.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: 0)
+                        passwordCheckLabel.transform = CGAffineTransform.init(translationX: -xPosAnimationRange, y: 0)
+                        
+                        lineView.alpha = 1
+                        
+                        passwordForgetLabel.alpha = 1
+                        findPasswordByIdTitleLabel.alpha = 1
+                        findPasswordByEmailTitleLabel.alpha = 1
+                        findPasswordByIdTextField.alpha = 1
+                        findPasswordByEmailTextField.alpha = 1
+                        passwordFindButton.alpha = 1
+                       })
+    }
+    
+    private func forgotPWEnterAnimate(){
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
                        usingSpringWithDamping: 0.6,
@@ -542,9 +603,10 @@ extension FindVC {
                         self.findIdByEmailTitleLabel.alpha = 0
                         self.findIdByEmailTextField.alpha = 0
                         self.idFindButton.alpha = 0
-                        self.lineView.alpha = 0
-                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: -180)
                         
+                        self.lineView.alpha = 0
+                        
+                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: -180)
                         self.passwordForgetLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
                         self.findPasswordByIdTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
                         self.findPasswordByEmailTitleLabel.transform = CGAffineTransform.init(translationX: 0, y: -130)
@@ -553,8 +615,7 @@ extension FindVC {
                         self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: -180)
                        })
     }
-    
-    private func touchEndAnimate(){
+    private func forgotPWExitAnimate(){
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
                        usingSpringWithDamping: 0.6,
@@ -577,6 +638,7 @@ extension FindVC {
                         self.passwordFindButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                        })
     }
+    
 }
 
 // MARK: - Server connect
