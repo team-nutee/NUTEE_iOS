@@ -51,7 +51,7 @@ class LoginVC: UIViewController {
         makeConstraints()
         
         enterLoginVCAnimate()
- //       checkSignIn()
+//        checkSignIn()
     }
     
     
@@ -263,6 +263,10 @@ class LoginVC: UIViewController {
         
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     @objc func didTapFindAccountButton() {
         let findVC = FindVC()
         findVC.modalPresentationStyle = .fullScreen
@@ -301,21 +305,73 @@ class LoginVC: UIViewController {
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+    func checkSignIn() {
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        let password = KeychainWrapper.standard.string(forKey: "pw")
+
+        if userId != nil && password != nil {
+            signInService(userId!, password!)
+        } else {
+            Splash.hide()
+            return
+        }
     }
     
-//    func checkSignIn() {
-//        let userId = KeychainWrapper.standard.string(forKey: "userId")
-//        let password = KeychainWrapper.standard.string(forKey: "pw")
-//
-//        if userId != nil && password != nil {
-//            signInService(userId!, password!)
-//        } else {
-//            Splash.hide()
-//            return
-//        }
-//    }
+    func startNuteeApp() {
+        var navigationController: UINavigationController
+        
+        // HomeTab
+        let homeVC = HomeVC()
+        navigationController = UINavigationController(rootViewController: homeVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "house")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
+
+        let HomeTab = navigationController
+        
+        // NotificationTab
+        let notificationVC = NotificationVC()
+        navigationController = UINavigationController(rootViewController: notificationVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "bell")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
+
+        let NotificationTab = navigationController
+        
+        // PostTab
+        let postVC = UIViewController()
+        postVC.view.backgroundColor = .white
+        navigationController = UINavigationController(rootViewController: postVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "plus")
+        
+        let PostTab = navigationController
+        
+        // NoticeTab
+        let noticeVC = NoticeVC()
+        navigationController = UINavigationController(rootViewController: noticeVC)
+        
+        navigationController.tabBarItem.image = UIImage(systemName: "pin")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+
+        let NoticeTab = navigationController
+        
+        // ProfileTab
+        let profileVC = ProfileVC()
+        navigationController = UINavigationController(rootViewController: profileVC)
+        navigationController.tabBarItem.image = UIImage(systemName: "person")
+        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+
+        let ProfileTab = navigationController
+        
+        // TabBarController Settings
+        let tabBarController = TabBarController()
+        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
+
+        tabBarController.tabBar.tintColor = .nuteeGreen
+        
+        let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+        sceneDelegate.window?.rootViewController = tabBarController
+    }
     
 }
 
@@ -414,81 +470,21 @@ extension LoginVC {
     }
     
     func signInService(_ userId: String, _ password: String) {
-        UserService.shared.signIn(userId, password) { responsedata in
+        UserService.shared.signIn(userId, password) { [self] result in
             
-            switch responsedata {
+            switch result {
                 
             // NetworkResult 의 요소들
             case .success(_):
                 Splash.hide()
                 LoadingHUD.hide()
                 
-                var navigationController: UINavigationController
-                
-                // HomeTab
-                let homeVC = HomeVC()
-                navigationController = UINavigationController(rootViewController: homeVC)
-                
-                navigationController.tabBarItem.image = UIImage(systemName: "house")
-                navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-                let HomeTab = navigationController
-                
-                // SearchTab
-//                let searchVC = SearchVC()
-//                navigationController = UINavigationController(rootViewController: searchVC)
-//
-//                navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-//                let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
-//                navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
-//
-//                let SearchTab = navigationController
-                
-                // NotificationTab
-                let notificationVC = NotificationVC()
-                navigationController = UINavigationController(rootViewController: notificationVC)
-                
-                navigationController.tabBarItem.image = UIImage(systemName: "bell")
-                navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
-
-                let NotificationTab = navigationController
-                
-                // PostTab
-                let postVC = UIViewController()
-                postVC.view.backgroundColor = .white
-                navigationController = UINavigationController(rootViewController: postVC)
-                navigationController.tabBarItem.image = UIImage(systemName: "plus")
-                
-                let PostTab = navigationController
-                
-                // NoticeTab
-                let noticeVC = NoticeVC()
-                navigationController = UINavigationController(rootViewController: noticeVC)
-                
-                navigationController.tabBarItem.image = UIImage(systemName: "pin")
-                navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
-
-                let NoticeTab = navigationController
-                
-                // ProfileTab
-                let profileVC = ProfileVC()
-                navigationController = UINavigationController(rootViewController: profileVC)
-                navigationController.tabBarItem.image = UIImage(systemName: "person")
-                navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-
-                let ProfileTab = navigationController
-                
-                // TabBarController Settings
-                let tabBarController = TabBarController()
-                tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
-
-                tabBarController.tabBar.tintColor = .nuteeGreen
-                
-                let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-                sceneDelegate.window?.rootViewController = tabBarController
-              //  sceneDelegate.window?.rootViewController = LoginVC()
+                startNuteeApp()
         
-            case .requestErr(_):
+            case .requestErr(let res):
+                let responseData = res as! SignIn
+                simpleNuteeAlertDialogue(title: "로그인 오류", message: responseData.message)
+                
                 LoadingHUD.hide()
                 self.error()
                 print("request error")

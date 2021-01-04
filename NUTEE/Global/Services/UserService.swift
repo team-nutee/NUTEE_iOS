@@ -96,21 +96,25 @@ struct UserService {
                 // parameter 위치
                 if let value = response.result.value {
                     if let status = response.response?.statusCode {
+                        
+                        var result: SignIn?
+                        do {
+                            let decoder = JSONDecoder()
+                            result = try decoder.decode(SignIn.self, from: value)
+                        } catch {
+                            completion(.pathErr)
+                        }
+                        
                         switch status {
                         case 200:
-                            do{
-                                let decoder = JSONDecoder()
-                                let result = try decoder.decode(SignIn.self, from: value)
-                                // 로그인 시 토큰 저장
-                                KeychainWrapper.standard.set(result.body.accessToken, forKey: "token")
-                                completion(.success(result))
-                                
-                            } catch {
-                                print("response code: ", status, "\ndecode fail")
-                                completion(.pathErr)
-                            }
+                                // 로그인 성공 시 토큰 저장
+                                KeychainWrapper.standard.set(result!.body.accessToken, forKey: "token")
+                                completion(.success(result!))
                         case 401:
                             completion(.pathErr)
+                        case 403:
+                            // ex)비밀번호가 맞지 않는 경우
+                            completion(.requestErr(result!))
                         case 500:
                             completion(.serverErr)
                         default:
