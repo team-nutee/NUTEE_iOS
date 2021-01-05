@@ -54,9 +54,12 @@ class SplashVC: UIViewController {
         let homeVC = HomeVC()
         navigationController = UINavigationController(rootViewController: homeVC)
         
-        navigationController.tabBarItem.image = UIImage(systemName: "house")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
+//        navigationController.tabBarItem.image = UIImage(systemName: "house")
+//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
 
+        navigationController.tabBarItem.image = UIImage(named: "home")
+        navigationController.tabBarItem.selectedImage = UIImage(named: "home_fill")
+        
         let HomeTab = navigationController
         
         // SearchTab
@@ -82,7 +85,8 @@ class SplashVC: UIViewController {
         let postVC = UIViewController()
         postVC.view.backgroundColor = .white
         navigationController = UINavigationController(rootViewController: postVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "plus")
+//        navigationController.tabBarItem.image = UIImage(systemName: "plus")
+        navigationController.tabBarItem.image = UIImage(named: "post")
         
         let PostTab = navigationController
         
@@ -90,16 +94,20 @@ class SplashVC: UIViewController {
         let noticeVC = NoticeVC()
         navigationController = UINavigationController(rootViewController: noticeVC)
         
-        navigationController.tabBarItem.image = UIImage(systemName: "pin")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+//        navigationController.tabBarItem.image = UIImage(systemName: "pin")
+//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
+        navigationController.tabBarItem.image = UIImage(named: "alarm")
+        navigationController.tabBarItem.selectedImage = UIImage(named: "alarm_fill")
 
         let NoticeTab = navigationController
         
         // ProfileTab
         let profileVC = ProfileVC()
         navigationController = UINavigationController(rootViewController: profileVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "person")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+//        navigationController.tabBarItem.image = UIImage(systemName: "person")
+//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
+        navigationController.tabBarItem.image = UIImage(named: "profile")
+        navigationController.tabBarItem.selectedImage = UIImage(named: "profile_fill")
 
         let ProfileTab = navigationController
         
@@ -110,8 +118,8 @@ class SplashVC: UIViewController {
         tabBarController.tabBar.tintColor = .nuteeGreen
         
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-//        sceneDelegate.window?.rootViewController = tabBarController
-        sceneDelegate.window?.rootViewController = LoginVC()
+        sceneDelegate.window?.rootViewController = tabBarController
+//        sceneDelegate.window?.rootViewController = LoginVC()
     }
     
 }

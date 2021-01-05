@@ -50,7 +50,8 @@ class HomeVC: UIViewController {
     // MARK: - Helper
     
     func setNavigationBarItem() {
-        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
+//        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
+        let rightBarButton = UIBarButtonItem(image: UIImage(named: "search") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
     
