@@ -1,19 +1,18 @@
 //
-//  Post.swift
+//  PostContent.swift
 //  NUTEE
 //
-//  Created by eunwoo on 2020/12/26.
-//  Copyright © 2020 Nutee. All rights reserved.
+//  Created by eunwoo on 2021/01/05.
+//  Copyright © 2021 Nutee. All rights reserved.
 //
 
 import Foundation
 
-// MARK: - Post
-
-struct Post: Codable {
+// MARK: - PostContent
+struct PostContent: Codable {
     let code: Int
     let message: String
-    let body: [PostBody]
+    let body: PostContentBody
     let links: Links
 
     enum CodingKeys: String, CodingKey {
@@ -25,31 +24,31 @@ struct Post: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         code = (try? values.decode(Int.self, forKey: .code)) ?? 0
         message = (try? values.decode(String.self, forKey: .message)) ?? ""
-        body = (try? values.decode([PostBody].self, forKey: .body)) ?? []
+        body = (try? values.decode(PostContentBody.self, forKey: .body))!
+//            PostContentBody.init(id: 0, title: "", content: "", createdAt: "", updateAt: "", user: User.init(id: 0, nickname: "", image: ""), images: [], likers: [], comments: [], retweet: nil, category: "", hits: 0, blocked: false)
         links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil)
     }
 }
 
 // MARK: - Body
 
-class PostBody: Codable {
+class PostContentBody: Codable {
     let id: Int
     let title, content, createdAt, updatedAt: String
     let user: User
     let images: [PostImage]?
     let likers: [Liker]?
-    let commentNum: Int
+    let comments: [Comment]?
     let retweet: PostBody?
     let category: String
     let hits: Int
     let blocked: Bool
-    let deleted: Bool?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, content, createdAt, updatedAt, deleted, blocked
+        case id, title, content, createdAt, updatedAt, blocked
         case user
         case images
-        case commentNum
+        case comments
         case retweet
         case likers
         case category
@@ -63,71 +62,23 @@ class PostBody: Codable {
         content = (try? values.decode(String.self, forKey: .content)) ?? ""
         createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
-        deleted = (try? values.decode(Bool.self, forKey: .deleted)) ?? false
         blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
         user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
         images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
-        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
+        comments = (try? values.decode([Comment].self, forKey: .comments)) ?? []
         retweet = (try? values.decode(PostBody.self, forKey: .retweet)) ?? nil
-        commentNum = (try? values.decode(Int.self, forKey: .commentNum)) ?? 0
+        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
         category = (try? values.decode(String.self, forKey: .category)) ?? ""
         hits = (try? values.decode(Int.self, forKey: .hits)) ?? 0
     }
 }
 
-// MARK: - Image
-struct PostImage: Codable {
-    let src: String?
+// MARK: - Comment
+struct Comment: Codable {
+    let id: Int
+    let content: String
+    let createdAt, updatedAt: String
+    let reComment: [Comment]?
+    let user: User
 }
 
-// MARK: - Liker
-
-struct Liker: Codable {
-    let id: Int?
-    let nickname: String?
-    let image: UserImage?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case nickname
-        case image
-    }
-}
-
-// MARK: - User
-
-struct User: Codable {
-    let id: Int?
-    let nickname: String?
-    let image: UserImage?
-
-    enum CodingKeys: String, CodingKey {
-        case id, nickname
-        case image
-    }
-}
-
-struct UserImage: Codable {
-    let src: String?
-}
-
-
-// MARK: - Links
-
-struct Links: Codable {
-    let linksSelf, updatePost, removePost, getFavoritePosts, getCategoryPosts: Link?
-
-    enum CodingKeys: String, CodingKey {
-        case linksSelf = "self"
-        case updatePost = "update-post"
-        case removePost = "remove-post"
-        case getFavoritePosts = "get-favorite-posts"
-        case getCategoryPosts = "get-category-posts"
-    }
-}
-
-// MARK: - GetFavoritePosts
-
-struct Link: Codable {
-    let href: String
-}

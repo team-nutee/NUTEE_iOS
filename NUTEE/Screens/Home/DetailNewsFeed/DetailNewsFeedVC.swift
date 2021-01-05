@@ -36,8 +36,8 @@ class DetailNewsFeedVC: UIViewController {
     // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
     var delegate: DetailHeaderViewDelegate?
 //
-    var post: Post?
-    var postBody: PostBody?
+    var post: PostContent?
+    var postBody: PostContentBody?
     var postId: Int?
 //
 //    var isEditCommentMode = false
@@ -228,15 +228,16 @@ extension DetailNewsFeedVC : UITableViewDataSource {
     // HeaderView settings
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // Dequeue with the reuse identifier
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
-        headerView?.detailNewsFeedVC = self
+        let detailNewsFeedheaderView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
+        detailNewsFeedheaderView?.detailNewsFeedVC = self
         
-        headerView?.initHeaderView()
-        headerView?.addContentView()
+        detailNewsFeedheaderView?.initHeaderView()
+        detailNewsFeedheaderView?.addContentView()
         
-//        // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
-//        headerNewsFeed?.detailNewsPost = self.content
-//        headerNewsFeed?.initPosting()
+        // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
+        detailNewsFeedheaderView?.post = self.post
+        detailNewsFeedheaderView?.initPosting()
+
 //
 //        // VC 컨트롤 권한을 HeaderView로 넘겨주기
 //        headerNewsFeed?.RootVC = self
@@ -248,7 +249,7 @@ extension DetailNewsFeedVC : UITableViewDataSource {
 //        headerNewsFeed?.awakeFromNib()
 //        headerNewsFeed?.initTextView()
 
-        return headerView
+        return detailNewsFeedheaderView
     }
 
     // TableView cell settings
@@ -364,12 +365,12 @@ extension DetailNewsFeedVC : UITableViewDataSource {
 extension DetailNewsFeedVC {
     
     // 게시글 한 개 가져오기
-    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: PostContent) -> Void ) {
         ContentService.shared.getPost(postId) { responsedata in
             
             switch responsedata {
             case .success(let res):
-                let response = res as! Post
+                let response = res as! PostContent
                 self.post = response
                 completionHandler(self.post!)
                 
