@@ -142,11 +142,16 @@ extension HomeVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
         
-        cell.category = menuBar.menuList[indexPath.row]
-        
-        cell.setTableView()
         cell.homeVC = self
-
+        
+        let category = menuBar.menuList[indexPath.row]
+        cell.category = category
+        
+        cell.getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
+            cell.postContent = Post.body
+            cell.newsFeedTableView.reloadData()
+        }
+        
         return cell
     }
 }

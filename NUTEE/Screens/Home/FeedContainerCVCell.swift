@@ -36,43 +36,6 @@ class FeedContainerCVCell : UICollectionViewCell {
         
         setTableView()
         setRefresh()
-        
-        setPostLoadButton()
-        self.postsLoadButton.addTarget(self, action: #selector(postsLoadButtonDidTap), for: .touchUpInside)
-        
-        getCategoryPostsService(category: category ?? "" , lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
-            
-            if Post.body.count > 0 {
-                var tmpNewsPost: PostBody?
-                
-                // 기존의 최신 게시글 id
-                tmpNewsPost = self.postContent?[0]
-                let lastestPostId = tmpNewsPost?.id
-                
-                // 업데이트 된 최신 게시글 id
-                tmpNewsPost = Post.body[0]
-                let updatedLastestPostId = tmpNewsPost?.id
-                
-                // 새로 올라온 게시글이 있을 경우
-                if(updatedLastestPostId ?? 0 > lastestPostId ?? 0){
-                    UIView.animate(withDuration: 1,
-                                   delay: 0,
-                                   usingSpringWithDamping: 0.6,
-                                   initialSpringVelocity: 1,
-                                   options: [.curveEaseIn],
-                                   animations: {
-                                    self.postsLoadButton.alpha = 1
-                                    self.postsLoadButton.transform = CGAffineTransform.init(translationX: 0, y: 50)
-                                   })
-                    
-                }
-                
-            }
-            
-        }
-        
     }
     
     required init?(coder: NSCoder) {
@@ -102,47 +65,6 @@ class FeedContainerCVCell : UICollectionViewCell {
             }
         }
     
-    func setPostLoadButton() {
-        _ = postsLoadButton.then {
-            let buttonLabel = NSMutableAttributedString(string: "새 글 업데이트")
-            $0.setAttributedTitle(buttonLabel, for: .normal)
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 13)
-            $0.makeRounded(cornerRadius: 15)
-            $0.borderColor = .nuteeGreen
-            $0.borderWidth = 0.5
-            
-            newsFeedTableView.addSubview($0)
-            
-            $0.snp.makeConstraints {
-                $0.top.equalTo(self.newsFeedTableView.snp.top)
-                $0.centerX.equalTo(self.newsFeedTableView.snp.centerX)
-                $0.height.equalTo(30)
-                $0.width.equalTo(100)
-            }
-            
-            $0.backgroundColor = .white
-            
-            $0.alpha = 0
-        }
-    }
-        
-    @objc func postsLoadButtonDidTap(){
-        updatePosts()
-        
-        UIView.animate(withDuration: 1,
-                       delay: 0,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.postsLoadButton.alpha = 0
-                        self.postsLoadButton.transform = CGAffineTransform.init(translationX: 0, y: 0)
-                       })
-        
-        let indexPath = IndexPath(row: 0, section: 0)
-        newsFeedTableView.scrollToRow(at: indexPath, at: .top, animated: true)
-    }
-    
     func setRefresh() {
         newsFeedTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
@@ -170,7 +92,6 @@ class FeedContainerCVCell : UICollectionViewCell {
             print("더 이상 불러올 게시글이 없습니다.")
         }
     }
-    
 }
 
 // MARK: - TableView 
@@ -212,7 +133,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.post
-        cell.homeVC = homeVC
         cell.delegate = self
         
         cell.fillDataToView()
