@@ -156,7 +156,7 @@ extension SearchHistoryTV : UITableViewDataSource {
         let postItems = 10//recodeMemory.count
         
         if postItems == 0 {
-            searchTableView.setEmptyView(tabBarHeight: 0, title: "", message: "검색 기록이 없습니다.")
+            searchTableView.setEmptyView(title: "", message: "검색 기록이 없습니다.")
         } else {
             searchTableView.restore()
         }
