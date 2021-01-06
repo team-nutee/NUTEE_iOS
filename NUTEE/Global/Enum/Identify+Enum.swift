@@ -11,16 +11,29 @@
 
 enum Identify {
     
+    // Category
     static let CategoryTVCell = "CategoryTVCell"
     
+    // Home
     static let FeedContainerCVCell = "FeedContainerCVCell"
     static let NewsFeedTVCell = "NewsFeedTVCell"
     
+    // Notification
     static let NotificationTVCell = "NotificationTVCell"
     
+    // Notice
     static let NoticeFeedContainerCVCell = "NoticeFeedContainerCVCell"
+    
+    static let BachelorFeedCVCell = "BachelorFeedCVCell"
+    static let ClassFeedCVCell = "ClassFeedCVCell"
+    static let ExchangeFeedCVCell = "ExchangeFeedCVCell"
+    static let ScholarshipFeedCVCell = "ScholarshipFeedCVCell"
+    static let GeneralFeedCVCell = "GeneralFeedCVCell"
+    static let EventFeedCVCell = "EventFeedCVCell"
+    
     static let NoticeFeedTVCell = "NoticeFeedTVCell"
     
+    // Setting
     static let SettingTVCell = "SettingTVCell"
     static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     

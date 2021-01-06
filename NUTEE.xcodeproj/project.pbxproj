@@ -61,6 +61,12 @@
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
+		D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */; };
+		D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */; };
+		D576528325A5A92E00A11E8D /* ExchangeFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */; };
+		D576528B25A5AB7000A11E8D /* ScholarshipFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528A25A5AB7000A11E8D /* ScholarshipFeedCVCell.swift */; };
+		D576529025A5ABAF00A11E8D /* GeneralFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528F25A5ABAF00A11E8D /* GeneralFeedCVCell.swift */; };
+		D576529525A5ABCA00A11E8D /* EventFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576529425A5ABCA00A11E8D /* EventFeedCVCell.swift */; };
 		D576A86E24D4456100202135 /* FeedContainerCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576A86D24D4456100202135 /* FeedContainerCVCell.swift */; };
 		D588072824E419FE0037384F /* NoticeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D588072724E419FE0037384F /* NoticeService.swift */; };
 		D588072A24E41A220037384F /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D588072924E41A220037384F /* NetworkResult.swift */; };
@@ -172,6 +178,12 @@
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
+		D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachelorFeedCVCell.swift; sourceTree = "<group>"; };
+		D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassFeedCVCell.swift; sourceTree = "<group>"; };
+		D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeFeedCVCell.swift; sourceTree = "<group>"; };
+		D576528A25A5AB7000A11E8D /* ScholarshipFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScholarshipFeedCVCell.swift; sourceTree = "<group>"; };
+		D576528F25A5ABAF00A11E8D /* GeneralFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralFeedCVCell.swift; sourceTree = "<group>"; };
+		D576529425A5ABCA00A11E8D /* EventFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFeedCVCell.swift; sourceTree = "<group>"; };
 		D576A86D24D4456100202135 /* FeedContainerCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedContainerCVCell.swift; sourceTree = "<group>"; };
 		D588072724E419FE0037384F /* NoticeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeService.swift; sourceTree = "<group>"; };
 		D588072924E41A220037384F /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
@@ -438,7 +450,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6C124C6D63500A58F43 /* NoticeVC.swift */,
-				D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */,
+				D576528125A5A8A900A11E8D /* NoticeFeedContainerCVCell */,
 				D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */,
 			);
 			path = Notice;
@@ -521,6 +533,20 @@
 				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
 			);
 			path = SignUp;
+			sourceTree = "<group>";
+		};
+		D576528125A5A8A900A11E8D /* NoticeFeedContainerCVCell */ = {
+			isa = PBXGroup;
+			children = (
+				D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */,
+				D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */,
+				D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */,
+				D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */,
+				D576528A25A5AB7000A11E8D /* ScholarshipFeedCVCell.swift */,
+				D576528F25A5ABAF00A11E8D /* GeneralFeedCVCell.swift */,
+				D576529425A5ABCA00A11E8D /* EventFeedCVCell.swift */,
+			);
+			path = NoticeFeedContainerCVCell;
 			sourceTree = "<group>";
 		};
 		D58C93D724CAE4FA005570D4 /* DetailNewsFeed */ = {
@@ -813,12 +839,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D590451D259E09E40091FEC0 /* MajorVC.swift in Sources */,
+				D576529525A5ABCA00A11E8D /* EventFeedCVCell.swift in Sources */,
 				D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */,
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D59EEDFA24DFF55C00BC028C /* Search.xcdatamodeld in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
+				D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */,
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
@@ -829,6 +857,7 @@
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
 				45D182112594B35B002810D0 /* SignUp.swift in Sources */,
 				D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */,
+				D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */,
 				D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */,
 				D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */,
 				D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */,
@@ -845,6 +874,7 @@
 				D5A7D1BC24E7C40400016A99 /* NuteeAlertSheet.swift in Sources */,
 				45C92AF725878FFA00828E8A /* SignIn.swift in Sources */,
 				D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */,
+				D576528325A5A92E00A11E8D /* ExchangeFeedCVCell.swift in Sources */,
 				5E8BA6BE24C6D61800A58F43 /* PostImageCVCell.swift in Sources */,
 				D5FC7B6824EBE7220029BEAE /* NuteeAlertDialogue.swift in Sources */,
 				5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */,
@@ -860,8 +890,10 @@
 				5E70FC5924C8046D001F79F7 /* UIImageView+Extension.swift in Sources */,
 				D592A92F24D437F300D49F62 /* MenuBarCV.swift in Sources */,
 				D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */,
+				D576528B25A5AB7000A11E8D /* ScholarshipFeedCVCell.swift in Sources */,
 				5E8BA65C24C6D1AA00A58F43 /* NUTEE.xcdatamodeld in Sources */,
 				D12D8BE824D14C7C005F4580 /* UIView+Extension.swift in Sources */,
+				D576529025A5ABAF00A11E8D /* GeneralFeedCVCell.swift in Sources */,
 				D12D8BEA24D14C90005F4580 /* Date+Extension.swift in Sources */,
 				D5C9C31E24DE430E006621D6 /* SearchTVCell.swift in Sources */,
 				D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */,
