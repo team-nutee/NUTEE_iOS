@@ -58,12 +58,14 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     }
     
     func fetchNoticeFeed() {
+        // default status
+        setFetchNoticeFeedFail()
+        
         // <-- will override by subclass
     }
     
     func setFetchNoticeFeedFail() {
-        let tabBarHeight = noticeVC?.tabBarController?.tabBar.frame.size.height ?? 0
-        noticeFeedTableView.setEmptyView(tabBarHeight: tabBarHeight, title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
+        noticeFeedTableView.setEmptyView(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
     }
     
 }
@@ -104,7 +106,7 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
 
         noticeVC?.present(safariViewController, animated: true, completion: nil)
     }
-
+    
 }
 
 // MARK: - Notice Service
