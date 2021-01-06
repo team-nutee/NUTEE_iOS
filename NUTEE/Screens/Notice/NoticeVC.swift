@@ -67,6 +67,13 @@ class NoticeVC: UIViewController {
             
             $0.register(NoticeFeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.NoticeFeedContainerCVCell)
             
+            $0.register(BachelorFeedCVCell.self, forCellWithReuseIdentifier: Identify.BachelorFeedCVCell)
+            $0.register(ClassFeedCVCell.self, forCellWithReuseIdentifier: Identify.ClassFeedCVCell)
+            $0.register(ExchangeFeedCVCell.self, forCellWithReuseIdentifier: Identify.ExchangeFeedCVCell)
+            $0.register(ScholarshipFeedCVCell.self, forCellWithReuseIdentifier: Identify.ScholarshipFeedCVCell)
+            $0.register(GeneralFeedCVCell.self, forCellWithReuseIdentifier: Identify.GeneralFeedCVCell)
+            $0.register(EventFeedCVCell.self, forCellWithReuseIdentifier: Identify.EventFeedCVCell)
+            
             view.addSubview($0)
             $0.snp.makeConstraints {
                 $0.top.equalTo(menuBar.snp.bottom)
@@ -117,31 +124,29 @@ extension NoticeVC : UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.NoticeFeedContainerCVCell, for: indexPath) as! NoticeFeedContainerCVCell
-        cell.noticeVC = self
+        let cellId: String
         
-        var URL = ""
         switch indexPath.row {
         case 0:
-            URL = APIConstants.NoticeBachelor
+            cellId = Identify.BachelorFeedCVCell
         case 1:
-            URL = APIConstants.NoticeClass
+            cellId = Identify.ClassFeedCVCell
         case 2:
-            URL = APIConstants.NoticeExchange
+            cellId = Identify.ExchangeFeedCVCell
         case 3:
-            URL = APIConstants.NoticeScholarship
+            cellId = Identify.ScholarshipFeedCVCell
         case 4:
-            URL = APIConstants.NoticeGeneral
+            cellId = Identify.GeneralFeedCVCell
         case 5:
-            URL = APIConstants.NoticeEvent
+            cellId = Identify.EventFeedCVCell
         default:
-            simpleNuteeAlertDialogue(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
+            cellId = Identify.NoticeFeedContainerCVCell
         }
         
-        cell.getNoticeService(url: URL, completionHandler: {(returnedData)-> Void in
-            cell.noticeFeedTableView.reloadData()
-        })
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! NoticeFeedContainerCVCell
+        cell.noticeVC = self
         
         return cell
     }
+    
 }
