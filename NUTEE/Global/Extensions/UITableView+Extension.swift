@@ -13,12 +13,11 @@ import SnapKit
 
 extension UITableView {
     
-    func setEmptyView(tabBarHeight: CGFloat, title: String, message: String) {
+    func setEmptyView(title: String, message: String) {
         let emptyView = UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
         
         // MARK: - UI components
         
-        let constraintsView = UIView()
         let alertView = UIView()
         
         let titleLabel = UILabel().then {
@@ -36,20 +35,13 @@ extension UITableView {
 
         // MARK: - Make Constraints
         
-        emptyView.addSubview(constraintsView)
-        constraintsView.addSubview(alertView)
+        emptyView.addSubview(alertView)
         
         alertView.addSubview(titleLabel)
         alertView.addSubview(messageLabel)
         
-        constraintsView.snp.makeConstraints {
-            $0.top.equalTo(emptyView.snp.top)
-            $0.left.equalTo(emptyView.snp.left)
-            $0.right.equalTo(emptyView.snp.right)
-            $0.bottom.equalTo(emptyView.snp.bottom).inset(tabBarHeight)
-        }
         alertView.snp.makeConstraints {
-            $0.centerY.equalTo(constraintsView)
+            $0.centerY.equalTo(emptyView)
             
             $0.left.equalTo(emptyView.snp.left)
             $0.right.equalTo(emptyView.snp.right)
