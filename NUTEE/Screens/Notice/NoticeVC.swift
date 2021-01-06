@@ -79,7 +79,7 @@ class NoticeVC: UIViewController {
                 $0.top.equalTo(menuBar.snp.bottom)
                 $0.left.equalTo(view.snp.left)
                 $0.right.equalTo(view.snp.right)
-                $0.bottom.equalTo(view.snp.bottom)
+                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
             
             $0.backgroundColor = .white
