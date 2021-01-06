@@ -112,7 +112,7 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
 extension NoticeFeedContainerCVCell {
     
     func getNoticeService(url: String, completionHandler: @escaping () -> Void) {
-        NoticeService.shared.getNoticeFromUrl(url: url, completion: { [self](returnedData)-> Void in
+        NoticeService.shared.getNoticeFromUrl(url: url, completion: { [self] (returnedData) -> Void in
             switch returnedData {
             case .success(let res):
                 
@@ -127,17 +127,17 @@ extension NoticeFeedContainerCVCell {
                 completionHandler()
                 
             case .pathErr:
-                noticeVC?.simpleNuteeAlertDialogue(title: "서버 연결 오류", message: "")
+                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "서버연결에 오류가 있습니다")
                 setFetchNoticeFeedFail()
                 completionHandler()
                 
             case .serverErr:
-                noticeVC?.simpleNuteeAlertDialogue(title: "서버 오류", message: "")
+                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "서버에 오류가 있습니다")
                 setFetchNoticeFeedFail()
                 completionHandler()
                 
             case .networkFail :
-                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "네트워크 상태를 확인해주세요.")
+                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "네트워크 상태를 확인해주세요")
                 setFetchNoticeFeedFail()
                 completionHandler()
             }
