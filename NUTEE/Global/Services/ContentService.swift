@@ -69,7 +69,7 @@ struct ContentService {
     
     // 게시글(post) 하나 가져오기
     func getPost(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.BackURL + "/" + String(postId)
+        let URL = APIConstants.Post + "/" + String(postId)
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""

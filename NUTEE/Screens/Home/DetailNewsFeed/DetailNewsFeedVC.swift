@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SnapKit
 import SwiftKeychainWrapper
 
 class DetailNewsFeedVC: UIViewController {
@@ -15,35 +15,20 @@ class DetailNewsFeedVC: UIViewController {
     //MARK: - UI components
     
     let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
+    let refreshControl = UIRefreshControl()
     
-    var refreshControl: UIRefreshControl!
-    
-    // 댓글창 표시
-    @IBOutlet var vwCommentWindow: UIView!
-    // 댓글창 상태표시(수정 or 답글)
-    @IBOutlet var statusView: UIView!
-    @IBOutlet var statusViewHeight: NSLayoutConstraint!
-    @IBOutlet var lblStatus: UILabel!
-    @IBOutlet var btnCancel: UIButton!
-    // 댓글작성
-    @IBOutlet var txtvwComment: UITextView!
-    @IBOutlet var btnSubmit: UIButton!
-    @IBOutlet var CommentWindowToBottom: NSLayoutConstraint!
-    @IBOutlet var CommentToTrailing: NSLayoutConstraint!
+    let commentView = UIView()
+    let commentTextView = UITextView()
+    let submitButton = UIButton()
     
     //MARK: - Variables and Properties
     
     // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
     var delegate: DetailHeaderViewDelegate?
-//
+
     var post: PostContent?
     var postBody: PostContentBody?
     var postId: Int?
-//
-//    var isEditCommentMode = false
-//    var currentCommentId: Int?
-//
-//    let statusNoReply = UIView()
     
     //MARK: - Dummy data
     
@@ -53,6 +38,8 @@ class DetailNewsFeedVC: UIViewController {
         super.viewDidLoad()
         
         setTableView()
+        setCommentView()
+        makeConstraints()
 //
 //        txtvwComment.delegate = self
 //
@@ -89,12 +76,68 @@ class DetailNewsFeedVC: UIViewController {
                 $0.top.equalToSuperview()
                 $0.left.equalToSuperview()
                 $0.right.equalToSuperview()
-                $0.bottom.equalToSuperview()
             }
             
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
+        }
+    }
+    
+    func setCommentView() {
+        _ = commentView.then {
+            $0.backgroundColor = .white
+            $0.addBorder(.top, color: .veryLightPink, thickness: 0.3)
+        }
+        
+        _ = commentTextView.then {
+//            $0.delegate = self
+            
+            $0.font = .systemFont(ofSize: 13)
+            $0.placeholder = "댓글을 입력하세요"
+            $0.tintColor = .veryLightPink
+        }
+        
+        _ = submitButton.then {
+            $0.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
+            $0.tintColor = .nuteeGreen
+            
+//            $0.isHidden = true
+            
+//            $0.addTarget(self, action: #selector(didTapSubmitButton), for: .touchUpInside)
+        }
+    }
+    
+    func makeConstraints() {
+        view.addSubview(commentView)
+        
+        commentView.addSubview(commentTextView)
+        commentView.addSubview(submitButton)
+        
+        commentView.snp.makeConstraints {
+            $0.height.equalTo(50)
+
+            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        
+        commentTextView.snp.makeConstraints {
+            $0.height.equalTo(40)
+
+            $0.top.equalTo(commentView.snp.top).offset(10)
+            $0.left.equalTo(commentView.snp.left).offset(10)
+            $0.bottom.equalTo(commentView.snp.bottom).inset(10)
+        }
+
+        submitButton.snp.makeConstraints {
+            $0.height.equalTo(commentTextView.snp.height)
+            $0.width.equalTo(submitButton.snp.height)
+            
+            $0.centerY.equalTo(commentTextView)
+            $0.left.equalTo(commentTextView.snp.right).offset(10)
+            $0.right.equalTo(commentView.snp.right).inset(10)
         }
     }
 //
@@ -228,15 +271,15 @@ extension DetailNewsFeedVC : UITableViewDataSource {
     // HeaderView settings
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // Dequeue with the reuse identifier
-        let detailNewsFeedheaderView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
-        detailNewsFeedheaderView?.detailNewsFeedVC = self
+        let detailNewsFeedHeaderView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
+        detailNewsFeedHeaderView?.detailNewsFeedVC = self
         
-        detailNewsFeedheaderView?.initHeaderView()
-        detailNewsFeedheaderView?.addContentView()
+        detailNewsFeedHeaderView?.initHeaderView()
+        detailNewsFeedHeaderView?.addContentView()
         
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
-        detailNewsFeedheaderView?.post = self.post
-        detailNewsFeedheaderView?.initPosting()
+        detailNewsFeedHeaderView?.post = self.post
+        detailNewsFeedHeaderView?.initPosting()
 
 //
 //        // VC 컨트롤 권한을 HeaderView로 넘겨주기
@@ -249,7 +292,7 @@ extension DetailNewsFeedVC : UITableViewDataSource {
 //        headerNewsFeed?.awakeFromNib()
 //        headerNewsFeed?.initTextView()
 
-        return detailNewsFeedheaderView
+        return detailNewsFeedHeaderView
     }
 
     // TableView cell settings
@@ -358,6 +401,12 @@ extension DetailNewsFeedVC : UITableViewDataSource {
         return .leastNormalMagnitude
     }
 
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let fakeView = UIView()
+        fakeView.backgroundColor = .clear
+        
+        return fakeView
+    }
 }
 
 // MARK: - Server connect

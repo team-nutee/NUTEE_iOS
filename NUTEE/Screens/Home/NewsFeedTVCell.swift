@@ -29,31 +29,24 @@ class NewsFeedTVCell: UITableViewCell {
         $0.isUserInteractionEnabled = false
         
         $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
     }
     var dateLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
         $0.textColor = UIColor(red: 178, green: 178, blue: 178)
         
-//        $0.isHidden = true
     }
     let moreButton = UIButton().then {
         $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         $0.contentHorizontalAlignment = .left
         $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
-//        $0.isUserInteractionEnabled = false
     }
     
     var titleLabel = UILabel().then {
         $0.font = .boldSystemFont(ofSize: 20)
-//        $0.text = "제목"
         
         $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
     }
     var contentTextView = UITextView().then {
-//        $0.text = "간단한 내용"
-        
         $0.textContainer.maximumNumberOfLines = 3
         $0.textContainer.lineBreakMode = .byTruncatingTail
         $0.font = .systemFont(ofSize: 13)

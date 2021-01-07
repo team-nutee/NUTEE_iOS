@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SnapKit
 import SafariServices
 
 import SwiftKeychainWrapper
@@ -23,7 +23,25 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     let moreButton = UIButton()
     
     let contentTextView = UITextView()
-    let contentImageView = UIImageView()
+    let imageWrapperView = UIView()
+    
+    // 이미지 하나일 때
+    let imageViewWhenOne = UIImageView()
+    
+    // 이미지 세 개일 때
+    let firstImageViewWhenThree = UIImageView()
+    let secondImageViewWhenThree = UIImageView()
+    let thirdImageViewWhenThree = UIImageView()
+    
+    // 이미지 네 개일 때
+    let firstImageViewWhenFour = UIImageView()
+    let secondImageViewWhenFour = UIImageView()
+    let thirdImageViewWhenFour = UIImageView()
+    let fourthImageViewWhenFour = UIImageView()
+    
+    // 더보기 Label
+    var imageViewOneMoreLabel = UILabel()
+    var imageViewMoreLabel = UILabel()
     
     let likeButton = UIButton()
     
@@ -32,7 +50,16 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     var detailNewsFeedVC: UIViewController?
     
     var post: PostContent?
-    var numLike: Int?
+    var likeCount: Int?
+    var imageCount: Int?
+    
+    // MARK: - Life Cycle
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+//        setImageView()
+    }
 
     //MARK: - Helper
     
@@ -71,18 +98,87 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.isScrollEnabled = false
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
         }
-        _ = contentImageView.then {
+        
+        _ = imageViewWhenOne.then {
             $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = firstImageViewWhenThree.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = secondImageViewWhenThree.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = thirdImageViewWhenThree.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = firstImageViewWhenFour.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = secondImageViewWhenFour.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = thirdImageViewWhenFour.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = fourthImageViewWhenFour.then {
+            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            $0.isHidden = true
+        }
+        
+        _ = imageViewOneMoreLabel.then {
+            $0.text = "+1"
+            $0.textColor = .black
+            $0.font = .boldSystemFont(ofSize: 21)
+            
+            $0.isHidden = true
+        }
+        
+        _ = imageViewMoreLabel.then {
+            $0.text = "+N"
+            $0.textColor = .black
+            $0.font = .boldSystemFont(ofSize: 21)
+            
+            $0.isHidden = true
         }
         
         _ = likeButton.then {
             $0.contentHorizontalAlignment = .left
-
+            
+            $0.setImage(UIImage(systemName: "heart"), for: .normal)
+            $0.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+            
             $0.tintColor = .systemPink
+            
+            $0.setTitle("0", for: .normal)
+            $0.setTitle("1", for: .selected)
             $0.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
+            $0.setTitleColor(.systemPink, for: .selected)
             
             $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
             
+            //$0.isSelected = true
             $0.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         }
     }
@@ -96,13 +192,26 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentView.addSubview(moreButton)
         
         contentView.addSubview(contentTextView)
-        contentView.addSubview(contentImageView)
-
+        contentView.addSubview(imageWrapperView)
+        
+        imageWrapperView.addSubview(imageViewWhenOne)
+        imageViewWhenOne.addSubview(imageViewOneMoreLabel)
+        
+        imageWrapperView.addSubview(firstImageViewWhenThree)
+        imageWrapperView.addSubview(secondImageViewWhenThree)
+        imageWrapperView.addSubview(thirdImageViewWhenThree)
+        thirdImageViewWhenThree.addSubview(imageViewMoreLabel)
+        
+        imageWrapperView.addSubview(firstImageViewWhenFour)
+        imageWrapperView.addSubview(secondImageViewWhenFour)
+        imageWrapperView.addSubview(thirdImageViewWhenFour)
+        imageWrapperView.addSubview(fourthImageViewWhenFour)
+        
         contentView.addSubview(likeButton)
 
-        
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 15
+        
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(profileImageView.snp.width)
@@ -130,20 +239,122 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
-        contentImageView.snp.makeConstraints{
-            $0.height.equalTo(300)
+        
+        imageWrapperView.snp.makeConstraints{
+            $0.height.equalTo(234)
+            
             $0.top.equalTo(contentTextView.snp.bottom).offset(15)
             $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
-
+        imageWrapperView.backgroundColor = .green
+        
+        imageViewWhenOne.snp.makeConstraints{
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(imageWrapperView.snp.left)
+            $0.right.equalTo(imageWrapperView.snp.right)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
+        imageViewOneMoreLabel.snp.makeConstraints{
+            $0.centerX.equalTo(imageViewWhenOne)
+            $0.centerY.equalTo(imageViewWhenOne)
+        }
+        
+        firstImageViewWhenThree.snp.makeConstraints{
+            $0.width.equalTo(175)
+            
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(imageWrapperView.snp.left)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
+        secondImageViewWhenThree.snp.makeConstraints{
+            $0.height.equalTo(117)
+            
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+            $0.right.equalTo(imageWrapperView.snp.right)
+        }
+        
+        thirdImageViewWhenThree.snp.makeConstraints{
+            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
+            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+            $0.right.equalTo(imageWrapperView.snp.right)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
+        imageViewMoreLabel.snp.makeConstraints{
+            $0.centerX.equalTo(secondImageViewWhenThree)
+            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
+        firstImageViewWhenFour.snp.makeConstraints{
+            $0.height.equalTo(117)
+            $0.width.equalTo(206)
+            
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(imageWrapperView.snp.left)
+        }
+        
+        secondImageViewWhenFour.snp.makeConstraints{
+            $0.height.equalTo(117)
+            
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(firstImageViewWhenFour.snp.right)
+            $0.right.equalTo(imageWrapperView.snp.right)
+        }
+        
+        thirdImageViewWhenFour.snp.makeConstraints{
+            $0.width.equalTo(140)
+            
+            $0.top.equalTo(firstImageViewWhenFour.snp.bottom)
+            $0.left.equalTo(imageWrapperView.snp.left)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
+        fourthImageViewWhenFour.snp.makeConstraints{
+            $0.top.equalTo(secondImageViewWhenFour.snp.bottom)
+            $0.left.equalTo(thirdImageViewWhenFour.snp.right)
+            $0.right.equalTo(imageWrapperView.snp.right)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+        
         likeButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(20)
-            $0.top.equalTo(contentImageView.snp.bottom).offset(10)
+            $0.top.equalTo(imageWrapperView.snp.bottom).offset(10)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
             $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
         }
+    }
+    
+//    func setImageView(){
+//        oneImageView.isUserInteractionEnabled = true
+//        oneImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage(tapGestureRecognizer:))))
+//
+//        for imageView in threeImageViews {
+//            imageView.isUserInteractionEnabled = true
+//            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage(tapGestureRecognizer:))))
+//
+//        }
+//        for imageView in fourImageViews {
+//            imageView.isUserInteractionEnabled = true
+//            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage(tapGestureRecognizer:))))
+//
+//        }
+//    }
+    
+    @objc func didTapImage(tapGestureRecognizer: UITapGestureRecognizer){
+//        let vc =
+//            UIStoryboard.init(name: "PopUp",
+//                              bundle: Bundle.main).instantiateViewController(
+//                                withIdentifier: "PictureVC") as? PictureVC
+//        vc?.modalPresentationStyle = .overFullScreen
+//        vc?.imageArr = self.post?.body.images
+//
+//        self.RootVC?.present(vc!, animated: false)
     }
     
     @objc func didTapMoreButton() {
@@ -158,18 +369,19 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     @objc func didTapLikeButton(_ sender: UIButton) {
-        if !likeButton.isSelected {
+        if likeButton.isSelected {
+            likeButton.isSelected = false
             likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            numLike! -= 1
-            likeButton.setTitle(String(numLike ?? 0), for: .normal)
+            likeCount! -= 1
+            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
             likeButton.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
             
             deleteLikeService(postId: post?.body.id ?? 0)
         } else {
+            likeButton.isSelected = true
             likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
-            numLike! += 1
-            likeButton.setTitle(String(numLike ?? 0), for: .normal)
-            likeButton.setTitle("1", for: .selected)
+            likeCount! += 1
+            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
             likeButton.setTitleColor(.systemPink, for: .selected)
             
             PostLikeService(postId: post?.body.id ?? 0)
@@ -177,9 +389,12 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     func initPosting() {
-        
         // 사용자 프로필 이미지 설정
-        profileImageView.setImageNutee(post?.body.user.image?.src)
+        if post?.body.user.image?.src != nil {
+            profileImageView.setImageNutee(post?.body.user.image?.src)
+        } else {
+            profileImageView.image = UIImage(named: "nutee_zigi_white")
+        }
         
         // 사용자 이름 설정
         nicknameLabel.text = post?.body.user.nickname
@@ -194,136 +409,64 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentTextView.postingInit()
         
         // 게시글 이미지 설정
-        //showImgFrame()
+        imageCount = post?.body.images?.count
+        //showImageFrame()
         
         // Like 버튼
-        numLike = post?.body.likers?.count
-        likeButton.setTitle(String(numLike ?? 0), for: .normal)
+        likeCount = post?.body.likers?.count
+        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
     }
 
-//    // 사진 개수에 따른 이미지 표시 유형 선택
-//    func showImgFrame() {
-//        moreLabel1.isHidden = true
-//        moreLabel4.isHidden = true
+    // 사진 개수에 따른 이미지 표시 유형 선택
+//    func showImageFrame() {
+//        imageViewOneMoreLabel.isHidden = true
+//        imageViewMoreLabel.isHidden = true
 //
-//        var num = 0
-//        switch post?.body.images?.count {
+//        var imageNum = 0
+//        switch imageCount {
 //        case 0:
-//            // 보여줄 사진이 없는 경우(글만 표시)
-//            imageWrapperViewHeight.constant = 0
+//            imageWrapperView.snp.makeConstraints {
+//                $0.height.equalTo(0)
+//            }
 //
 //            break
 //        case 1:
-//            // ver. only OneImage
-//            oneImageView.imageFromUrl((APIConstants.BaseURL) + "/" + (detailNewsPost?.images[0].src ?? ""), defaultImgPath: (APIConstants.BaseURL) + "/settings/nutee_profile.png")
+//            oneImageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[0].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
+//
 //            break
 //        case 2:
-//            oneImageView.imageFromUrl((APIConstants.BaseURL) + "/" + (detailNewsPost?.images[0].src ?? ""), defaultImgPath: (APIConstants.BaseURL) + "/settings/nutee_profile.png")
-//            moreLabel1.isHidden = false
+//            oneImageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[0].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
+//            imageViewOneMoreLabel.isHidden = false
 //            oneImageView.alpha = 0.7
-//            moreLabel1.text = "+1"
-//            moreLabel1.textColor = .black
+//            imageViewOneMoreLabel.text = "+1"
+//            imageViewOneMoreLabel.textColor = .black
 //
 //            break
 //        case 3:
-//            for imgvw in threeImageViewArr {
-//                imgvw.imageFromUrl((APIConstants.BaseURL) + "/" + (detailNewsPost?.images[num].src ?? ""), defaultImgPath: (APIConstants.BaseURL) + "/settings/nutee_profile.png")
-//                num += 1
+//            for imageView in threeImageViews {
+//                imageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[imageNum].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
+//                imageNum += 1
 //            }
 //            break
 //        default:
 //            // ver. FourFrame
-//            for imgvw in fourImageViewArr {
-//                if num <= 3 {
-//                    imgvw.imageFromUrl((APIConstants.BaseURL) + "/" + (detailNewsPost?.images[num].src ?? ""), defaultImgPath: (APIConstants.BaseURL) + "/settings/nutee_profile.png")
+//            for imageView in fourImageViews {
+//                if imageNum <= 3 {
+//                    imageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[imageNum].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
 //                }
 //
-//                if num == 3 {
-//                    let leftImg = (imageCnt ?? 3) - 4
-//                    if leftImg > 0 {
-//                        imgvw.alpha = 0.7
-//                        moreLabel4.isHidden = false
-//                        moreLabel4.text = "+" + String(leftImg)
-//                        moreLabel4.textColor = .black
+//                if imageNum == 3 {
+//                    let leftImage = (imageCount ?? 3) - 4
+//                    if leftImage > 0 {
+//                        imageView.alpha = 0.7
+//                        imageViewMoreLabel.isHidden = false
+//                        imageViewMoreLabel.text = "+" + String(leftImage)
+//                        imageViewMoreLabel.textColor = .black
 //                    }
 //                }
-//                num += 1
+//                imageNum += 1
 //            }
-//        } // End of case statement
-//    } // Finish ShowImageFrame
-
-//    // 프로필 이미지에 탭 인식하게 만들기
-//    func setClickActions() {
-//        userIMG.tag = 1
-//        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-//        tapGestureRecognizer1.numberOfTapsRequired = 1
-//        userIMG.isUserInteractionEnabled = true
-//        userIMG.addGestureRecognizer(tapGestureRecognizer1)
-//    }
-//
-//    // 프로필 이미지 클릭시 실행 함수
-//    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-//        let imgView = tapGestureRecognizer.view as! UIImageView
-//
-//        //Give your image View tag
-//        if (imgView.tag == 1) {
-//            showProfile()
 //        }
-//    }
-//
-//    func setImageView(){
-//        oneImageView.isUserInteractionEnabled = true
-//        oneImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTap(tapGestureRecognizer:))))
-//
-//
-//        for imageView in threeImageViewArr {
-//            imageView.isUserInteractionEnabled = true
-//            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTap(tapGestureRecognizer:))))
-//
-//        }
-//        for imageView in fourImageViewArr {
-//            imageView.isUserInteractionEnabled = true
-//            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTap(tapGestureRecognizer:))))
-//
-//        }
-//    }
-//
-//    @objc func imageTap(tapGestureRecognizer: UITapGestureRecognizer){
-//        let vc =
-//            UIStoryboard.init(name: "PopUp",
-//                                   bundle: Bundle.main).instantiateViewController(
-//                                    withIdentifier: "PictureVC") as? PictureVC
-//        vc?.modalPresentationStyle = .overFullScreen
-//        vc?.imageArr = self.detailNewsPost?.images
-//
-//        self.RootVC?.present(vc!, animated: false)
-//    }
-//
-//
-//    func showProfile() {
-//        let vc = UIStoryboard.init(name: "Profile", bundle: Bundle.main).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileVC
-//
-//        // 해당 글이 공유글인지 아닌지 판단
-//        if detailNewsPost?.retweet == nil {
-//            vc?.userId = detailNewsPost?.user.id ?? KeychainWrapper.standard.integer(forKey: "id")
-//        } else {
-//            vc?.userId = detailNewsPost?.retweet?.user.id ?? KeychainWrapper.standard.integer(forKey: "id")
-//        }
-//
-//        RootVC?.navigationController?.pushViewController(vc!, animated: true)
-//    }
-//
-//    func setButtonAttributed(btn: UIButton, num: Int, color: UIColor, state: UIControl.State) {
-//        let stateAttributes = [NSAttributedString.Key.foregroundColor: color]
-//        btn.setAttributedTitle(NSAttributedString(string: " " + String(num), attributes: stateAttributes), for: state)
-//        btn.tintColor = color
-//    }
-//
-//    func deletePost() {
-//        self.postDeleteService(postId: self.detailNewsPost?.id ?? 0, completionHandler: {() -> Void in
-//            // delegate로 NewsFeedVC와 통신하기
-//            self.delegate?.backToUpdateNewsTV()
-//        })
 //    }
 }
 
@@ -418,13 +561,6 @@ extension DetailNewsFeedHeaderView {
             switch responsedata {
             case .success(let res):
                 print("post report success", res)
-//                let successfulAlert = UIAlertController(title: "신고가 완료되었습니다", message: nil, preferredStyle: UIAlertController.Style.alert)
-//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//
-//                successfulAlert.addAction(okAction)
-//
-//                self.RootVC?.present(successfulAlert, animated: true, completion: nil)
-
 
             case .requestErr(_):
                 print("request error")
