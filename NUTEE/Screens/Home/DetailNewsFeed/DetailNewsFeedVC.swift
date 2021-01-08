@@ -31,6 +31,8 @@ class DetailNewsFeedVC: UIViewController {
     var postBody: PostContentBody?
     var postId: Int?
     
+    var commentViewBottomConstraint: Constraint?
+    
     //MARK: - Dummy data
     
     //MARK: - Life Cycle
@@ -84,6 +86,8 @@ class DetailNewsFeedVC: UIViewController {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
+            
+            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapScreen(sender:))))
         }
     }
     
@@ -125,17 +129,16 @@ class DetailNewsFeedVC: UIViewController {
         commentView.addSubview(submitButton)
         
         commentView.snp.makeConstraints {
-            $0.height.equalTo(50)
-
-            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
+            $0.top.equalTo(detailNewsFeedTableView.snp.bottom).inset(10)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            commentViewBottomConstraint =
+                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
         }
         
         commentTextView.snp.makeConstraints {
-            $0.height.equalTo(40)
-
+            $0.height.greaterThanOrEqualTo(40)
+            
             $0.top.equalTo(commentView.snp.top).offset(10)
             $0.left.equalTo(commentView.snp.left).offset(10)
             $0.bottom.equalTo(commentView.snp.bottom).inset(10)
@@ -149,12 +152,11 @@ class DetailNewsFeedVC: UIViewController {
         }
 
         submitButton.snp.makeConstraints {
-            $0.height.equalTo(commentTextView.snp.height)
-            $0.width.equalTo(submitButton.snp.height)
+            $0.height.equalTo(commentTextView)
             
-            $0.centerY.equalTo(commentTextView)
             $0.left.equalTo(commentTextView.snp.right).offset(10)
             $0.right.equalTo(commentView.snp.right).inset(10)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
 
@@ -173,7 +175,13 @@ class DetailNewsFeedVC: UIViewController {
 //            }
 //        })
 //    }
-//
+
+    @objc func didTapScreen(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            view.endEditing(true)
+        }
+        sender.cancelsTouchesInView = false
+    }
 }
 
 //MARK: - Build TableView
@@ -332,9 +340,7 @@ extension DetailNewsFeedVC: UITextViewDelegate {
                 self.submitButton.alpha = 1.0
                         }
             
-        } else {
-            self.placeholderLabel.isHidden = false
-            
+        } else if str == "" {
             UIView.animate(withDuration: 0.1) {
                 self.submitButton.alpha = 0.0
                         }
@@ -351,20 +357,24 @@ extension DetailNewsFeedVC: UITextViewDelegate {
             self.commentTextView.translatesAutoresizingMaskIntoConstraints = true
         }
         
-        // 댓글 입력창의 높이가 100 이상 넘을 시 스크롤 가능 활성화
-        if commentTextView.contentSize.height >= 100 {
+        // 댓글 입력창의 높이가 30 이상일 시 스크롤 기능 활성화
+        if commentTextView.contentSize.height >= 30 {
             commentTextView.isScrollEnabled = true
         } else {
             commentTextView.frame.size.height = commentTextView.contentSize.height
             commentTextView.isScrollEnabled = false
         }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView){
+        placeholderLabel.isHidden = true
         
-        func textViewDidBeginEditing(_ textView: UITextView){
-            if placeholderLabel.isHidden == false {
-                placeholderLabel.isHidden = true
-            }
-            
-            textView.becomeFirstResponder()
+        textView.becomeFirstResponder()
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if commentTextView.text == "" {
+            placeholderLabel.isHidden = false
         }
     }
 }
@@ -384,7 +394,14 @@ extension DetailNewsFeedVC {
             let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
             let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
             let keyboardHeight = keyboardFrame.height
-
+            let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
+            let bottomPadding = keyWindow?.safeAreaInsets.bottom
+        
             let tabbarHeight = self.tabBarController?.tabBar.frame.size.height ?? 0
             _ = UIApplication.shared.connectedScenes
                 .filter({$0.activationState == .foregroundActive})
@@ -392,10 +409,16 @@ extension DetailNewsFeedVC {
                 .compactMap({$0})
                 .first?.windows
                 .filter({$0.isKeyWindow}).first
+
+            commentViewBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - (bottomPadding ?? 0))
+
+//            commentView.snp.updateConstraints {
+//                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(keyboardHeight - (bottomPadding ?? 0))
+//            }
             
-            commentView.snp.updateConstraints {
-                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(keyboardHeight - tabbarHeight)
-            }
+//            submitButton.snp.updateConstraints {
+//                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(keyboardHeight - tabbarHeight + 12)
+//            }
 
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
@@ -412,6 +435,9 @@ extension DetailNewsFeedVC {
             commentView.snp.updateConstraints {
                 $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
+            submitButton.snp.updateConstraints {
+                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(12)
+            }
             detailNewsFeedTableView.contentInset = .zero
             
             self.view.setNeedsLayout()
@@ -419,10 +445,6 @@ extension DetailNewsFeedVC {
                 self.view.layoutIfNeeded()
             })
         }
-    }
-
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        commentTextView.endEditing(true)
     }
 }
 
@@ -454,136 +476,6 @@ extension DetailNewsFeedVC {
             }
         }
     }
-}
-
-
-//
-//// MARK: - Detect commentWindow text changed
-//extension DetailNewsFeedVC: UITextViewDelegate {
-//
-//    public func textViewDidChange(_ textView: UITextView) {
-//        // 입력된 빈칸과 줄바꿈 개수 구하기
-//        var str = txtvwComment.text.replacingOccurrences(of: " ", with: "")
-//        str = str.replacingOccurrences(of: "\n", with: "")
-//        // 빈칸이나 줄바꿈으로만 입력된 경우 버튼 비활성화
-//        if str.count != 0 {
-//            // 전송 버튼 보이기
-//            UIView.animate(withDuration: 0.2) {
-//                self.btnSubmit.alpha = 1.0
-//            }
-//            self.CommentToTrailing.constant = 40
-//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//        } else {
-//            // 전송 버튼 가리기
-//            UIView.animate(withDuration: 0.1) {
-//                self.btnSubmit.alpha = 0
-//            }
-//            self.CommentToTrailing.constant = 5
-//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseInOut, animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//        }
-//
-//        // 댓글 입력창의 높이가 100 이상 넘을 시 스크롤 가능 활성화
-//        if txtvwComment.contentSize.height >= 100 {
-//            txtvwComment.isScrollEnabled = true
-//        } else {
-//            txtvwComment.frame.size.height = txtvwComment.contentSize.height
-//            txtvwComment.isScrollEnabled = false
-//        }
-//
-//        // 입력된 줄바꿈 개수 구하기
-//        let originalStr = txtvwComment.text.count
-//        let removeEnterStr = txtvwComment.text.replacingOccurrences(of: "\n", with: "").count
-//        // 엔터가 4개 이하 일시 댓글창 높이 자동조절 설정
-//        let enterNum = originalStr - removeEnterStr
-//        if enterNum <= 4 {
-//            self.txtvwComment.translatesAutoresizingMaskIntoConstraints = false
-//        } else {
-//            self.txtvwComment.translatesAutoresizingMaskIntoConstraints = true
-//        }
-//    }
-//
-//
-//    // PlaceHolder 따로 지정해주기(기존 것 사용시 충돌 일어남)
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if (textView.text == "") {
-//            textView.text = " 댓글을 입력하세요"
-//            textView.textColor = UIColor.lightGray
-//        }
-//        textView.resignFirstResponder()
-//    }
-//
-//    func textViewDidBeginEditing(_ textView: UITextView){
-//        if (txtvwComment.text == " 댓글을 입력하세요"){
-//            textView.text = ""
-//            textView.textColor = UIColor.black
-//        }
-//        textView.becomeFirstResponder()
-//    }
-//
-//}
-//
-//// MARK: - ReplyCell과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
-//
-//extension DetailNewsFeedVC: ReplyCellDelegate {
-//    func updateReplyTV() {
-//        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-//            self.replyTV.reloadData()
-//        })
-//    }
-//
-//    func setEditCommentMode(commentId: Int, commentContent: String) {
-//        self.isEditCommentMode = true
-//        self.currentCommentId = commentId
-//
-//        self.btnCancel.isHidden = false
-//        self.lblStatus.isHidden = false
-//        self.lblStatus.text = "댓글수정"
-//        self.statusViewHeight.constant = 40
-//
-//        self.txtvwComment.text = commentContent
-//        self.txtvwComment.textColor = .black
-//
-//        self.view.setNeedsLayout()
-//        UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-//            self.view.layoutIfNeeded()
-//        }, completion: nil)
-//
-//        txtvwComment.becomeFirstResponder()
-//    }
-//}
-//
-//// MARK: - 서버 연결 코드 구간
-//
-//extension DetailNewsFeedVC {
-//
-//    // 게시글 한 개 가져오기
-//    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: NewsPostsContentElement) -> Void ) {
-//        ContentService.shared.getPost(postId) { responsedata in
-//
-//            switch responsedata {
-//            case .success(let res):
-//                let response = res as! NewsPostsContentElement
-//                self.content = response
-//                completionHandler(self.content!)
-//
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//                }
-//        }
-//    }
 //
 //    // 댓글 작성
 //    func postCommentService(postId: Int, comment: String, completionHandler: @escaping () -> Void ) {
@@ -605,7 +497,7 @@ extension DetailNewsFeedVC {
 //
 //            case .networkFail :
 //                print("failure")
-//                }
+//            }
 //        }
 //    }
 //
@@ -638,5 +530,36 @@ extension DetailNewsFeedVC {
 //            }
 //        }
 //    }
+}
+
+
+//// MARK: - ReplyCell과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
 //
+//extension DetailNewsFeedVC: ReplyCellDelegate {
+//    func updateReplyTV() {
+//        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+//            self.replyTV.reloadData()
+//        })
+//    }
+//
+//    func setEditCommentMode(commentId: Int, commentContent: String) {
+//        self.isEditCommentMode = true
+//        self.currentCommentId = commentId
+//
+//        self.btnCancel.isHidden = false
+//        self.lblStatus.isHidden = false
+//        self.lblStatus.text = "댓글수정"
+//        self.statusViewHeight.constant = 40
+//
+//        self.txtvwComment.text = commentContent
+//        self.txtvwComment.textColor = .black
+//
+//        self.view.setNeedsLayout()
+//        UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
+//            self.view.layoutIfNeeded()
+//        }, completion: nil)
+//
+//        txtvwComment.becomeFirstResponder()
+//    }
 //}
+//
