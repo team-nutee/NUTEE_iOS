@@ -14,6 +14,8 @@ import SwiftKeychainWrapper
 
 class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate {
     
+    static let identifier = Identify.DetailNewsFeedHeaderView
+    
     //MARK: - UI components
     
     let profileImageView = UIImageView()

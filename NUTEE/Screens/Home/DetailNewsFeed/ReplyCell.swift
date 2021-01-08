@@ -13,6 +13,8 @@ import SwiftKeychainWrapper
 
 class ReplyCell: UITableViewCell, UITextViewDelegate{
     
+    static let identifier = Identify.ReplyCell
+    
     //MARK: - UI components
     
     let profileImageView = UIImageView()
