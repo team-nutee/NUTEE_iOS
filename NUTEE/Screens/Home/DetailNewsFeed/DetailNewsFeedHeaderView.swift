@@ -51,7 +51,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     var post: PostContent?
     var likeCount: Int?
-    var imageCount: Int?
     
     // MARK: - Life Cycle
     
@@ -247,7 +246,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
-        imageWrapperView.backgroundColor = .green
         
         imageViewWhenOne.snp.makeConstraints{
             $0.top.equalTo(imageWrapperView.snp.top)
@@ -285,9 +283,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         imageViewMoreLabel.snp.makeConstraints{
-            $0.centerX.equalTo(secondImageViewWhenThree)
-            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+            $0.centerX.equalTo(thirdImageViewWhenThree)
+            $0.centerY.equalTo(thirdImageViewWhenThree)
         }
         
         firstImageViewWhenFour.snp.makeConstraints{
@@ -389,6 +386,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     func initPosting() {
+        print(KeychainWrapper.standard.string(forKey: "token")!)
         // 사용자 프로필 이미지 설정
         if post?.body.user.image?.src != nil {
             profileImageView.setImageNutee(post?.body.user.image?.src)
@@ -409,8 +407,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentTextView.postingInit()
         
         // 게시글 이미지 설정
-        imageCount = post?.body.images?.count
-        //showImageFrame()
+        showImageFrame(imageCount: post?.body.images?.count ?? 0)
         
         // Like 버튼
         likeCount = post?.body.likers?.count
@@ -418,56 +415,45 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
 
     // 사진 개수에 따른 이미지 표시 유형 선택
-//    func showImageFrame() {
-//        imageViewOneMoreLabel.isHidden = true
-//        imageViewMoreLabel.isHidden = true
-//
-//        var imageNum = 0
-//        switch imageCount {
-//        case 0:
-//            imageWrapperView.snp.makeConstraints {
-//                $0.height.equalTo(0)
-//            }
-//
-//            break
-//        case 1:
-//            oneImageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[0].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
-//
-//            break
-//        case 2:
-//            oneImageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[0].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
-//            imageViewOneMoreLabel.isHidden = false
-//            oneImageView.alpha = 0.7
-//            imageViewOneMoreLabel.text = "+1"
-//            imageViewOneMoreLabel.textColor = .black
-//
-//            break
-//        case 3:
-//            for imageView in threeImageViews {
-//                imageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[imageNum].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
-//                imageNum += 1
-//            }
-//            break
-//        default:
-//            // ver. FourFrame
-//            for imageView in fourImageViews {
-//                if imageNum <= 3 {
-//                    imageView.imageFromUrl((APIConstants.BackURL) + "/" + (post?.body.images?[imageNum].src ?? ""), defaultImgPath: (APIConstants.BackURL) + "/settings/nutee_profile.png")
-//                }
-//
-//                if imageNum == 3 {
-//                    let leftImage = (imageCount ?? 3) - 4
-//                    if leftImage > 0 {
-//                        imageView.alpha = 0.7
-//                        imageViewMoreLabel.isHidden = false
-//                        imageViewMoreLabel.text = "+" + String(leftImage)
-//                        imageViewMoreLabel.textColor = .black
-//                    }
-//                }
-//                imageNum += 1
-//            }
-//        }
-//    }
+    func showImageFrame(imageCount: Int) {
+        var imageNum: Int? = imageCount
+        
+        switch imageCount {
+        case 0:
+            imageWrapperView.snp.makeConstraints{
+                $0.height.equalTo(0)
+            }
+            break
+        case 1:
+            imageViewWhenOne.isHidden = false
+            break
+        case 2:
+            imageViewWhenOne.isHidden = false
+            imageViewWhenOne.alpha = 0.7
+            imageViewOneMoreLabel.isHidden = false
+            break
+        case 3:
+            firstImageViewWhenThree.isHidden = false
+            secondImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.isHidden = false
+            break
+        case 4:
+            firstImageViewWhenFour.isHidden = false
+            secondImageViewWhenFour.isHidden = false
+            thirdImageViewWhenFour.isHidden = false
+            fourthImageViewWhenFour.isHidden = false
+            break
+        default:
+            firstImageViewWhenThree.isHidden = false
+            secondImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.alpha = 0.7
+            imageViewMoreLabel.isHidden = false
+            imageNum = imageCount - 3
+            imageViewMoreLabel.text = "+\(imageNum ?? 0)"
+        }
+        
+    }
 }
 
 // MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의
