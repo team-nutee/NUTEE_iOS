@@ -39,7 +39,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     let thirdImageViewWhenFour = UIImageView()
     let fourthImageViewWhenFour = UIImageView()
     
-    // 더보기 Label
+    // 이미지 더보기 Label
     var imageViewOneMoreLabel = UILabel()
     var imageViewMoreLabel = UILabel()
     
