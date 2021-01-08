@@ -20,33 +20,12 @@ class SearchHistoryTV : UITableView {
     
     // MARK: - Variables and Properties
     
-    var recodeMemory : [String] = []
-    var recodeObject: [NSManagedObject] = []
-    let con = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var searchText: String = ""
-    
     var searchVC: SearchVC?
     
     // MARK: - Life Cycle
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        
-//        let context = self.getRecode()
-//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Recode")
-//
-//        let sortDescriptor = NSSortDescriptor(key: "time", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//
-//        do {
-//            recodeObject = try context.fetch(fetchRequest)
-//        } catch let error as NSError {
-//            print(error)
-//        }
-//
-//        for i in 0..<recodeObject.count {
-//            recodeMemory.append(recodeObject[i].value(forKey: "recode") as! String)
-//        }
         
         initTableView()
     }
@@ -62,8 +41,8 @@ class SearchHistoryTV : UITableView {
             $0.delegate = self
             $0.dataSource = self
             
-            $0.register(SearchHistoryTVHeaderView.self, forHeaderFooterViewReuseIdentifier: "SearchHistoryTVHeaderView")
-            $0.register(SearchHistoryTVCell.self, forCellReuseIdentifier: "SearchHistoryTVCell")
+            $0.register(SearchHistoryTVHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.SearchHistoryTVHeaderView)
+            $0.register(SearchHistoryTVCell.self, forCellReuseIdentifier: Identify.SearchHistoryTVCell)
             $0.tableFooterView = nil
             
             $0.backgroundColor = .white
@@ -72,74 +51,18 @@ class SearchHistoryTV : UITableView {
             
             $0.keyboardDismissMode = .onDrag
         }
-        
     }
     
-    func getRecode() -> NSManagedObjectContext {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        return appDelegate.persistentContainer.viewContext
-    }
-    
-    func save(_ inputRecode: String) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        
-        // 1
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        // 2
-        let entity = NSEntityDescription.entity(forEntityName: "Recode", in: managedContext)!
-        
-        let recode = NSManagedObject(entity: entity, insertInto: managedContext)
-        
-        // 3
-        recode.setValue(inputRecode, forKeyPath: "recode")
-        recode.setValue(Date(), forKey: "time")
-        
-        // 4
-        do {
-            try managedContext.save()
-            recodeObject.append(recode)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
-    }
-    
-    @objc func search() {
-        let searchResultVC = SearchResultVC()
-        
-        let text = searchVC?.searchTextField.text ?? ""
-        save(text)
-        searchResultVC.searchResult = text
-        
-        recodeMemory.insert(text, at: 0)
-        searchTableView.reloadData()
-        
-        searchVC?.searchTextField.text = ""
-        
-        searchVC?.navigationController?.pushViewController(searchResultVC, animated: true)
-    }
-    
-    @objc func searchInList() {
-        let searchResultVC = SearchResultVC()
-        let text: String = searchText
-        
-        searchResultVC.searchResult = text
-        searchVC?.navigationController?.pushViewController(searchResultVC, animated: true)
-    }
 }
 
 
 // MARK: - TableView Delegate
 
-extension SearchHistoryTV : UITableViewDelegate { }
-extension SearchHistoryTV : UITableViewDataSource {
+extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "SearchHistoryTVHeaderView") as? SearchHistoryTVHeaderView
-        
-        headerView?.searchTV = self
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.SearchHistoryTVHeaderView) as? SearchHistoryTVHeaderView
+        headerView?.searchHistoryTV = self
         
         return headerView
     }
@@ -153,7 +76,7 @@ extension SearchHistoryTV : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = 10//recodeMemory.count
+        let postItems = searchVC?.seearchHistoryList.count ?? 0
         
         if postItems == 0 {
             searchTableView.setEmptyView(title: "", message: "검색 기록이 없습니다.")
@@ -165,11 +88,11 @@ extension SearchHistoryTV : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SearchHistoryTVCell", for: indexPath) as! SearchHistoryTVCell
-//        let recoding = recodeMemory[indexPath.row]
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: Identify.SearchHistoryTVCell, for: indexPath) as! SearchHistoryTVCell
         cell.selectionStyle = .none
-//        cell.keywordHistoryLabel.text = recoding
+        cell.searchHistoryTV = self
+        
+        cell.keywordHistoryLabel.text = searchVC?.seearchHistoryList[indexPath.row]
         
         return cell
     }
@@ -183,11 +106,11 @@ extension SearchHistoryTV : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        _ = tableView.dequeueReusableCell(withIdentifier: "SearchHistoryTVCell", for: indexPath) as! SearchHistoryTVCell
+        let selectedKeyword = searchVC?.seearchHistoryList[indexPath.row] ?? ""
         
-        searchText = recodeMemory[indexPath.row]
-        self.searchInList()
-        self.searchTableView.reloadData()
+        if selectedKeyword != "" {
+            searchVC?.didTapSearchButton(keyword: selectedKeyword)
+        }
     }
     
 }
@@ -196,6 +119,8 @@ extension SearchHistoryTV : UITableViewDataSource {
 
 class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
     
+    static let identifier = Identify.SearchHistoryTVHeaderView
+    
     // MARK: - UI components
     
     let previousSearchlabel = UIButton()
@@ -203,7 +128,7 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
     
     // MARK: - Variables and Properties
     
-    var searchTV: SearchHistoryTV?
+    var searchHistoryTV: SearchHistoryTV?
     
     // MARK: - Life Cycle
     
@@ -216,10 +141,6 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     // MARK: - Helper
@@ -239,11 +160,9 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
             $0.titleLabel?.font = .systemFont(ofSize: 11)
             $0.addTarget(self, action: #selector(deleteAllRecords), for: .touchUpInside)
         }
-        
     }
     
     func addContentView() {
-        
         contentView.addSubview(previousSearchlabel)
         contentView.addSubview(deleteAllButton)
         
@@ -259,7 +178,6 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
             $0.right.equalTo(contentView.snp.right)
             $0.bottom.equalTo(contentView.snp.bottom)
         }
-        
     }
     
     @objc func deleteAllRecords() {
@@ -280,15 +198,17 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
             
         }
         
-        searchTV?.recodeMemory = []
+//        searchTV?.recodeMemory = []
         
-        searchTV?.searchTableView.reloadData()
+        searchHistoryTV?.searchTableView.reloadData()
     }
 }
 
 // MARK: - Search TableViewCell
 
 class SearchHistoryTVCell : UITableViewCell {
+    
+    static let identifier = Identify.SearchHistoryTVCell
     
     // MARK: - UI components
     
@@ -298,7 +218,7 @@ class SearchHistoryTVCell : UITableViewCell {
     
     // MARK: - Variables and Properties
     
-    var recode: String?
+    var searchHistoryTV: SearchHistoryTV?
     
     // MARK: - Life Cycle
     
@@ -313,21 +233,28 @@ class SearchHistoryTVCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        
+        if isHighlighted == true {
+            // light gray
+            contentView.backgroundColor = UIColor(red: 211 / 255.0, green: 211 / 255.0, blue: 211 / 255.0 , alpha: 1.0)
+        } else {
+            contentView.backgroundColor = .white
+        }
     }
     
     // MARK: - Helper
     
     func initCell() {
         _ = keywordHistoryLabel.then {
-            $0.text = "누티"
             $0.font = .systemFont(ofSize: 15)
         }
         
         _ = deleteButton.then {
             $0.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
             $0.tintColor = .lightGray
+            $0.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
         }
     }
     
