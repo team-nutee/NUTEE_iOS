@@ -21,7 +21,7 @@ class SearchVC: UIViewController {
     // MARK: - Variables and Properties
     
     var searchHistoryObject: [NSManagedObject] = []
-    var seearchHistoryList: [String] = []
+    var searchHistoryList: [String] = []
     
     // MARK: - Dummy data
      
@@ -40,7 +40,7 @@ class SearchVC: UIViewController {
         super.viewWillAppear(true)
         
         getSearchHistory(completion: {
-            searchHistoryTableView.searchTableView.reloadData()
+            searchHistoryTableView.reloadData()
         })
     }
     
@@ -88,7 +88,7 @@ class SearchVC: UIViewController {
         view.addSubview(searchTextField)
         view.addSubview(searchButton)
         
-        view.addSubview(searchHistoryTableView.searchTableView)
+        view.addSubview(searchHistoryTableView)
         
         
         searchTextField.snp.makeConstraints {
@@ -103,7 +103,7 @@ class SearchVC: UIViewController {
             $0.right.equalTo(searchTextField.snp.right)
         }
         
-        searchHistoryTableView.searchTableView.snp.makeConstraints {
+        searchHistoryTableView.snp.makeConstraints {
             $0.top.equalTo(searchTextField.snp.bottom).offset(10)
             $0.left.equalTo(searchTextField.snp.left)
             $0.right.equalTo(searchTextField.snp.right)
@@ -128,8 +128,9 @@ class SearchVC: UIViewController {
 //        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "keyword")
         do {
             let searchHistory = try managedObjectContext.fetch(SearchHistory.fetchRequest()) as! [SearchHistory]
+            searchHistoryList = []
             searchHistory.forEach {
-                seearchHistoryList.append($0.keyword ?? "")
+                searchHistoryList.append($0.keyword ?? "")
             }
             completion()
         } catch {

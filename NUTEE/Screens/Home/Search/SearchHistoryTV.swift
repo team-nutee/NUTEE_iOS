@@ -16,8 +16,6 @@ class SearchHistoryTV : UITableView {
     
     // MARK: - UI components
     
-    let searchTableView = UITableView(frame: CGRect(), style: .grouped)
-    
     // MARK: - Variables and Properties
     
     var searchVC: SearchVC?
@@ -25,9 +23,20 @@ class SearchHistoryTV : UITableView {
     // MARK: - Life Cycle
     
     override init(frame: CGRect, style: UITableView.Style) {
-        super.init(frame: frame, style: style)
+        super.init(frame: frame, style: .grouped)
         
-        initTableView()
+        delegate = self
+        dataSource = self
+        
+        register(SearchHistoryTVHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.SearchHistoryTVHeaderView)
+        register(SearchHistoryTVCell.self, forCellReuseIdentifier: Identify.SearchHistoryTVCell)
+        tableFooterView = nil
+        
+        backgroundColor = .white
+        separatorInset.left = 0
+        separatorStyle = .singleLine
+        
+        keyboardDismissMode = .onDrag
     }
     
     required init?(coder: NSCoder) {
@@ -35,24 +44,6 @@ class SearchHistoryTV : UITableView {
     }
  
     // MARK: - Helper
-    
-    func initTableView() {
-        _ = searchTableView.then {
-            $0.delegate = self
-            $0.dataSource = self
-            
-            $0.register(SearchHistoryTVHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.SearchHistoryTVHeaderView)
-            $0.register(SearchHistoryTVCell.self, forCellReuseIdentifier: Identify.SearchHistoryTVCell)
-            $0.tableFooterView = nil
-            
-            $0.backgroundColor = .white
-            $0.separatorInset.left = 0
-            $0.separatorStyle = .singleLine
-            
-            $0.keyboardDismissMode = .onDrag
-        }
-    }
-    
 }
 
 
@@ -60,6 +51,7 @@ class SearchHistoryTV : UITableView {
 
 extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
     
+    // HeaderView
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.SearchHistoryTVHeaderView) as? SearchHistoryTVHeaderView
         headerView?.searchHistoryTV = self
@@ -75,13 +67,14 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
         return 30
     }
     
+    // Cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = searchVC?.seearchHistoryList.count ?? 0
+        let postItems = searchVC?.searchHistoryList.count ?? 0
         
         if postItems == 0 {
-            searchTableView.setEmptyView(title: "", message: "검색 기록이 없습니다.")
+            setEmptyView(title: "", message: "검색 기록이 없습니다")
         } else {
-            searchTableView.restore()
+            restore()
         }
         
         return postItems
@@ -92,7 +85,7 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.searchHistoryTV = self
         
-        cell.keywordHistoryLabel.text = searchVC?.seearchHistoryList[indexPath.row]
+        cell.keywordHistoryLabel.text = searchVC?.searchHistoryList[indexPath.row]
         
         return cell
     }
@@ -106,7 +99,7 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedKeyword = searchVC?.seearchHistoryList[indexPath.row] ?? ""
+        let selectedKeyword = searchVC?.searchHistoryList[indexPath.row] ?? ""
         
         if selectedKeyword != "" {
             searchVC?.didTapSearchButton(keyword: selectedKeyword)
@@ -200,7 +193,7 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
         
 //        searchTV?.recodeMemory = []
         
-        searchHistoryTV?.searchTableView.reloadData()
+//        searchHistoryTV?.searchTableView.reloadData()
     }
 }
 
