@@ -146,7 +146,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
         detailNewsFeedVC.postId = postContent?[indexPath.row].id
         detailNewsFeedVC.getPostService(postId: detailNewsFeedVC.postId!, completionHandler: {(returnedData)-> Void in
-            detailNewsFeedVC.replyTableView.reloadData()
+            detailNewsFeedVC.detailNewsFeedTableView.reloadData()
         })
 
         // NewsFeedVC와 중간 매개 델리게이트(DetailNewsFeed) 사이를 통신하기 위한 변수 연결작업

@@ -14,7 +14,7 @@ class DetailNewsFeedVC: UIViewController {
     
     //MARK: - UI components
     
-    let replyTableView = UITableView(frame: CGRect(), style: .grouped)
+    let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
     let refreshControl = UIRefreshControl()
     
@@ -65,7 +65,7 @@ class DetailNewsFeedVC: UIViewController {
             $0.tintColor = .nuteeGreen
         }
         
-        _ = replyTableView.then {
+        _ = detailNewsFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
             
@@ -108,7 +108,7 @@ class DetailNewsFeedVC: UIViewController {
     }
     
     func makeConstraints() {
-        view.addSubview(replyTableView)
+        view.addSubview(detailNewsFeedTableView)
         
         view.addSubview(commentView)
         
@@ -118,14 +118,14 @@ class DetailNewsFeedVC: UIViewController {
         commentView.addSubview(submitButton)
         
         
-        replyTableView.snp.makeConstraints {
+        detailNewsFeedTableView.snp.makeConstraints {
             $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
         }
         
         commentView.snp.makeConstraints {
-            $0.top.equalTo(replyTableView.snp.bottom)
+            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             commentViewBottomConstraint =
@@ -327,7 +327,7 @@ extension DetailNewsFeedVC {
             let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
             
             commentViewBottomConstraint?.layoutConstraints[0].constant = 0
-            replyTableView.contentInset = .zero
+            detailNewsFeedTableView.contentInset = .zero
             
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
