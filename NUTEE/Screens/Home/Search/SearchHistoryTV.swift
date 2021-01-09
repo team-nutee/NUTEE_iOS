@@ -33,10 +33,13 @@ class SearchHistoryTV : UITableView {
         tableFooterView = nil
         
         backgroundColor = .white
-        separatorInset.left = 0
-        separatorStyle = .singleLine
+        separatorColor = .clear
+        
+        separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         keyboardDismissMode = .onDrag
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapTableView(sender:))))
     }
     
     required init?(coder: NSCoder) {
@@ -44,6 +47,15 @@ class SearchHistoryTV : UITableView {
     }
  
     // MARK: - Helper
+    
+    @objc func didTapTableView(sender: UITapGestureRecognizer) {
+        // when tap tableView, keyboard is dismissed by this code
+        if sender.state == .ended {
+            searchVC?.view.endEditing(true)
+        }
+        sender.cancelsTouchesInView = false
+    }
+    
 }
 
 
@@ -73,8 +85,10 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
         
         if postItems == 0 {
             setEmptyView(title: "", message: "검색 기록이 없습니다")
+            self.isScrollEnabled = false
         } else {
             restore()
+            self.isScrollEnabled = true
         }
         
         return postItems
@@ -85,25 +99,46 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.searchHistoryTV = self
         
+        cell.indexPath = indexPath.row
         cell.keywordHistoryLabel.text = searchVC?.searchHistoryList[indexPath.row]
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 46
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 46
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedKeyword = searchVC?.searchHistoryList[indexPath.row] ?? ""
+//        searchVC?.searchTextField.text = selectedKeyword
+//        searchVC?.didTapSearchButton()
+//        searchVC?.searchTextField.text = ""
+        let searchResultVC = SearchResultVC()
+        searchResultVC.navigationItem.title = selectedKeyword
+        searchVC?.saveSearchKeyword(toSaveKeyword: selectedKeyword)
         
-        if selectedKeyword != "" {
-            searchVC?.didTapSearchButton(keyword: selectedKeyword)
-        }
+        searchVC?.navigationController?.pushViewController(searchResultVC, animated: true)
+    }
+    
+    // FooterView
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let fakeView = UIView()
+        fakeView.backgroundColor = .clear
+        
+        return fakeView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
     }
     
 }
@@ -151,7 +186,7 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
             $0.setTitle("전체 삭제", for: .normal)
             $0.setTitleColor(.lightGray, for: .normal)
             $0.titleLabel?.font = .systemFont(ofSize: 11)
-            $0.addTarget(self, action: #selector(deleteAllRecords), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapDeleteAllButton), for: .touchUpInside)
         }
     }
     
@@ -162,38 +197,36 @@ class SearchHistoryTVHeaderView : UITableViewHeaderFooterView {
         
         previousSearchlabel.snp.makeConstraints {
             $0.top.equalTo(contentView.snp.top)
-            $0.left.equalTo(contentView.snp.left)
+            $0.left.equalTo(contentView.snp.left).offset(20)
             $0.bottom.equalTo(contentView.snp.bottom)
         }
         
         deleteAllButton.snp.makeConstraints {
             $0.top.equalTo(contentView.snp.top)
-            $0.right.equalTo(contentView.snp.right)
+            $0.right.equalTo(contentView.snp.right).inset(20)
             $0.bottom.equalTo(contentView.snp.bottom)
         }
     }
     
-    @objc func deleteAllRecords() {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
+    @objc func didTapDeleteAllButton() {
+        // get NSManagedObjectContext
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedObjectContext = appDelegate.persistentContainer.viewContext
         
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Recode")
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "SearchHistory")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
         
         do {
-            
-            try context.execute(deleteRequest)
-            try context.save()
-            
+            try managedObjectContext.execute(deleteRequest)
+            try managedObjectContext.save()
+         
+            searchHistoryTV?.searchVC?.searchHistoryList = []
+            searchHistoryTV?.reloadData()
         } catch {
-            
-            print ("There was an error")
-            
+            print ("delete all 'SearchHistory' error")
         }
-        
-//        searchTV?.recodeMemory = []
-        
-//        searchHistoryTV?.searchTableView.reloadData()
     }
 }
 
@@ -207,11 +240,14 @@ class SearchHistoryTVCell : UITableViewCell {
     
     let keywordHistoryLabel = UILabel()
     let deleteButton = UIButton()
-    let underBarView = UIView()
+    let seperatorView = UIView()
     
     // MARK: - Variables and Properties
     
+    var indexPath: Int = 0
     var searchHistoryTV: SearchHistoryTV?
+    
+    var recodeObject: NSManagedObject?
     
     // MARK: - Life Cycle
     
@@ -224,6 +260,12 @@ class SearchHistoryTVCell : UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        indexPath = 0
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
@@ -249,29 +291,58 @@ class SearchHistoryTVCell : UITableViewCell {
             $0.tintColor = .lightGray
             $0.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
         }
+        
+        _ = seperatorView.then {
+            $0.backgroundColor = UIColor(red: 199 / 255.0, green: 199 / 255.0, blue: 199 / 255.0 , alpha: 1.0)
+        }
     }
     
     func addContentView() {
-        
         contentView.addSubview(keywordHistoryLabel)
         contentView.addSubview(deleteButton)
         
+        contentView.addSubview(seperatorView)
+        
         
         keywordHistoryLabel.snp.makeConstraints {
-            $0.left.equalTo(contentView.snp.left).offset(5)
+            $0.left.equalTo(contentView.snp.left).offset(5+20)
+            $0.right.equalTo(deleteButton.snp.left).inset(-5)
             $0.centerY.equalTo(contentView)
         }
         deleteButton.snp.makeConstraints {
-            $0.width.equalTo(15)
+            $0.width.equalTo(20)
             $0.height.equalTo(deleteButton.snp.width)
             
-            $0.right.equalTo(contentView.snp.right).inset(5)
+            $0.right.equalTo(contentView.snp.right).inset(5+20)
             $0.centerY.equalTo(contentView)
         }
         
+        seperatorView.snp.makeConstraints {
+            $0.height.equalTo(1)
+            
+            $0.left.equalTo(contentView.snp.left).offset(20)
+            $0.right.equalTo(contentView.snp.right).inset(20)
+            $0.bottom.equalTo(contentView.snp.bottom)
+        }
     }
     
     @objc func didTapDeleteButton() {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedObjectContext = appDelegate.persistentContainer.viewContext
+        
+        do {
+            let toRemoveObject = (searchHistoryTV?.searchVC?.searchHistoryObjectList[indexPath])!
+            managedObjectContext.delete(toRemoveObject)
+            try managedObjectContext.save()
+            
+            searchHistoryTV?.searchVC?.getSearchHistory(completion: {
+                searchHistoryTV?.reloadData()
+            })
+            
+        } catch {
+            print("delete \(keywordHistoryLabel.text ?? "") failed")
+            print(error.localizedDescription)
+        }
         
     }
     
