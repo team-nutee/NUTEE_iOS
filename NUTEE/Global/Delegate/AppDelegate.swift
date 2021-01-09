@@ -12,8 +12,6 @@ import CoreData
 @UIApplicationMain
     class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         UINavigationBar.appearance().backgroundColor = .white
@@ -77,6 +75,9 @@ import CoreData
 
     func saveContext () {
         let context = persistentContainer.viewContext
+        // 같은 키워드 중복 저장 금지 설정
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
         if context.hasChanges {
             do {
                 try context.save()
