@@ -115,9 +115,7 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedKeyword = searchVC?.searchHistoryList[indexPath.row] ?? ""
-//        searchVC?.searchTextField.text = selectedKeyword
-//        searchVC?.didTapSearchButton()
-//        searchVC?.searchTextField.text = ""
+        
         let searchResultVC = SearchResultVC()
         searchResultVC.navigationItem.title = selectedKeyword
         searchVC?.saveSearchKeyword(toSaveKeyword: selectedKeyword)

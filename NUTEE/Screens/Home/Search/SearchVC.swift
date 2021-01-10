@@ -127,7 +127,6 @@ class SearchVC: UIViewController {
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
         }
-        
     }
     
     @objc func didTapDeleteAllTextButton() {
@@ -203,7 +202,6 @@ class SearchVC: UIViewController {
             print("could not save search keyword")
             print(error.localizedDescription)
         }
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
