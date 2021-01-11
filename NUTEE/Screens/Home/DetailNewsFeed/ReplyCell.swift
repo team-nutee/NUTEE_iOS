@@ -25,14 +25,6 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
     
     let replyTextView = UITextView()
 //
-//    @IBOutlet var contentsCell: UIView!
-//
-//    // 댓글 표시
-//    @IBOutlet var imgCommentUser: UIImageView!
-//    @IBOutlet var lblCommentUserId: UIButton!
-//    @IBOutlet var lblCommentTime: UILabel!
-//    @IBOutlet var txtvwCommentContents: LinkTextView!
-//    @IBOutlet var LeadingToCommentUser: NSLayoutConstraint!
 //
 //    //MARK: - Variables and Properties
 //
@@ -40,7 +32,7 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 //    weak var delegate: ReplyCellDelegate?
 //    weak var RootVC: UIViewController?
 //
-//    var comment: Comment?
+    var comment: Comment?
 //
 //    //MARK: - Life Cycle
 //
@@ -185,98 +177,32 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 //
 //        return false
 //    }
-//
-//    @IBAction func showDetailProfile(_ sender: UIButton) {
-//        showProfile()
-//    }
-//
-//    @IBAction func btnCommentMore(_ sender: Any) {
-//        let moreAlert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
-//        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-//            let editAction = UIAlertAction(title: "수정", style: .default) {
-//                (action: UIAlertAction) in
-//                // Code to EditComment
-//                self.delegate?.setEditCommentMode(commentId: self.comment?.id ?? 0, commentContent: self.txtvwCommentContents.text)
-//            }
-//            let deleteAction = UIAlertAction(title: "삭제", style: .destructive) {
-//                (action: UIAlertAction) in
-//                // Code to 수정/삭제 기능
-//                let deleteAlert = UIAlertController(title: nil, message: "댓글을 삭제 하시겠습니까?", preferredStyle: UIAlertController.Style.alert)
-//                let cancelAction = UIAlertAction(title: "취소", style: .default, handler: nil)
-//                let okAction = UIAlertAction(title: "삭제", style: .destructive) {
-//                    (action: UIAlertAction) in
-//                    // Code to delete
-//                    self.deleteCommentService(postId: self.comment?.postID ?? 0, commentId: self.comment?.id ?? 0, completionHandler: {()-> Void in
-//                        self.delegate?.updateReplyTV()
-//                    })
-//                }
-//                deleteAlert.addAction(cancelAction)
-//                deleteAlert.addAction(okAction)
-//                self.RootVC?.present(deleteAlert, animated: true, completion: nil)
-//            }
-//            let reportAction = UIAlertAction(title: "신고하기🚨", style: .destructive) {
-//                (action: UIAlertAction) in
-//                // Code to 신고 기능
-//                let reportAlert = UIAlertController(title: "🚨댓글 신고🚨", message: "", preferredStyle: UIAlertController.Style.alert)
-//                let cancelAction
-//                    = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-//                let reportAction = UIAlertAction(title: "신고", style: .destructive) {
-//                    (action: UIAlertAction) in
-//                    let reason = reportAlert.textFields?[0].text ?? "" // 신고 내용
-//                    self.reportCommentService(reportReason: reason)
-//                    //신고 여부 알림 <-- 서버연결 코드에서 구현됨
-//                }
-//                reportAlert.addTextField { (mytext) in
-//                    mytext.tintColor = .nuteeGreen
-//                    mytext.placeholder = "신고할 내용을 입력해주세요."
-//                }
-//                reportAlert.addAction(cancelAction)
-//                reportAlert.addAction(reportAction)
-//
-//                self.RootVC?.present(reportAlert, animated: true, completion: nil)
-//            }
-//
-//        if comment?.userID == KeychainWrapper.standard.integer(forKey: "id") {
-//            moreAlert.addAction(editAction)
-//            moreAlert.addAction(deleteAction)
-//            moreAlert.addAction(cancelAction)
-//        } else {
-//            moreAlert.addAction(reportAction)
-//            moreAlert.addAction(cancelAction)
-//        }
-//        self.RootVC?.present(moreAlert, animated: true, completion: nil)
-//    }
-//
-//    func initComments() {
-//        // 사용자 프로필 이미지 설정
-//        imgCommentUser.setRounded(radius: imgCommentUser.frame.height/2)
-//        imgCommentUser.setImageNutee(comment?.user.image?.src)
-//        imgCommentUser.setImageContentMode(comment?.user.image?.src, imgvw: imgCommentUser)
-//
-//        lblCommentUserId.setTitle(comment?.user.nickname, for: .normal)
-//        lblCommentUserId.sizeToFit()
-//
-//
-//        // 댓글 작성 시간 설정
-//        if comment?.createdAt == comment?.updatedAt {
-//            let originPostTime = comment?.createdAt ?? "1970-01-01T00:00:00.000Z" // 기본값 지정 안했을 경우 getDateFormat함수에서 nil값 에러 발생. 시간 임의 지정
-//            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-//            lblCommentTime.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-//        } else {
-//            let originPostTime = comment?.updatedAt ?? ""
-//            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
-//            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-//            lblCommentTime.text = "수정 " + (updatePostTime ?? "")
-//        }
-//
-////        let originPostTime = comment?.createdAt
-////        let postTimeDateFormat = originPostTime?.getDateFormat(time: originPostTime!)
-////        lblCommentTime.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-//
-//        txtvwCommentContents.sizeToFit()
-//        txtvwCommentContents.text = comment?.content
-//    }
-//
+    
+    func fillDataToView() {
+        // 사용자 프로필 설정
+        if comment?.user.image?.src != nil {
+            profileImageView.setImageNutee(comment?.user.image?.src)
+        } else {
+            profileImageView.image = UIImage(named: "nutee_zigi_white")
+        }
+
+        nicknameLabel.text = comment?.user.nickname
+
+        // 댓글 작성 시간 설정
+        if comment?.createdAt == comment?.updatedAt {
+            let originPostTime = comment?.createdAt ?? "1970-01-01T00:00:00.000Z" // 기본값 지정 안했을 경우 getDateFormat함수에서 nil값 에러 발생. 시간 임의 지정
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+        } else {
+            let originPostTime = comment?.updatedAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+            dateLabel.text = "수정 " + (updatePostTime ?? "")
+        }
+
+        replyTextView.text = comment?.content
+    }
+
 ////    func initReComments() {
 ////        // 대댓글 표현을 위해 오른쪽으로 들여서 댓글 표시
 ////        LeadingToCommentUser.constant = 45

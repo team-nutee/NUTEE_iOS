@@ -103,7 +103,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         _ = imageViewWhenOne.then {
             $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
             
-            $0.isHidden = true
+            //$0.isHidden = true
         }
         
         _ = firstImageViewWhenThree.then {
@@ -388,7 +388,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     func initPosting() {
-        print(KeychainWrapper.standard.string(forKey: "token")!)
         // 사용자 프로필 이미지 설정
         if post?.body.user.image?.src != nil {
             profileImageView.setImageNutee(post?.body.user.image?.src)
