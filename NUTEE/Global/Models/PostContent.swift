@@ -25,8 +25,7 @@ struct PostContent: Codable {
         code = (try? values.decode(Int.self, forKey: .code)) ?? 0
         message = (try? values.decode(String.self, forKey: .message)) ?? ""
         body = (try? values.decode(PostContentBody.self, forKey: .body))!
-//            PostContentBody.init(id: 0, title: "", content: "", createdAt: "", updateAt: "", user: User.init(id: 0, nickname: "", image: ""), images: [], likers: [], comments: [], retweet: nil, category: "", hits: 0, blocked: false)
-        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil)
+        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil, getComments: nil)
     }
 }
 
@@ -38,7 +37,7 @@ class PostContentBody: Codable {
     let user: User
     let images: [PostImage]?
     let likers: [Liker]?
-    let comments: [Comment]?
+    let comments: [CommentBody]?
     let retweet: PostBody?
     let category: String
     let hits: Int
@@ -65,7 +64,7 @@ class PostContentBody: Codable {
         blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
         user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
         images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
-        comments = (try? values.decode([Comment].self, forKey: .comments)) ?? []
+        comments = (try? values.decode([CommentBody].self, forKey: .comments)) ?? []
         retweet = (try? values.decode(PostBody.self, forKey: .retweet)) ?? nil
         likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
         category = (try? values.decode(String.self, forKey: .category)) ?? ""
@@ -73,12 +72,4 @@ class PostContentBody: Codable {
     }
 }
 
-// MARK: - Comment
-struct Comment: Codable {
-    let id: Int
-    let content: String
-    let createdAt, updatedAt: String
-    let reComment: [Comment]?
-    let user: User
-}
 

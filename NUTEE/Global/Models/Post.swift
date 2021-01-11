@@ -26,7 +26,7 @@ struct Post: Codable {
         code = (try? values.decode(Int.self, forKey: .code)) ?? 0
         message = (try? values.decode(String.self, forKey: .message)) ?? ""
         body = (try? values.decode([PostBody].self, forKey: .body)) ?? []
-        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil)
+        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil, getComments: nil)
     }
 }
 
@@ -115,7 +115,7 @@ struct UserImage: Codable {
 // MARK: - Links
 
 struct Links: Codable {
-    let linksSelf, updatePost, removePost, getFavoritePosts, getCategoryPosts: Link?
+    let linksSelf, updatePost, removePost, getFavoritePosts, getCategoryPosts, getComments: Link?
 
     enum CodingKeys: String, CodingKey {
         case linksSelf = "self"
@@ -123,6 +123,7 @@ struct Links: Codable {
         case removePost = "remove-post"
         case getFavoritePosts = "get-favorite-posts"
         case getCategoryPosts = "get-category-posts"
+        case getComments = "get-comments"
     }
 }
 

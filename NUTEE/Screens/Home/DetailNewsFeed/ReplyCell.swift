@@ -32,7 +32,7 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 //    weak var delegate: ReplyCellDelegate?
 //    weak var RootVC: UIViewController?
 //
-    var comment: Comment?
+    var comment: CommentBody?
 //
 //    //MARK: - Life Cycle
 //

@@ -213,6 +213,33 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 15
         
+//        profileImageView.snp.makeConstraints {
+//            $0.width.equalTo(50)
+//            $0.height.equalTo(profileImageView.snp.width)
+//            $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
+//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+//        }
+//        nicknameLabel.snp.makeConstraints {
+//            $0.top.equalTo(profileImageView.snp.top)
+//            $0.left.equalTo(profileImageView.snp.right).offset(15)
+//        }
+//        dateLabel.snp.makeConstraints {
+//            $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
+//            $0.left.equalTo(nicknameLabel.snp.left)
+//        }
+//
+//        moreButton.snp.makeConstraints {
+//            $0.width.equalTo(40)
+//            $0.height.equalTo(40)
+//            $0.centerY.equalTo(profileImageView)
+//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+//        }
+//
+//        contentTextView.snp.makeConstraints {
+//            $0.top.equalTo(profileImageView.snp.bottom).offset(15)
+//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+//        }
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(profileImageView.snp.width)
@@ -235,98 +262,93 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
         
-        contentTextView.snp.makeConstraints {
-            $0.top.equalTo(profileImageView.snp.bottom).offset(15)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
-        }
-        
-        imageWrapperView.snp.makeConstraints{
-            $0.height.equalTo(234)
-            
-            $0.top.equalTo(contentTextView.snp.bottom).offset(15)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
-        }
-        
-        imageViewWhenOne.snp.makeConstraints{
-            $0.top.equalTo(imageWrapperView.snp.top)
-            $0.left.equalTo(imageWrapperView.snp.left)
-            $0.right.equalTo(imageWrapperView.snp.right)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-        }
-        
-        imageViewOneMoreLabel.snp.makeConstraints{
-            $0.centerX.equalTo(imageViewWhenOne)
-            $0.centerY.equalTo(imageViewWhenOne)
-        }
-        
-        firstImageViewWhenThree.snp.makeConstraints{
-            $0.width.equalTo(175)
-            
-            $0.top.equalTo(imageWrapperView.snp.top)
-            $0.left.equalTo(imageWrapperView.snp.left)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-        }
-        
-        secondImageViewWhenThree.snp.makeConstraints{
-            $0.height.equalTo(117)
-            
-            $0.top.equalTo(imageWrapperView.snp.top)
-            $0.left.equalTo(firstImageViewWhenThree.snp.right)
-            $0.right.equalTo(imageWrapperView.snp.right)
-        }
-        
-        thirdImageViewWhenThree.snp.makeConstraints{
-            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
-            $0.left.equalTo(firstImageViewWhenThree.snp.right)
-            $0.right.equalTo(imageWrapperView.snp.right)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-        }
-        
-        imageViewMoreLabel.snp.makeConstraints{
-            $0.centerX.equalTo(thirdImageViewWhenThree)
-            $0.centerY.equalTo(thirdImageViewWhenThree)
-        }
-        
-        firstImageViewWhenFour.snp.makeConstraints{
-            $0.height.equalTo(117)
-            $0.width.equalTo(206)
-            
-            $0.top.equalTo(imageWrapperView.snp.top)
-            $0.left.equalTo(imageWrapperView.snp.left)
-        }
-        
-        secondImageViewWhenFour.snp.makeConstraints{
-            $0.height.equalTo(117)
-            
-            $0.top.equalTo(imageWrapperView.snp.top)
-            $0.left.equalTo(firstImageViewWhenFour.snp.right)
-            $0.right.equalTo(imageWrapperView.snp.right)
-        }
-        
-        thirdImageViewWhenFour.snp.makeConstraints{
-            $0.width.equalTo(140)
-            
-            $0.top.equalTo(firstImageViewWhenFour.snp.bottom)
-            $0.left.equalTo(imageWrapperView.snp.left)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-        }
-        
-        fourthImageViewWhenFour.snp.makeConstraints{
-            $0.top.equalTo(secondImageViewWhenFour.snp.bottom)
-            $0.left.equalTo(thirdImageViewWhenFour.snp.right)
-            $0.right.equalTo(imageWrapperView.snp.right)
-            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-        }
+//        imageWrapperView.snp.makeConstraints{
+//            $0.height.equalTo(234)
+//
+//            $0.top.equalTo(contentTextView.snp.bottom).offset(15)
+//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+//        }
+//
+//        imageViewWhenOne.snp.makeConstraints{
+//            $0.top.equalTo(imageWrapperView.snp.top)
+//            $0.left.equalTo(imageWrapperView.snp.left)
+//            $0.right.equalTo(imageWrapperView.snp.right)
+//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+//        }
+//
+//        imageViewOneMoreLabel.snp.makeConstraints{
+//            $0.centerX.equalTo(imageViewWhenOne)
+//            $0.centerY.equalTo(imageViewWhenOne)
+//        }
+//
+//        firstImageViewWhenThree.snp.makeConstraints{
+//            $0.width.equalTo(175)
+//
+//            $0.top.equalTo(imageWrapperView.snp.top)
+//            $0.left.equalTo(imageWrapperView.snp.left)
+//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+//        }
+//
+//        secondImageViewWhenThree.snp.makeConstraints{
+//            $0.height.equalTo(117)
+//
+//            $0.top.equalTo(imageWrapperView.snp.top)
+//            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+//            $0.right.equalTo(imageWrapperView.snp.right)
+//        }
+//
+//        thirdImageViewWhenThree.snp.makeConstraints{
+//            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
+//            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+//            $0.right.equalTo(imageWrapperView.snp.right)
+//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+//        }
+//
+//        imageViewMoreLabel.snp.makeConstraints{
+//            $0.centerX.equalTo(thirdImageViewWhenThree)
+//            $0.centerY.equalTo(thirdImageViewWhenThree)
+//        }
+//
+//        firstImageViewWhenFour.snp.makeConstraints{
+//            $0.height.equalTo(117)
+//            $0.width.equalTo(206)
+//
+//            $0.top.equalTo(imageWrapperView.snp.top)
+//            $0.left.equalTo(imageWrapperView.snp.left)
+//        }
+//
+//        secondImageViewWhenFour.snp.makeConstraints{
+//            $0.height.equalTo(117)
+//
+//            $0.top.equalTo(imageWrapperView.snp.top)
+//            $0.left.equalTo(firstImageViewWhenFour.snp.right)
+//            $0.right.equalTo(imageWrapperView.snp.right)
+//        }
+//
+//        thirdImageViewWhenFour.snp.makeConstraints{
+//            $0.width.equalTo(140)
+//
+//            $0.top.equalTo(firstImageViewWhenFour.snp.bottom)
+//            $0.left.equalTo(imageWrapperView.snp.left)
+//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+//        }
+//
+//        fourthImageViewWhenFour.snp.makeConstraints{
+//            $0.top.equalTo(secondImageViewWhenFour.snp.bottom)
+//            $0.left.equalTo(thirdImageViewWhenFour.snp.right)
+//            $0.right.equalTo(imageWrapperView.snp.right)
+//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+//        }
         
         likeButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(20)
-            $0.top.equalTo(imageWrapperView.snp.bottom).offset(10)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
-            $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
+            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.bottom.equalTo(contentView.snp.bottom).inset(TopAndBottomSpace)
         }
+        
     }
     
 //    func setImageView(){
