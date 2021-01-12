@@ -103,7 +103,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         _ = imageViewWhenOne.then {
             $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
             
-            //$0.isHidden = true
+            $0.isHidden = false
         }
         
         _ = firstImageViewWhenThree.then {
@@ -213,38 +213,14 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 15
         
-//        profileImageView.snp.makeConstraints {
-//            $0.width.equalTo(50)
-//            $0.height.equalTo(profileImageView.snp.width)
-//            $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
-//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
-//        }
-//        nicknameLabel.snp.makeConstraints {
-//            $0.top.equalTo(profileImageView.snp.top)
-//            $0.left.equalTo(profileImageView.snp.right).offset(15)
-//        }
-//        dateLabel.snp.makeConstraints {
-//            $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
-//            $0.left.equalTo(nicknameLabel.snp.left)
-//        }
-//
-//        moreButton.snp.makeConstraints {
-//            $0.width.equalTo(40)
-//            $0.height.equalTo(40)
-//            $0.centerY.equalTo(profileImageView)
-//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
-//        }
-//
-//        contentTextView.snp.makeConstraints {
-//            $0.top.equalTo(profileImageView.snp.bottom).offset(15)
-//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
-//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
-//        }
+//        let imageWrapperViewHalfWidth = imageWrapperView.bounds.width / 2.0
+//        let imageWrapperViewHalfHeight = imageWrapperView.bounds.height / 2.0
+
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(profileImageView.snp.width)
-            $0.top.equalToSuperview().offset(TopAndBottomSpace)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
+            $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
         }
         nicknameLabel.snp.makeConstraints {
             $0.top.equalTo(profileImageView.snp.top)
@@ -254,36 +230,42 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
             $0.left.equalTo(nicknameLabel.snp.left)
         }
-        
+
         moreButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(40)
             $0.centerY.equalTo(profileImageView)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+        }
+
+        contentTextView.snp.makeConstraints {
+            $0.top.equalTo(profileImageView.snp.bottom).offset(TopAndBottomSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         
-//        imageWrapperView.snp.makeConstraints{
-//            $0.height.equalTo(234)
-//
-//            $0.top.equalTo(contentTextView.snp.bottom).offset(15)
-//            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
-//            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
-//        }
-//
-//        imageViewWhenOne.snp.makeConstraints{
-//            $0.top.equalTo(imageWrapperView.snp.top)
-//            $0.left.equalTo(imageWrapperView.snp.left)
-//            $0.right.equalTo(imageWrapperView.snp.right)
-//            $0.bottom.equalTo(imageWrapperView.snp.bottom)
-//        }
-//
+        imageWrapperView.snp.makeConstraints{
+            $0.height.equalTo(234)
+            
+            $0.top.equalTo(contentTextView.snp.bottom).offset(TopAndBottomSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+        }
+
+        imageViewWhenOne.snp.makeConstraints{
+            $0.top.equalTo(imageWrapperView.snp.top)
+            $0.left.equalTo(imageWrapperView.snp.left)
+            $0.right.equalTo(imageWrapperView.snp.right)
+            $0.bottom.equalTo(imageWrapperView.snp.bottom)
+        }
+
 //        imageViewOneMoreLabel.snp.makeConstraints{
 //            $0.centerX.equalTo(imageViewWhenOne)
 //            $0.centerY.equalTo(imageViewWhenOne)
 //        }
 //
 //        firstImageViewWhenThree.snp.makeConstraints{
-//            $0.width.equalTo(175)
+//            $0.width.equalTo(imageWrapperViewHalfWidth)
 //
 //            $0.top.equalTo(imageWrapperView.snp.top)
 //            $0.left.equalTo(imageWrapperView.snp.left)
@@ -291,7 +273,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 //        }
 //
 //        secondImageViewWhenThree.snp.makeConstraints{
-//            $0.height.equalTo(117)
+//            $0.height.equalTo(imageWrapperViewHalfHeight)
 //
 //            $0.top.equalTo(imageWrapperView.snp.top)
 //            $0.left.equalTo(firstImageViewWhenThree.snp.right)
@@ -311,7 +293,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 //        }
 //
 //        firstImageViewWhenFour.snp.makeConstraints{
-//            $0.height.equalTo(117)
+//            $0.height.equalTo(imageWrapperViewHalfHeight)
 //            $0.width.equalTo(206)
 //
 //            $0.top.equalTo(imageWrapperView.snp.top)
@@ -319,7 +301,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 //        }
 //
 //        secondImageViewWhenFour.snp.makeConstraints{
-//            $0.height.equalTo(117)
+//            $0.height.equalTo(imageWrapperViewHalfHeight)
 //
 //            $0.top.equalTo(imageWrapperView.snp.top)
 //            $0.left.equalTo(firstImageViewWhenFour.snp.right)
@@ -340,15 +322,14 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 //            $0.right.equalTo(imageWrapperView.snp.right)
 //            $0.bottom.equalTo(imageWrapperView.snp.bottom)
 //        }
-        
+
         likeButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(20)
-            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
+            $0.top.equalTo(imageWrapperView.snp.bottom).offset(10)
             $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
             $0.bottom.equalTo(contentView.snp.bottom).inset(TopAndBottomSpace)
         }
-        
     }
     
 //    func setImageView(){
@@ -439,42 +420,52 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 
     // 사진 개수에 따른 이미지 표시 유형 선택
     func showImageFrame(imageCount: Int) {
-        var imageNum: Int? = imageCount
+//        var imageNum: Int? = imageCount
         
-        switch imageCount {
-        case 0:
-            imageWrapperView.snp.makeConstraints{
+        if imageCount == 0 {
+            imageWrapperView.snp.updateConstraints {
                 $0.height.equalTo(0)
             }
-            break
-        case 1:
-            imageViewWhenOne.isHidden = false
-            break
-        case 2:
-            imageViewWhenOne.isHidden = false
-            imageViewWhenOne.alpha = 0.7
-            imageViewOneMoreLabel.isHidden = false
-            break
-        case 3:
-            firstImageViewWhenThree.isHidden = false
-            secondImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.isHidden = false
-            break
-        case 4:
-            firstImageViewWhenFour.isHidden = false
-            secondImageViewWhenFour.isHidden = false
-            thirdImageViewWhenFour.isHidden = false
-            fourthImageViewWhenFour.isHidden = false
-            break
-        default:
-            firstImageViewWhenThree.isHidden = false
-            secondImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.alpha = 0.7
-            imageViewMoreLabel.isHidden = false
-            imageNum = imageCount - 3
-            imageViewMoreLabel.text = "+\(imageNum ?? 0)"
+        } else {
+            imageWrapperView.snp.updateConstraints {
+                $0.height.equalTo(234)
+            }
         }
+//        switch imageCount {
+//        case 0:
+//            imageWrapperView.snp.updateConstraints {
+//                $0.height.equalTo(0)
+//            }
+//            break
+//        case 1:
+//            imageViewWhenOne.isHidden = false
+//            break
+//        case 2:
+//            imageViewWhenOne.isHidden = false
+//            imageViewWhenOne.alpha = 0.7
+//            imageViewOneMoreLabel.isHidden = false
+//            break
+//        case 3:
+//            firstImageViewWhenThree.isHidden = false
+//            secondImageViewWhenThree.isHidden = false
+//            thirdImageViewWhenThree.isHidden = false
+//            break
+//        case 4:
+//            firstImageViewWhenFour.isHidden = false
+//            secondImageViewWhenFour.isHidden = false
+//            thirdImageViewWhenFour.isHidden = false
+//            fourthImageViewWhenFour.isHidden = false
+//            break
+//        default:
+//
+//            firstImageViewWhenThree.isHidden = false
+//            secondImageViewWhenThree.isHidden = false
+//            thirdImageViewWhenThree.isHidden = false
+//            thirdImageViewWhenThree.alpha = 0.7
+//            imageViewMoreLabel.isHidden = false
+//            imageNum = imageCount - 3
+//            imageViewMoreLabel.text = "+\(imageNum ?? 0)"
+//        }
         
     }
 }

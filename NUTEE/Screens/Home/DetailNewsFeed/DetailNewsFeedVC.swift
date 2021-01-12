@@ -13,8 +13,6 @@ import SwiftKeychainWrapper
 class DetailNewsFeedVC: UIViewController {
     
     //MARK: - UI components
-    let scrollView = UIScrollView()
-    let containerView = UIView()
     
     let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
@@ -27,11 +25,6 @@ class DetailNewsFeedVC: UIViewController {
     
     let submitButton = UIButton()
     
-    let lineView = UIView()
-    
-    let statusNoCommentView = UIView()
-    let statusNoCommentLabel = UILabel()
-    
     //MARK: - Variables and Properties
 
     // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
@@ -43,6 +36,8 @@ class DetailNewsFeedVC: UIViewController {
     
     var commentViewBottomConstraint: Constraint?
     
+    var isEditCommentMode = false
+    
     //MARK: - Dummy data
     
     //MARK: - Life Cycle
@@ -52,6 +47,8 @@ class DetailNewsFeedVC: UIViewController {
         
         initView()
         makeConstraints()
+        
+        setRefresh()
         
         addKeyboardNotification()
     }
@@ -72,40 +69,19 @@ class DetailNewsFeedVC: UIViewController {
             $0.tintColor = .nuteeGreen
         }
         
-        _ = scrollView.then {
-            $0.scrollIndicatorInsets = UIEdgeInsets(top: 5, left: 0, bottom: 0, right: 0)
-        }
-        
         _ = detailNewsFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
-            $0.isScrollEnabled = false
             
             $0.register(DetailNewsFeedHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.DetailNewsFeedHeaderView)
             $0.register(ReplyCell.self, forCellReuseIdentifier: Identify.ReplyCell)
+            $0.register(NoReplyFooterView.self, forHeaderFooterViewReuseIdentifier: Identify.NoReplyFooterView)
             
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
             
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapScreen(sender:))))
-        }
-        
-        _ = lineView.then {
-            $0.addBorder(.top, color: .veryLightPink, thickness: 0.3)
-        }
-        
-        _ = statusNoCommentView.then {
-            $0.backgroundColor = .white
-        }
-        
-        _ = statusNoCommentLabel.then {
-            $0.text = "댓글이 없습니다"
-            $0.textColor = .black
-            $0.font = .boldSystemFont(ofSize: 17)
-            $0.textAlignment = .center
-            
-            $0.isHidden = true
         }
         
         _ = commentView.then {
@@ -133,20 +109,14 @@ class DetailNewsFeedVC: UIViewController {
             
             $0.alpha = 0
             
-//            $0.addTarget(self, action: #selector(didTapSubmitButton), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapSubmitButton), for: .touchUpInside)
         }
     }
     
     func makeConstraints() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(containerView)
         
-        containerView.addSubview(detailNewsFeedTableView)
-        containerView.addSubview(statusNoCommentView)
-        
-        statusNoCommentView.addSubview(lineView)
-        statusNoCommentView.addSubview(statusNoCommentLabel)
-        
+        view.addSubview(detailNewsFeedTableView)
+
         view.addSubview(commentView)
         
         commentView.addSubview(commentTextView)
@@ -154,52 +124,16 @@ class DetailNewsFeedVC: UIViewController {
         
         commentView.addSubview(submitButton)
         
-        scrollView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+        detailNewsFeedTableView.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-        }
-        
-        containerView.snp.makeConstraints {
-            $0.width.equalTo(scrollView.snp.width)
-            $0.height.greaterThanOrEqualTo(scrollView.snp.height)
-            
-            $0.top.equalTo(scrollView.snp.top)
-            $0.left.equalTo(scrollView.snp.left)
-            $0.right.equalTo(scrollView.snp.right)
-            $0.bottom.equalTo(scrollView.snp.bottom)
-        }
-        
-        detailNewsFeedTableView.snp.makeConstraints {
-            $0.top.equalTo(containerView.snp.top)
-            $0.left.equalTo(containerView.snp.left)
-            $0.right.equalTo(containerView.snp.right)
-        }
-        
-        statusNoCommentView.snp.makeConstraints {
-            $0.height.equalTo(0)
-
-            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
-            $0.left.equalTo(containerView.snp.left)
-            $0.right.equalTo(containerView.snp.right)
-            $0.bottom.equalTo(containerView.snp.bottom)
-        }
-        
-        lineView.snp.makeConstraints {
-            $0.top.equalTo(statusNoCommentView.snp.top)
-            $0.left.equalTo(statusNoCommentView.snp.left)
-            $0.right.equalTo(statusNoCommentView.snp.right)
-        }
-
-        statusNoCommentLabel.snp.makeConstraints {
-            $0.centerX.equalTo(statusNoCommentView)
-            $0.centerY.equalTo(statusNoCommentView)
         }
         
         commentView.snp.makeConstraints {
             $0.height.greaterThanOrEqualTo(60)
             
-            $0.top.equalTo(scrollView.snp.bottom)
+            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             commentViewBottomConstraint =
@@ -228,6 +162,35 @@ class DetailNewsFeedVC: UIViewController {
             $0.bottom.equalTo(commentTextView.snp.bottom)
         }
     }
+    
+    func setRefresh() {
+        detailNewsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePost), for: UIControl.Event.valueChanged)
+    }
+    
+    @objc func updatePost() {
+        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+            self.detailNewsFeedTableView.reloadData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        })
+    }
+    
+    @objc func didTapSubmitButton(_ sender: UIButton) {
+        if isEditCommentMode {
+            // 댓글 수정 모드일 때 실행될 문장
+        } else {
+            // 댓글 수정x, 새로 작성할 때
+            self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) {
+                self.detailNewsFeedTableView.reloadData()
+                
+                let lastRow = IndexPath(row: (self.post?.body.comments?.count ?? 1) - 1, section: 0)
+                self.detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+            }
+        }
+    }
 
     @objc func didTapScreen(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
@@ -252,7 +215,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         detailNewsFeedHeaderView?.post = self.post
-        //detailNewsFeedHeaderView?.initPosting()
+        detailNewsFeedHeaderView?.initPosting()
 
         return detailNewsFeedHeaderView
     }
@@ -267,27 +230,14 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let replyCnt = post?.body.comments?.count ?? 0
-        
-        if replyCnt == 0 {
-            statusNoCommentView.snp.updateConstraints() {
-                $0.height.equalTo(250)
-            }
-            statusNoCommentLabel.isHidden = false
-        } else {
-            statusNoCommentView.snp.updateConstraints() {
-                $0.height.equalTo(0)
-            }
-            statusNoCommentLabel.isHidden = true
-        }
-        
-        return replyCnt
+        return post?.body.comments?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.ReplyCell, for: indexPath) as! ReplyCell
         cell.selectionStyle = .none
         cell.detailNewsFeedVC = self
+        cell.delegate = self
         
         cell.comment = post?.body.comments?[indexPath.row]
         
@@ -300,19 +250,21 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
     // FooterView
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        if post?.body.comments?.count == 0 {
+            return 200.0
+        } else {
+            return .leastNormalMagnitude
+        }
     }
 
-    // tableView의 마지막 cell 밑의 여백 발생 문제(footerView의 기본 높이 값) 제거 코드
+    // 댓글이 없을 때 띄우는 footer view
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let fakeView = UIView()
-        fakeView.backgroundColor = .clear
+        let noReplyFooterView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.NoReplyFooterView) as? NoReplyFooterView
+        
+        noReplyFooterView?.initFooterView()
+        noReplyFooterView?.addContentView()
 
-        return fakeView
+        return noReplyFooterView
     }
 }
 
@@ -406,13 +358,6 @@ extension DetailNewsFeedVC {
 
             commentViewBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - tabbarHeight)
             
-            if post?.body.comments?.count == 0 {
-                statusNoCommentView.snp.updateConstraints() {
-                    $0.height.equalTo(0)
-                }
-                statusNoCommentLabel.isHidden = true
-            }
-            
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
@@ -428,18 +373,21 @@ extension DetailNewsFeedVC {
             commentViewBottomConstraint?.layoutConstraints[0].constant = 0
             detailNewsFeedTableView.contentInset = .zero
             
-            if post?.body.comments?.count == 0 {
-                statusNoCommentView.snp.updateConstraints() {
-                    $0.height.equalTo(250)
-                }
-                statusNoCommentLabel.isHidden = false
-            }
-            
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
             })
         }
+    }
+}
+
+// MARK: - ReplyCell과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
+
+extension DetailNewsFeedVC: ReplyCellDelegate {
+    func updateReplyTV() {
+        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+            self.detailNewsFeedTableView.reloadData()
+        })
     }
 }
 
@@ -472,4 +420,27 @@ extension DetailNewsFeedVC {
         }
     }
     
+    // 댓글 작성
+    func postCommentService(postId: Int, comment: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.createComment(postId, comment: comment) { (responsedata) in
+            
+            switch responsedata {
+            case .success(let res):
+                completionHandler()
+                
+                print("Create comment successful", res)
+            case .requestErr(_):
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
 }

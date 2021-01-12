@@ -24,24 +24,18 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
     let moreButton = UIButton()
     
     let replyTextView = UITextView()
-//
-//
-//    //MARK: - Variables and Properties
-//
-//    // NewsFeedVC와 통신하기 위한 델리게이트 변수 선언
-//    weak var delegate: ReplyCellDelegate?
+
+    //MARK: - Variables and Properties
+
+    // NewsFeedVC와 통신하기 위한 델리게이트 변수 선언
+    var delegate: ReplyCellDelegate?
 //    weak var RootVC: UIViewController?
-//
+
     var comment: CommentBody?
-//
-//    //MARK: - Life Cycle
-//
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//
-////        initComments()
-//        txtvwCommentContents.font = .systemFont(ofSize: 13)
-//    }
+
+    //MARK: - Life Cycle
+
+
 
     // MARK: - Variables and Properties
     
@@ -144,40 +138,6 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
     }
     
-//
-//    func initTextView() {
-//        txtvwCommentContents.delegate = self
-//        txtvwCommentContents.isEditable = false
-//        txtvwCommentContents.isSelectable = true
-//        txtvwCommentContents.isUserInteractionEnabled = true
-//        txtvwCommentContents.linkTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.blue]
-//        txtvwCommentContents.dataDetectorTypes = .link
-//        txtvwCommentContents.resolveHashTags()
-//    }
-//
-//    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-//        var sub:String = (NSString(string: textView.text)).substring(with: characterRange)
-//        if (sub.first) == "#" {
-//            let vc = UIStoryboard.init(name: "Hash", bundle: Bundle.main).instantiateViewController(withIdentifier: "HashVC") as? HashVC
-//
-//            vc?.hashTag = sub
-//            RootVC?.navigationController?.pushViewController(vc!, animated: true)
-//
-//        } else {
-//            if (sub.hasPrefix("https://") || sub.hasPrefix("http://")) == false {
-//                sub = "http://" + sub
-//            }
-//            let beforeURL = sub
-//            let url: URL = Foundation.URL(string: beforeURL)!
-//            let safariViewController = SFSafariViewController(url: url)
-//            safariViewController.preferredControlTintColor = .nuteeGreen
-//
-//            self.RootVC?.present(safariViewController, animated: true, completion: nil)
-//        }
-//
-//        return false
-//    }
-    
     func fillDataToView() {
         // 사용자 프로필 설정
         if comment?.user.image?.src != nil {
@@ -203,24 +163,6 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         replyTextView.text = comment?.content
     }
 
-////    func initReComments() {
-////        // 대댓글 표현을 위해 오른쪽으로 들여서 댓글 표시
-////        LeadingToCommentUser.constant = 45
-////
-////        imgCommentUser.imageFromUrl((APIConstants.BaseURL) + "/" + (comment?.reComment?..image.src ?? ""), defaultImgPath: "http://15.164.50.161:9425/settings/nutee_profile.png")
-////        imgCommentUser.contentMode = .scaleAspectFill
-////        imgCommentUser.setRounded(radius: imgCommentUser.frame.height/2)
-////
-////        lblCommentUserId.text = comment?.user.nickname
-////        lblCommentUserId.sizeToFit()
-////        let originPostTime = comment?.createdAt
-////        let postTimeDateFormat = originPostTime?.getDateFormat(time: originPostTime!)
-////        lblCommentTime.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
-////
-////        txtvwCommentContents.sizeToFit()
-////        txtvwCommentContents.text = comment?.content
-////    }
-//
 //    func showProfile() {
 //        let vc = UIStoryboard.init(name: "Profile", bundle: Bundle.main).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileVC
 //
@@ -254,7 +196,6 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 
 protocol ReplyCellDelegate: class {
     func updateReplyTV()
-    func setEditCommentMode(commentId: Int, commentContent: String)
 }
 //
 //extension ReplyCell : UITableViewDelegate { }
