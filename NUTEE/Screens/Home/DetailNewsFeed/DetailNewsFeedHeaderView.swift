@@ -411,7 +411,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentTextView.postingInit()
         
         // 게시글 이미지 설정
-        showImageFrame(imageCount: post?.body.images?.count ?? 0)
+        //showImageFrame(imageCount: post?.body.images?.count ?? 0)
         
         // Like 버튼
         likeCount = post?.body.likers?.count
@@ -419,18 +419,18 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
 
     // 사진 개수에 따른 이미지 표시 유형 선택
-    func showImageFrame(imageCount: Int) {
+//    func showImageFrame(imageCount: Int) {
 //        var imageNum: Int? = imageCount
-        
-        if imageCount == 0 {
-            imageWrapperView.snp.updateConstraints {
-                $0.height.equalTo(0)
-            }
-        } else {
-            imageWrapperView.snp.updateConstraints {
-                $0.height.equalTo(234)
-            }
-        }
+//
+//        if imageCount == 0 {
+//            imageWrapperView.snp.updateConstraints {
+//                $0.height.equalTo(0)
+//            }
+//        } else {
+//            imageWrapperView.snp.updateConstraints {
+//                $0.height.equalTo(234)
+//            }
+//        }
 //        switch imageCount {
 //        case 0:
 //            imageWrapperView.snp.updateConstraints {
@@ -466,8 +466,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 //            imageNum = imageCount - 3
 //            imageViewMoreLabel.text = "+\(imageNum ?? 0)"
 //        }
-        
-    }
+//
+//    }
 }
 
 // MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의

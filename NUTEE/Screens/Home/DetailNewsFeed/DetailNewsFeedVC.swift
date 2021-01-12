@@ -184,10 +184,15 @@ class DetailNewsFeedVC: UIViewController {
         } else {
             // 댓글 수정x, 새로 작성할 때
             self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) {
-                self.detailNewsFeedTableView.reloadData()
+                self.commentTextView.text = ""
+                self.commentTextView.endEditing(true)
                 
-                let lastRow = IndexPath(row: (self.post?.body.comments?.count ?? 1) - 1, section: 0)
-                self.detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    self.detailNewsFeedTableView.reloadData()
+                    
+                    let lastRow = IndexPath(row: (self.post?.body.comments?.count ?? 1) - 1, section: 0)
+                    self.detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                })
             }
         }
     }
