@@ -9,6 +9,10 @@
 import UIKit
 import CoreData
 
+#if DEBUG
+import Gedatsu
+#endif
+
 @UIApplicationMain
     class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -26,6 +30,11 @@ import CoreData
         UINavigationBar.appearance().isTranslucent = false
         // remove all navigationbar back button title
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
+        
+        // Gedatsu (show AutoLayout error pretty) enable
+        #if DEBUG
+        Gedatsu.open()
+        #endif
         
         return true
     }
