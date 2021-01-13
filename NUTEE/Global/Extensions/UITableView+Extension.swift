@@ -16,6 +16,10 @@ extension UITableView {
     func setEmptyView(title: String, message: String) {
         let emptyView = UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
         
+        // MARK: - UI components
+        
+        let alertView = UIView()
+        
         let titleLabel = UILabel().then {
             $0.textColor = .black
             $0.text = title
@@ -29,18 +33,30 @@ extension UITableView {
             $0.font = Font.emptyTableLabel
         }
 
-        emptyView.addSubview(titleLabel)
-        emptyView.addSubview(messageLabel)
+        // MARK: - Make Constraints
         
-        titleLabel.snp.makeConstraints { (make) in
-            make.centerY.equalTo(emptyView.snp.centerY)
-            make.centerX.equalTo(emptyView.snp.centerX)
+        emptyView.addSubview(alertView)
+        
+        alertView.addSubview(titleLabel)
+        alertView.addSubview(messageLabel)
+        
+        alertView.snp.makeConstraints {
+            $0.centerY.equalTo(emptyView)
+            
+            $0.left.equalTo(emptyView.snp.left)
+            $0.right.equalTo(emptyView.snp.right)
         }
         
-        messageLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.left.equalTo(emptyView.snp.left).offset(20)
-            make.right.equalTo(emptyView.snp.right).offset(-20)
+        titleLabel.snp.makeConstraints {
+            $0.centerX.equalTo(alertView.snp.centerX)
+            
+            $0.top.equalTo(alertView.snp.top)
+        }
+        messageLabel.snp.makeConstraints {
+            $0.centerX.equalTo(titleLabel)
+            
+            $0.top.equalTo(titleLabel.snp.bottom).offset(20)
+            $0.bottom.equalTo(alertView.snp.bottom)
         }
 
         self.backgroundView = emptyView

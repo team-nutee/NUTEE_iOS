@@ -5,9 +5,10 @@
 //  Created by Hee Jae Kim on 2020/07/24.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
 import UIKit
+
 import SnapKit
+
 import SwiftKeychainWrapper
 
 class DetailNewsFeedVC: UIViewController {
@@ -26,7 +27,6 @@ class DetailNewsFeedVC: UIViewController {
     let submitButton = UIButton()
     
     //MARK: - Variables and Properties
-
     // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
     var delegate: DetailHeaderViewDelegate?
     
@@ -94,20 +94,23 @@ class DetailNewsFeedVC: UIViewController {
             
             $0.font = .systemFont(ofSize: 13)
             $0.tintColor = .veryLightPink
+            $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         _ = placeholderLabel.then {
             $0.text = "댓글을 입력하세요"
             $0.sizeToFit()
-            $0.font = .systemFont(ofSize: 13)
+            $0.font = .systemFont(ofSize: 14)
             $0.textColor = .gray
         }
         
         _ = submitButton.then {
-            $0.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
+            //$0.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
             $0.tintColor = .nuteeGreen
+            $0.backgroundColor = .gray
+            $0.setTitle("등록", for: .normal)
             
-            $0.alpha = 0
+            $0.alpha = 1
             
             $0.addTarget(self, action: #selector(didTapSubmitButton), for: .touchUpInside)
         }
@@ -122,7 +125,7 @@ class DetailNewsFeedVC: UIViewController {
         commentView.addSubview(commentTextView)
         commentTextView.addSubview(placeholderLabel)
         
-        commentView.addSubview(submitButton)
+        //commentView.addSubview(submitButton)
         
         detailNewsFeedTableView.snp.makeConstraints {
             $0.top.equalTo(view.snp.top)
@@ -130,37 +133,42 @@ class DetailNewsFeedVC: UIViewController {
             $0.right.equalTo(view.snp.right)
         }
         
+        commentView.backgroundColor = .yellow
         commentView.snp.makeConstraints {
-            $0.height.greaterThanOrEqualTo(60)
+            //$0.height.greaterThanOrEqualTo(50)
+            //$0.height.lessThanOrEqualTo(130)
+            //$0.height.lessThanOrEqualTo(100)
             
             $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-            commentViewBottomConstraint =
-                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
+            commentViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
         }
         
         commentTextView.snp.makeConstraints {
-            $0.height.greaterThanOrEqualTo(40)
+            //$0.height.greaterThanOrEqualTo(40)
+            $0.height.lessThanOrEqualTo(90)
             
             $0.top.equalTo(commentView.snp.top).offset(10)
             $0.left.equalTo(commentView.snp.left).offset(10)
+            $0.right.equalTo(commentView.snp.right).inset(10)
             $0.bottom.equalTo(commentView.snp.bottom).inset(10)
         }
+
         placeholderLabel.snp.makeConstraints {
             $0.top.equalTo(commentTextView.snp.top).offset(10)
             
             $0.centerY.equalTo(commentTextView)
         }
 
-        submitButton.snp.makeConstraints {
-            $0.width.equalTo(40)
-            $0.height.equalTo(submitButton.snp.width)
-            
-            $0.left.equalTo(commentTextView.snp.right).offset(5)
-            $0.right.equalTo(commentView.snp.right)
-            $0.bottom.equalTo(commentTextView.snp.bottom)
-        }
+//        submitButton.snp.makeConstraints {
+//            $0.width.equalTo(40)
+//            $0.height.equalTo(submitButton.snp.width)
+//
+//            $0.left.equalTo(commentTextView.snp.right).offset(5)
+//            $0.right.equalTo(commentView.snp.right)
+//            $0.bottom.equalTo(commentTextView.snp.bottom)
+//        }
     }
     
     func setRefresh() {
@@ -206,7 +214,6 @@ class DetailNewsFeedVC: UIViewController {
 }
 
 //MARK: - Build TableView
-
 extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
     // HeaderView
@@ -220,7 +227,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         detailNewsFeedHeaderView?.post = self.post
-        detailNewsFeedHeaderView?.initPosting()
+        //detailNewsFeedHeaderView?.initPosting()
 
         return detailNewsFeedHeaderView
     }
@@ -274,7 +281,6 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 }
 
 // MARK: - UITextView Delegate
-
 extension DetailNewsFeedVC: UITextViewDelegate {
     
     // TextView의 동적인 크기 변화를 위한 function
@@ -304,19 +310,15 @@ extension DetailNewsFeedVC: UITextViewDelegate {
                         }
         }
         
-        // 입력된 줄바꿈 개수 구하기
-        let originalStr = commentTextView.text.count
-        let removeEnterStr = commentTextView.text.replacingOccurrences(of: "\n", with: "").count
-        // 엔터가 4개 이하 일시 댓글창 높이 자동조절 설정
-        let enterNum = originalStr - removeEnterStr
-        if enterNum <= 4 {
+        let lineCounter = commentTextView.text.components(separatedBy: "\n").count - 1
+        if lineCounter <= 4 {
             self.commentTextView.translatesAutoresizingMaskIntoConstraints = false
         } else {
             self.commentTextView.translatesAutoresizingMaskIntoConstraints = true
         }
         
-        // 댓글 입력창의 높이가 30 이상일 시 스크롤 기능 활성화
-        if commentTextView.contentSize.height >= 30 {
+        // 댓글 입력창의 높이가 100 이상일 시 스크롤 기능 활성화
+        if commentTextView.contentSize.height >= 90 {
             commentTextView.isScrollEnabled = true
         } else {
             commentTextView.frame.size.height = commentTextView.contentSize.height
@@ -338,7 +340,6 @@ extension DetailNewsFeedVC: UITextViewDelegate {
 }
 
 // MARK: - KeyBoard
-
 extension DetailNewsFeedVC {
 
     func addKeyboardNotification() {
@@ -387,7 +388,6 @@ extension DetailNewsFeedVC {
 }
 
 // MARK: - ReplyCell과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
-
 extension DetailNewsFeedVC: ReplyCellDelegate {
     func updateReplyTV() {
         self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
@@ -397,7 +397,6 @@ extension DetailNewsFeedVC: ReplyCellDelegate {
 }
 
 // MARK: - Server connect
-
 extension DetailNewsFeedVC {
     
     // 게시글 한 개 가져오기
