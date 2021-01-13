@@ -51,7 +51,7 @@ class LoginVC: UIViewController {
         makeConstraints()
         
         enterLoginVCAnimate()
-//        checkSignIn()
+        checkSignIn()
     }
     
     
@@ -379,6 +379,7 @@ class LoginVC: UIViewController {
 }
 
 // MARK: - LoginVC Animation
+
 extension LoginVC {
     
     private func enterLoginVCAnimate() {
@@ -431,6 +432,7 @@ extension LoginVC {
 }
 
 // MARK: - TextField Delegate
+
 extension LoginVC: UITextFieldDelegate {
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -463,6 +465,7 @@ extension LoginVC: UITextFieldDelegate {
 }
 
 // MARK: - server service
+
 extension LoginVC {
     func error(){
         self.idErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
