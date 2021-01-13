@@ -17,7 +17,7 @@ class NuteeImageViewer: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var imageList: [UIImage] = []
+    var imageList: [UIImage?] = []
     
     // MARK: - Dummy data
     
@@ -28,6 +28,8 @@ class NuteeImageViewer: UIViewController {
 
         initView()
         makeConstraints()
+        
+        addPanGestureRecognizer()
     }
 
     // MARK: - Helper
@@ -63,6 +65,41 @@ class NuteeImageViewer: UIViewController {
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
         }
+    }
+    
+    // MARK: - Pan Recognizer
+    
+    func addPanGestureRecognizer() {
+        // add pan gesture recognizer to the view controller's view (the whole screen)
+        let viewPan = UIPanGestureRecognizer(target: self, action: #selector(handleDismiss(sender:)))
+        
+        // by default iOS will delay the touch before recording the drag/pan information
+        // we want the drag gesture to be recorded down immediately, hence setting no delay
+        viewPan.delaysTouchesBegan = false
+        viewPan.delaysTouchesEnded = false
+
+        self.view.addGestureRecognizer(viewPan)
+    }
+    
+    var viewTranslation = CGPoint(x: 0, y: 0)
+    @objc func handleDismiss(sender: UIPanGestureRecognizer) {
+        switch sender.state {
+            case .changed:
+                viewTranslation = sender.translation(in: view)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                    self.view.transform = CGAffineTransform(translationX: 0, y: self.viewTranslation.y)
+                })
+            case .ended:
+                if viewTranslation.y < 200 {
+                    UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                        self.view.transform = .identity
+                    })
+                } else {
+                    dismiss(animated: true, completion: nil)
+                }
+            default:
+                break
+            }
     }
     
 }
@@ -128,7 +165,7 @@ class ImageViewerCVCell : UICollectionViewCell {
             $0.showsHorizontalScrollIndicator = false
             
             $0.minimumZoomScale = 1.0
-            $0.maximumZoomScale = 1.5
+            $0.maximumZoomScale = 2.0
             
             $0.clipsToBounds = false
             

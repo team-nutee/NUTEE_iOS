@@ -31,6 +31,11 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
    
     var detailNewsFeedVC: UIViewController?
    
+    
+    var testImageList: [UIImage?] = [UIImage(named: "TestImage01"), UIImage(named: "TestImage02"), UIImage(named: "TestImage03")]
+    
+    
+    
 //
 //    // User Information
 //    @IBOutlet var userIMG: UIImageView!
@@ -134,6 +139,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         _ = contentImageView.then {
             $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            
+            setClickActions()
         }
         
         _ = likeButton.then {
@@ -224,6 +231,40 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    func setClickActions() {
+        contentImageView.tag = 1
+        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        tapGestureRecognizer1.numberOfTapsRequired = 1
+        contentImageView.isUserInteractionEnabled = true
+        contentImageView.addGestureRecognizer(tapGestureRecognizer1)
+    }
+    
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        let imgView = tapGestureRecognizer.view as! UIImageView
+        print("your taped image view tag is : \(imgView.tag)")
+
+        //Give your image View tag
+        if (imgView.tag == 1) {
+            let nuteeImageViewer = NuteeImageViewer()
+            nuteeImageViewer.imageList = testImageList
+            
+            nuteeImageViewer.modalPresentationStyle = .fullScreen
+            
+            detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
+        }
+    }
+    
+    
+    
     
 //
 //    func initTextView() {
