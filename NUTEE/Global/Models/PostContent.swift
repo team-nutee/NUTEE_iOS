@@ -13,7 +13,7 @@ struct PostContent: Codable {
     let code: Int
     let message: String
     let body: PostContentBody
-    let links: Links
+    let links: PostLinks
 
     enum CodingKeys: String, CodingKey {
         case code, message, body
@@ -25,7 +25,7 @@ struct PostContent: Codable {
         code = (try? values.decode(Int.self, forKey: .code)) ?? 0
         message = (try? values.decode(String.self, forKey: .message)) ?? ""
         body = (try? values.decode(PostContentBody.self, forKey: .body))!
-        links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil, getComments: nil)
+        links = (try? values.decode(PostLinks.self, forKey: .links)) ?? PostLinks.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil, getComments: nil)
     }
 }
 

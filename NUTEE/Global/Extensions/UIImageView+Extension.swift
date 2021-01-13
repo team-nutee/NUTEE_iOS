@@ -31,9 +31,9 @@ extension UIImageView {
 
     func setImageNutee(_ urlString: String?){
         if urlString == "" || urlString == nil {
-            setImage(with: APIConstants.BaseURL + "/settings/nutee_profile.png")
+            setImage(with: APIConstants.CurrentServiceURL + "/settings/nutee_profile.png")
         } else {
-            setImage(with: APIConstants.BaseURL + "/"  + (urlString ?? ""))
+            setImage(with: APIConstants.CurrentServiceURL + "/"  + (urlString ?? ""))
         }
     }
     
