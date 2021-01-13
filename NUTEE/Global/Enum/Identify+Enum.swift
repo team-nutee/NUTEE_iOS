@@ -43,4 +43,11 @@ enum Identify {
     
     static let OptionListTVCell = "OptionListTVCell"
     
+    
+    
+    // Detail NewsFeed
+    static let DetailNewsFeedHeaderView = "DetailNewsFeedHeaderView"
+    static let ReplyCell = "ReplyCell"
+    static let NoReplyFooterView = "NoReplyFooterView"
+    
 }
