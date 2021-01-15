@@ -18,6 +18,11 @@ enum Identify {
     static let FeedContainerCVCell = "FeedContainerCVCell"
     static let NewsFeedTVCell = "NewsFeedTVCell"
     
+    // Detail NewsFeed
+    static let DetailNewsFeedHeaderView = "DetailNewsFeedHeaderView"
+    static let ReplyTVCell = "ReplyTVCell"
+    static let NoReplyFooterView = "NoReplyFooterView"
+    
     // Search
     static let SearchHistoryTVHeaderView = "SearchHistoryTVHeaderView"
     static let SearchHistoryTVCell = "SearchHistoryTVCell"
@@ -42,12 +47,5 @@ enum Identify {
     static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     
     static let OptionListTVCell = "OptionListTVCell"
-    
-    
-    
-    // Detail NewsFeed
-    static let DetailNewsFeedHeaderView = "DetailNewsFeedHeaderView"
-    static let ReplyCell = "ReplyCell"
-    static let NoReplyFooterView = "NoReplyFooterView"
     
 }
