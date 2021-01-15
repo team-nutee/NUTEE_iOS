@@ -66,6 +66,7 @@
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
+		D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */; };
 		D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */; };
 		D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */; };
 		D576528325A5A92E00A11E8D /* ExchangeFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */; };
@@ -187,6 +188,7 @@
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
+		D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeImageViewer.swift; sourceTree = "<group>"; };
 		D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachelorFeedCVCell.swift; sourceTree = "<group>"; };
 		D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassFeedCVCell.swift; sourceTree = "<group>"; };
 		D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeFeedCVCell.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
+				D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */,
 				D5A7D1BA24E7C3E100016A99 /* Alert */,
 				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 				45C92B002587993400828E8A /* LoadingHUD.swift */,
@@ -899,6 +902,7 @@
 				D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */,
 				5E8BA69A24C6D2D800A58F43 /* APIConstants.swift in Sources */,
 				D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */,
+				D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */,
 				45C92B012587993400828E8A /* LoadingHUD.swift in Sources */,
 				45D182192594B70D002810D0 /* UserService.swift in Sources */,
 				4561129125AC95A900B49546 /* Comment.swift in Sources */,
