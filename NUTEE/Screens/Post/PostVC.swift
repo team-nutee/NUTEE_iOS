@@ -22,8 +22,7 @@ class PostVC: UIViewController {
     
     let containerView = UIView()
     
-    let postContentTextView = UITextView()
-    let placeholderLabel = UILabel()
+    let postContentTextView = PlaceholderTextView()
     
     let imageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -94,16 +93,11 @@ class PostVC: UIViewController {
             
             $0.font = .systemFont(ofSize: 15)
             
+            $0.placeholderLabel.text = "내용을 입력해주세요"
+            $0.placeholderLabel.font = .systemFont(ofSize: 15)
+            
             $0.tintColor = .nuteeGreen
             $0.isScrollEnabled = false
-            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)
-        }
-        
-        _ = placeholderLabel.then {
-            $0.text = "내용을 입력해주세요"
-            $0.sizeToFit()
-            $0.font = .systemFont(ofSize: 15)
-            $0.textColor = .gray
         }
         
         _ = imageCollectionView.then {
@@ -142,7 +136,6 @@ class PostVC: UIViewController {
         scrollView.addSubview(containerView)
         
         containerView.addSubview(postContentTextView)
-        postContentTextView.addSubview(placeholderLabel)
 
         containerView.addSubview(imageCollectionView)
         
@@ -172,12 +165,7 @@ class PostVC: UIViewController {
             $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
             $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
         }
-        placeholderLabel.snp.makeConstraints {
-            $0.top.equalTo(postContentTextView.snp.top)
-            $0.left.equalTo(postContentTextView.snp.left)
-            $0.right.equalTo(postContentTextView.snp.right)
-        }
-
+        
         imageCollectionView.snp.makeConstraints {
             $0.height.equalTo(60)
             
@@ -378,6 +366,10 @@ extension PostVC: UITextViewDelegate {
     
     // TextView의 동적인 크기 변화를 위한 function
     func textViewDidChange(_ textView: UITextView) {
+        
+        postContentTextView.handlePlaceholder()
+        
+        // textView 높이 동적으로 구성하기
         let size = CGSize(width: view.frame.width, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         textView.constraints.forEach { (constraint) in
@@ -386,17 +378,10 @@ extension PostVC: UITextViewDelegate {
             }
         }
         
-        // 입력된 빈칸과 줄바꿈 개수 구하기
+        // 게시 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
         var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         str = str.replacingOccurrences(of: "\n", with: "")
         
-        if str != "" {
-            self.placeholderLabel.isHidden = true
-        } else {
-            self.placeholderLabel.isHidden = false
-        }
-        
-        // 빈칸이나 줄바꿈으로만 입력된 경우 버튼 비활성화
         if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {

@@ -137,9 +137,9 @@ class DetailNewsFeedVC: UIViewController {
         commentTextView.snp.makeConstraints {
             $0.height.lessThanOrEqualTo(commentTextViewHeight)
             
-            $0.top.equalTo(commentView.snp.top).offset(10)
+            $0.top.equalTo(commentView.snp.top).offset(20)
             $0.left.equalTo(commentView.snp.left).offset(10)
-            $0.bottom.equalTo(commentView.snp.bottom).inset(10)
+            $0.bottom.equalTo(commentView.snp.bottom).inset(20)
         }
         submitButton.snp.makeConstraints {
             $0.width.equalTo(40)
@@ -147,7 +147,7 @@ class DetailNewsFeedVC: UIViewController {
 
             $0.left.equalTo(commentTextView.snp.right)
             $0.right.equalTo(commentView.snp.right)
-            $0.bottom.equalTo(commentView.snp.bottom)
+            $0.bottom.equalTo(commentView.snp.bottom).inset(3)
         }
     }
     
