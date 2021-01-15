@@ -19,6 +19,7 @@ class NoReplyFooterView: UITableViewHeaderFooterView {
     let lineView = UIView()
         
     let noReplyView = UIView()
+    let statusView = UIView()
     let noReplyTitleLabel = UILabel()
     let noReplyMessageLabel = UILabel()
     
@@ -26,11 +27,20 @@ class NoReplyFooterView: UITableViewHeaderFooterView {
     
     // MARK: - Life Cycle
     
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: Identify.DetailNewsFeedHeaderView)
+        
+        initFooterView()
+        makeConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     //MARK: - Helper
     
     func initFooterView() {
-        
         _ = lineView.then {
             $0.backgroundColor = UIColor(red: 93, green: 93, blue: 93)
             $0.alpha = 0.3
@@ -56,39 +66,48 @@ class NoReplyFooterView: UITableViewHeaderFooterView {
         }
     }
     
-    func addContentView() {
+    func makeConstraints() {
         contentView.addSubview(lineView)
-        contentView.addSubview(noReplyView)
         
-        noReplyView.addSubview(noReplyTitleLabel)
-        noReplyView.addSubview(noReplyMessageLabel)
+        contentView.addSubview(noReplyView)
+        noReplyView.addSubview(statusView)
+        statusView.addSubview(noReplyTitleLabel)
+        statusView.addSubview(noReplyMessageLabel)
+        
         
         lineView.snp.makeConstraints {
-            $0.height.equalTo(0.3)
+            $0.height.equalTo(0.3).priority(999)
             
             $0.top.equalTo(contentView.snp.top)
             $0.left.equalTo(contentView.snp.left)
             $0.right.equalTo(contentView.snp.right)
+            
         }
         
         noReplyView.snp.makeConstraints {
-            $0.centerY.equalTo(contentView)
-                        
+            $0.height.equalTo(200)
+            
+            $0.top.equalTo(lineView.snp.bottom)
             $0.left.equalTo(contentView.snp.left)
             $0.right.equalTo(contentView.snp.right)
+            $0.bottom.equalTo(contentView.snp.bottom)
         }
-        
+        statusView.snp.makeConstraints {
+            $0.centerY.equalTo(noReplyView)
+            
+            $0.left.equalTo(noReplyView.snp.left)
+            $0.right.equalTo(noReplyView.snp.right)
+        }
         noReplyTitleLabel.snp.makeConstraints {
-            $0.centerX.equalTo(noReplyView.snp.centerX)
-                        
-            $0.top.equalTo(noReplyView.snp.top)
+            $0.centerX.equalTo(statusView)
+            
+            $0.top.equalTo(statusView.snp.top)
         }
-        
         noReplyMessageLabel.snp.makeConstraints {
             $0.centerX.equalTo(noReplyTitleLabel)
             
             $0.top.equalTo(noReplyTitleLabel.snp.bottom).offset(20)
-            $0.bottom.equalTo(noReplyView.snp.bottom)
+            $0.bottom.equalTo(statusView.snp.bottom)
         }
     }
 }

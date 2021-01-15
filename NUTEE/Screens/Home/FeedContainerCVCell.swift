@@ -133,7 +133,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.post
-        cell.delegate = self
         
         cell.fillDataToView()
         
@@ -186,25 +185,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
             }
             
             
-        }
-    }
-}
-
-
-// MARK: - NewsFeedTVC과 통신하여 테이블뷰 정보 다시 로드하기
-
-extension FeedContainerCVCell: NewsFeedTVCellDelegate, DetailHeaderViewDelegate {
-    func updateNewsTV() {
-        getCategoryPostsService(category: category ?? "", lastId: 0, limit: 10) { (Posts) in
-            self.postContent = Posts.body
-            self.newsFeedTableView.reloadData()
-        }
-    }
-
-    func backToUpdateNewsTV() {
-        getCategoryPostsService(category: category ?? "" , lastId: 0, limit: 10) { (Posts) in
-            self.postContent = Posts.body
-            self.newsFeedTableView.reloadData()
         }
     }
 }
