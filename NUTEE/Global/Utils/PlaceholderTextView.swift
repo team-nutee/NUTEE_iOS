@@ -31,6 +31,10 @@ class PlaceholderTextView: UITextView {
     // MARK: - Helper
     
     func addPlaceHolder() {
+        _ = self.then {
+            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)
+        }
+        
         _ = placeholderLabel.then {
             $0.text = "placehoder"
             $0.textColor = .lightGray
@@ -39,10 +43,10 @@ class PlaceholderTextView: UITextView {
         
         addSubview(placeholderLabel)
         placeholderLabel.snp.makeConstraints {
-            $0.centerY.equalTo(self)
-            
-            $0.left.equalTo(self.snp.left).offset(5)
+            $0.top.equalTo(self.snp.top)
+            $0.left.equalTo(self.snp.left)
             $0.right.equalTo(self.snp.right)
+            $0.bottom.equalTo(self.snp.bottom)
         }
     }
     
