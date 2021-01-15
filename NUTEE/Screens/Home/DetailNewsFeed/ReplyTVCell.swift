@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import SafariServices
 
 import SwiftKeychainWrapper
 
-class ReplyCell: UITableViewCell, UITextViewDelegate{
+class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
-    static let identifier = Identify.ReplyCell
+    static let identifier = Identify.ReplyTVCell
     
     //MARK: - UI components
     
@@ -27,19 +26,24 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
 
     //MARK: - Variables and Properties
 
-    // NewsFeedVC와 통신하기 위한 델리게이트 변수 선언
-    var delegate: ReplyCellDelegate?
-//    weak var RootVC: UIViewController?
-
+    var detailNewsFeedVC: DetailNewsFeedVC?
     var comment: CommentBody?
-
+    
     //MARK: - Life Cycle
 
-
-
-    // MARK: - Variables and Properties
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: Identify.ReplyTVCell)
+        
+        initCell()
+        makeConstraints()
+//        fillDataToView()
+        
+        setClickActionsInImage()
+    }
     
-    var detailNewsFeedVC: UIViewController?
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     //MARK: - Helper
     
@@ -72,7 +76,7 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         }
         
         _ = replyTextView.then {
-            $0.text = "대대대댇글"
+            $0.text = "대대대댇글대대대댇글대대대댇글대대대댇글대대대댇글"
             $0.textContainer.maximumNumberOfLines = 3
             $0.textContainer.lineBreakMode = .byTruncatingTail
             $0.font = .systemFont(ofSize: 14)
@@ -83,8 +87,7 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         
     }
     
-    func addContentView() {
-        
+    func makeConstraints() {
         contentView.addSubview(profileImageView)
         contentView.addSubview(nicknameLabel)
         
@@ -99,8 +102,9 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(profileImageView.snp.width)
-            $0.top.equalToSuperview().offset(TopAndBottomSpace)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
+            
+            $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
+            $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
         }
         nicknameLabel.snp.makeConstraints {
             $0.top.equalTo(profileImageView.snp.top)
@@ -109,26 +113,28 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         
         dateLabel.snp.makeConstraints {
             $0.centerY.equalTo(nicknameLabel)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         moreButton.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(12)
+            
             $0.top.equalTo(replyTextView.snp.top)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         
         replyTextView.snp.makeConstraints {
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
             $0.left.equalTo(nicknameLabel.snp.left)
             $0.right.equalTo(moreButton.snp.left).inset(-10)
-            $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
+            $0.bottom.equalTo(contentView.snp.bottom).inset(TopAndBottomSpace)
         }
         
     }
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.titleHeight = 0
         nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
                                       ["삭제", UIColor.red, "deletePost"],
                                       ["🚨신고하기", UIColor.red, "reportPost"]]
@@ -163,48 +169,39 @@ class ReplyCell: UITableViewCell, UITextViewDelegate{
         replyTextView.text = comment?.content
     }
 
-//    func showProfile() {
-//        let vc = UIStoryboard.init(name: "Profile", bundle: Bundle.main).instantiateViewController(withIdentifier: "ProfileVC") as? ProfileVC
-//
-//        // 선택된 사용자 아이디를 넘거줌
-//        vc?.userId = comment?.user.id  ?? KeychainWrapper.standard.integer(forKey: "id")
-//
-//        RootVC?.navigationController?.pushViewController(vc!, animated: true)
-//    }
-//
-//    // 프로필 이미지에 탭 인식하게 만들기
-//    func setClickActions() {
-//        imgCommentUser.tag = 1
-//        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-//        tapGestureRecognizer1.numberOfTapsRequired = 1
-//        imgCommentUser.isUserInteractionEnabled = true
-//        imgCommentUser.addGestureRecognizer(tapGestureRecognizer1)
-//    }
-//
-//    // 프로필 이미지 클릭시 실행 함수
-//    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-//        let imgView = tapGestureRecognizer.view as! UIImageView
-//
-//        //Give your image View tag
-//        if (imgView.tag == 1) {
-//            showProfile()
-//        }
-//    }
+    // 프로필 이미지에 탭 인식하게 만들기
+    func setClickActionsInImage() {
+        profileImageView.tag = 1
+        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped(tapGestureRecognizer:)))
+        tapGestureRecognizer1.numberOfTapsRequired = 1
+        
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.addGestureRecognizer(tapGestureRecognizer1)
+    }
+
+    // 프로필 이미지 클릭시 실행 함수
+    @objc func profileImageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        print("profile image tapped")
+        
+        let imgView = tapGestureRecognizer.view as! UIImageView
+
+        //Give your image View tag
+        if (imgView.tag == 1) {
+            showUserProfile()
+        }
+    }
+    
+    func showUserProfile() {
+        // when user profile image clicked, it will show user info with bottom sheet
+    }
+
 }
 
-// MARK: - DetailNewsFeedVC와 통신하기 위한 프로토콜 정의
+// MARK: - 서버 연결 코드 구간
 
-protocol ReplyCellDelegate: class {
-    func updateReplyTV()
-}
-//
-//extension ReplyCell : UITableViewDelegate { }
-//
-//// MARK: - 서버 연결 코드 구간
-//
-//extension ReplyCell {
-//    // 뎃글 신고 <-- 확인 필요
-//    func reportCommentService(reportReason: String) {
+extension ReplyTVCell {
+    // 뎃글 신고 <-- 확인 필요
+    func reportCommentService(reportReason: String) {
 //        let userid = KeychainWrapper.standard.string(forKey: "id") ?? "" // <-- 수정 必
 //        ContentService.shared.reportPost(userid, reportReason) { (responsedata) in // <-- 현재 작성된 API는 게시글(post)에 대한 신고기능
 //
@@ -233,10 +230,10 @@ protocol ReplyCellDelegate: class {
 //                print("failure")
 //                }
 //        }
-//    }
-//
-//    // 댓글 삭제
-//    func deleteCommentService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
+    }
+
+    // 댓글 삭제
+    func deleteCommentService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
 //        ContentService.shared.commentDelete(postId, commentId: commentId) { (responsedata) in
 //
 //            switch responsedata {
@@ -265,5 +262,5 @@ protocol ReplyCellDelegate: class {
 //                print("failure")
 //                }
 //        }
-//    }
-//}
+    }
+}
