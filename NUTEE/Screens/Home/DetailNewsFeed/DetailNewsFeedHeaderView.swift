@@ -18,6 +18,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     //MARK: - UI components
     
+    let testView = UIView()
+    
     let profileImageView = UIImageView()
     let nicknameLabel = UILabel()
     let dateLabel = UILabel()
@@ -31,15 +33,29 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     // MARK: - Variables and Properties
    
-    var detailNewsFeedVC: UIViewController?
+    var detailNewsFeedVC: DetailNewsFeedVC?
    
     var post: PostContent?
     var likeCount: Int?
         
+    // MARK: - Life Cycle
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: Identify.DetailNewsFeedHeaderView)
+        
+        contentView.autoresizingMask = .flexibleHeight // console 창에 뜨는 headerView Height 경고 창을 방지하기 위한 코드. 가장 마지막 contraints가 적용되어서 height의 혼동(ambiguous)을 없앤다
+        
+        initHeaderView()
+        makeConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     //MARK: - Helper
     
     func initHeaderView () {
-
         _ = profileImageView.then {
             $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
             $0.image = UIImage(named: "nutee_zigi_white")
@@ -96,25 +112,25 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
     }
     
-    func addContentView() {
-        
+    func makeConstraints() {
         contentView.addSubview(profileImageView)
         contentView.addSubview(nicknameLabel)
         contentView.addSubview(dateLabel)
-        
+
         contentView.addSubview(moreButton)
-        
+
         contentView.addSubview(contentTextView)
         contentView.addSubview(contentImageView)
 
         contentView.addSubview(likeButton)
 
+        
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 15
-        
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(profileImageView.snp.width)
+            
             $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
             $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
         }
@@ -122,7 +138,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.top.equalTo(profileImageView.snp.top)
             $0.left.equalTo(profileImageView.snp.right).offset(15)
         }
-        
+
         dateLabel.snp.makeConstraints {
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
             $0.left.equalTo(nicknameLabel.snp.left)
@@ -158,6 +174,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.titleHeight = 0
         nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
                                       ["삭제", UIColor.red, "deletePost"],
                                       ["🚨신고하기", UIColor.red, "reportPost"]]
@@ -215,15 +232,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         likeButton.setTitle(String(likeCount ?? 0), for: .normal)
     }
 }
-
-// MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의
-
-protocol DetailHeaderViewDelegate: class {
-    func backToUpdateNewsTV() // NewsFeedVC에 정의되어 있는 프로토콜 함수
-}
-//
-//extension DetailHeaderView : UITableViewDelegate { }
-//
 
 // MARK: - Server connect
 extension DetailNewsFeedHeaderView {
