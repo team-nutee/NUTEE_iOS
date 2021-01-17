@@ -15,7 +15,13 @@ class NuteeImageViewer: UIViewController {
     
     let imageViewContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
+    let dismissButton = HighlightedButton()
+    let pageControl = UIPageControl()
+    
     // MARK: - Variables and Properties
+    
+    let minimumAlphaValue: CGFloat = 0.15
+    let maximumAlphaValue: CGFloat = 1.0
     
     var imageList: [UIImage?] = []
     
@@ -26,19 +32,43 @@ class NuteeImageViewer: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        modalTransitionStyle = .crossDissolve
+        modalPresentationCapturesStatusBarAppearance = true
+        
         initView()
         makeConstraints()
         
         addPanGestureRecognizer()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.presentingViewController?.view.alpha = minimumAlphaValue
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+     
+        self.presentingViewController?.view.alpha = maximumAlphaValue
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
 
     // MARK: - Helper
     
     func initView() {
+        _ = view.then {
+            $0.backgroundColor = .clear
+        }
+        
         _ = imageViewContainerCollectionView.then {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
-            layout.minimumLineSpacing = 0
+            layout.minimumLineSpacing = 10
             layout.minimumInteritemSpacing = 0
             
             $0.collectionViewLayout = layout
@@ -51,12 +81,32 @@ class NuteeImageViewer: UIViewController {
             
             $0.register(ImageViewerCVCell.self, forCellWithReuseIdentifier: "ImageViewerCVCell")
             
-            $0.backgroundColor = .blue
+            $0.backgroundColor = .clear
+        }
+        
+        _ = dismissButton.then {
+            $0.setImage(UIImage(systemName: "xmark"), for: .normal)
+            $0.tintColor = .white
+            
+            $0.addTarget(self, action: #selector(dismissImageViewer), for: .touchUpInside)
+        }
+        _ = pageControl.then {
+            $0.backgroundColor = .clear
+            $0.pageIndicatorTintColor = .white
+            $0.currentPageIndicatorTintColor = .nuteeGreen
+            
+            $0.numberOfPages = imageList.count
+            $0.currentPage = 0
+            
+            $0.isUserInteractionEnabled = false
         }
     }
     
     func makeConstraints() {
         view.addSubview(imageViewContainerCollectionView)
+        
+        view.addSubview(dismissButton)
+        view.addSubview(pageControl)
         
         
         imageViewContainerCollectionView.snp.makeConstraints {
@@ -65,6 +115,25 @@ class NuteeImageViewer: UIViewController {
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
         }
+        
+        dismissButton.snp.makeConstraints {
+            $0.width.equalTo(60)
+            $0.height.equalTo(dismissButton.snp.width)
+            
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+            $0.right.equalTo(view.snp.right).inset(10)
+        }
+        pageControl.snp.makeConstraints {
+            $0.height.equalTo(50)
+            
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        }
+    }
+    
+    @objc func dismissImageViewer() {
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Pan Recognizer
@@ -81,32 +150,61 @@ class NuteeImageViewer: UIViewController {
         self.view.addGestureRecognizer(viewPan)
     }
     
-    var viewTranslation = CGPoint(x: 0, y: 0)
     @objc func handleDismiss(sender: UIPanGestureRecognizer) {
+        let viewTranslation = sender.translation(in: view)
+        let absoluteViewTranslationY = abs(viewTranslation.y)
+        
         switch sender.state {
             case .changed:
-                viewTranslation = sender.translation(in: view)
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                    self.view.transform = CGAffineTransform(translationX: 0, y: self.viewTranslation.y)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: { [self] in
+                    dismissButton.alpha = 0
+                    pageControl.alpha = 0
+                    
+                    imageViewContainerCollectionView.transform = CGAffineTransform(translationX: 0, y: viewTranslation.y)
                 })
+                
+                presentingViewController?.view.alpha = changeAlphaByDragLevel(value: absoluteViewTranslationY)
+                
             case .ended:
-                if viewTranslation.y < 200 {
-                    UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                        self.view.transform = .identity
+                if absoluteViewTranslationY < 200 {
+                    UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: { [self] in
+                        dismissButton.alpha = 1
+                        pageControl.alpha = 1
+                        
+                        imageViewContainerCollectionView.transform = .identity
                     })
                 } else {
-                    dismiss(animated: true, completion: nil)
+                    dismissImageViewer()
                 }
+                
+                presentingViewController?.view.alpha = minimumAlphaValue
+                
             default:
                 break
             }
     }
     
+    // MARK: - Change alpha value by position
+
+    private func changeAlphaByDragLevel(value: CGFloat) -> CGFloat {
+      // ensure safe area height and safe area bottom padding is not nil
+        guard let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height else {
+        return maximumAlphaValue
+      }
+    
+        let alphaValue = value / (safeAreaHeight / 2)
+        
+        if alphaValue > minimumAlphaValue {
+            return alphaValue
+        } else {
+            return minimumAlphaValue
+        }
+    }
+    
 }
 
-// MARK: - ImageView CollectionView
+// MARK: - ImageViewer CollectionView
 
-extension NuteeImageViewer : UICollectionViewDelegate { }
 extension NuteeImageViewer : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView:UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -115,35 +213,48 @@ extension NuteeImageViewer : UICollectionViewDelegateFlowLayout {
     
 }
 
-extension NuteeImageViewer : UICollectionViewDataSource {
+extension NuteeImageViewer : UICollectionViewDelegate, UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//       view.frame.origin.x = scrollView.contentOffset.x
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollView : ", scrollView.contentOffset.x)
+        print("width : ", view.frame.size.width)
+        
+//
+//        let currentImageIndex = scrollView.contentOffset.x / view.frame.width
+//
+//        let point = CGPoint(x: scrollView.contentOffset.x + (currentImageIndex * 10), y: 0)
+//        scrollView.setContentOffset(point, animated: false)
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let currentImageIndex = Int(targetContentOffset.pointee.x / view.frame.width)
+        pageControl.currentPage = currentImageIndex
+        
+        print("index : ", targetContentOffset.pointee.x / view.frame.width)
+        print(targetContentOffset.pointee.x)
+//        targetContentOffset.pointee = CGPoint(x: CGFloat(currentImageIndex) * view.frame.width + 20, y: 0)
+        
+        let point = CGPoint(x: scrollView.contentOffset.x + CGFloat((currentImageIndex+1) * 10), y: 0)
+        targetContentOffset.pointee = point
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return imageList.count
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-//        let menuIndex = Int(targetContentOffset.pointee.x / view.frame.width)
-//        let indexPath = IndexPath(item: menuIndex, section: 0)
-//        menuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-    }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = imageViewContainerCollectionView.dequeueReusableCell(withReuseIdentifier: "ImageViewerCVCell", for: indexPath) as! ImageViewerCVCell
         
-        cell.initCell()
-        cell.addContentView()
-        
+        cell.nuteeImageViewer = self
         cell.imageView.image = imageList[indexPath.row]
         
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    }
 }
 
 // MARK: - ImageViewer CollectionView Cell Definition
@@ -155,6 +266,23 @@ class ImageViewerCVCell : UICollectionViewCell {
     let scrollView = UIScrollView()
     let imageView = UIImageView()
     
+    // MARK: - Variables and Properties
+    
+    var nuteeImageViewer: NuteeImageViewer?
+    
+    // MARK: - Life Cycle
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        initCell()
+        addContentView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Helper
     
     func initCell() {
@@ -165,26 +293,26 @@ class ImageViewerCVCell : UICollectionViewCell {
             $0.showsHorizontalScrollIndicator = false
             
             $0.minimumZoomScale = 1.0
-            $0.maximumZoomScale = 2.0
+            $0.maximumZoomScale = 3.0
             
             $0.clipsToBounds = false
             
-            $0.backgroundColor = .yellow
+            $0.backgroundColor = .clear
         }
         _ = imageView.then {
             $0.contentMode = .scaleAspectFit
             
-            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImageView(sender:))))
+            $0.isUserInteractionEnabled = true
+            setClickActionsInImageView($0)
             
-            $0.backgroundColor = .green
+            $0.backgroundColor = .clear
         }
     }
     
     func addContentView() {
         contentView.addSubview(scrollView)
         scrollView.addSubview(imageView)
-        
-//        contentView.addSubview(imageView)
+
         
         scrollView.snp.makeConstraints {
             $0.width.equalTo(imageView.snp.width)
@@ -201,20 +329,48 @@ class ImageViewerCVCell : UICollectionViewCell {
             $0.right.equalTo(scrollView.snp.right)
             $0.bottom.equalTo(scrollView.snp.bottom)
         }
-//        imageView.snp.makeConstraints {
-//            $0.top.equalTo(contentView.snp.top)
-//            $0.left.equalTo(contentView.snp.left)
-//            $0.right.equalTo(contentView.snp.right)
-//            $0.bottom.equalTo(contentView.snp.bottom)
-//        }
     }
     
-    @objc func didTapImageView(sender: UITapGestureRecognizer) {
+    func setClickActionsInImageView(_ imageView: UIImageView) {
+        imageView.tag = 1
+        let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(singleTapImageView(sender:)))
+        tapGestureRecognizer1.numberOfTapsRequired = 1
         
-        print("tapped")
+        imageView.addGestureRecognizer(tapGestureRecognizer1)
         
+        let tapGestureRecognizer2 = UITapGestureRecognizer(target: self, action: #selector(doubleTapImageView(sender:)))
+        tapGestureRecognizer2.numberOfTapsRequired = 2
+        
+        imageView.addGestureRecognizer(tapGestureRecognizer2)
+    }
+    
+    @objc func singleTapImageView(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
-            scrollView.zoomScale = 1.0
+            UIView.animate(withDuration: 0.3) { [self] in
+                scrollView.zoomScale = 1.0
+                
+                if nuteeImageViewer?.dismissButton.alpha == 0 {
+                    nuteeImageViewer?.dismissButton.alpha = 1
+                    nuteeImageViewer?.pageControl.alpha = 1
+                } else {
+                    nuteeImageViewer?.dismissButton.alpha = 0
+                    nuteeImageViewer?.pageControl.alpha = 0
+                }
+            }
+        }
+        sender.cancelsTouchesInView = false
+    }
+    
+    @objc func doubleTapImageView(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            UIView.animate(withDuration: 0.3) { [self] in
+                let point = sender.location(in: imageView)
+                let size = CGSize(width: scrollView.frame.size.width / scrollView.maximumZoomScale,
+                                  height: scrollView.frame.size.height / scrollView.maximumZoomScale)
+                let origin = CGPoint(x: point.x - size.width / 2,
+                                     y: point.y - size.height / 2)
+                scrollView.zoom(to:CGRect(origin: origin, size: size), animated: true)
+            }
         }
         sender.cancelsTouchesInView = false
     }
@@ -228,8 +384,23 @@ extension ImageViewerCVCell: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        
+    }
+    
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+        UIView.animate(withDuration: 0.1) { [self] in
+            nuteeImageViewer?.dismissButton.alpha = 0
+            nuteeImageViewer?.pageControl.alpha = 0
+        }
+    }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        
+        if scrollView.zoomScale == scrollView.minimumZoomScale {
+            UIView.animate(withDuration: 0.1) { [self] in
+                nuteeImageViewer?.dismissButton.alpha = 1
+                nuteeImageViewer?.pageControl.alpha = 1
+            }
+        }
     }
 }
