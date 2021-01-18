@@ -78,7 +78,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         _ = moreButton.then {
-            $0.contentHorizontalAlignment = .left
+            $0.contentHorizontalAlignment = .center
             $0.setImage(UIImage(systemName: "ellipsis"), for: .normal)
             $0.tintColor = UIColor(red: 134, green: 134, blue: 134)
             
@@ -89,9 +89,11 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."
             $0.textAlignment = .justified
             $0.font = .systemFont(ofSize: 14)
+            
             $0.isUserInteractionEnabled = false
             $0.isScrollEnabled = false
-            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
+            
+            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값이 좌우 여백이 있기 때문에 조정 필요
         }
         _ = contentImageView.then {
             $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
@@ -135,7 +137,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let leftAndRightSpace = 15
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
-            $0.height.equalTo(profileImageView.snp.width)
+            $0.height.equalTo(profileImageView.snp.width).priority(999)
             
             $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
             $0.left.equalTo(contentView.snp.left).offset(leftAndRightSpace)
@@ -153,8 +155,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         moreButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(40)
+            
             $0.centerY.equalTo(profileImageView)
-            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace - 10)
         }
 
         contentTextView.snp.makeConstraints {
@@ -163,7 +166,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.right.equalToSuperview().inset(leftAndRightSpace)
         }
         contentImageView.snp.makeConstraints{
-            $0.height.equalTo(300)
+            $0.height.equalTo(300).priority(999)
+            
             $0.top.equalTo(contentTextView.snp.bottom).offset(15)
             $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
@@ -172,6 +176,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         likeButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(20)
+            
             $0.top.equalTo(contentImageView.snp.bottom).offset(10)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
             $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
@@ -255,7 +260,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             let nuteeImageViewer = NuteeImageViewer()
             nuteeImageViewer.imageList = testImageList
             
-            nuteeImageViewer.modalPresentationStyle = .fullScreen
+            nuteeImageViewer.modalPresentationStyle = .overFullScreen
             
             detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
         }

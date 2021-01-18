@@ -144,14 +144,9 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
         detailNewsFeedVC.postId = postContent?[indexPath.row].id
-        detailNewsFeedVC.getPostService(postId: detailNewsFeedVC.postId!, completionHandler: {(returnedData)-> Void in
-            detailNewsFeedVC.detailNewsFeedTableView.reloadData()
-        })
-
-//        // NewsFeedVC와 중간 매개 델리게이트(DetailNewsFeed) 사이를 통신하기 위한 변수 연결작업
-//        detailNewsFeedVC.delegate = self
-        
-        homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
+        if detailNewsFeedVC.postId != nil {
+            homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
+        }
     }
     
     // 마지막 셀일 때 ActivateIndicator와 함께 새로운 cell 정보 로딩

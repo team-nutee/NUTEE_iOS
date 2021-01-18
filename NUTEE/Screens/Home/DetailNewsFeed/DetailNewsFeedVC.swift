@@ -53,6 +53,10 @@ class DetailNewsFeedVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        getPostService(postId: postId!, completionHandler: { [self] (returnedData)-> Void in
+            detailNewsFeedTableView.reloadData()
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -213,8 +217,10 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         headerView?.post = self.post
-        headerView?.initPosting()
-
+        if headerView?.post != nil {
+            headerView?.initPosting()
+        }
+        
         return headerView
     }
 
