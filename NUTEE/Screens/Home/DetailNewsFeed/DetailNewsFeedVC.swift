@@ -17,6 +17,8 @@ class DetailNewsFeedVC: UIViewController {
     
     let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
+    var activityIndicator = UIActivityIndicatorView()
+    
     let refreshControl = UIRefreshControl()
     
     let commentView = UIView()
@@ -54,8 +56,11 @@ class DetailNewsFeedVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        self.showActivityIndicator(activityIndicator: activityIndicator)
         getPostService(postId: postId!, completionHandler: { [self] (returnedData)-> Void in
+            detailNewsFeedTableView.isHidden = false
             detailNewsFeedTableView.reloadData()
+            self.hideActivityIndicator(activityIndicator: activityIndicator)
         })
     }
 
@@ -82,6 +87,7 @@ class DetailNewsFeedVC: UIViewController {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
+            $0.isHidden = true
             
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
         }
@@ -255,12 +261,11 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        
-//        if post?.body.comments?.count == 0 {
-        return UITableView.automaticDimension
-//        } else {
-//            return 0
-//        }
+        if post?.body.comments?.count == 0 {
+            return UITableView.automaticDimension
+        } else {
+            return 0
+        }
     }
 
     // 댓글이 없을 때 표시 할 정보
