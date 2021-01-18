@@ -36,7 +36,6 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         
         initCell()
         makeConstraints()
-//        fillDataToView()
         
         setClickActionsInImage()
     }
@@ -144,7 +143,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
     }
     
-    func fillDataToView() {
+    func initComment() {
         // 사용자 프로필 설정
         if comment?.user.image?.src != nil {
             profileImageView.setImageNutee(comment?.user.image?.src)

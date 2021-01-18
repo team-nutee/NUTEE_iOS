@@ -46,7 +46,7 @@ class DetailNewsFeedVC: UIViewController {
         initView()
         makeConstraints()
         
-//        setRefresh()
+        setRefresh()
         
         addKeyboardNotification()
     }
@@ -213,7 +213,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         headerView?.post = self.post
-        //detailNewsFeedHeaderView?.initPosting()
+        headerView?.initPosting()
 
         return headerView
     }
@@ -228,7 +228,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5//post?.body.comments?.count ?? 0
+        return post?.body.comments?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -237,6 +237,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         
         cell.detailNewsFeedVC = self
         cell.comment = post?.body.comments?[indexPath.row]
+        cell.initComment()
 
         return cell
     }
