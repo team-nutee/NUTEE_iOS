@@ -576,7 +576,7 @@ extension PostVC {
         config.colors.tintColor = .nuteeGreen
         config.overlayView = UIView()
         
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
         
         let picker = YPImagePicker(configuration: config)
         
