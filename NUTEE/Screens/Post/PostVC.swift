@@ -23,7 +23,10 @@ class PostVC: UIViewController {
     let containerView = UIView()
     
     let postTitleTextField = UITextField()
+    
     let categoryButton = UIButton()
+    let majorButton = UIButton()
+    
     let postContentTextView = PlaceholderTextView()
     
     let imageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -32,6 +35,12 @@ class PostVC: UIViewController {
     let imagePickerButton = UIButton()
     
     // MARK: - Variables and Properties
+    
+    var categoryList = ["카테고리11111", "카테고리2", "카테고리3"]
+    var selectedCategory: String?
+    
+    var majorList = ["앱등전자공학", "갈낙지생명공학", "우주기운학", "충전기환경보호학", "종강심리학", "펭생철학과", "라떼고고학"]
+    var selectedMajor: String?
 
     var pickedIMG : [UIImage] = []
     
@@ -68,6 +77,7 @@ class PostVC: UIViewController {
         addKeyboardNotification()
         self.postTitleTextField.becomeFirstResponder()
     }
+    
     
     // MARK: - Helper
     
@@ -109,9 +119,21 @@ class PostVC: UIViewController {
             $0.setTitleColor(.white, for: .normal)
             $0.setTitle("카테고리", for: .normal)
             
-            $0.isUserInteractionEnabled = false
+            $0.addTarget(self, action: #selector(didTapSelectPostCategoryButton), for: .touchUpInside)
+        }
+        
+        
+        _ = majorButton.then {
+            $0.layer.cornerRadius = 12
+            $0.backgroundColor = .nuteeGreen
+
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 13)
+            $0.setTitleColor(.white, for: .normal)
+            $0.setTitle("내 전공", for: .normal)
             
-            $0.isSkeletonable = true
+            $0.addTarget(self, action: #selector(didTapSelectPostMajorButton), for: .touchUpInside)
         }
         
         _ = postContentTextView.then {
@@ -163,6 +185,7 @@ class PostVC: UIViewController {
         
         containerView.addSubview(postTitleTextField)
         containerView.addSubview(categoryButton)
+        containerView.addSubview(majorButton)
         containerView.addSubview(postContentTextView)
 
         containerView.addSubview(imageCollectionView)
@@ -199,11 +222,19 @@ class PostVC: UIViewController {
         }
         
         categoryButton.snp.makeConstraints {
-            $0.width.equalTo(67)
+            $0.width.greaterThanOrEqualTo(67)
             $0.height.equalTo(28)
             
             $0.top.equalTo(postTitleTextField.snp.bottom).offset(topAndBottomSpace)
             $0.left.equalTo(postTitleTextField.snp.left)
+        }
+        
+        majorButton.snp.makeConstraints {
+            $0.width.greaterThanOrEqualTo(67)
+            $0.height.equalTo(28)
+            
+            $0.top.equalTo(postTitleTextField.snp.bottom).offset(topAndBottomSpace)
+            $0.left.equalTo(categoryButton.snp.right).offset(leftAndRightSpace)
         }
         
         postContentTextView.snp.makeConstraints {
@@ -237,14 +268,6 @@ class PostVC: UIViewController {
             $0.left.equalTo(imagePickerView.snp.left).offset(leftAndRightSpace)
         }
     }
- 
-//    func setEditMode() {
-//        isEditMode = true
-//        postContentTextView.text = editNewsPost?.content
-//        editPostImg = editNewsPost?.images ?? []
-//        self.navigationItem.leftBarButtonItem?.title = "취소"
-//        self.navigationItem.rightBarButtonItem?.title = "수정"
-//    }
     
     @objc func didTapClosePosting() {
         // 입력된 빈칸과 줄바꿈 개수 구하기
@@ -276,56 +299,55 @@ class PostVC: UIViewController {
         }
     }
     
-//    @objc func didTapPosting(){
-//
-//        LoadingHUD.show()
-//        if isEditMode == false {
-//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-//            if pickedIMG != [] {
-//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-//                    self.postContent(images: self.uploadedImages,
-//                                     postContent: self.postContentTextView.text)
-//                })
-//            } else {
-//                postContent(images: [], postContent: postContentTextView.text)
-//            }
-//        } else {
-//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-//            var images: [String] = []
-//            for img in self.editPostImg {
-//                images.append(img.src ?? "")
-//            }
-//            if pickedIMG != [] {
-//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-//                    for uploadimg in self.uploadedImages {
-//                        images.append(uploadimg as String)
-//                    }
-//                    self.editPostContent(postId: self.editNewsPost?.id ?? 0,
-//                                         postContent: self.postContentTextView.text, postImages: images)
-//                })
-//            } else {
-//                editPostContent(postId: editNewsPost?.id ?? 0,
-//                                postContent: postContentTextView.text,
-//                                postImages: images)
-//            }
-//        }
-//
-//
-//    }
-//
-//    @objc func activeself.navigationItem.rightBarButtonItem?() {
-//        NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification,
-//                                               object: postContentTextView ,
-//                                               queue: OperationQueue.main) { (notification) in
-//            if self.postContentTextView.text != "" || self.pickedIMG != []{
-//                self.navigationItem.rightBarButtonItem?.isEnabled = true
-//            } else {
-//                self.navigationItem.rightBarButtonItem?.isEnabled = false
-//            }
-//        }
-//    }
+    func updatePostCategoryButtonStatus() {
+        categoryButton.setTitle(selectedCategory, for: .normal)
+        
+        majorButton.isEnabled = false
+        majorButton.alpha = 0.5
+    }
 
+    @objc func didTapSelectPostCategoryButton() {
+        let selectCategorySheet = NuteeAlertSheet()
+        selectCategorySheet.postVC = self
+
+        selectCategorySheet.handleArea = 0
+        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+
+        var optionList = [[Any]]()
+        for category in categoryList {
+            optionList.append([category, UIColor.gray, "selectPostCategory", true])
+        }
+        selectCategorySheet.optionList = optionList
+        selectCategorySheet.optionContentAligment = "left"
+
+        present(selectCategorySheet, animated: true)
+    }
+    
+    func updatePostMajorButtonStatus() {
+        majorButton.setTitle(selectedMajor, for: .normal)
+        
+        categoryButton.isEnabled = false
+        categoryButton.alpha = 0.5
+    }
+
+    @objc func didTapSelectPostMajorButton() {
+        let selectMajorSheet = NuteeAlertSheet()
+        selectMajorSheet.postVC = self
+
+        selectMajorSheet.handleArea = 0
+        selectMajorSheet.titleContent = "전공을 선택해주세요"
+
+        var optionList = [[Any]]()
+        for major in majorList {
+            optionList.append([major, UIColor.gray, "selectPostMajor", true])
+        }
+        selectMajorSheet.optionList = optionList
+        selectMajorSheet.optionContentAligment = "left"
+
+        present(selectMajorSheet, animated: true)
+    }
 }
+
 
 // MARK: - imageCollectionView Delegate
 
@@ -409,9 +431,9 @@ extension PostVC : UICollectionViewDataSource {
     
 }
 
-// MARK: - UITextView Delegate
+// MARK: - UITextView Delegate, UITextField Delegate
 
-extension PostVC: UITextViewDelegate, UITextFieldDelegate {
+extension PostVC: UITextViewDelegate {
     
     // TextView의 동적인 크기 변화를 위한 function
     func textViewDidChange(_ textView: UITextView) {
@@ -440,6 +462,9 @@ extension PostVC: UITextViewDelegate, UITextFieldDelegate {
         }
     }
     
+}
+
+extension PostVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = textField.text else { return false }
         
@@ -447,16 +472,15 @@ extension PostVC: UITextViewDelegate, UITextFieldDelegate {
         let newLength = text.count + string.count - range.length
         return newLength <= 31
     }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        let text = textField.text?.count
+        
+        if text == 0 {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
 }
-
-//extension PostVC: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let text = textField.text else { return false }
-//
-//        let newLength = text.count + string.count - range.length
-//        return newLength <= 31
-//    }
-//}
 
 // MARK: - KeyBoard
 
