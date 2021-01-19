@@ -161,6 +161,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
 
         contentTextView.snp.makeConstraints {
+            let deviceHight = UIScreen.main.bounds.height
+            $0.height.equalTo(deviceHight / 2).priority(999)
+            
             $0.top.equalTo(profileImageView.snp.bottom).offset(15)
             $0.left.equalToSuperview().offset(leftAndRightSpace)
             $0.right.equalToSuperview().inset(leftAndRightSpace)
@@ -234,6 +237,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         // Posting 내용 설정
         contentTextView.text = post?.body.content
         contentTextView.postingInit()
+        contentTextView.snp.updateConstraints {
+            $0.height.equalTo(contentTextView.frame.size.height).priority(999)
+        }
         
         // 게시글 이미지 설정
         //showImageFrame(imageCount: post?.body.images?.count ?? 0)
