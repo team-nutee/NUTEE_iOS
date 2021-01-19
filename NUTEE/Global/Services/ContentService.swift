@@ -118,7 +118,77 @@ struct ContentService {
         }
     }
     
-    // 게시글 생성
+    // 게시물 생성
+    func uploadPost(pictures: [NSString], title: String, content: String, category: String, major: String, completion: @escaping(NetworkResult<Any>)->Void) {
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type": "multipart/form-data",
+//            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for image in pictures {
+                multipartFormData.append((image as String).data(using: .utf8) ?? Data(), withName: "image")
+            }
+            multipartFormData.append(title.data(using: .utf8) ?? Data(), withName: "title")
+            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "content")
+            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "category")
+            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "major")
+
+        }, to: APIConstants.Post, method: .post, headers: headers) { (encodingResult) in
+            
+            switch encodingResult {
+            
+            case .success(let upload, _, _):
+                upload.responseJSON { (response) in
+                    
+                    completion(.success(response.data as Any))
+                }
+            case .failure(let encodingError):
+                print(encodingError.localizedDescription)
+            }
+        }
+    }
+    
+    func uploadImage(pictures: [UIImage], completion: @escaping(NetworkResult<Any>)->Void) {
+
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+
+        let headers: HTTPHeaders = [
+            "Content-Type": "multipart/form-data",
+//            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for image in pictures {
+                dump(image.jpegData(compressionQuality: 0.1)?.base64EncodedString())
+                dump(image.jpegData(compressionQuality: 0.1))
+                if let imageData = image.jpegData(compressionQuality: 0.3) {
+                    print(imageData)
+                    dump(imageData)
+                    multipartFormData.append(imageData, withName: "image", fileName: "image.jpg", mimeType: "image/jpg")
+                }
+            }
+        }, to: APIConstants.Image, method: .post, headers: headers) { (encodingResult) in
+
+            switch encodingResult {
+
+            case .success(let upload, _, _):
+                upload.responseJSON { (response) in
+
+                    completion(.success(response.result.value as Any))
+                }
+            case .failure(let encodingError):
+                print(encodingError.localizedDescription)
+            }
+        }
+    }
     
     // 게시물 수정
     func editPost(_ postId: Int, _ title: String, _ content: String, _ images: [String], completion: @escaping (NetworkResult<Any>) -> Void) {

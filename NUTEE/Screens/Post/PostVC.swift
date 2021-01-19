@@ -36,7 +36,7 @@ class PostVC: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var categoryList = ["카테고리11111", "카테고리2", "카테고리3"]
+    var categoryList = ["카테고리11111", "IT2", "카테고리3"]
     var selectedCategory: String?
     
     var majorList = ["앱등전자공학", "갈낙지생명공학", "우주기운학", "충전기환경보호학", "종강심리학", "펭생철학과", "라떼고고학"]
@@ -47,6 +47,8 @@ class PostVC: UIViewController {
     var selectedItems = [YPMediaItem]()
     
     var uploadedImages: [NSString] = []
+    
+    var isExistContent = false
     
 //    var editNewsPost: NewsPostsContentElement?
     var isEditMode = false
@@ -91,7 +93,7 @@ class PostVC: UIViewController {
         if isEditMode == true {
             rightBarTitle = "수정"
         }
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapClosePosting))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapUploadPosting))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.veryLightPink], for: .disabled)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -300,6 +302,19 @@ class PostVC: UIViewController {
         }
     }
     
+    @objc func didTapUploadPosting() {
+//        if isEditMode == false {
+//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+//            if pickedIMG != [] {
+//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+//                    self.createPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", major: self.selectedMajor ?? "")
+//                })
+//            } else {
+//                createPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.selectedCategory ?? "", major: self.selectedMajor ?? "")
+//            }
+//        }
+    }
+    
     func updatePostCategoryButtonStatus() {
         categoryButton.setTitle(selectedCategory, for: .normal)
         
@@ -412,7 +427,6 @@ extension PostVC : UICollectionViewDataSource {
             print(false)
             if editPostImg.count > 0 && indexPath.row < editPostImg.count {
                 editPostImg.remove(at: indexPath.row)
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
             } else {
                 let fixIndex = Int(indexPath.row) - (editPostImg.count)
                 pickedIMG.remove(at: fixIndex)
@@ -451,13 +465,12 @@ extension PostVC: UITextViewDelegate {
         }
         
         // 게시 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
-        let titleStr = postTitleTextField.text?.count
+        var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
+        str = str.replacingOccurrences(of: "\n", with: "")
         
-        var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
-        contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
-        
-        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0 {
+        if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
+            isExistContent = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
@@ -479,6 +492,11 @@ extension PostVC: UITextFieldDelegate {
         
         if text == 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            if isExistContent {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+            }
+            
         }
     }
 }
@@ -558,6 +576,8 @@ extension PostVC {
         config.colors.tintColor = .nuteeGreen
         config.overlayView = UIView()
         
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        
         let picker = YPImagePicker(configuration: config)
         
         picker.didFinishPicking { [unowned picker] items, cancelled in
@@ -579,6 +599,7 @@ extension PostVC {
             picker.dismiss(animated: true) {
                 self.imageCollectionView.reloadData()
             }
+            UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         }
         present(picker, animated: true, completion: nil)
     }
@@ -587,97 +608,66 @@ extension PostVC {
 
 // MARK: - PostVC 서버 연결
 
-//extension PostVC {
-//    func postContent(images: [NSString], postContent: String){
-//        ContentService.shared.uploadPost(pictures: images, postContent: postContent){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(_ ):
-//
-//                LoadingHUD.hide()
-//                self.dismiss(animated: true, completion: nil)
-//            case .requestErr:
-//                LoadingHUD.hide()
-//                print("requestErr")
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//
-//            }
-//        }
-//
-//    }
-//
-//    func postImage(images: [UIImage],
-//                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
-//        dump(images[0])
-//
-//        ContentService.shared.uploadImage(pictures: images){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(let res):
-//                self.uploadedImages = res as! [NSString]
-//                print(".successful uploadImage")
-//                completionHandler(self.uploadedImages)
-//            case .requestErr:
-//                self.simpleAlert(title: "실패", message: "")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//            }
-//        }
-//
-//    }
-//
-//    func editPostContent(postId: Int, postContent: String, postImages: [String]){
-//        ContentService.shared.editPost(postId, postContent, postImages){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(_ ):
-//
-//                LoadingHUD.hide()
-//                self.dismiss(animated: true, completion: nil)
-//            case .requestErr:
-//                LoadingHUD.hide()
-//                print("requestErr")
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//
-//            }
-//        }
-//
-//    }
-//
-//}
+extension PostVC {
+    func createPost(images: [NSString], title: String, content: String, category: String, major: String){
+        ContentService.shared.uploadPost(pictures: images, title: title, content: content, category: category, major: major){
+            [weak self]
+            data in
+
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+
+                LoadingHUD.hide()
+                self.dismiss(animated: true, completion: nil)
+            case .requestErr:
+                LoadingHUD.hide()
+                print("requestErr")
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+
+            }
+        }
+
+    }
+
+    func postImage(images: [UIImage],
+                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
+        dump(images[0])
+
+        ContentService.shared.uploadImage(pictures: images){
+            [weak self]
+            data in
+
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(let res):
+                self.uploadedImages = res as! [NSString]
+                print(".successful uploadImage")
+                completionHandler(self.uploadedImages)
+            case .requestErr:
+                self.simpleAlert(title: "실패", message: "")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+            }
+        }
+
+    }
+}

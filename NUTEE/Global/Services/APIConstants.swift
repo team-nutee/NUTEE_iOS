@@ -42,5 +42,6 @@ struct APIConstants {
     
     // POST
     static let Post = BackURL + "/post"
+    static let Image = BackURL + "/upload"
 
 }
