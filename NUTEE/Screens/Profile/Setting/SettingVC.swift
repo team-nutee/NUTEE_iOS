@@ -43,7 +43,12 @@ class SettingVC : UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        alignmentSettingListToCenter()
     }
     
     // MARK: - Helper
@@ -66,8 +71,18 @@ class SettingVC : UIViewController {
             $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.snp.bottom)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+    }
+    
+    func alignmentSettingListToCenter() {
+        let screenHeight = view.frame.size.height
+        let listHeight = settingListTableView.contentSize.height
+        let tabbarHeight = tabBarController?.tabBar.frame.size.height ?? 0
+        
+        let pos = (screenHeight - listHeight - tabbarHeight) / 2
+        
+        settingListTableView.contentInset = UIEdgeInsets(top: pos, left: 0, bottom: 0, right: 0)
     }
 }
 
