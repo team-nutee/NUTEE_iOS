@@ -255,7 +255,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             let nuteeImageViewer = NuteeImageViewer()
             nuteeImageViewer.imageList = testImageList
             
-            nuteeImageViewer.modalPresentationStyle = .fullScreen
+            nuteeImageViewer.modalPresentationStyle = .overFullScreen
             
             detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
         }

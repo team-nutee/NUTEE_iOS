@@ -57,7 +57,7 @@ class NuteeImageViewer: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-
+    
     // MARK: - Helper
     
     func initView() {
@@ -68,7 +68,7 @@ class NuteeImageViewer: UIViewController {
         _ = imageViewContainerCollectionView.then {
             let layout = UICollectionViewFlowLayout()
             layout.scrollDirection = .horizontal
-            layout.minimumLineSpacing = 10
+            layout.minimumLineSpacing = 0
             layout.minimumInteritemSpacing = 0
             
             $0.collectionViewLayout = layout
@@ -215,31 +215,9 @@ extension NuteeImageViewer : UICollectionViewDelegateFlowLayout {
 
 extension NuteeImageViewer : UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("scrollView : ", scrollView.contentOffset.x)
-        print("width : ", view.frame.size.width)
-        
-//
-//        let currentImageIndex = scrollView.contentOffset.x / view.frame.width
-//
-//        let point = CGPoint(x: scrollView.contentOffset.x + (currentImageIndex * 10), y: 0)
-//        scrollView.setContentOffset(point, animated: false)
-    }
-    
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let currentImageIndex = Int(targetContentOffset.pointee.x / view.frame.width)
         pageControl.currentPage = currentImageIndex
-        
-        print("index : ", targetContentOffset.pointee.x / view.frame.width)
-        print(targetContentOffset.pointee.x)
-//        targetContentOffset.pointee = CGPoint(x: CGFloat(currentImageIndex) * view.frame.width + 20, y: 0)
-        
-        let point = CGPoint(x: scrollView.contentOffset.x + CGFloat((currentImageIndex+1) * 10), y: 0)
-        targetContentOffset.pointee = point
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -384,8 +362,27 @@ extension ImageViewerCVCell: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
+    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        
+        if scrollView.zoomScale > 1 {
+            if let image = imageView.image {
+                
+                let ratioW = imageView.frame.width / image.size.width
+                let ratioH = imageView.frame.height / image.size.height
+
+                let ratio = ratioW < ratioH ? ratioW : ratioH
+
+                let newWidth = image.size.width * ratio
+                let newHeight = image.size.height * ratio
+
+                let left = 0.5 * (newWidth * scrollView.zoomScale > imageView.frame.width ? (newWidth - imageView.frame.width) : (scrollView.frame.width - scrollView.contentSize.width))
+                let top = 0.5 * (newHeight * scrollView.zoomScale > imageView.frame.height ? (newHeight - imageView.frame.height) : (scrollView.frame.height - scrollView.contentSize.height))
+
+                scrollView.contentInset = UIEdgeInsets(top: top, left: left, bottom: top, right: left)
+            }
+        } else {
+            scrollView.contentInset = UIEdgeInsets.zero
+        }
     }
     
     func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
