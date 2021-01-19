@@ -22,7 +22,7 @@ class PostVC: UIViewController {
     
     let containerView = UIView()
     
-    let postTitleTextView = PlaceholderTextView()
+    let postTitleTextField = UITextField()
     let categoryButton = UIButton()
     let postContentTextView = PlaceholderTextView()
     
@@ -66,7 +66,7 @@ class PostVC: UIViewController {
         ])
         
         addKeyboardNotification()
-        self.postTitleTextView.becomeFirstResponder()
+        self.postTitleTextField.becomeFirstResponder()
     }
     
     // MARK: - Helper
@@ -83,6 +83,7 @@ class PostVC: UIViewController {
         }
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapClosePosting))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func initPostingView() {
@@ -90,16 +91,12 @@ class PostVC: UIViewController {
             $0.verticalScrollIndicatorInsets = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
         }
         
-        _ = postTitleTextView.then {
+        _ = postTitleTextField.then {
             $0.delegate = self
             
             $0.font = .boldSystemFont(ofSize: 20)
-            
-            $0.placeholderLabel.text = "제목을 입력해주세요"
-            $0.placeholderLabel.font = .boldSystemFont(ofSize: 20)
-            
+            $0.placeholder = "제목을 입력해주세요"
             $0.tintColor = .nuteeGreen
-            $0.isScrollEnabled = false
         }
         
         _ = categoryButton.then {
@@ -164,7 +161,7 @@ class PostVC: UIViewController {
         
         scrollView.addSubview(containerView)
         
-        containerView.addSubview(postTitleTextView)
+        containerView.addSubview(postTitleTextField)
         containerView.addSubview(categoryButton)
         containerView.addSubview(postContentTextView)
 
@@ -193,19 +190,20 @@ class PostVC: UIViewController {
             $0.bottom.equalTo(scrollView.snp.bottom)
         }
         
-        postTitleTextView.snp.makeConstraints {
+        postTitleTextField.snp.makeConstraints {
+            $0.height.equalTo(24)
+            
             $0.top.equalTo(containerView.snp.top)
             $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
             $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
         }
-        postTitleTextView.backgroundColor = .yellow
         
         categoryButton.snp.makeConstraints {
             $0.width.equalTo(67)
             $0.height.equalTo(28)
             
-            $0.top.equalTo(postTitleTextView.snp.bottom).offset(topAndBottomSpace)
-            $0.left.equalTo(postTitleTextView.snp.left)
+            $0.top.equalTo(postTitleTextField.snp.bottom).offset(topAndBottomSpace)
+            $0.left.equalTo(postTitleTextField.snp.left)
         }
         
         postContentTextView.snp.makeConstraints {
@@ -213,7 +211,6 @@ class PostVC: UIViewController {
             $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
             $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
         }
-        postContentTextView.backgroundColor = .green
         
         imageCollectionView.snp.makeConstraints {
             $0.height.equalTo(60)
@@ -251,11 +248,12 @@ class PostVC: UIViewController {
     
     @objc func didTapClosePosting() {
         // 입력된 빈칸과 줄바꿈 개수 구하기
+        let titleStr = postTitleTextField.text?.count
         var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
         // 빈칸이나 줄바꿈으로만 입력된 경우 포스팅 창 바로 나가기
-        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 {
+        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0 {
             var content = ""
             if isEditMode == true {
                 content = "수정을 취소하시겠습니까?"
@@ -375,12 +373,14 @@ extension PostVC : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         // 입력된 빈칸과 줄바꿈 개수 구하기
-        var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
-        str = str.replacingOccurrences(of: "\n", with: "")
+        let titleStr = postTitleTextField.text?.count
+        
+        var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
+        contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
         if isEditMode == false {
             pickedIMG.remove(at: indexPath.row)
-            if (pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0){
+            if (pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0){
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             } else {
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -396,7 +396,7 @@ extension PostVC : UICollectionViewDataSource {
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
             
-            if (pickedIMG.count != 0 || editPostImg.count != 0 || str.count != 0){
+            if (pickedIMG.count != 0 || editPostImg.count != 0 || contentStr.count != 0 && titleStr != 0){
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             } else {
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -411,12 +411,11 @@ extension PostVC : UICollectionViewDataSource {
 
 // MARK: - UITextView Delegate
 
-extension PostVC: UITextViewDelegate {
+extension PostVC: UITextViewDelegate, UITextFieldDelegate {
     
     // TextView의 동적인 크기 변화를 위한 function
     func textViewDidChange(_ textView: UITextView) {
         
-        postTitleTextView.handlePlaceholder()
         postContentTextView.handlePlaceholder()
         
         // textView 높이 동적으로 구성하기
@@ -429,19 +428,35 @@ extension PostVC: UITextViewDelegate {
         }
         
         // 게시 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
-        var titleStr = postTitleTextView.text.replacingOccurrences(of: " ", with: "")
-        titleStr = titleStr.replacingOccurrences(of: "\n", with: "")
+        let titleStr = postTitleTextField.text?.count
         
         var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
-        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 || titleStr.count != 0 {
+        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return false }
+        
+        // 제목 글자 수 한글 기준 30자 제한
+        let newLength = text.count + string.count - range.length
+        return newLength <= 31
+    }
 }
+
+//extension PostVC: UITextFieldDelegate {
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        guard let text = textField.text else { return false }
+//
+//        let newLength = text.count + string.count - range.length
+//        return newLength <= 31
+//    }
+//}
 
 // MARK: - KeyBoard
 
