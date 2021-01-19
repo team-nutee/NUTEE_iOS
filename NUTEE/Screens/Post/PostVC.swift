@@ -93,6 +93,7 @@ class PostVC: UIViewController {
         }
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapClosePosting))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.veryLightPink], for: .disabled)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
