@@ -15,9 +15,9 @@ class DetailNewsFeedVC: UIViewController {
     
     //MARK: - UI components
     
-    let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
+    let activityIndicator = UIActivityIndicatorView()
     
-    var activityIndicator = UIActivityIndicatorView()
+    let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
     let refreshControl = UIRefreshControl()
     
@@ -56,11 +56,13 @@ class DetailNewsFeedVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        self.showActivityIndicator(activityIndicator: activityIndicator)
+        showActivityIndicator(activityIndicator: activityIndicator)
         getPostService(postId: postId!, completionHandler: { [self] (returnedData)-> Void in
-            detailNewsFeedTableView.isHidden = false
             detailNewsFeedTableView.reloadData()
-            self.hideActivityIndicator(activityIndicator: activityIndicator)
+            
+            hideActivityIndicator(activityIndicator: activityIndicator)
+            detailNewsFeedTableView.isHidden = false
+            commentView.isHidden = false
         })
     }
 
@@ -87,14 +89,17 @@ class DetailNewsFeedVC: UIViewController {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
-            $0.isHidden = true
             
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
+            
+            $0.isHidden = true
         }
         
         _ = commentView.then {
             $0.backgroundColor = .white
             $0.addBorder(.top, color: .veryLightPink, thickness: 0.3)
+            
+            $0.isHidden = true
         }
         _ = commentTextView.then {
             $0.delegate = self
