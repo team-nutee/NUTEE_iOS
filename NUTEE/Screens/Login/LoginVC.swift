@@ -45,12 +45,12 @@ class LoginVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.alpha = 0.0
+//        view.alpha = 0.0
         
         initView()
         makeConstraints()
         
-        enterLoginVCAnimate()
+//        enterLoginVCAnimate()
         checkSignIn()
     }
     
