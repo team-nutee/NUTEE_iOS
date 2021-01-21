@@ -35,6 +35,7 @@ class NuteeAlertSheet : UIViewController {
     
     var categoryVC: CategoryVC?
     var majorVC: MajorVC?
+    var postVC: PostVC?
     
     var selectedOptionList: [String] = []
     
@@ -474,6 +475,14 @@ extension NuteeAlertSheet : UITableViewDataSource {
         case "selectSecondMajor":
             majorVC?.secondMajor = optionList[indexPath.row][0] as? String ?? ""
             majorVC?.updateSecondMajorButtonStatus()
+            didTapOutsideCardSheet()
+        case "selectPostCategory":
+            postVC?.selectedCategory = optionList[indexPath.row][0] as? String ?? ""
+            postVC?.updatePostCategoryButtonStatus()
+            didTapOutsideCardSheet()
+        case "selectPostMajor":
+            postVC?.selectedMajor = optionList[indexPath.row][0] as? String ?? ""
+            postVC?.updatePostMajorButtonStatus()
             didTapOutsideCardSheet()
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")

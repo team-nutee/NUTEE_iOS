@@ -118,7 +118,112 @@ struct ContentService {
         }
     }
     
-    // 게시글 생성
+    // 게시물 생성
+    func createPost(title: String, content: String, category: String, images: [NSString], completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "title" : title,
+            "content" : content,
+            "category" : category,
+            "images" : images
+        ]
+        
+        Alamofire.request(APIConstants.Post, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200, 201:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(PostContent.self, from: value)
+                                print(result.body.images ?? [])
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            // 전공이나 카테고리를 선택하지 않았을 경우
+                            print("실패 400")
+                            completion(.requestErr(value))
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    func uploadImage(images: [UIImage], completion: @escaping(NetworkResult<Any>)->Void) {
+
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+
+        let headers: HTTPHeaders = [
+            "Content-Type": "multipart/form-data",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for image in images {
+                if let imageData = image.jpegData(compressionQuality: 0.3) {
+                    multipartFormData.append(imageData, withName: "images", fileName: "image.jpg", mimeType: "image/jpg")
+                }
+            }
+        }, to: APIConstants.Image, method: .post, headers: headers) { (encodingResult) in
+
+            switch encodingResult {
+
+            case .success(let upload, _, _):
+                upload.responseJSON { (response) in
+
+                    if let value = response.result.value {
+                        if let status = response.response?.statusCode {
+                            switch status {
+                            case 200, 201:
+                                completion(.success(value as Any))
+                            case 401:
+                                print("실패 401")
+                                completion(.pathErr)
+                            case 500:
+                                print("실패 500")
+                                completion(.serverErr)
+                            default:
+                                break
+                            }
+                        }
+                    }
+                    
+                }
+            case .failure(let encodingError):
+                print(encodingError.localizedDescription)
+            }
+        }
+    }
     
     // 게시물 수정
     func editPost(_ postId: Int, _ title: String, _ content: String, _ images: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
