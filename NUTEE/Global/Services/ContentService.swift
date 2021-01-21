@@ -119,60 +119,79 @@ struct ContentService {
     }
     
     // 게시물 생성
-    func uploadPost(pictures: [NSString], title: String, content: String, category: String, major: String, completion: @escaping(NetworkResult<Any>)->Void) {
+    func createPost(title: String, content: String, category: String, images: [NSString], completion: @escaping (NetworkResult<Any>) -> Void) {
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
         
         let headers: HTTPHeaders = [
-            "Content-Type": "multipart/form-data",
-//            "Accept": "application/hal+json",
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
             "Authorization": token
         ]
         
-        Alamofire.upload(multipartFormData: { (multipartFormData) in
-            for image in pictures {
-                multipartFormData.append((image as String).data(using: .utf8) ?? Data(), withName: "image")
-            }
-            multipartFormData.append(title.data(using: .utf8) ?? Data(), withName: "title")
-            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "content")
-            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "category")
-            multipartFormData.append(content.data(using: .utf8) ?? Data(), withName: "major")
-
-        }, to: APIConstants.Post, method: .post, headers: headers) { (encodingResult) in
+        let body : Parameters = [
+            "title" : title,
+            "content" : content,
+            "category" : category,
+            "images" : images
+        ]
+        
+        Alamofire.request(APIConstants.Post, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
             
-            switch encodingResult {
+            switch response.result {
             
-            case .success(let upload, _, _):
-                upload.responseJSON { (response) in
-                    
-                    completion(.success(response.data as Any))
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200, 201:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(PostContent.self, from: value)
+                                print(result.body.images ?? [])
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            // 전공이나 카테고리를 선택하지 않았을 경우
+                            print("실패 400")
+                            completion(.requestErr(value))
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            break
+                        }
+                    }
                 }
-            case .failure(let encodingError):
-                print(encodingError.localizedDescription)
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
             }
         }
     }
     
-    func uploadImage(pictures: [UIImage], completion: @escaping(NetworkResult<Any>)->Void) {
+    func uploadImage(images: [UIImage], completion: @escaping(NetworkResult<Any>)->Void) {
 
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
 
         let headers: HTTPHeaders = [
             "Content-Type": "multipart/form-data",
-//            "Accept": "application/hal+json",
+            "Accept": "application/hal+json",
             "Authorization": token
         ]
 
         Alamofire.upload(multipartFormData: { (multipartFormData) in
-            for image in pictures {
-                dump(image.jpegData(compressionQuality: 0.1)?.base64EncodedString())
-                dump(image.jpegData(compressionQuality: 0.1))
+            for image in images {
                 if let imageData = image.jpegData(compressionQuality: 0.3) {
-                    print(imageData)
-                    dump(imageData)
-                    multipartFormData.append(imageData, withName: "image", fileName: "image.jpg", mimeType: "image/jpg")
+                    multipartFormData.append(imageData, withName: "images", fileName: "image.jpg", mimeType: "image/jpg")
                 }
             }
         }, to: APIConstants.Image, method: .post, headers: headers) { (encodingResult) in
@@ -182,7 +201,23 @@ struct ContentService {
             case .success(let upload, _, _):
                 upload.responseJSON { (response) in
 
-                    completion(.success(response.result.value as Any))
+                    if let value = response.result.value {
+                        if let status = response.response?.statusCode {
+                            switch status {
+                            case 200, 201:
+                                completion(.success(value as Any))
+                            case 401:
+                                print("실패 401")
+                                completion(.pathErr)
+                            case 500:
+                                print("실패 500")
+                                completion(.serverErr)
+                            default:
+                                break
+                            }
+                        }
+                    }
+                    
                 }
             case .failure(let encodingError):
                 print(encodingError.localizedDescription)

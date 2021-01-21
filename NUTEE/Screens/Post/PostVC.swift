@@ -303,16 +303,16 @@ class PostVC: UIViewController {
     }
     
     @objc func didTapUploadPosting() {
-//        if isEditMode == false {
-//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-//            if pickedIMG != [] {
-//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-//                    self.createPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", major: self.selectedMajor ?? "")
-//                })
-//            } else {
-//                createPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.selectedCategory ?? "", major: self.selectedMajor ?? "")
-//            }
-//        }
+        if isEditMode == false {
+            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+            if pickedIMG != [] {
+                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                    self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "")
+                })
+            } else {
+                uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.selectedCategory ?? "")
+            }
+        }
     }
     
     func updatePostCategoryButtonStatus() {
@@ -389,20 +389,9 @@ extension PostVC : UICollectionViewDataSource {
         
         if isEditMode == false {
             cell.postImageImageView.image = pickedIMG[indexPath.row]
-            if ( pickedIMG.count != 0 || editPostImg.count != 0) {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
         } else {
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-            
-            if editPostImg.count >= 1 && indexPath.row < editPostImg.count {
-//                cell.postImageImageView.setImageNutee(editNewsPost?.images[indexPath.row].src ?? "")
-            } else {
-                let fixIndex = Int(indexPath.row) - (editPostImg.count)
-                cell.postImageImageView.image = pickedIMG[fixIndex]
-            }
+            let fixIndex = Int(indexPath.row) - (editPostImg.count)
+            cell.postImageImageView.image = pickedIMG[fixIndex]
         }
         
         return cell
@@ -410,35 +399,15 @@ extension PostVC : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // 입력된 빈칸과 줄바꿈 개수 구하기
-        let titleStr = postTitleTextField.text?.count
-        
-        var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
-        contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
-        
         if isEditMode == false {
             pickedIMG.remove(at: indexPath.row)
-            if (pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0){
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
         } else {
-            print(false)
             if editPostImg.count > 0 && indexPath.row < editPostImg.count {
                 editPostImg.remove(at: indexPath.row)
             } else {
                 let fixIndex = Int(indexPath.row) - (editPostImg.count)
                 pickedIMG.remove(at: fixIndex)
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
-            
-            if (pickedIMG.count != 0 || editPostImg.count != 0 || contentStr.count != 0 && titleStr != 0){
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
-            
         }
         
         self.imageCollectionView.reloadData()
@@ -468,11 +437,12 @@ extension PostVC: UITextViewDelegate {
         var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         str = str.replacingOccurrences(of: "\n", with: "")
         
-        if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
+        if str.count != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
             isExistContent = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
+            //isExistContent = false
         }
     }
     
@@ -609,46 +579,44 @@ extension PostVC {
 // MARK: - PostVC 서버 연결
 
 extension PostVC {
-    func createPost(images: [NSString], title: String, content: String, category: String, major: String){
-        ContentService.shared.uploadPost(pictures: images, title: title, content: content, category: category, major: major){
+    func uploadPost(images: [NSString], title: String, content: String, category: String){
+        ContentService.shared.createPost(title: title, content: content, category: category, images: images){
             [weak self]
             data in
-
+            
             guard let `self` = self else { return }
-
+            
             switch data {
             case .success(_ ):
-
-                LoadingHUD.hide()
+                print("글 올리기 성공")
                 self.dismiss(animated: true, completion: nil)
             case .requestErr:
-                LoadingHUD.hide()
-                print("requestErr")
+                self.simpleNuteeAlertDialogue(title: "알림", message: "카테고리나 전공을 선택해주세요.")
             case .pathErr:
                 print(".pathErr")
-
+                
             case .serverErr:
                 print(".serverErr")
-
+                
             case .networkFail:
                 print(".networkFail")
-
-
+                
+                
             }
         }
-
+        
     }
 
     func postImage(images: [UIImage],
                    completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
         dump(images[0])
-
-        ContentService.shared.uploadImage(pictures: images){
+        
+        ContentService.shared.uploadImage(images: images){
             [weak self]
             data in
-
+            
             guard let `self` = self else { return }
-
+            
             switch data {
             case .success(let res):
                 self.uploadedImages = res as! [NSString]
@@ -656,18 +624,18 @@ extension PostVC {
                 completionHandler(self.uploadedImages)
             case .requestErr:
                 self.simpleAlert(title: "실패", message: "")
-
+                
             case .pathErr:
                 print(".pathErr")
-
+                
             case .serverErr:
                 print(".serverErr")
-
+                
             case .networkFail:
                 print(".networkFail")
-
+                
             }
         }
-
+        
     }
 }
