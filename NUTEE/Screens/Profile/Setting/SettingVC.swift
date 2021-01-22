@@ -177,12 +177,16 @@ extension SettingVC : UITableViewDataSource {
             self.navigationController?.pushViewController(developerInfoVC, animated: true)
         
         case IndexPath(row: 0, section: 2):
-            KeychainWrapper.standard.remove(forKey: "userId")
-            KeychainWrapper.standard.remove(forKey: "pw")
+            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
             
-            let rootVC = view.window?.rootViewController
-            self.view.window!.rootViewController?.dismiss(animated: true, completion: {
-                rootVC?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
+            let loginVC = LoginVC()
+            UIView.transition(from: (sceneDelegate.window?.rootViewController?.view)!, to: loginVC.view, duration: 0.2, options: [.transitionCrossDissolve], completion: {
+                _ in
+                KeychainWrapper.standard.remove(forKey: "userId")
+                KeychainWrapper.standard.remove(forKey: "pw")
+                
+                sceneDelegate.window?.rootViewController = loginVC
+                sceneDelegate.window?.rootViewController?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
             })
             
         default:
