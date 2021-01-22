@@ -35,6 +35,7 @@ class FeedContainerCVCell : UICollectionViewCell {
         super.init(frame: frame)
         
         setTableView()
+        fetchNewsFeed()
         setRefresh()
     }
     
@@ -64,33 +65,27 @@ class FeedContainerCVCell : UICollectionViewCell {
                 $0.separatorStyle = .none
             }
         }
-    
+
     func setRefresh() {
         newsFeedTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
     }
     
     @objc func updatePosts() {
-        getCategoryPostsService(category: category ?? "", lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.refreshControl.endRefreshing()
-            }
-        }
+        setFetchNewsFeedFail()
     }
     
     func loadMorePosts(lastId: Int) {
-        if postContent?.count != 0 {
-            getCategoryPostsService(category: category ?? "", lastId: lastId, limit: 10) { (Post) in
-                self.postContent?.append(contentsOf: Post.body)
-                self.newsFeedTableView.reloadData()
-                self.newsFeedTableView.tableFooterView = nil
-            }
-        } else {
-            print("더 이상 불러올 게시글이 없습니다.")
-        }
+        setFetchNewsFeedFail()
+    }
+    
+    func fetchNewsFeed() {
+        // default status
+        setFetchNewsFeedFail()
+    }
+    
+    func setFetchNewsFeedFail() {
+        newsFeedTableView.setEmptyView(title: "오류발생😢", message: "피드를 조회하지 못했습니다")
     }
 }
 
@@ -188,6 +183,34 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
 
 extension FeedContainerCVCell{
     
+    func getFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.getFavoritePosts(lastId: lastId, limit: limit) { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
+                
+            case .requestErr(_):
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                print(".serverErr")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
+                
+            case .networkFail :
+                print("failure")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
     func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
         ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
             
@@ -198,19 +221,22 @@ extension FeedContainerCVCell{
                 completionHandler(self.newsPost!)
                 
             case .requestErr(_):
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
                 print("request error")
                 
             case .pathErr:
                 print(".pathErr")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
                 
             case .serverErr:
                 print(".serverErr")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
                 
             case .networkFail :
                 print("failure")
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
             }
         }
     }
-    
     
 }

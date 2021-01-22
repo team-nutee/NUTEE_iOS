@@ -50,7 +50,6 @@ class HomeVC: UIViewController {
     // MARK: - Helper
     
     func setNavigationBarItem() {
-//        let rightBarButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
         let rightBarButton = UIBarButtonItem(image: UIImage(named: "search") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
         self.navigationItem.rightBarButtonItem = rightBarButton
     }
@@ -66,7 +65,7 @@ class HomeVC: UIViewController {
                 $0.height.equalTo(50)
             }
             
-            $0.menuList = ["IT2", "IT3", "IT4"]
+            $0.menuList = ["추천 게시글", "내 전공", "전체 게시글"]
             $0.homeVC = self
         }
     }
@@ -84,6 +83,10 @@ class HomeVC: UIViewController {
             $0.dataSource = self
             
             $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
+            
+            $0.register(FavoriteFeedCVCell.self, forCellWithReuseIdentifier: Identify.FavoriteFeedCVCell)
+            $0.register(MajorFeedCVCell.self, forCellWithReuseIdentifier: Identify.MajorFeedCVCell)
+            $0.register(AllFeedCVCell.self, forCellWithReuseIdentifier: Identify.AllFeedCVCell)
             
             view.addSubview($0)
             $0.snp.makeConstraints {
@@ -141,17 +144,21 @@ extension HomeVC : UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
+        let cellId: String
         
-        cell.homeVC = self
-        
-        let category = menuBar.menuList[indexPath.row]
-        cell.category = category
-        
-        cell.getCategoryPostsService(category: category, lastId: 0, limit: 10) { (Post) in
-            cell.postContent = Post.body
-            cell.newsFeedTableView.reloadData()
+        switch indexPath.row {
+        case 0:
+            cellId = Identify.FavoriteFeedCVCell
+        case 1:
+            cellId = Identify.MajorFeedCVCell
+        case 2:
+            cellId = Identify.AllFeedCVCell
+        default:
+            cellId = Identify.FeedContainerCVCell
         }
+        
+        let cell = newsFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedContainerCVCell
+        cell.homeVC = self
         
         return cell
     }

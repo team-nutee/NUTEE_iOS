@@ -21,6 +21,9 @@
 		45C92B0625879A3900828E8A /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92B0525879A3900828E8A /* Splash.swift */; };
 		45D182112594B35B002810D0 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182102594B35B002810D0 /* SignUp.swift */; };
 		45D182192594B70D002810D0 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182182594B70D002810D0 /* UserService.swift */; };
+		45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */; };
+		45E6903725BA8BA4007FFEE7 /* MajorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903625BA8BA4007FFEE7 /* MajorFeedCVCell.swift */; };
+		45E6903F25BA9830007FFEE7 /* AllFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903E25BA9830007FFEE7 /* AllFeedCVCell.swift */; };
 		5E70FC5924C8046D001F79F7 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */; };
 		5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA65124C6D1AA00A58F43 /* AppDelegate.swift */; };
 		5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA65324C6D1AA00A58F43 /* SceneDelegate.swift */; };
@@ -133,6 +136,9 @@
 		45C92B0525879A3900828E8A /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		45D182102594B35B002810D0 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 		45D182182594B70D002810D0 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteFeedCVCell.swift; sourceTree = "<group>"; };
+		45E6903625BA8BA4007FFEE7 /* MajorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorFeedCVCell.swift; sourceTree = "<group>"; };
+		45E6903E25BA9830007FFEE7 /* AllFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFeedCVCell.swift; sourceTree = "<group>"; };
 		588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NUTEEUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E70FC5824C8046D001F79F7 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		5E8BA64E24C6D1AA00A58F43 /* NUTEE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NUTEE.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,6 +268,17 @@
 				292BDA4088538027B8492389 /* Pods-NUTEEUITests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		45E6903025BA8B2F007FFEE7 /* NewsFeedContainer */ = {
+			isa = PBXGroup;
+			children = (
+				D576A86D24D4456100202135 /* FeedContainerCVCell.swift */,
+				45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */,
+				45E6903625BA8BA4007FFEE7 /* MajorFeedCVCell.swift */,
+				45E6903E25BA9830007FFEE7 /* AllFeedCVCell.swift */,
+			);
+			path = NewsFeedContainer;
 			sourceTree = "<group>";
 		};
 		5E8BA64524C6D1AA00A58F43 = {
@@ -405,7 +422,7 @@
 			isa = PBXGroup;
 			children = (
 				D592A92A24D3F9C600D49F62 /* HomeVC.swift */,
-				D576A86D24D4456100202135 /* FeedContainerCVCell.swift */,
+				45E6903025BA8B2F007FFEE7 /* NewsFeedContainer */,
 				D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */,
 				5E8BA69024C6D24400A58F43 /* Search */,
 				D58C93D724CAE4FA005570D4 /* DetailNewsFeed */,
@@ -857,6 +874,7 @@
 				D576529525A5ABCA00A11E8D /* EventFeedCVCell.swift in Sources */,
 				D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */,
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
+				45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
@@ -872,6 +890,7 @@
 				D12D8BE024D14850005F4580 /* KeyChainKeys+Enum.swift in Sources */,
 				4586B61525971917003968B0 /* Post.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
+				45E6903F25BA9830007FFEE7 /* AllFeedCVCell.swift in Sources */,
 				45D182112594B35B002810D0 /* SignUp.swift in Sources */,
 				D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */,
 				D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */,
@@ -900,6 +919,7 @@
 				D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */,
 				D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */,
 				D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */,
+				45E6903725BA8BA4007FFEE7 /* MajorFeedCVCell.swift in Sources */,
 				5E8BA69A24C6D2D800A58F43 /* APIConstants.swift in Sources */,
 				D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */,
 				D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */,
