@@ -203,7 +203,7 @@ class PostVC: UIViewController {
             $0.right.equalTo(view.snp.right)
         }
         
-        let topAndBottomSpace = 10
+        let topAndBottomSpace = 15
         let leftAndRightSpace = 15
         
         containerView.snp.makeConstraints {
@@ -279,7 +279,7 @@ class PostVC: UIViewController {
         contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
         // 빈칸이나 줄바꿈으로만 입력된 경우 포스팅 창 바로 나가기
-        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 && titleStr != 0 {
+        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 || titleStr != 0 {
             var content = ""
             if isEditMode == true {
                 content = "수정을 취소하시겠습니까?"
@@ -318,7 +318,10 @@ class PostVC: UIViewController {
     func updatePostCategoryButtonStatus() {
         categoryButton.setTitle(selectedCategory, for: .normal)
         
-        majorButton.isEnabled = false
+        if selectedMajor != "" {
+            selectedMajor = ""
+            majorButton.setTitle("내 전공", for: .normal)
+        }
         majorButton.alpha = 0.5
     }
 
@@ -335,6 +338,8 @@ class PostVC: UIViewController {
         }
         selectCategorySheet.optionList = optionList
         selectCategorySheet.optionContentAligment = "left"
+        
+        selectCategorySheet.modalPresentationStyle = .custom
 
         present(selectCategorySheet, animated: true)
     }
@@ -342,7 +347,10 @@ class PostVC: UIViewController {
     func updatePostMajorButtonStatus() {
         majorButton.setTitle(selectedMajor, for: .normal)
         
-        categoryButton.isEnabled = false
+        if selectedCategory != "" {
+            selectedCategory = ""
+            categoryButton.setTitle("카테고리", for: .normal)
+        }
         categoryButton.alpha = 0.5
     }
 
@@ -359,6 +367,8 @@ class PostVC: UIViewController {
         }
         selectMajorSheet.optionList = optionList
         selectMajorSheet.optionContentAligment = "left"
+        
+        selectMajorSheet.modalPresentationStyle = .custom
 
         present(selectMajorSheet, animated: true)
     }
@@ -434,16 +444,17 @@ extension PostVC: UITextViewDelegate {
         }
         
         // 게시 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
+        let titleStr = postTitleTextField.text ?? ""
+        
         var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         str = str.replacingOccurrences(of: "\n", with: "")
         
-        if str.count != 0 {
+        if str.count != 0 && titleStr.count != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
-            isExistContent = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
-            //isExistContent = false
         }
+        
     }
     
 }
@@ -458,16 +469,7 @@ extension PostVC: UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        let text = textField.text?.count
-        
-        if text == 0 {
-            self.navigationItem.rightBarButtonItem?.isEnabled = false
-        } else {
-            if isExistContent {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            }
-            
-        }
+        textViewDidChange(postContentTextView)
     }
 }
 
