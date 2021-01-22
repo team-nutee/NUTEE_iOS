@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SwiftKeychainWrapper
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -20,7 +22,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = SplashVC()
+        
+        
+        // 자동로그인 유무 파악하기
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        let password = KeychainWrapper.standard.string(forKey: "pw")
+
+        if userId == nil && password == nil {
+            window?.rootViewController = LoginVC()
+        } else {
+            let nuteeApp = BuildTabBarController.shared.nuteeApp()
+            window?.rootViewController = nuteeApp
+        }
+
         window?.makeKeyAndVisible()
     }
 

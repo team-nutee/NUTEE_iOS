@@ -14,11 +14,13 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     
     // MARK: - UI components
     
+    let activityIndicator = UIActivityIndicatorView()
+    
     let noticeFeedTableView = UITableView()
     
     // MARK: - Variables and Properties
     
-    var noticeVC: UIViewController?
+    var noticeVC: NoticeVC?
     
     var notices: Notice?
     
@@ -27,7 +29,9 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setTableView()
+        initView()
+        makeConstraints()
+        
         fetchNoticeFeed()
     }
     
@@ -37,23 +41,39 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     
     // MARK: - Helper
 
-    func setTableView() {
+    func initView() {
         _ = noticeFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
             
             $0.register(NoticeFeedTVCell.self, forCellReuseIdentifier: Identify.NoticeFeedTVCell)
             
-            contentView.addSubview($0)
-            
-            $0.snp.makeConstraints {
-                $0.top.equalTo(contentView.snp.top)
-                $0.left.equalTo(contentView.snp.left)
-                $0.right.equalTo(contentView.snp.right)
-                $0.bottom.equalTo(contentView.snp.bottom)
-            }
-            
             $0.separatorInset.left = 0
+            
+            $0.isHidden = true
+        }
+        _ = activityIndicator.then {
+            $0.style = .medium
+            $0.startAnimating()
+        }
+    }
+    
+    func makeConstraints() {
+        contentView.addSubview(noticeFeedTableView)
+        contentView.addSubview(activityIndicator)
+        
+        
+        noticeFeedTableView.snp.makeConstraints {
+            $0.top.equalTo(contentView.snp.top)
+            $0.left.equalTo(contentView.snp.left)
+            $0.right.equalTo(contentView.snp.right)
+            $0.bottom.equalTo(contentView.snp.bottom)
+        }
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(noticeFeedTableView.snp.top)
+            $0.left.equalTo(noticeFeedTableView.snp.left)
+            $0.right.equalTo(noticeFeedTableView.snp.right)
+            $0.bottom.equalTo(noticeFeedTableView.snp.bottom)
         }
     }
     
@@ -65,7 +85,17 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     }
     
     func setFetchNoticeFeedFail() {
+        noticeVC?.hideActivityIndicator(activityIndicator: activityIndicator)
+        noticeFeedTableView.isHidden = false
+        
         noticeFeedTableView.setEmptyView(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
+    }
+    
+    func afterFetchNotice() {
+        noticeFeedTableView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        noticeFeedTableView.isHidden = false
     }
     
 }
@@ -120,9 +150,8 @@ extension NoticeFeedContainerCVCell {
                 
                 let response = res as! Notice
                 notices = response
-                
                 completionHandler()
-
+                
             case .requestErr(let message):
                 noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "\(message)")
                 setFetchNoticeFeedFail()

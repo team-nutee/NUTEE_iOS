@@ -247,7 +247,7 @@ class NuteeAlertSheet : UIViewController {
         
         if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
             
-            let standardPos = safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)
+            let standardPos = safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)
             
             let swipeDownSensitivity: CGFloat = 1.5
             if self.cardPanStartingTopConstant + translation.y > standardPos {
@@ -349,7 +349,7 @@ class NuteeAlertSheet : UIViewController {
       }
       
       // else return an alpha value in between 0.0 and 0.7 based on the top constraint value
-        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) //* 0.4
+        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) * 0.4
     }
     
 // MARK: - Custom Settings

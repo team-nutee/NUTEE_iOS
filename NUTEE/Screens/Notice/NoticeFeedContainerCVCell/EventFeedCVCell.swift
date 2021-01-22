@@ -13,8 +13,8 @@ class EventFeedCVCell: NoticeFeedContainerCVCell {
     override func fetchNoticeFeed() {
         let url = APIConstants.NoticeEvent
         
-        getNoticeService(url: url, completionHandler: { ()-> Void in
-            self.noticeFeedTableView.reloadData()
+        getNoticeService(url: url, completionHandler: { [self] ()-> Void in
+            afterFetchNotice()
         })
     }
     

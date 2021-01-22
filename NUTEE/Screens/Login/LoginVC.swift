@@ -45,13 +45,13 @@ class LoginVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.alpha = 0.0
+//        view.alpha = 0.0
         
         initView()
         makeConstraints()
         
-        enterLoginVCAnimate()
-        checkSignIn()
+//        enterLoginVCAnimate()
+//        checkSignIn()
     }
     
     
@@ -318,64 +318,6 @@ class LoginVC: UIViewController {
         }
     }
     
-    func buildNuteeApp() -> TabBarController {
-        var navigationController: UINavigationController
-        
-        // HomeTab
-        let homeVC = HomeVC()
-        navigationController = UINavigationController(rootViewController: homeVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "house")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-        let HomeTab = navigationController
-        
-        // NotificationTab
-        let notificationVC = NotificationVC()
-        navigationController = UINavigationController(rootViewController: notificationVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "bell")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
-
-        let NotificationTab = navigationController
-        
-        // PostTab
-        let postVC = UIViewController()
-        postVC.view.backgroundColor = .white
-        navigationController = UINavigationController(rootViewController: postVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "plus")
-        
-        let PostTab = navigationController
-        
-        // NoticeTab
-        let noticeVC = NoticeVC()
-        navigationController = UINavigationController(rootViewController: noticeVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "pin")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
-
-        let NoticeTab = navigationController
-        
-        // ProfileTab
-        let profileVC = ProfileVC()
-        navigationController = UINavigationController(rootViewController: profileVC)
-        navigationController.tabBarItem.image = UIImage(systemName: "person")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-
-        let ProfileTab = navigationController
-        
-        // TabBarController Settings
-        let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
-
-        tabBarController.tabBar.tintColor = .nuteeGreen
-        
-        tabBarController.modalPresentationStyle = .fullScreen
-        tabBarController.modalTransitionStyle = .crossDissolve
-        
-        return tabBarController
-    }
-    
 }
 
 // MARK: - LoginVC Animation
@@ -485,17 +427,11 @@ extension LoginVC {
                 Splash.hide()
                 LoadingHUD.hide()
                 
-                let nuteeApp = buildNuteeApp()
-                present(nuteeApp, animated: true, completion: { [self] in
-                    // LoginVC 초기화
-                    idTextField.text = ""
-                    pwTextField.text = ""
-                    textFieldDidChange(idTextField)
-                    
-                    autoLogin = true
-                    didTapAutoLoginButton()
-                })
-        
+                let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
+                
+                let nuteeApp = BuildTabBarController.shared.nuteeApp()
+                sceneDelegate.window?.rootViewController = nuteeApp
+                
             case .requestErr(let res):
                 let responseData = res as! SignIn
                 simpleNuteeAlertDialogue(title: "로그인 오류", message: responseData.message)
