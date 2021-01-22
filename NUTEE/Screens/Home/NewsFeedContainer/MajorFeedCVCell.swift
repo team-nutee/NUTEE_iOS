@@ -9,5 +9,8 @@
 import Foundation
 
 class MajorFeedCVCell: FeedContainerCVCell {
-    
+    override func fetchNewsFeed() {
+        
+        self.afterFetchNewsFeed()
+    }
 }

@@ -16,6 +16,8 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     // MARK: - UI components
     
+    let activityIndicator = UIActivityIndicatorView()
+    
     let newsFeedTableView = UITableView()
     let refreshControl = UIRefreshControl()
     let postsLoadButton = UIButton()
@@ -34,8 +36,11 @@ class FeedContainerCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setTableView()
+        initView()
+        makeConstraints()
+        
         fetchNewsFeed()
+        
         setRefresh()
     }
     
@@ -45,26 +50,43 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     // MARK: - Helper
 
-    func setTableView() {
-            _ = newsFeedTableView.then {
-                $0.delegate = self
-                $0.dataSource = self
-                
-                $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: Identify.NewsFeedTVCell)
-                
-                contentView.addSubview($0)
-                
-                $0.snp.makeConstraints {
-                    $0.top.equalTo(contentView.snp.top)
-                    $0.left.equalTo(contentView.snp.left)
-                    $0.right.equalTo(contentView.snp.right)
-                    $0.bottom.equalTo(contentView.snp.bottom)
-                }
-                
-                $0.separatorInset.left = 0
-                $0.separatorStyle = .none
-            }
+    func initView() {
+        _ = newsFeedTableView.then {
+            $0.delegate = self
+            $0.dataSource = self
+            
+            $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: Identify.NewsFeedTVCell)
+            
+            $0.separatorInset.left = 0
+            $0.separatorStyle = .none
+            
+            $0.isHidden = true
         }
+        
+        _ = activityIndicator.then {
+            $0.style = .medium
+            $0.startAnimating()
+        }
+    }
+    
+    func makeConstraints() {
+        contentView.addSubview(newsFeedTableView)
+        contentView.addSubview(activityIndicator)
+        
+        newsFeedTableView.snp.makeConstraints {
+            $0.top.equalTo(contentView.snp.top)
+            $0.left.equalTo(contentView.snp.left)
+            $0.right.equalTo(contentView.snp.right)
+            $0.bottom.equalTo(contentView.snp.bottom)
+        }
+        
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(newsFeedTableView.snp.top)
+            $0.left.equalTo(newsFeedTableView.snp.left)
+            $0.right.equalTo(newsFeedTableView.snp.right)
+            $0.bottom.equalTo(newsFeedTableView.snp.bottom)
+        }
+    }
 
     func setRefresh() {
         newsFeedTableView.addSubview(refreshControl)
@@ -80,12 +102,21 @@ class FeedContainerCVCell : UICollectionViewCell {
     }
     
     func fetchNewsFeed() {
-        // default status
         setFetchNewsFeedFail()
     }
     
     func setFetchNewsFeedFail() {
+        homeVC?.hideActivityIndicator(activityIndicator: activityIndicator)
+        newsFeedTableView.isHidden = false
+        
         newsFeedTableView.setEmptyView(title: "오류발생😢", message: "피드를 조회하지 못했습니다")
+    }
+    
+    func afterFetchNewsFeed() {
+        newsFeedTableView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        newsFeedTableView.isHidden = false
     }
 }
 

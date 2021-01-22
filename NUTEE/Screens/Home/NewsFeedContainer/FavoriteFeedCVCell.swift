@@ -14,7 +14,7 @@ class FavoriteFeedCVCell: FeedContainerCVCell {
         
         getFavoritePostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
+            self.afterFetchNewsFeed()
         }
     }
     

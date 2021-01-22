@@ -13,7 +13,7 @@ class AllFeedCVCell: FeedContainerCVCell {
         
         getCategoryPostsService(category: "IT2", lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
+            self.afterFetchNewsFeed()
         }
     }
     
