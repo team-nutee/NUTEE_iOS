@@ -316,6 +316,7 @@ class PostVC: UIViewController {
     }
     
     func updatePostCategoryButtonStatus() {
+        categoryButton.alpha = 1.0
         categoryButton.setTitle(selectedCategory, for: .normal)
         
         if selectedMajor != "" {
@@ -345,6 +346,7 @@ class PostVC: UIViewController {
     }
     
     func updatePostMajorButtonStatus() {
+        majorButton.alpha = 1.0
         majorButton.setTitle(selectedMajor, for: .normal)
         
         if selectedCategory != "" {
