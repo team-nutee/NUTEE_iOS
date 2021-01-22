@@ -69,6 +69,8 @@ class SearchVC: UIViewController {
             $0.placeholder = "검색어를 입력해주세요"
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             $0.tintColor = .nuteeGreen
+            
+            $0.becomeFirstResponder()
         }
         _ = deleteAllTextButton.then {
             $0.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
