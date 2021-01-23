@@ -93,6 +93,8 @@
 		D5ABA77325BC2F16006C64F9 /* UserPostFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77225BC2F16006C64F9 /* UserPostFeedCVCell.swift */; };
 		D5ABA77B25BC31C3006C64F9 /* UserCommentFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */; };
 		D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */; };
+		D5ABA78525BC4413006C64F9 /* UserMenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78425BC4413006C64F9 /* UserMenuBarCV.swift */; };
+		D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
 		D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */; };
 		D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */; };
@@ -221,6 +223,8 @@
 		D5ABA77225BC2F16006C64F9 /* UserPostFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostFeedCVCell.swift; sourceTree = "<group>"; };
 		D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentFeedCVCell.swift; sourceTree = "<group>"; };
 		D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecommendFeedCVCell.swift; sourceTree = "<group>"; };
+		D5ABA78425BC4413006C64F9 /* UserMenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuBarCV.swift; sourceTree = "<group>"; };
+		D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBarCVCell.swift; path = ../../../../../../../MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
 		D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsVC.swift; sourceTree = "<group>"; };
 		D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TermsAndConditions.storyboard; sourceTree = "<group>"; };
@@ -412,9 +416,9 @@
 		5E8BA68B24C6D1F500A58F43 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
-				D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */,
+				D5ABA78C25BC47CB006C64F9 /* MenuBar */,
 				D5A7D1BA24E7C3E100016A99 /* Alert */,
+				D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */,
 				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 				45C92B002587993400828E8A /* LoadingHUD.swift */,
 				45C92B0525879A3900828E8A /* Splash.swift */,
@@ -440,6 +444,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6B524C6D5DC00A58F43 /* ProfileVC.swift */,
+				D5ABA78425BC4413006C64F9 /* UserMenuBarCV.swift */,
 				D5ABA77125BC2EDB006C64F9 /* UserFeedContainer */,
 				D5A18AFC24E12F920075B886 /* Setting */,
 			);
@@ -624,6 +629,15 @@
 				D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */,
 			);
 			path = UserFeedContainer;
+			sourceTree = "<group>";
+		};
+		D5ABA78C25BC47CB006C64F9 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
+				D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */,
+			);
+			path = MenuBar;
 			sourceTree = "<group>";
 		};
 		D5CC689324E6F46100274451 /* DetailSetting */ = {
@@ -896,6 +910,7 @@
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */,
+				D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */,
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D5A4F3F225B1C21200AC3DCD /* PlaceholderTextView.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
@@ -963,6 +978,7 @@
 				D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */,
 				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
+				D5ABA78525BC4413006C64F9 /* UserMenuBarCV.swift in Sources */,
 				D5FFA5AC24E2E027005B3C33 /* SettingCategory.swift in Sources */,
 				5E8BA69824C6D2CC00A58F43 /* Notice.swift in Sources */,
 				D12D8BE424D14C4D005F4580 /* UITextView+Extension.swift in Sources */,
