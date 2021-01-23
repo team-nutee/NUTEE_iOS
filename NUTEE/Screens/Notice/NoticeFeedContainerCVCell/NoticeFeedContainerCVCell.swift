@@ -85,7 +85,7 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     }
     
     func setFetchNoticeFeedFail() {
-        noticeVC?.hideActivityIndicator(activityIndicator: activityIndicator)
+        activityIndicator.stopAnimating()
         noticeFeedTableView.isHidden = false
         
         noticeFeedTableView.setEmptyView(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
@@ -121,9 +121,12 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NoticeFeedTVCell, for: indexPath) as! NoticeFeedTVCell
         cell.selectionStyle = .none
         
-        cell.noticeContent = notices?[indexPath.row]
-        cell.fillDataToView()
-
+        if notices != nil {
+            cell.setFetchedData(noticeContent: notices?[indexPath.row], completionHandler: { ()-> Void in
+                cell.fillDataToView()
+            })
+        }
+        
         return cell
     }
 

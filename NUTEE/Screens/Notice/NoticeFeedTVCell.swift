@@ -131,6 +131,11 @@ class NoticeFeedTVCell: UITableViewCell {
         }
     }
     
+    func setFetchedData(noticeContent: NoticeElement?, completionHandler: @escaping () -> Void) {
+        self.noticeContent = noticeContent
+        completionHandler()
+    }
+    
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         
