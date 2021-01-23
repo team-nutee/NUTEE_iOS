@@ -43,10 +43,10 @@ class MenuBarCV : UIView {
             
             addSubview($0)
             $0.snp.makeConstraints {
-                $0.top.equalToSuperview()
-                $0.left.equalToSuperview()
-                $0.right.equalToSuperview()
-                $0.bottom.equalToSuperview()
+                $0.top.equalTo(self.snp.top)
+                $0.left.equalTo(self.snp.left)
+                $0.right.equalTo(self.snp.right)
+                $0.bottom.equalTo(self.snp.bottom)
             }
         }
     }
@@ -71,8 +71,8 @@ class MenuBarCV : UIView {
                 $0.height.equalTo(4)
                 let width = menuBarCollectionView.frame.size.width / CGFloat(menuList.count) - 20
                 $0.width.equalTo(width)
-                $0.left.equalToSuperview().offset(10)
-                $0.bottom.equalToSuperview()
+                $0.left.equalTo(self.snp.left).offset(10)
+                $0.bottom.equalTo(self.snp.bottom)
             }
         }
     }
@@ -107,9 +107,6 @@ extension MenuBarCV : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = menuBarCollectionView.dequeueReusableCell(withReuseIdentifier: "MenuBarCVCell", for: indexPath) as! MenuBarCVCell
         
-        cell.initCell()
-        cell.addContentView()
-        
         cell.menuTitle.text = menuList[indexPath.item]
         
         return cell
@@ -120,65 +117,4 @@ extension MenuBarCV : UICollectionViewDataSource {
         self.profileVC?.scrollToMenuIndex(menuIndex: indexPath.item)
         self.noticeVC?.scrollToMenuIndex(menuIndex: indexPath.item)
     }
-}
-
-
-// MARK: - Menu Bar CollectionView Cell Definition
-
-class MenuBarCVCell : UICollectionViewCell {
-    
-    // MARK: - UI components
-    
-    var menuTitle = UILabel()
-    
-    // MARK: - Helper
-    
-    func initCell() {
-        _ = menuTitle.then {
-            $0.font = .systemFont(ofSize: 15)
-            $0.textColor = .gray
-        }
-    }
-    
-    func addContentView() {
-        contentView.addSubview(menuTitle)
-        
-        menuTitle.snp.makeConstraints {
-            $0.centerX.equalTo(contentView)
-            $0.centerY.equalTo(contentView)
-        }
-    }
-    
-    override var isHighlighted: Bool {
-        didSet {
-            if isSelected == true {
-                _ = menuTitle.then {
-                    $0.font = .boldSystemFont(ofSize: 18)
-                    $0.textColor = .nuteeGreen
-                }
-            } else {
-                _ = menuTitle.then {
-                    $0.font = .systemFont(ofSize: 15)
-                    $0.textColor = .gray
-                }
-            }
-        }
-    }
-    
-    override var isSelected: Bool {
-        didSet {
-            if isSelected == true {
-                _ = menuTitle.then {
-                    $0.font = .boldSystemFont(ofSize: 18)
-                    $0.textColor = .nuteeGreen
-                }
-            } else {
-                _ = menuTitle.then {
-                    $0.font = .systemFont(ofSize: 15)
-                    $0.textColor = .gray
-                }
-            }
-        }
-    }
-    
 }
