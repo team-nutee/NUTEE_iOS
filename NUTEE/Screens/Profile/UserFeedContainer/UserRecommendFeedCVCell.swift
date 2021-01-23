@@ -6,4 +6,10 @@
 //  Copyright © 2021 Nutee. All rights reserved.
 //
 
-import Foundation
+class UserRecommendFeedCVCell: FeedContainerCVCell {
+    
+    override func fetchNewsFeed() {
+        newsFeedTableView.backgroundColor = .blue
+    }
+    
+}

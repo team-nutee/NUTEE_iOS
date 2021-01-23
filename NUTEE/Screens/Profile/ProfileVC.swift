@@ -78,6 +78,11 @@ class ProfileVC: UIViewController {
             $0.collectionViewLayout = layout
             
             $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
+            
+            $0.register(UserPostFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserPostFeedCVCell)
+            $0.register(UserCommentFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserCommentFeedCVCell)
+            $0.register(UserRecommendFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserRecommendFeedCVCell)
+            
             $0.delegate = self
             $0.dataSource = self
             
@@ -185,12 +190,22 @@ extension ProfileVC : UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = userFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
-
+        let cellId: String
+        
+        switch indexPath.row {
+        case 0:
+            cellId = Identify.UserPostFeedCVCell
+        case 1:
+            cellId = Identify.UserCommentFeedCVCell
+        case 2:
+            cellId = Identify.UserRecommendFeedCVCell
+        default:
+            cellId = Identify.FeedContainerCVCell
+        }
+        
+        let cell = userFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedContainerCVCell
         cell.homeVC = self
         
-        cell.newsFeedTableView.reloadData()
-
         return cell
     }
 }
