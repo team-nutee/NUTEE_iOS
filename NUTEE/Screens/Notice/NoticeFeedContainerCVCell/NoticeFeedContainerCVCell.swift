@@ -122,9 +122,7 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.noticeContent = notices?[indexPath.row]
-
-        cell.addContentView()
-        cell.initCell()
+        cell.fillDataToView()
 
         return cell
     }
