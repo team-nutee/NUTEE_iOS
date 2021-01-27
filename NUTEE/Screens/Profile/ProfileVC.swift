@@ -15,7 +15,7 @@ class ProfileVC: UIViewController {
     let userProfileImageImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     let userNickNameButton = UIButton()
     
-    let menuBar = MenuBarCV()
+    let userMenuBar = UserMenuBarCV()
     
     let separatorView = UIView()
     
@@ -61,8 +61,10 @@ class ProfileVC: UIViewController {
             $0.contentHorizontalAlignment = .left
             }
         
-        _ = menuBar.then {
-            $0.menuList = ["내가 쓴 글", "내가 쓴 댓글", "내가 추천한 글"]
+        _ = userMenuBar.then {
+//            $0.menuList = ["내가 쓴 글", "내가 쓴 댓글", "내가 추천한 글"]
+            $0.menuList = ["게시물", "댓글", "추천 게시글"]
+            $0.userInfomationList = [1314, 2218, 2199]
         }
         
         _ = separatorView.then {
@@ -98,7 +100,7 @@ class ProfileVC: UIViewController {
         view.addSubview(userProfileImageImageView)
         view.addSubview(userNickNameButton)
         
-        view.addSubview(menuBar)
+        view.addSubview(userMenuBar)
         
         view.addSubview(separatorView)
         
@@ -119,7 +121,7 @@ class ProfileVC: UIViewController {
             $0.right.equalTo(view.snp.right).inset(15)
         }
         
-        menuBar.snp.makeConstraints {
+        userMenuBar.snp.makeConstraints {
             $0.top.equalTo(userProfileImageImageView.snp.bottom).offset(20)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
@@ -129,7 +131,7 @@ class ProfileVC: UIViewController {
         separatorView.snp.makeConstraints {
             $0.height.equalTo(0.3).priority(999)
             
-            $0.top.equalTo(menuBar.snp.bottom)
+            $0.top.equalTo(userMenuBar.snp.bottom)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
         }
@@ -138,15 +140,15 @@ class ProfileVC: UIViewController {
             $0.top.equalTo(separatorView.snp.bottom)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.snp.bottom)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
     
     func fillDataToView() {
         userProfileImageImageView.image = #imageLiteral(resourceName: "nutee_zigi_green")
-        userNickNameButton.setTitle("닉네임닉네임닉네임닉네임", for: .normal)
+        userNickNameButton.setTitle("닉네임닉네임닉네임닉네임닉네임닉네임", for: .normal)
         
-        menuBar.profileVC = self
+        userMenuBar.profileVC = self
     }
     
     func scrollToMenuIndex(menuIndex: Int) {
@@ -176,17 +178,42 @@ extension ProfileVC : UICollectionViewDelegateFlowLayout {
 extension ProfileVC : UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        menuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(menuBar.menuList.count) + 10
+//        userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10
+        
+        
+        
+        let menuCount = CGFloat(userMenuBar.menuList.count)
+        
+        var indextPathRange = scrollView.contentSize.width / menuCount
+        print("1: ", indextPathRange)
+        indextPathRange = floor(indextPathRange)
+        print("2: ", indextPathRange)
+        
+        let itemPos: CGFloat
+//        let adjustLength: CGFloat = 30
+        switch indextPathRange {
+        case 0:
+            itemPos = 10
+        case 1:
+            itemPos = (self.view.frame.width / menuCount) + 10 - 15
+        case 2:
+            itemPos = ((self.view.frame.width / menuCount) * 2) + 10 - 15
+        default:
+            itemPos = 0
+        }
+        
+        userMenuBar.positionBarView.frame.origin.x = itemPos
+        print("endddddddddd")
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let menuIndex = Int(targetContentOffset.pointee.x / view.frame.width)
         let indexPath = IndexPath(item: menuIndex, section: 0)
-        menuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return menuBar.menuList.count
+        return userMenuBar.menuList.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

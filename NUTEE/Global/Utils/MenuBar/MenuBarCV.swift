@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuBarCV : UIView {
+class MenuBarCV: UIView {
     
     // MARK: - UI components
     
@@ -28,27 +28,7 @@ class MenuBarCV : UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        _ = menuBarCollectionView.then {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-            layout.minimumLineSpacing = 0
-            layout.minimumInteritemSpacing = 0
-            
-            $0.collectionViewLayout = layout
-            
-            $0.delegate = self
-            $0.dataSource = self
-            
-            $0.register(MenuBarCVCell.self, forCellWithReuseIdentifier: "MenuBarCVCell")
-            
-            addSubview($0)
-            $0.snp.makeConstraints {
-                $0.top.equalTo(self.snp.top)
-                $0.left.equalTo(self.snp.left)
-                $0.right.equalTo(self.snp.right)
-                $0.bottom.equalTo(self.snp.bottom)
-            }
-        }
+        setCollectionView()
     }
     
     // 레이아웃이 형성된 뒤에 불려지는 함수
@@ -68,9 +48,10 @@ class MenuBarCV : UIView {
             
             addSubview($0)
             $0.snp.makeConstraints {
-                $0.height.equalTo(4)
                 let width = menuBarCollectionView.frame.size.width / CGFloat(menuList.count) - 20
                 $0.width.equalTo(width)
+                $0.height.equalTo(4)
+                
                 $0.left.equalTo(self.snp.left).offset(10)
                 $0.bottom.equalTo(self.snp.bottom)
             }
@@ -82,6 +63,34 @@ class MenuBarCV : UIView {
     }
     
     // MARK: - Helper
+    
+    func setCollectionView() {
+        _ = menuBarCollectionView.then {
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 0
+            layout.minimumInteritemSpacing = 0
+            
+            $0.collectionViewLayout = layout
+            
+            $0.delegate = self
+            $0.dataSource = self
+            
+            registerCVCell()
+            
+            addSubview($0)
+            $0.snp.makeConstraints {
+                $0.top.equalTo(self.snp.top)
+                $0.left.equalTo(self.snp.left)
+                $0.right.equalTo(self.snp.right)
+                $0.bottom.equalTo(self.snp.bottom)
+            }
+        }
+    }
+    
+    func registerCVCell() {
+        menuBarCollectionView.register(MenuBarCVCell.self, forCellWithReuseIdentifier: "MenuBarCVCell")
+    }
 }
     
 
