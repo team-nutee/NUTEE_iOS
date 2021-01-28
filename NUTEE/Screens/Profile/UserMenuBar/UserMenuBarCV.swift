@@ -28,16 +28,17 @@ class UserMenuBarCV: MenuBarCV {
     
     override func collectionView(_ collectionView:UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let menuCount = CGFloat(menuList.count)
+        let standardItemWidth = self.frame.width / menuCount
         
         let itemWidth: CGFloat
         let adjustLength: CGFloat = 30
         switch indexPath.row {
         case 1:
-            itemWidth = self.frame.width / menuCount - adjustLength
+            itemWidth = standardItemWidth - adjustLength
         case 2:
-            itemWidth = self.frame.width / menuCount + adjustLength
+            itemWidth = standardItemWidth + adjustLength
         default:
-            itemWidth = self.frame.width / menuCount
+            itemWidth = standardItemWidth
         }
         
         return CGSize(width: itemWidth, height: collectionView.frame.height)
