@@ -16,6 +16,8 @@ class UserMenuBarCV: MenuBarCV {
     
     var userInfomationList = [0]
     
+    let adjustItemLength: CGFloat = 30
+    
     // MARK: - Life Cycle
     
     // MARK: - Helper
@@ -31,12 +33,11 @@ class UserMenuBarCV: MenuBarCV {
         let standardItemWidth = self.frame.width / menuCount
         
         let itemWidth: CGFloat
-        let adjustLength: CGFloat = 30
         switch indexPath.row {
         case 1:
-            itemWidth = standardItemWidth - adjustLength
+            itemWidth = standardItemWidth - adjustItemLength
         case 2:
-            itemWidth = standardItemWidth + adjustLength
+            itemWidth = standardItemWidth + adjustItemLength
         default:
             itemWidth = standardItemWidth
         }
