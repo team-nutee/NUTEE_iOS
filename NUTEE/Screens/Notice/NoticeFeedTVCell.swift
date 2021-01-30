@@ -29,6 +29,17 @@ class NoticeFeedTVCell: UITableViewCell {
     
     // MARK: - Life Cycle
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        initCell()
+        makeConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Helper
     
     func initCell () {
@@ -61,8 +72,7 @@ class NoticeFeedTVCell: UITableViewCell {
         }
     }
     
-    func addContentView() {
-        
+    func makeConstraints() {
         contentView.addSubview(fixedNoticeImageView)
         
         contentView.addSubview(titleLabel)
@@ -99,6 +109,33 @@ class NoticeFeedTVCell: UITableViewCell {
         
     }
 
+    func fillDataToView () {
+        _ = fixedNoticeImageView.then {
+            if noticeContent?.no == "공지" {
+                $0.isHidden = false
+            } else {
+                $0.isHidden = true
+            }
+        }
+        
+        _ = titleLabel.then {
+            $0.text = noticeContent?.title
+        }
+        
+        _ = dateLabel.then {
+            $0.text = noticeContent?.date
+        }
+        _ = authorLabel.then {
+            $0.text = noticeContent?.author
+            $0.sizeToFit()
+        }
+    }
+    
+    func setFetchedData(noticeContent: NoticeElement?, completionHandler: @escaping () -> Void) {
+        self.noticeContent = noticeContent
+        completionHandler()
+    }
+    
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         

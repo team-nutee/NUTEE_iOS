@@ -85,11 +85,17 @@
 		D58C93DE24CAE556005570D4 /* ReplyTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93DD24CAE556005570D4 /* ReplyTVCell.swift */; };
 		D58CEE6925A04DEB00AAE31F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */; };
 		D590451D259E09E40091FEC0 /* MajorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D590451C259E09E40091FEC0 /* MajorVC.swift */; };
+		D5929F2B25BC54D60031F74E /* UserMenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5929F2A25BC54D60031F74E /* UserMenuBarCV.swift */; };
 		D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92A24D3F9C600D49F62 /* HomeVC.swift */; };
 		D592A92F24D437F300D49F62 /* MenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92E24D437F300D49F62 /* MenuBarCV.swift */; };
 		D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A18AFD24E12FD60075B886 /* SettingVC.swift */; };
 		D5A4F3F225B1C21200AC3DCD /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A4F3F125B1C21200AC3DCD /* PlaceholderTextView.swift */; };
 		D5A7D1BC24E7C40400016A99 /* NuteeAlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */; };
+		D5ABA77325BC2F16006C64F9 /* UserPostFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77225BC2F16006C64F9 /* UserPostFeedCVCell.swift */; };
+		D5ABA77B25BC31C3006C64F9 /* UserCommentFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */; };
+		D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */; };
+		D5ABA78525BC4413006C64F9 /* UserMenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78425BC4413006C64F9 /* UserMenuBarCVCell.swift */; };
+		D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
 		D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */; };
 		D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */; };
@@ -210,11 +216,17 @@
 		D58C93DD24CAE556005570D4 /* ReplyTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyTVCell.swift; sourceTree = "<group>"; };
 		D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		D590451C259E09E40091FEC0 /* MajorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorVC.swift; sourceTree = "<group>"; };
+		D5929F2A25BC54D60031F74E /* UserMenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuBarCV.swift; sourceTree = "<group>"; };
 		D592A92A24D3F9C600D49F62 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		D592A92E24D437F300D49F62 /* MenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCV.swift; sourceTree = "<group>"; };
 		D5A18AFD24E12FD60075B886 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
 		D5A4F3F125B1C21200AC3DCD /* PlaceholderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeAlertSheet.swift; sourceTree = "<group>"; };
+		D5ABA77225BC2F16006C64F9 /* UserPostFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostFeedCVCell.swift; sourceTree = "<group>"; };
+		D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentFeedCVCell.swift; sourceTree = "<group>"; };
+		D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecommendFeedCVCell.swift; sourceTree = "<group>"; };
+		D5ABA78425BC4413006C64F9 /* UserMenuBarCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuBarCVCell.swift; sourceTree = "<group>"; };
+		D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBarCVCell.swift; path = ../../../../../../../MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
 		D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsVC.swift; sourceTree = "<group>"; };
 		D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TermsAndConditions.storyboard; sourceTree = "<group>"; };
@@ -406,9 +418,9 @@
 		5E8BA68B24C6D1F500A58F43 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
-				D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */,
+				D5ABA78C25BC47CB006C64F9 /* MenuBar */,
 				D5A7D1BA24E7C3E100016A99 /* Alert */,
+				D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */,
 				5E8BA69524C6D2C600A58F43 /* LinkTextView.swift */,
 				45C92B002587993400828E8A /* LoadingHUD.swift */,
 				45C92B0525879A3900828E8A /* Splash.swift */,
@@ -433,7 +445,9 @@
 		5E8BA68D24C6D21000A58F43 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				D5929F2925BC54940031F74E /* UserMenuBar */,
 				5E8BA6B524C6D5DC00A58F43 /* ProfileVC.swift */,
+				D5ABA77125BC2EDB006C64F9 /* UserFeedContainer */,
 				D5A18AFC24E12F920075B886 /* Setting */,
 			);
 			path = Profile;
@@ -591,6 +605,15 @@
 			path = DetailNewsFeed;
 			sourceTree = "<group>";
 		};
+		D5929F2925BC54940031F74E /* UserMenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				D5929F2A25BC54D60031F74E /* UserMenuBarCV.swift */,
+				D5ABA78425BC4413006C64F9 /* UserMenuBarCVCell.swift */,
+			);
+			path = UserMenuBar;
+			sourceTree = "<group>";
+		};
 		D5A18AFC24E12F920075B886 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -607,6 +630,25 @@
 				D5FC7B6724EBE7220029BEAE /* NuteeAlertDialogue.swift */,
 			);
 			path = Alert;
+			sourceTree = "<group>";
+		};
+		D5ABA77125BC2EDB006C64F9 /* UserFeedContainer */ = {
+			isa = PBXGroup;
+			children = (
+				D5ABA77225BC2F16006C64F9 /* UserPostFeedCVCell.swift */,
+				D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */,
+				D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */,
+			);
+			path = UserFeedContainer;
+			sourceTree = "<group>";
+		};
+		D5ABA78C25BC47CB006C64F9 /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
+				D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */,
+			);
+			path = MenuBar;
 			sourceTree = "<group>";
 		};
 		D5CC689324E6F46100274451 /* DetailSetting */ = {
@@ -879,6 +921,7 @@
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */,
+				D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */,
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D5A4F3F225B1C21200AC3DCD /* PlaceholderTextView.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
@@ -899,6 +942,7 @@
 				D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */,
 				5E8BA6B624C6D5DC00A58F43 /* ProfileVC.swift in Sources */,
 				5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */,
+				D5ABA77B25BC31C3006C64F9 /* UserCommentFeedCVCell.swift in Sources */,
 				D58CEE6925A04DEB00AAE31F /* SignUpViewController.swift in Sources */,
 				D12D8BDE24D1483A005F4580 /* UserDefaultKeys+Enum.swift in Sources */,
 				D12D8BEC24D14CA4005F4580 /* UITableView+Extension.swift in Sources */,
@@ -935,6 +979,7 @@
 				D576529025A5ABAF00A11E8D /* GeneralFeedCVCell.swift in Sources */,
 				D12D8BEA24D14C90005F4580 /* Date+Extension.swift in Sources */,
 				4538F87D25A48C17004515C7 /* PostContent.swift in Sources */,
+				D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */,
 				D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */,
 				D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */,
 				45C92B0625879A3900828E8A /* Splash.swift in Sources */,
@@ -944,11 +989,14 @@
 				D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */,
 				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
+				D5ABA78525BC4413006C64F9 /* UserMenuBarCVCell.swift in Sources */,
 				D5FFA5AC24E2E027005B3C33 /* SettingCategory.swift in Sources */,
 				5E8BA69824C6D2CC00A58F43 /* Notice.swift in Sources */,
 				D12D8BE424D14C4D005F4580 /* UITextView+Extension.swift in Sources */,
+				D5ABA77325BC2F16006C64F9 /* UserPostFeedCVCell.swift in Sources */,
 				D58C93DC24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift in Sources */,
 				D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */,
+				D5929F2B25BC54D60031F74E /* UserMenuBarCV.swift in Sources */,
 				5E8BA69624C6D2C600A58F43 /* LinkTextView.swift in Sources */,
 				D12D8BEE24D14CC4005F4580 /* String+Extension.swift in Sources */,
 				5E8BA6AE24C6D37700A58F43 /* SplashVC.swift in Sources */,
