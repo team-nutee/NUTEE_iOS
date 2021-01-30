@@ -48,6 +48,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     // MARK: - Variables and Properties
    
     var detailNewsFeedVC: DetailNewsFeedVC?
+    
+    let TopAndBottomSpace = 10
+    let leftAndRightSpace = 15
         
     var imageFrameViewWidth: CGFloat = 0
     var imageFrameViewHeight: CGFloat = 300
@@ -57,7 +60,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
     //MARK: - Dummy data
     
-    var testImageList: [UIImage?] = [UIImage(named: "TestImage01"), UIImage(named: "TestImage02"), UIImage(named: "TestImage03")]
+    //var testImageList: [UIImage?] = [UIImage(named: "TestImage01"), UIImage(named: "TestImage02"), UIImage(named: "TestImage03")]
+    var postImageList: [PostImage?] = []
     
     // MARK: - Life Cycle
     
@@ -130,36 +134,50 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         _ = firstImageViewWhenOne.then {
-            setClickActions()
+            setClickActions(imageView: $0)
             
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenThree.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenThree.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenThree.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenFour.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenFour.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenFour.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
         _ = fourthImageViewWhenFour.then {
+            setClickActions(imageView: $0)
+            
             $0.isHidden = true
         }
         
@@ -222,9 +240,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         imageFrameView.addSubview(fourthImageViewWhenFour)
 
         contentView.addSubview(likeButton)
-
-        let TopAndBottomSpace = 10
-        let leftAndRightSpace = 15
         
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
@@ -252,8 +267,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
 
         contentTextView.snp.makeConstraints {
-            let deviceHight = UIScreen.main.bounds.height
-            $0.height.equalTo(deviceHight / 2).priority(999)
+            let deviceHeight = UIScreen.main.bounds.height
+            $0.height.equalTo(deviceHeight / 2).priority(999)
             
             $0.top.equalTo(profileImageView.snp.bottom).offset(15)
             $0.left.equalTo(contentView).offset(leftAndRightSpace)
@@ -406,6 +421,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         // 게시글 이미지 설정
         setImageFrame(imageCnt: post?.body.images?.count ?? 0)
+        postImageList = post?.body.images ?? []
         
         // Like 버튼
         likeCount = post?.body.likers?.count
@@ -482,32 +498,32 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         default:
             _ = firstImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
-                
+
                 $0.isHidden = false
             }
             _ = secondImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
-                
+
                 $0.isHidden = false
             }
             _ = thirdImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
-                
+
                 $0.alpha = 0.7
                 $0.isHidden = false
             }
-            
+
             moreLabel.text = "+\(imageCnt - 3)"
             moreLabel.isHidden = false
         }
     }
     
-    func setClickActions() {
-        contentImageView.tag = 1
+    func setClickActions(imageView: UIImageView) {
+        imageView.tag = 1
         let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         tapGestureRecognizer1.numberOfTapsRequired = 1
-        contentImageView.isUserInteractionEnabled = true
-        contentImageView.addGestureRecognizer(tapGestureRecognizer1)
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer1)
     }
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
@@ -517,7 +533,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         //Give your image View tag
         if (imgView.tag == 1) {
             let nuteeImageViewer = NuteeImageViewer()
-            nuteeImageViewer.imageList = testImageList
+            nuteeImageViewer.imageList = postImageList
             
             nuteeImageViewer.modalPresentationStyle = .overFullScreen
             

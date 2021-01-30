@@ -23,7 +23,7 @@ class NuteeImageViewer: UIViewController {
     let minimumAlphaValue: CGFloat = 0.15
     let maximumAlphaValue: CGFloat = 1.0
     
-    var imageList: [UIImage?] = []
+    var imageList: [PostImage?] = []
     
     // MARK: - Dummy data
     
@@ -228,7 +228,7 @@ extension NuteeImageViewer : UICollectionViewDelegate, UICollectionViewDataSourc
         let cell = imageViewContainerCollectionView.dequeueReusableCell(withReuseIdentifier: "ImageViewerCVCell", for: indexPath) as! ImageViewerCVCell
         
         cell.nuteeImageViewer = self
-        cell.imageView.image = imageList[indexPath.row]
+        cell.imageView.imageFromUrl(imageList[indexPath.row]?.src, defaultImgPath: "")
         
         return cell
     }
