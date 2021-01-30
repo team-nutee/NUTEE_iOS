@@ -29,11 +29,28 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     let contentTextView = UITextView()
     let contentImageView = UIImageView()
     
+    let imageFrameView = UIView()
+    let firstImageViewWhenOne = UIImageView()
+    let oneMoreLabel = UILabel()
+    
+    let firstImageViewWhenThree = UIImageView()
+    let secondImageViewWhenThree = UIImageView()
+    let thirdImageViewWhenThree = UIImageView()
+
+    let firstImageViewWhenFour = UIImageView()
+    let secondImageViewWhenFour = UIImageView()
+    let thirdImageViewWhenFour = UIImageView()
+    let fourthImageViewWhenFour = UIImageView()
+    let moreLabel = UILabel()
+    
     let likeButton = UIButton()
     
     // MARK: - Variables and Properties
    
     var detailNewsFeedVC: DetailNewsFeedVC?
+        
+    var imageFrameViewWidth: CGFloat = 0
+    var imageFrameViewHeight: CGFloat = 300
    
     var post: PostContent?
     var likeCount: Int?
@@ -55,6 +72,23 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+        
+    }
+    
+    override func layoutSubviews() {
+        imageFrameViewWidth = imageFrameView.frame.size.width
+        
+        firstImageViewWhenThree.snp.updateConstraints {
+            $0.width.equalTo(imageFrameViewWidth / 2)
+        }
+        
+        firstImageViewWhenFour.snp.updateConstraints {
+            $0.width.equalTo(imageFrameViewWidth * (3/5))
+        }
+        
+        thirdImageViewWhenFour.snp.updateConstraints {
+            $0.width.equalTo(imageFrameViewWidth * (2/5))
+        }
     }
     
     //MARK: - Helper
@@ -94,10 +128,72 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값이 좌우 여백이 있기 때문에 조정 필요
         }
-        _ = contentImageView.then {
-            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+        
+        
+        _ = firstImageViewWhenOne.then {
+//            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
+            $0.backgroundColor = .green
             
             setClickActions()
+            $0.isHidden = true
+        }
+        
+        _ = firstImageViewWhenThree.then {
+            $0.backgroundColor = .green
+            
+            $0.isHidden = true
+        }
+        
+        _ = secondImageViewWhenThree.then {
+            $0.backgroundColor = .red
+            
+            $0.isHidden = true
+        }
+        
+        _ = thirdImageViewWhenThree.then {
+            $0.backgroundColor = .blue
+            
+            $0.isHidden = true
+        }
+        
+        _ = firstImageViewWhenFour.then {
+            $0.backgroundColor = .green
+            
+            $0.isHidden = true
+        }
+        
+        _ = secondImageViewWhenFour.then {
+            $0.backgroundColor = .red
+            
+            $0.isHidden = true
+        }
+        
+        _ = thirdImageViewWhenFour.then {
+            $0.backgroundColor = .blue
+            
+            $0.isHidden = true
+        }
+        
+        _ = fourthImageViewWhenFour.then {
+            $0.backgroundColor = .yellow
+            
+            $0.isHidden = true
+        }
+        
+        _ = oneMoreLabel.then {
+            $0.text = "+1"
+            $0.font = .boldSystemFont(ofSize: 21)
+            $0.textColor = .black
+            
+            $0.isHidden = true
+        }
+        
+        _ = moreLabel.then {
+            $0.text = "+N"
+            $0.font = .boldSystemFont(ofSize: 21)
+            $0.textColor = .black
+            
+            $0.isHidden = true
         }
         
         _ = likeButton.then {
@@ -127,13 +223,26 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentView.addSubview(moreButton)
 
         contentView.addSubview(contentTextView)
-        contentView.addSubview(contentImageView)
+        contentView.addSubview(imageFrameView)
+        
+        imageFrameView.addSubview(firstImageViewWhenOne)
+        firstImageViewWhenOne.addSubview(oneMoreLabel)
+
+        imageFrameView.addSubview(firstImageViewWhenThree)
+        imageFrameView.addSubview(secondImageViewWhenThree)
+        imageFrameView.addSubview(thirdImageViewWhenThree)
+        thirdImageViewWhenThree.addSubview(moreLabel)
+        
+        imageFrameView.addSubview(firstImageViewWhenFour)
+        imageFrameView.addSubview(secondImageViewWhenFour)
+        imageFrameView.addSubview(thirdImageViewWhenFour)
+        imageFrameView.addSubview(fourthImageViewWhenFour)
 
         contentView.addSubview(likeButton)
 
-        
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 15
+        
         profileImageView.snp.makeConstraints {
             $0.width.equalTo(50)
             $0.height.equalTo(profileImageView.snp.width).priority(999)
@@ -164,24 +273,96 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.height.equalTo(deviceHight / 2).priority(999)
             
             $0.top.equalTo(profileImageView.snp.bottom).offset(15)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.left.equalTo(contentView).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView).inset(leftAndRightSpace)
         }
-        contentImageView.snp.makeConstraints{
+        
+        imageFrameView.snp.makeConstraints{
             $0.height.equalTo(300).priority(999)
-            
+
             $0.top.equalTo(contentTextView.snp.bottom).offset(15)
-            $0.left.equalToSuperview().offset(leftAndRightSpace)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
+            $0.left.equalTo(contentView).offset(leftAndRightSpace)
+            $0.right.equalTo(contentView).inset(leftAndRightSpace)
+        }
+        
+        firstImageViewWhenOne.snp.makeConstraints {
+            $0.top.equalTo(imageFrameView.snp.top)
+            $0.left.equalTo(imageFrameView.snp.left)
+            $0.right.equalTo(imageFrameView.snp.right)
+            $0.bottom.equalTo(imageFrameView.snp.bottom)
+        }
+        
+        oneMoreLabel.snp.makeConstraints {
+            $0.centerX.equalTo(firstImageViewWhenOne)
+            $0.centerY.equalTo(firstImageViewWhenOne)
+        }
+        
+        firstImageViewWhenThree.snp.makeConstraints {
+            $0.width.equalTo(0)
+
+            $0.top.equalTo(imageFrameView.snp.top)
+            $0.left.equalTo(imageFrameView.snp.left)
+            $0.bottom.equalTo(imageFrameView.snp.bottom)
+        }
+
+        secondImageViewWhenThree.snp.makeConstraints {
+            $0.height.equalTo(imageFrameViewHeight / 2).priority(999)
+            
+            $0.top.equalTo(imageFrameView.snp.top)
+            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+            $0.right.equalTo(imageFrameView.snp.right)
+        }
+        
+        thirdImageViewWhenThree.snp.makeConstraints {
+            $0.top.equalTo(secondImageViewWhenThree.snp.bottom)
+            $0.left.equalTo(firstImageViewWhenThree.snp.right)
+            $0.right.equalTo(imageFrameView.snp.right)
+            $0.bottom.equalTo(imageFrameView.snp.bottom)
+        }
+        
+        moreLabel.snp.makeConstraints {
+            $0.centerX.equalTo(thirdImageViewWhenThree)
+            $0.centerY.equalTo(thirdImageViewWhenThree)
+        }
+        
+        firstImageViewWhenFour.snp.makeConstraints {
+            $0.width.equalTo(0)
+            $0.height.equalTo(imageFrameViewHeight / 2).priority(999)
+
+            $0.top.equalTo(imageFrameView.snp.top)
+            $0.left.equalTo(imageFrameView.snp.left)
+        }
+        
+        secondImageViewWhenFour.snp.makeConstraints {
+            $0.height.equalTo(imageFrameViewHeight / 2).priority(999)
+            
+            $0.top.equalTo(imageFrameView.snp.top)
+            $0.left.equalTo(firstImageViewWhenFour.snp.right)
+            $0.right.equalTo(imageFrameView.snp.right)
+        }
+        
+        thirdImageViewWhenFour.snp.makeConstraints {
+            $0.width.equalTo(0)
+            
+            $0.top.equalTo(firstImageViewWhenFour.snp.bottom)
+            $0.left.equalTo(imageFrameView.snp.left)
+            $0.bottom.equalTo(imageFrameView.snp.bottom)
+        }
+        
+        fourthImageViewWhenFour.snp.makeConstraints {
+            $0.top.equalTo(secondImageViewWhenFour.snp.bottom)
+            $0.left.equalTo(thirdImageViewWhenFour.snp.right)
+            $0.right.equalTo(imageFrameView.snp.right)
+            $0.bottom.equalTo(imageFrameView.snp.bottom)
         }
 
         likeButton.snp.makeConstraints {
             $0.width.equalTo(40)
             $0.height.equalTo(20)
             
-            $0.top.equalTo(contentImageView.snp.bottom).offset(10)
-            $0.right.equalToSuperview().inset(leftAndRightSpace)
-            $0.bottom.equalToSuperview().inset(TopAndBottomSpace)
+            $0.top.equalTo(imageFrameView.snp.bottom).offset(10)
+            $0.right.equalTo(contentView).inset(leftAndRightSpace)
+            $0.bottom.equalTo(contentView).inset(TopAndBottomSpace)
         }
     }
     
@@ -241,11 +422,62 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         // 게시글 이미지 설정
-        //showImageFrame(imageCount: post?.body.images?.count ?? 0)
+        setImageFrame(imageCnt: post?.body.images?.count ?? 0)
         
         // Like 버튼
         likeCount = post?.body.likers?.count
         likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+    }
+    
+    func setImageFrame(imageCnt: Int) {
+        switch imageCnt {
+        case 0:
+            imageFrameView.snp.remakeConstraints { (remakeView) in
+                remakeView.height.equalTo(0)
+
+                remakeView.top.equalTo(contentTextView.snp.bottom).offset(15)
+                remakeView.left.equalTo(contentView).offset(10)
+                remakeView.right.equalTo(contentView).inset(10)
+            }
+            
+            break
+        case 1:
+            _ = firstImageViewWhenOne.then {
+                $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            break
+        case 2:
+            _ = firstImageViewWhenOne.then {
+                $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                
+                $0.alpha = 0.7
+                $0.isHidden = false
+            }
+            
+            oneMoreLabel.isHidden = false
+            break
+        case 3:
+            firstImageViewWhenThree.isHidden = false
+            secondImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.isHidden = false
+            break
+        case 4:
+            firstImageViewWhenFour.isHidden = false
+            secondImageViewWhenFour.isHidden = false
+            thirdImageViewWhenFour.isHidden = false
+            fourthImageViewWhenFour.isHidden = false
+            break
+        default:
+            firstImageViewWhenThree.isHidden = false
+            secondImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.isHidden = false
+            thirdImageViewWhenThree.alpha = 0.7
+            
+            moreLabel.isHidden = false
+            moreLabel.text = "+\(imageCnt - 3)"
+        }
     }
     
     func setClickActions() {
