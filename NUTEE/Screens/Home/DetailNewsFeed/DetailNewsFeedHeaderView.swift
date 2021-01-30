@@ -129,54 +129,37 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값이 좌우 여백이 있기 때문에 조정 필요
         }
         
-        
         _ = firstImageViewWhenOne.then {
-//            $0.imageFromUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png", defaultImgPath: "")
-            $0.backgroundColor = .green
-            
             setClickActions()
+            
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenThree.then {
-            $0.backgroundColor = .green
-            
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenThree.then {
-            $0.backgroundColor = .red
-            
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenThree.then {
-            $0.backgroundColor = .blue
-            
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenFour.then {
-            $0.backgroundColor = .green
-            
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenFour.then {
-            $0.backgroundColor = .red
-            
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenFour.then {
-            $0.backgroundColor = .blue
-            
             $0.isHidden = true
         }
         
         _ = fourthImageViewWhenFour.then {
-            $0.backgroundColor = .yellow
-            
             $0.isHidden = true
         }
         
@@ -439,7 +422,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
                 remakeView.left.equalTo(contentView).offset(10)
                 remakeView.right.equalTo(contentView).inset(10)
             }
-            
             break
         case 1:
             _ = firstImageViewWhenOne.then {
@@ -459,24 +441,64 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             oneMoreLabel.isHidden = false
             break
         case 3:
-            firstImageViewWhenThree.isHidden = false
-            secondImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.isHidden = false
+            _ = firstImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = secondImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = thirdImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
             break
         case 4:
-            firstImageViewWhenFour.isHidden = false
-            secondImageViewWhenFour.isHidden = false
-            thirdImageViewWhenFour.isHidden = false
-            fourthImageViewWhenFour.isHidden = false
+            _ = firstImageViewWhenFour.then {
+                $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = secondImageViewWhenFour.then {
+                $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = thirdImageViewWhenFour.then {
+                $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = fourthImageViewWhenFour.then {
+                $0.imageFromUrl(post?.body.images?[3].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
             break
         default:
-            firstImageViewWhenThree.isHidden = false
-            secondImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.isHidden = false
-            thirdImageViewWhenThree.alpha = 0.7
+            _ = firstImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = secondImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                
+                $0.isHidden = false
+            }
+            _ = thirdImageViewWhenThree.then {
+                $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                
+                $0.alpha = 0.7
+                $0.isHidden = false
+            }
             
-            moreLabel.isHidden = false
             moreLabel.text = "+\(imageCnt - 3)"
+            moreLabel.isHidden = false
         }
     }
     
