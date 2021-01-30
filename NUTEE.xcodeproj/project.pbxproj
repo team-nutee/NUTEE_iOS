@@ -70,6 +70,7 @@
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
 		D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */; };
+		D56CAD9425C5A5D200827BAA /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */; };
 		D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */; };
 		D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */; };
 		D576528325A5A92E00A11E8D /* ExchangeFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */; };
@@ -95,7 +96,6 @@
 		D5ABA77B25BC31C3006C64F9 /* UserCommentFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */; };
 		D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */; };
 		D5ABA78525BC4413006C64F9 /* UserMenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78425BC4413006C64F9 /* UserMenuBarCVCell.swift */; };
-		D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */; };
 		D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */; };
 		D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */; };
 		D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */; };
@@ -201,6 +201,7 @@
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
 		D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeImageViewer.swift; sourceTree = "<group>"; };
+		D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachelorFeedCVCell.swift; sourceTree = "<group>"; };
 		D576527C25A5A6CF00A11E8D /* ClassFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassFeedCVCell.swift; sourceTree = "<group>"; };
 		D576528225A5A92E00A11E8D /* ExchangeFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeFeedCVCell.swift; sourceTree = "<group>"; };
@@ -226,7 +227,6 @@
 		D5ABA77A25BC31C3006C64F9 /* UserCommentFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCommentFeedCVCell.swift; sourceTree = "<group>"; };
 		D5ABA77F25BC3255006C64F9 /* UserRecommendFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecommendFeedCVCell.swift; sourceTree = "<group>"; };
 		D5ABA78425BC4413006C64F9 /* UserMenuBarCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuBarCVCell.swift; sourceTree = "<group>"; };
-		D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuBarCVCell.swift; path = ../../../../../../../MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchHistoryTV.swift; sourceTree = "<group>"; };
 		D5CC688F24E6D9BE00274451 /* TermsAndConditionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsVC.swift; sourceTree = "<group>"; };
 		D5CC689124E6DEA400274451 /* TermsAndConditions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TermsAndConditions.storyboard; sourceTree = "<group>"; };
@@ -646,7 +646,7 @@
 			isa = PBXGroup;
 			children = (
 				D592A92E24D437F300D49F62 /* MenuBarCV.swift */,
-				D5ABA78D25BC47FF006C64F9 /* MenuBarCVCell.swift */,
+				D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */,
 			);
 			path = MenuBar;
 			sourceTree = "<group>";
@@ -921,7 +921,6 @@
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */,
-				D5ABA78E25BC47FF006C64F9 /* MenuBarCVCell.swift in Sources */,
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D5A4F3F225B1C21200AC3DCD /* PlaceholderTextView.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
@@ -982,6 +981,7 @@
 				D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */,
 				D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */,
 				D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */,
+				D56CAD9425C5A5D200827BAA /* MenuBarCVCell.swift in Sources */,
 				45C92B0625879A3900828E8A /* Splash.swift in Sources */,
 				5E8BA6BA24C6D5FF00A58F43 /* EmailVC.swift in Sources */,
 				D588072824E419FE0037384F /* NoticeService.swift in Sources */,
