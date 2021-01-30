@@ -528,7 +528,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let imgView = tapGestureRecognizer.view as! UIImageView
-        print("your tapped image view tag is : \(imgView.tag)")
+//        print("your tapped image view tag is : \(imgView.tag)")
 
         //Give your image View tag
         if (imgView.tag == 1) {
