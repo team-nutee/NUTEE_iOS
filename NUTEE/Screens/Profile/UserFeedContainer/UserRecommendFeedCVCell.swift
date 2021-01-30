@@ -9,6 +9,8 @@
 class UserRecommendFeedCVCell: FeedContainerCVCell {
     
     override func fetchNewsFeed() {
+        super.fetchNewsFeed()
+        
         newsFeedTableView.backgroundColor = .blue
     }
     

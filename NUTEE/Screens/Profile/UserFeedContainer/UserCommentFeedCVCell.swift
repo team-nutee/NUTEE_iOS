@@ -9,6 +9,8 @@
 class UserCommentFeedCVCell: FeedContainerCVCell {
     
     override func fetchNewsFeed() {
+        super.fetchNewsFeed()
+        
         newsFeedTableView.backgroundColor = .green
     }
     

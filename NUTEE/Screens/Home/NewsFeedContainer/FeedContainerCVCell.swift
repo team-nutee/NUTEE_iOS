@@ -106,7 +106,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     }
     
     func setFetchNewsFeedFail() {
-        homeVC?.hideActivityIndicator(activityIndicator: activityIndicator)
+        activityIndicator.stopAnimating()
         newsFeedTableView.isHidden = false
         
         newsFeedTableView.setEmptyView(title: "오류발생😢", message: "피드를 조회하지 못했습니다")
