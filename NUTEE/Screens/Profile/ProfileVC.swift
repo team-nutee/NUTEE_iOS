@@ -182,23 +182,16 @@ extension ProfileVC : UICollectionViewDataSource {
         var adjustStartPoint: CGFloat = userMenuBar.adjustItemLength / 2
         
         let fullWidth = scrollView.bounds.size.width
-        let currentWidth = scrollView.contentOffset.x / 2
-        let ratio = currentWidth / fullWidth
+        let currentWidth = scrollView.contentOffset.x
+        let currentPositionRatio = currentWidth / fullWidth
         
-        let numberOfMenu = CGFloat(userMenuBar.menuList.count)
-        let boundaryIndex = 1
-        let boundary = CGFloat(1) / numberOfMenu * CGFloat(boundaryIndex)
-        print(boundary)
-        print(ratio)
+        let boundaryItemIndex = CGFloat(1)
         
-        if ratio <= boundary {
-            adjustStartPoint *= ratio
-            userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / numberOfMenu + 10 - adjustStartPoint
-        } else {
-            userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
+        if currentPositionRatio < boundaryItemIndex {
+            adjustStartPoint *= currentPositionRatio
         }
         
-        
+        userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
