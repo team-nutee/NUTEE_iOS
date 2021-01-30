@@ -122,10 +122,11 @@ class ProfileVC: UIViewController {
         }
         
         userMenuBar.snp.makeConstraints {
+            $0.height.equalTo(50)
+            
             $0.top.equalTo(userProfileImageImageView.snp.bottom).offset(20)
             $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-            $0.height.equalTo(50)
+            $0.right.equalTo(view.snp.right)//.inset(10)
         }
         
         separatorView.snp.makeConstraints {
@@ -178,32 +179,26 @@ extension ProfileVC : UICollectionViewDelegateFlowLayout {
 extension ProfileVC : UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10
+        var adjustStartPoint: CGFloat = userMenuBar.adjustItemLength / 2
         
+        let fullWidth = scrollView.bounds.size.width
+        let currentWidth = scrollView.contentOffset.x / 2
+        let ratio = currentWidth / fullWidth
         
+        let numberOfMenu = CGFloat(userMenuBar.menuList.count)
+        let boundaryIndex = 1
+        let boundary = CGFloat(1) / numberOfMenu * CGFloat(boundaryIndex)
+        print(boundary)
+        print(ratio)
         
-        let menuCount = CGFloat(userMenuBar.menuList.count)
-        
-        var indextPathRange = scrollView.contentSize.width / menuCount
-        print("1: ", indextPathRange)
-        indextPathRange = floor(indextPathRange)
-        print("2: ", indextPathRange)
-        
-        let itemPos: CGFloat
-//        let adjustLength: CGFloat = 30
-        switch indextPathRange {
-        case 0:
-            itemPos = 10
-        case 1:
-            itemPos = (self.view.frame.width / menuCount) + 10 - 15
-        case 2:
-            itemPos = ((self.view.frame.width / menuCount) * 2) + 10 - 15
-        default:
-            itemPos = 0
+        if ratio <= boundary {
+            adjustStartPoint *= ratio
+            userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / numberOfMenu + 10 - adjustStartPoint
+        } else {
+            userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
         }
         
-        userMenuBar.positionBarView.frame.origin.x = itemPos
-        print("endddddddddd")
+        
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
