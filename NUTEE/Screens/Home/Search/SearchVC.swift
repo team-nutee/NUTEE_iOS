@@ -32,7 +32,7 @@ class SearchVC: UIViewController {
         super.viewDidLoad()
         
         initSearchVC()
-        setSearchBar()
+        initView()
         
         makeConstraints()
     }
@@ -40,9 +40,17 @@ class SearchVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        tabBarController?.tabBar.isHidden = true
+        
         getSearchHistory(completion: {
             searchHistoryTableView.reloadData()
         })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -61,7 +69,7 @@ class SearchVC: UIViewController {
         view.backgroundColor = .white
     }
     
-    func setSearchBar(){
+    func initView(){
         _ = searchTextField.then {
             $0.delegate = self
             
