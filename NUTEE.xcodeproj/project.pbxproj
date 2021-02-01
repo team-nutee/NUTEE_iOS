@@ -78,6 +78,7 @@
 		D576529025A5ABAF00A11E8D /* GeneralFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576528F25A5ABAF00A11E8D /* GeneralFeedCVCell.swift */; };
 		D576529525A5ABCA00A11E8D /* EventFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576529425A5ABCA00A11E8D /* EventFeedCVCell.swift */; };
 		D576A86E24D4456100202135 /* FeedContainerCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576A86D24D4456100202135 /* FeedContainerCVCell.swift */; };
+		D57959D925C7DEF000BEFD12 /* SignUpPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57959D825C7DEF000BEFD12 /* SignUpPasswordVC.swift */; };
 		D588072824E419FE0037384F /* NoticeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D588072724E419FE0037384F /* NoticeService.swift */; };
 		D588072A24E41A220037384F /* NetworkResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D588072924E41A220037384F /* NetworkResult.swift */; };
 		D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */; };
@@ -209,6 +210,7 @@
 		D576528F25A5ABAF00A11E8D /* GeneralFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralFeedCVCell.swift; sourceTree = "<group>"; };
 		D576529425A5ABCA00A11E8D /* EventFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFeedCVCell.swift; sourceTree = "<group>"; };
 		D576A86D24D4456100202135 /* FeedContainerCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedContainerCVCell.swift; sourceTree = "<group>"; };
+		D57959D825C7DEF000BEFD12 /* SignUpPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPasswordVC.swift; sourceTree = "<group>"; };
 		D588072724E419FE0037384F /* NoticeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeService.swift; sourceTree = "<group>"; };
 		D588072924E41A220037384F /* NetworkResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResult.swift; sourceTree = "<group>"; };
 		D58C93D524C9D1D7005570D4 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 				D54FE03824F180DC00BA0361 /* NicknameVC.swift */,
 				D5381F102599EC8200C94A6F /* CategoryVC.swift */,
 				D590451C259E09E40091FEC0 /* MajorVC.swift */,
+				D57959D825C7DEF000BEFD12 /* SignUpPasswordVC.swift */,
 				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
 			);
 			path = SignUp;
@@ -917,6 +920,7 @@
 				D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */,
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
 				45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */,
+				D57959D925C7DEF000BEFD12 /* SignUpPasswordVC.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
