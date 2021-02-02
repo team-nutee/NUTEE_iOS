@@ -278,7 +278,7 @@ struct ContentService {
     }
     
     // 게시물 수정
-    func editPost(_ postId: Int, _ title: String, _ content: String, images: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+    func editPost(postId: Int, title: String, content: String, category: String, images: [NSString], completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId)
         
@@ -294,7 +294,8 @@ struct ContentService {
         let body : Parameters = [
             "title" : title,
             "content" : content,
-            "image" : images
+            "category" : category,
+            "images" : images
         ]
         
         
@@ -311,6 +312,7 @@ struct ContentService {
                             do{
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(PostContent.self, from: value)
+                                print(result.body.images ?? [])
                                 completion(.success(result))
                             } catch {
                                 completion(.pathErr)

@@ -282,14 +282,6 @@ class PostVC: UIViewController {
         }
     }
     
-    func setEditMode(title: String?, content: String?, category: String?, images: [PostImage]?) {
-        isEditMode = true
-        postTitleTextField.text = title ?? ""
-        postContentTextView.text = content ?? ""
-        selectedCategory = category ?? ""
-        editPostImage = images ?? []
-    }
-    
     func setEditMode(editPost: PostContent?) {
         isEditMode = true
         editPostContent = editPost
@@ -341,20 +333,20 @@ class PostVC: UIViewController {
             }
         } else {
             // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-            var images: [String] = []
+            var images: [NSString] = []
             for image in self.editPostImage {
-                images.append(image?.src ?? "")
+                images.append((image?.src! ?? "") as NSString)
             }
             
             if pickedIMG != [] {
                 postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
                     for uploadimg in self.uploadedImages {
-                        images.append(uploadimg as String)
+                        images.append(uploadimg)
                     }
-                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, postTitle: self.postTitleTextField.text ?? "", postContent: self.postContentTextView.text ?? "", postImages: images)
+                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", images: images)
                 })
             } else {
-                editPostContent(postId: editPostContent?.body.id ?? 0, postTitle: postTitleTextField.text ?? "", postContent: postContentTextView.text ?? "", postImages: images)
+                self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", images: images)
             }
             
         }
@@ -447,8 +439,12 @@ extension PostVC : UICollectionViewDataSource {
         if isEditMode == false {
             cell.postImageImageView.image = pickedIMG[indexPath.row]
         } else {
-            //let fixIndex = Int(indexPath.row) - (editPostImage.count) 0-4, 1-4, 2-4, 3-4
-            //cell.postImageImageView.image = pickedIMG[fixIndex]
+            if editPostImage.count > 0 && indexPath.row < editPostImage.count {
+                cell.postImageImageView.setImage(with: editPostImage[indexPath.row]?.src ?? "")
+            } else {
+                let fixIndex = Int(indexPath.row) - (editPostImage.count)
+                cell.postImageImageView.image = pickedIMG[fixIndex]
+            }
         }
         
         return cell
@@ -688,8 +684,8 @@ extension PostVC {
         
     }
     
-    func editPostContent(postId: Int, postTitle: String, postContent: String, postImages: [String]){
-        ContentService.shared.editPost(postId, postTitle, postContent, images: postImages){
+    func editPostContent(postId: Int, title: String, content: String, category: String, images: [NSString]){
+        ContentService.shared.editPost(postId: postId, title: title, content: content, category: category, images: images){
             [weak self]
             data in
             
