@@ -426,9 +426,16 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         nicknameLabel.text = post?.body.user.nickname
         
         // 게시글 게시 시간 설정
-        let originPostTime = post?.body.createdAt
-        let postTimeDateFormat = originPostTime?.getDateFormat(time: originPostTime!)
-        dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+        if post?.body.createdAt == post?.body.updatedAt {
+            let originPostTime = post?.body.createdAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            dateLabel.text = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+        } else {
+            let originPostTime = post?.body.updatedAt ?? ""
+            let postTimeDateFormat = originPostTime.getDateFormat(time: originPostTime)
+            let updatePostTime = postTimeDateFormat?.timeAgoSince(postTimeDateFormat!)
+            dateLabel.text = "수정 " + (updatePostTime ?? "")
+        }
         
         // Posting 내용 설정
         contentTextView.text = post?.body.content

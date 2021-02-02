@@ -343,10 +343,10 @@ class PostVC: UIViewController {
                     for uploadimg in self.uploadedImages {
                         images.append(uploadimg)
                     }
-                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", images: images)
+                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
                 })
             } else {
-                self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "", images: images)
+                self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
             }
             
         }
@@ -684,8 +684,8 @@ extension PostVC {
         
     }
     
-    func editPostContent(postId: Int, title: String, content: String, category: String, images: [NSString]){
-        ContentService.shared.editPost(postId: postId, title: title, content: content, category: category, images: images){
+    func editPostContent(postId: Int, title: String, content: String, images: [NSString]){
+        ContentService.shared.editPost(postId: postId, title: title, content: content, images: images){
             [weak self]
             data in
             
