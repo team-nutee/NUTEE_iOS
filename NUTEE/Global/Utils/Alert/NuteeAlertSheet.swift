@@ -362,7 +362,7 @@ class NuteeAlertSheet : UIViewController {
     func editPost() {
         let postVC = PostVC()
         // 의존성 주입 실패로 일단 파라미터 값을 통해 주입
-        postVC.setEditMode(title: editPostContent?.body.title ?? "", content: editPostContent?.body.content ?? "", category: editPostContent?.body.category ?? "", images: editPostContent?.body.images ?? [])
+        postVC.setEditMode(editPost: editPostContent)
         
         let navigationController = UINavigationController(rootViewController: postVC)
         navigationController.modalPresentationStyle = .currentContext

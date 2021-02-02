@@ -290,6 +290,15 @@ class PostVC: UIViewController {
         editPostImage = images ?? []
     }
     
+    func setEditMode(editPost: PostContent?) {
+        isEditMode = true
+        editPostContent = editPost
+        postTitleTextField.text = editPostContent?.body.title ?? ""
+        postContentTextView.text = editPostContent?.body.content ?? ""
+        selectedCategory = editPostContent?.body.category ?? ""
+        editPostImage = editPostContent?.body.images ?? []
+    }
+    
     @objc func didTapClosePosting() {
         // 입력된 빈칸과 줄바꿈 개수 구하기
         let titleStr = postTitleTextField.text?.count
