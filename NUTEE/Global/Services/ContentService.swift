@@ -278,7 +278,7 @@ struct ContentService {
     }
     
     // 게시물 수정
-    func editPost(_ postId: Int, _ title: String, _ content: String, _ images: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+    func editPost(_ postId: Int, _ title: String, _ content: String, images: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId)
         

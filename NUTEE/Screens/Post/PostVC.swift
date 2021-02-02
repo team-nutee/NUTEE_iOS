@@ -48,11 +48,10 @@ class PostVC: UIViewController {
     
     var uploadedImages: [NSString] = []
     
-    var isExistContent = false
-    
-//    var editNewsPost: NewsPostsContentElement?
     var isEditMode = false
-    var editPostImg: [Image] = []
+    
+    var editPostContent: PostContent?
+    var editPostImage: [PostImage?] = []
     
     // MARK: - Dummy data
     
@@ -78,6 +77,17 @@ class PostVC: UIViewController {
         
         addKeyboardNotification()
         self.postTitleTextField.becomeFirstResponder()
+        
+        if isEditMode {
+            if selectedCategory != "" {
+                updatePostCategoryButtonStatus()
+            } else if selectedMajor != "" {
+                updatePostMajorButtonStatus()
+            }
+            
+            categoryButton.isEnabled = false
+            majorButton.isEnabled = false
+        }
     }
     
     
@@ -272,6 +282,14 @@ class PostVC: UIViewController {
         }
     }
     
+    func setEditMode(title: String?, content: String?, category: String?, images: [PostImage]?) {
+        isEditMode = true
+        postTitleTextField.text = title ?? ""
+        postContentTextView.text = content ?? ""
+        selectedCategory = category ?? ""
+        editPostImage = images ?? []
+    }
+    
     @objc func didTapClosePosting() {
         // 입력된 빈칸과 줄바꿈 개수 구하기
         let titleStr = postTitleTextField.text?.count
@@ -279,7 +297,7 @@ class PostVC: UIViewController {
         contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
         // 빈칸이나 줄바꿈으로만 입력된 경우 포스팅 창 바로 나가기
-        if pickedIMG.count != 0 || editPostImg.count > 1 || contentStr.count != 0 || titleStr != 0 {
+        if pickedIMG.count != 0 || editPostImage.count > 1 || contentStr.count != 0 || titleStr != 0 {
             var content = ""
             if isEditMode == true {
                 content = "수정을 취소하시겠습니까?"
@@ -312,6 +330,24 @@ class PostVC: UIViewController {
             } else {
                 uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.selectedCategory ?? "")
             }
+        } else {
+            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+            var images: [String] = []
+            for image in self.editPostImage {
+                images.append(image?.src ?? "")
+            }
+            
+            if pickedIMG != [] {
+                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                    for uploadimg in self.uploadedImages {
+                        images.append(uploadimg as String)
+                    }
+                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, postTitle: self.postTitleTextField.text ?? "", postContent: self.postContentTextView.text ?? "", postImages: images)
+                })
+            } else {
+                editPostContent(postId: editPostContent?.body.id ?? 0, postTitle: postTitleTextField.text ?? "", postContent: postContentTextView.text ?? "", postImages: images)
+            }
+            
         }
     }
     
@@ -391,7 +427,7 @@ extension PostVC : UICollectionViewDataSource {
         if isEditMode == false {
             return pickedIMG.count
         } else {
-            return (editPostImg.count ) + pickedIMG.count
+            return (editPostImage.count ) + pickedIMG.count
         }
         
     }
@@ -402,8 +438,8 @@ extension PostVC : UICollectionViewDataSource {
         if isEditMode == false {
             cell.postImageImageView.image = pickedIMG[indexPath.row]
         } else {
-            let fixIndex = Int(indexPath.row) - (editPostImg.count)
-            cell.postImageImageView.image = pickedIMG[fixIndex]
+            //let fixIndex = Int(indexPath.row) - (editPostImage.count) 0-4, 1-4, 2-4, 3-4
+            //cell.postImageImageView.image = pickedIMG[fixIndex]
         }
         
         return cell
@@ -414,10 +450,10 @@ extension PostVC : UICollectionViewDataSource {
         if isEditMode == false {
             pickedIMG.remove(at: indexPath.row)
         } else {
-            if editPostImg.count > 0 && indexPath.row < editPostImg.count {
-                editPostImg.remove(at: indexPath.row)
+            if editPostImage.count > 0 && indexPath.row < editPostImage.count {
+                editPostImage.remove(at: indexPath.row)
             } else {
-                let fixIndex = Int(indexPath.row) - (editPostImg.count)
+                let fixIndex = Int(indexPath.row) - (editPostImage.count)
                 pickedIMG.remove(at: fixIndex)
             }
         }
@@ -637,6 +673,36 @@ extension PostVC {
                 
             case .networkFail:
                 print(".networkFail")
+                
+            }
+        }
+        
+    }
+    
+    func editPostContent(postId: Int, postTitle: String, postContent: String, postImages: [String]){
+        ContentService.shared.editPost(postId, postTitle, postContent, images: postImages){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(_ ):
+                
+                LoadingHUD.hide()
+                self.dismiss(animated: true, completion: nil)
+            case .requestErr:
+                LoadingHUD.hide()
+                print("requestErr")
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail:
+                print(".networkFail")
+                
                 
             }
         }

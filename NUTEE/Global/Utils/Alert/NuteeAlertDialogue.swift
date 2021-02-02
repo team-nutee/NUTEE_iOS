@@ -24,6 +24,9 @@ class NuteeAlertDialogue: UIViewController {
     let cancelButton = HighlightedButton()
     
     // MARK: - Variables and Properties
+    var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
+
+    var postId: Int?
     
     var windowWidth: CGFloat = 245
     
@@ -156,7 +159,11 @@ class NuteeAlertDialogue: UIViewController {
     }
     
     func addDeletePostAction() {
-        okButton.addTarget(self, action: #selector(didTapEditOkButton), for: .touchUpInside)
+        okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
+    }
+    
+    func addReportPostAction() {
+        okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
     }
     
     func addCancelSigUpAction() {
@@ -183,4 +190,13 @@ class NuteeAlertDialogue: UIViewController {
         rootVC?.dismiss(animated: true, completion: nil)
     }
     
+    @objc func didTapDeletePost() {
+        detailNewsFeedHeaderView?.postDeleteService(postId: postId ?? 0, completionHandler: {
+            
+        })
+    }
+    
+    @objc func didTapReportPost() {
+        detailNewsFeedHeaderView?.reportPost(postId: postId ?? 0, content: "신고합니다")
+    }
 }

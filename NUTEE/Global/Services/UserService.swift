@@ -107,9 +107,10 @@ struct UserService {
                         
                         switch status {
                         case 200:
-                                // 로그인 성공 시 토큰 저장
-                                KeychainWrapper.standard.set(result!.body.accessToken, forKey: "token")
-                                completion(.success(result!))
+                            // 로그인 성공 시 토큰 저장
+                            KeychainWrapper.standard.set(result!.body.accessToken, forKey: "token")
+                            KeychainWrapper.standard.set(result!.body.memberId, forKey: "id")
+                            completion(.success(result!))
                         case 401:
                             completion(.pathErr)
                         case 403:

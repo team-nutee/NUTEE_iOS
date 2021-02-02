@@ -57,6 +57,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
    
     var post: PostContent?
     var likeCount: Int?
+    var loginUser = false
         
     //MARK: - Dummy data
     
@@ -367,9 +368,17 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
-        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
-                                      ["삭제", UIColor.red, "deletePost"],
-                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
+        if post?.body.user.id == KeychainWrapper.standard.integer(forKey: "id") {
+            nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                          ["삭제", UIColor.red, "deletePost"]]
+        } else {
+            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
+        }
+        
+        nuteeAlertSheet.detailNewsFeedHeaderView = self
+        nuteeAlertSheet.postId = post?.body.id
+        nuteeAlertSheet.editPostContent = post
         
         nuteeAlertSheet.modalPresentationStyle = .custom
         
@@ -378,22 +387,31 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     @objc func didTapLikeButton(_ sender: UIButton) {
         if likeButton.isSelected {
-            likeButton.isSelected = false
-            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            setNormalLikeButton()
             likeCount! -= 1
-            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
-            likeButton.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
             
             deleteLikeService(postId: post?.body.id ?? 0)
         } else {
-            likeButton.isSelected = true
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+            setSelectedLikeButton()
             likeCount! += 1
-            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
-            likeButton.setTitleColor(.systemPink, for: .selected)
             
-            PostLikeService(postId: post?.body.id ?? 0)
+            postLikeService(postId: post?.body.id ?? 0)
         }
+    }
+    
+    func setNormalLikeButton() {
+        likeButton.isSelected = false
+        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+        likeButton.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
+    }
+    
+    func setSelectedLikeButton() {
+        likeButton.isSelected = true
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+        likeCount! += 1
+        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+        likeButton.setTitleColor(.systemPink, for: .selected)
     }
     
     func initPosting() {
@@ -425,7 +443,20 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         // Like 버튼
         likeCount = post?.body.likers?.count
-        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+    
+        for liker in post?.body.likers ?? [] {
+            if liker.id == KeychainWrapper.standard.integer(forKey: "id") {
+                loginUser = true
+            }
+        }
+        
+        if loginUser {
+            // 로그인 한 사용자가 좋아요를 누른 상태일 경우
+            setSelectedLikeButton()
+        } else {
+            // 로그인 한 사용자가 좋아요를 누르지 않은 상태일 경우
+            setNormalLikeButton()
+        }
     }
     
     func setImageFrame(imageCnt: Int) {
@@ -548,7 +579,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 extension DetailNewsFeedHeaderView {
 
     // MARK: - Like
-    func PostLikeService(postId: Int) {
+    func postLikeService(postId: Int) {
         ContentService.shared.postLike(postId) { (responsedata) in
 
             switch responsedata {
