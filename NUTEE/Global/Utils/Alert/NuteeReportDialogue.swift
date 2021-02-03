@@ -73,8 +73,6 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             $0.contentEdgeInsets = UIEdgeInsets(top: 7, left: 10, bottom: 7, right: 10)
             
             $0.backgroundColor = okButtonData[2] as? UIColor
-            
-            $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         }
         _ = cancelButton.then {
             $0.clipsToBounds = true
@@ -172,6 +170,7 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             reasonLabel.alpha = 1.0
         } else {
             detailNewsFeedHeaderView?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
+            self.dismiss(animated: true)
         }
     }
 }
