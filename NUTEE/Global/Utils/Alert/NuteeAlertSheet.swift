@@ -392,20 +392,20 @@ class NuteeAlertSheet : UIViewController {
     }
     
     func reportPost() {
-        let nuteeAlertDialogue = NuteeAlertDialogue()
-        nuteeAlertDialogue.dialogueData = ["신고하기", "해당 게시글을 신고하시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
-        nuteeAlertDialogue.detailNewsFeedHeaderView = self.detailNewsFeedHeaderView
-        nuteeAlertDialogue.postId = postId
-        nuteeAlertDialogue.addReportPostAction()
+        nuteeReportDialogue.detailNewsFeedHeaderView = self.detailNewsFeedHeaderView
+        nuteeReportDialogue.postId = postId
+        nuteeReportDialogue.addReportPostAction()
         
-        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
-        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
         
         let beforeVC = self.presentingViewController
         dismiss(animated: true, completion: {
-            beforeVC?.present(nuteeAlertDialogue, animated: true)
+            beforeVC?.present(nuteeReportDialogue, animated: true)
         })
     }
     

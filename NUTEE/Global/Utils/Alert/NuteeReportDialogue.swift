@@ -1,53 +1,24 @@
 //
-//  NuteeAlertDialogue.swift
+//  ReportDialogue.swift
 //  NUTEE
 //
-//  Created by Hee Jae Kim on 2020/08/18.
-//  Copyright © 2020 Nutee. All rights reserved.
+//  Created by eunwoo on 2021/02/03.
+//  Copyright © 2021 Nutee. All rights reserved.
 //
 
 import UIKit
 import SnapKit
 
-class NuteeAlertDialogue: UIViewController {
+class NuteeReportDialogue: NuteeAlertDialogue {
     
     // MARK: - UI components
-
-    let backgroundView = UIView()
+    let reasonView = UIView()
+    let reasonTextField = UITextField()
+    let reasonLabel = UILabel()
     
-    let windowView = UIView()
     
-    let titleLabel = UILabel()
-    let contentTextView = UITextView()
-    
-    let okButton = HighlightedButton()
-    let cancelButton = HighlightedButton()
-    
-    // MARK: - Variables and Properties
-    var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
-
-    var postId: Int?
-    
-    var windowWidth: CGFloat = 245
-    
-    var dialogueData = ["", ""]
-    var okButtonData = ["확인", UIColor.white, UIColor.nuteeGreen] as [Any] // title: 0, textColor: 1, backgroundColor: 2
-    var cancelButtonData = ["취소", UIColor.lightGray, UIColor.white] as [Any] // title: 0, textColor: 1, backgroundColor: 2, isHidden: 3
-    
-    // MARK: - Dummy data
-    
-    // MARK: - Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        makeConstraints()
-        initView()
-    }
-
     // MARK: - Helper
-    
-    func initView() {
+    override func initView() {
         _ = backgroundView.then {
             $0.backgroundColor = .black
             $0.alpha = 0.3
@@ -71,6 +42,25 @@ class NuteeAlertDialogue: UIViewController {
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)
             $0.isScrollEnabled = false
             $0.isSelectable = false
+        }
+        
+        _ = reasonView.then {
+            $0.backgroundColor = .white
+            $0.setBorder(borderColor: .veryLightPink, borderWidth: 0.3)
+            
+        }
+        
+        _ = reasonTextField.then {
+            $0.placeholder = "내용을 입력해주세요"
+            $0.font = .systemFont(ofSize: 14)
+            $0.tintColor = .nuteeGreen
+        }
+        _ = reasonLabel.then {
+            $0.text = "신고 사유를 입력해주세요"
+            $0.font = .systemFont(ofSize: 11)
+            $0.textColor = .red
+            
+            $0.alpha = 0
         }
         
         _ = okButton.then {
@@ -99,16 +89,18 @@ class NuteeAlertDialogue: UIViewController {
             
             $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         }
-        
     }
     
-    func makeConstraints() {
+    override func makeConstraints() {
         // Add SubViews
         view.addSubview(backgroundView)
         view.addSubview(windowView)
         
         windowView.addSubview(titleLabel)
         windowView.addSubview(contentTextView)
+        windowView.addSubview(reasonView)
+        reasonView.addSubview(reasonTextField)
+        windowView.addSubview(reasonLabel)
         
         windowView.addSubview(cancelButton)
         windowView.addSubview(okButton)
@@ -140,10 +132,27 @@ class NuteeAlertDialogue: UIViewController {
             $0.right.equalTo(titleLabel.snp.right)
         }
         
+        reasonView.snp.makeConstraints {
+            $0.top.equalTo(contentTextView.snp.bottom).offset(10)
+            $0.left.equalTo(contentTextView.snp.left)
+            $0.right.equalTo(contentTextView.snp.right)
+        }
+        reasonTextField.snp.makeConstraints {
+            $0.top.equalTo(reasonView.snp.top).offset(5)
+            $0.left.equalTo(reasonView.snp.left).offset(5)
+            $0.right.equalTo(reasonView.snp.right).inset(5)
+            $0.bottom.equalTo(reasonView.snp.bottom).inset(5)
+        }
+        reasonLabel.snp.makeConstraints {
+            $0.top.equalTo(reasonView.snp.bottom)
+            $0.left.equalTo(contentTextView.snp.left)
+            $0.right.equalTo(contentTextView.snp.right)
+        }
+        
         okButton.snp.makeConstraints {
             $0.width.greaterThanOrEqualTo(45)
             
-            $0.top.equalTo(contentTextView.snp.bottom).offset(20)
+            $0.top.equalTo(reasonView.snp.bottom).offset(20)
             $0.left.equalTo(cancelButton.snp.right).offset(15)
             $0.right.equalTo(contentTextView.snp.right)
             $0.bottom.equalTo(windowView.snp.bottom).inset(20)
@@ -154,41 +163,15 @@ class NuteeAlertDialogue: UIViewController {
         
     }
     
-    func addCancelPostAction() {
-        okButton.addTarget(self, action: #selector(didTapCancelPost), for: .touchUpInside)
+    func addReportPostAction() {
+        okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
     }
     
-    func addDeletePostAction() {
-        okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
-    }
-    
-    func addCancelSigUpAction() {
-        okButton.addTarget(self, action: #selector(didTapCancelSignUp), for: .touchUpInside)
-    }
-    
-    @objc func didTapEditOkButton() {
-        self.dismiss(animated: true)
-    }
-    
-    @objc func didTapCancelButton() {
-        self.dismiss(animated: true)
-    }
-    
-    @objc func didTapCancelPost() {
-        let beforeVC = self.presentingViewController
-        dismiss(animated: true, completion: {
-            beforeVC?.dismiss(animated: true)
-        })
-    }
-    
-    @objc func didTapCancelSignUp() {
-        let rootVC = self.view.window!.rootViewController
-        rootVC?.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func didTapDeletePost() {
-        detailNewsFeedHeaderView?.postDeleteService(postId: postId ?? 0, completionHandler: {
-            
-        })
+    @objc func didTapReportPost() {
+        if reasonTextField.text == "" {
+            reasonLabel.alpha = 1.0
+        } else {
+            detailNewsFeedHeaderView?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
+        }
     }
 }

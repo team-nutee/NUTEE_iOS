@@ -10,6 +10,7 @@
 		0B3827FB041D46212374CBA2 /* Pods_NUTEETests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 066E8F9DAE85B2F296E9E3BA /* Pods_NUTEETests.framework */; };
 		354617B889A0574629A7C313 /* Pods_NUTEE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3243E55C992B1AC612F59912 /* Pods_NUTEE.framework */; };
 		37AE9D60D81DCEB874809E14 /* Pods_NUTEEUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */; };
+		452AACB025CA6D8400FF3592 /* NuteeReportDialogue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */; };
 		4538F87D25A48C17004515C7 /* PostContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4538F87C25A48C17004515C7 /* PostContent.swift */; };
 		455908302564FBE9009A5F5C /* FindVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4559082F2564FBE9009A5F5C /* FindVC.swift */; };
 		4561129125AC95A900B49546 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4561129025AC95A900B49546 /* Comment.swift */; };
@@ -131,6 +132,7 @@
 		292BDA4088538027B8492389 /* Pods-NUTEEUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEEUITests.release.xcconfig"; path = "Target Support Files/Pods-NUTEEUITests/Pods-NUTEEUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3243E55C992B1AC612F59912 /* Pods_NUTEE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NUTEE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F020B527E3089EEA90DCFFE /* Pods-NUTEEUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEEUITests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEEUITests/Pods-NUTEEUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeReportDialogue.swift; sourceTree = "<group>"; };
 		4538F87C25A48C17004515C7 /* PostContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostContent.swift; sourceTree = "<group>"; };
 		4559082F2564FBE9009A5F5C /* FindVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindVC.swift; sourceTree = "<group>"; };
 		4561129025AC95A900B49546 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
@@ -628,6 +630,7 @@
 			children = (
 				D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */,
 				D5FC7B6724EBE7220029BEAE /* NuteeAlertDialogue.swift */,
+				452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */,
 			);
 			path = Alert;
 			sourceTree = "<group>";
@@ -957,6 +960,7 @@
 				5E8BA6BE24C6D61800A58F43 /* PostImageCVCell.swift in Sources */,
 				D5FC7B6824EBE7220029BEAE /* NuteeAlertDialogue.swift in Sources */,
 				5E8BA65424C6D1AA00A58F43 /* SceneDelegate.swift in Sources */,
+				452AACB025CA6D8400FF3592 /* NuteeReportDialogue.swift in Sources */,
 				D50BB0AE24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift in Sources */,
 				D58C93DE24CAE556005570D4 /* ReplyTVCell.swift in Sources */,
 				D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */,
