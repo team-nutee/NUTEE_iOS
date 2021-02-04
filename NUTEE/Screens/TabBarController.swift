@@ -12,7 +12,7 @@ class TabBarController: UITabBarController {
     
     // MARK: - UI components
     
-    let toPostButton = UIButton()
+    let toPostButton = TabBarHighlightedButton()
     
     // MARK: - Variables and Properties
     
@@ -23,20 +23,53 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.delegate = self
+        setModalStyle()
         
         setTabBarStyle()
+        
+        addToPostButton()
+        delegate = self
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        toPostButton.snp.makeConstraints {
+            $0.width.equalTo(tabBar.frame.size.width / CGFloat(viewControllers?.count ?? 0))
+            $0.height.equalTo(tabBar.frame.size.height - view.safeAreaInsets.bottom)
+        }
     }
     
     // MARK: - Helper
     
+    func setModalStyle() {
+        modalPresentationStyle = .fullScreen
+        modalTransitionStyle = .crossDissolve
+    }
+    
     func setTabBarStyle() {
         UITabBar.clearShadow()
-        self.tabBar.layer.applyShadow(color: .gray, alpha: 0.3, x: 0, y: 0, blur: 12)
+        
+        _ = tabBar.then {
+            $0.layer.applyShadow(color: .gray, alpha: 0.3, x: 0, y: 0, blur: 12)
+            $0.tintColor = .nuteeGreen
+        }
+    }
+    
+    func addToPostButton() {
+        _ = toPostButton.then {
+            $0.setImage(UIImage(named: "add")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.setImage(UIImage(named: "add_fill")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+            
+            $0.addTarget(self, action: #selector(didTapToPostButton), for: .touchUpInside)
+        }
+        
+        view.addSubview(toPostButton)
+        toPostButton.snp.makeConstraints {
+            $0.centerX.equalTo(view)
+            
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
     }
     
     @objc func didTapToPostButton() {
@@ -53,13 +86,9 @@ class TabBarController: UITabBarController {
 // MARK: - TabBarController Delegate
 
 extension TabBarController : UITabBarControllerDelegate {
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) { }
-    
+  
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         if viewController == tabBarController.viewControllers?[2] {
-            // present 형식으로 PostVC 화면 띄우기
-            didTapToPostButton()
-
             // 해당 탭 화면('+' 버튼에 해당하는)으로 VC 전환 금지
             return false
         } else {
@@ -77,79 +106,26 @@ struct BuildTabBarController {
     static let shared = BuildTabBarController()
     
     func nuteeApp() -> TabBarController {
-        var navigationController: UINavigationController
-        
-        // HomeTab
-        let homeVC = HomeVC()
-        navigationController = UINavigationController(rootViewController: homeVC)
-        
-//        navigationController.tabBarItem.image = UIImage(systemName: "house")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-        navigationController.tabBarItem.image = UIImage(named: "home")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "home_fill")
-        
-        let HomeTab = navigationController
-        
-        // SearchTab
-//        let searchVC = SearchVC()
-//        navigationController = UINavigationController(rootViewController: searchVC)
-//
-//        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-//        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
-//
-//        let SearchTab = navigationController
-        
-        // NotificationTab
-        let notificationVC = NotificationVC()
-        navigationController = UINavigationController(rootViewController: notificationVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "bell")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
-
-        let NotificationTab = navigationController
-        
-        // PostTab
-        let postVC = UIViewController()
-        postVC.view.backgroundColor = .white
-        navigationController = UINavigationController(rootViewController: postVC)
-//        navigationController.tabBarItem.image = UIImage(systemName: "plus")
-        navigationController.tabBarItem.image = UIImage(named: "post")
-        
-        let PostTab = navigationController
-        
-        // NoticeTab
-        let noticeVC = NoticeVC()
-        navigationController = UINavigationController(rootViewController: noticeVC)
-        
-//        navigationController.tabBarItem.image = UIImage(systemName: "pin")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
-        navigationController.tabBarItem.image = UIImage(named: "alarm")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "alarm_fill")
-
-        let NoticeTab = navigationController
-        
-        // ProfileTab
-        let profileVC = ProfileVC()
-        navigationController = UINavigationController(rootViewController: profileVC)
-//        navigationController.tabBarItem.image = UIImage(systemName: "person")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-        navigationController.tabBarItem.image = UIImage(named: "profile")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "profile_fill")
-
-        let ProfileTab = navigationController
+        let HomeTab = setTabBarViewController(viewcontroller: HomeVC(), image: "home", selectedImage: "home_fill")
+        let NotificationTab = setTabBarViewController(viewcontroller: NotificationVC(), image: "notice", selectedImage: "notice_fill")
+        let PostTab = UINavigationController()
+        let NoticeTab = setTabBarViewController(viewcontroller: NoticeVC(), image: "speaker", selectedImage: "speaker_fill")
+        let ProfileTab = setTabBarViewController(viewcontroller: ProfileVC(), image: "user", selectedImage: "user_fill")
         
         // TabBarController Settings
         let tabBarController = TabBarController()
         tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
-
-        tabBarController.tabBar.tintColor = .nuteeGreen
-        
-        tabBarController.modalPresentationStyle = .fullScreen
-        tabBarController.modalTransitionStyle = .crossDissolve
         
         return tabBarController
+    }
+    
+    func setTabBarViewController(viewcontroller: UIViewController, image: String, selectedImage: String) -> UINavigationController {
+        let navigationController = UINavigationController(rootViewController: viewcontroller)
+        
+        navigationController.tabBarItem.image = UIImage(named: image)
+        navigationController.tabBarItem.selectedImage = UIImage(named: selectedImage)
+        
+        return navigationController
     }
     
 }

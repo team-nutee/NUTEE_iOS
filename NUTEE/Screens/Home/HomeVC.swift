@@ -17,6 +17,8 @@ class HomeVC: UIViewController {
     
     // MARK: - UI components
     
+    let rightNavigationBarButton = HighlightedButton()
+    
     let menuBar = MenuBarCV()
     
     let newsFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -49,9 +51,15 @@ class HomeVC: UIViewController {
     // MARK: - Helper
     
     func setNavigationBarItem() {
-        let rightBarButton = UIBarButtonItem(image: UIImage(named: "search") , style: .plain, target: self, action: #selector(didTapSearchBarItem))
-        self.navigationItem.rightBarButtonItem = rightBarButton
-        self.navigationItem.rightBarButtonItem?.tintColor = .black
+        _ = rightNavigationBarButton.then {
+            $0.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.setImage(UIImage(named: "search_fill")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+            
+            $0.tintColor = .black
+            
+            $0.addTarget(self, action: #selector(didTapSearchBarItem), for: .touchUpInside)
+        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightNavigationBarButton)
     }
     
     func setMenuBar() {

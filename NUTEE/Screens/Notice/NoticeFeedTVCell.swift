@@ -44,7 +44,7 @@ class NoticeFeedTVCell: UITableViewCell {
     
     func initCell () {
         _ = fixedNoticeImageView.then {
-            $0.image = UIImage(systemName: "pin")
+            $0.image = UIImage(named: "speaker")?.withRenderingMode(.alwaysTemplate)
             $0.tintColor = .red
             
             if noticeContent?.no == "공지" {

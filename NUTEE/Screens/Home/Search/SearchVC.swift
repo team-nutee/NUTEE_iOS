@@ -40,7 +40,7 @@ class SearchVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        tabBarController?.tabBar.isHidden = true
+        hideTabBarController(isHidden: true)
         
         getSearchHistory(completion: {
             searchHistoryTableView.reloadData()
@@ -50,7 +50,7 @@ class SearchVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         
-        tabBarController?.tabBar.isHidden = false
+        hideTabBarController(isHidden: false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -60,6 +60,13 @@ class SearchVC: UIViewController {
             $0.rightView = UIView(frame: CGRect(x: 0, y: 0, width: searchButton.frame.size.width + deleteAllTextButton.frame.size.width - 10, height: 0))
             $0.rightViewMode = .always
         }
+    }
+    
+    func hideTabBarController(isHidden: Bool) {
+        tabBarController?.tabBar.isHidden = isHidden
+        
+        let tabBarController = self.tabBarController as? TabBarController
+        tabBarController?.toPostButton.isHidden = isHidden
     }
     
     // MARK: - Helper
@@ -89,7 +96,9 @@ class SearchVC: UIViewController {
             $0.addTarget(self, action: #selector(didTapDeleteAllTextButton), for: .touchUpInside)
         }
         _ = searchButton.then {
-            $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+            $0.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.setImage(UIImage(named: "search_fill")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+            
             $0.tintColor = .nuteeGreen
             
             $0.isEnabled = false
