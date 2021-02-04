@@ -47,10 +47,15 @@ class NuteeAlertSheet : UIViewController {
     
     weak var settingProfileImageVCDelegate: SettingProfileImageVCDelegate?
     
+    var detailNewsFeedVC: DetailNewsFeedVC?
+    
     var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
 
     var postId: Int?
     var editPostContent: PostContent?
+    
+    var commentId: Int?
+    var editCommentContent: String?
     
     // MARK: - Dummy data
     
@@ -409,6 +414,31 @@ class NuteeAlertSheet : UIViewController {
         })
     }
     
+    func editComment() {
+        detailNewsFeedVC?.setEditCommentMode(editCommentId: commentId ?? 0, content: editCommentContent ?? "")
+    
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func deleteComment() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
+        
+        nuteeAlertDialogue.detailNewsFeedVC = self.detailNewsFeedVC
+        nuteeAlertDialogue.postId = postId
+        nuteeAlertDialogue.commentId = commentId
+        nuteeAlertDialogue.addDeleteCommentAction()
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.present(nuteeAlertDialogue, animated: true)
+        })
+    }
+    
     func openLibrary() {
         settingProfileImageVCDelegate?.openSettingProfileImageVCLibrary()
     }
@@ -465,6 +495,10 @@ extension NuteeAlertSheet : UITableViewDataSource {
             deletePost()
         case "reportPost":
             reportPost()
+        case "editComment":
+            editComment()
+        case "deleteComment":
+            deleteComment()
         case "openLibrary":
             openLibrary()
         case "openCamera":

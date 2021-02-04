@@ -134,9 +134,17 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
-        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
-                                      ["삭제", UIColor.red, "deletePost"],
-                                      ["🚨신고하기", UIColor.red, "reportPost"]]
+        
+        if comment?.user.id == KeychainWrapper.standard.integer(forKey: "id") {
+            nuteeAlertSheet.optionList = [["수정", UIColor.black, "editComment"],
+                                          ["삭제", UIColor.red, "deleteComment"]]
+        } else {
+            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
+        }
+        
+        nuteeAlertSheet.detailNewsFeedVC = self.detailNewsFeedVC
+        nuteeAlertSheet.commentId = comment?.id
+        nuteeAlertSheet.editCommentContent = comment?.content
         
         nuteeAlertSheet.modalPresentationStyle = .custom
         

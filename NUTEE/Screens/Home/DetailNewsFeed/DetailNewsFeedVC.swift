@@ -37,6 +37,7 @@ class DetailNewsFeedVC: UIViewController {
     var commentViewBottomConstraint: Constraint?
     
     var isEditCommentMode = false
+    var commentId: Int?
     
     //MARK: - Dummy data
     
@@ -184,6 +185,18 @@ class DetailNewsFeedVC: UIViewController {
     @objc func didTapSubmitButton(_ sender: UIButton) {
         if isEditCommentMode {
             // 댓글 수정 모드일 때 실행될 문장
+            self.editCommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {() -> Void in
+                self.commentTextView.text = ""
+                self.commentTextView.endEditing(true)
+                
+                // 수정모드 종료
+                self.isEditCommentMode = false
+                self.textViewDidChange(self.commentTextView)
+                
+                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    self.detailNewsFeedTableView.reloadData()
+                })
+            })
         } else {
             // 댓글 수정x, 새로 작성할 때
             self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) {
@@ -205,6 +218,24 @@ class DetailNewsFeedVC: UIViewController {
             view.endEditing(true)
         }
         sender.cancelsTouchesInView = false
+    }
+    
+    func setEditCommentMode(editCommentId: Int, content: String) {
+        isEditCommentMode = true
+        
+        commentId = editCommentId
+        commentTextView.text = content
+        commentTextView.placeholderLabel.text = ""
+        
+        commentTextView.becomeFirstResponder()
+    }
+    
+    func deleteComment(deleteCommentId: Int) {
+        deleteCommentService(postId: postId ?? 0, commentId: deleteCommentId) {
+            self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                self.detailNewsFeedTableView.reloadData()
+            })
+        }
     }
 }
 
@@ -413,6 +444,63 @@ extension DetailNewsFeedVC {
                 
                 print("Create comment successful", res)
             case .requestErr(_):
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
+    
+    // 댓글 수정
+    func editCommentService(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.editComment(postId, commentId, content) { (responsedata) in
+            
+            switch responsedata {
+            case .success(let res):
+                print("commentEdit succussful", res)
+                completionHandler()
+                print(res)
+                
+            case .requestErr(_):
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
+    
+    // 댓글 삭제
+    func deleteCommentService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.deleteComment(postId, commentId: commentId) { (responsedata) in
+            
+            switch responsedata {
+            case .success(let res):
+                
+                print("commentDelete succussful", res)
+                completionHandler()
+                
+            case .requestErr(_):
+                let errorAlert = UIAlertController(title: "오류발생😵", message: "오류가 발생하여 댓글을 삭제하지 못했습니다", preferredStyle: UIAlertController.Style.alert)
+                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+                
+                errorAlert.addAction(okAction)
+                
+                self.present(errorAlert, animated: true, completion: nil)
+                
                 print("request error")
                 
             case .pathErr:

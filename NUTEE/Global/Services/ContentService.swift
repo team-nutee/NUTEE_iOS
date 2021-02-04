@@ -586,7 +586,7 @@ struct ContentService {
     
     func deleteComment(_ postId: Int, commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
-        let URL = APIConstants.Post + "/" + String(postId) + "/comment"
+        let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId)
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -634,7 +634,7 @@ struct ContentService {
     
     func editComment(_ postId: Int, _ commentId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
-        let URL = APIConstants.Post + "/" + String(postId) + "/comment" + String(commentId)
+        let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId)
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""

@@ -25,8 +25,10 @@ class NuteeAlertDialogue: UIViewController {
     
     // MARK: - Variables and Properties
     var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
+    var detailNewsFeedVC: DetailNewsFeedVC?
 
     var postId: Int?
+    var commentId: Int?
     
     var windowWidth: CGFloat = 245
     
@@ -166,6 +168,10 @@ class NuteeAlertDialogue: UIViewController {
         okButton.addTarget(self, action: #selector(didTapCancelSignUp), for: .touchUpInside)
     }
     
+    func addDeleteCommentAction() {
+        okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
+    }
+    
     @objc func didTapEditOkButton() {
         self.dismiss(animated: true)
     }
@@ -190,5 +196,9 @@ class NuteeAlertDialogue: UIViewController {
         detailNewsFeedHeaderView?.postDeleteService(postId: postId ?? 0, completionHandler: {
             
         })
+    }
+    
+    @objc func didTapDeleteComment() {
+        detailNewsFeedVC?.deleteComment(deleteCommentId: commentId ?? 0)
     }
 }
