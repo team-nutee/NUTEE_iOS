@@ -603,28 +603,23 @@ struct ContentService {
             switch response.result {
             
             case .success:
-                if let value = response.result.value {
-                    if let status = response.response?.statusCode {
-                        switch status {
-                        case 200:
-                            do{
-                                let decoder = JSONDecoder()
-                                let result = try decoder.decode(PostContent.self, from: value)
-                                completion(.success(result))
-                            } catch {
-                                completion(.pathErr)
-                            }
-                        case 401:
-                            print("실패 401")
-                            completion(.pathErr)
-                        case 500:
-                            print("실패 500")
-                            completion(.serverErr)
-                        default:
-                            break
-                        }
+                if let status = response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("comment 삭제 성공."))
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
                     }
                 }
+                
+                break
+                
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(.networkFail)

@@ -489,8 +489,7 @@ extension DetailNewsFeedVC {
             
             switch responsedata {
             case .success(let res):
-                
-                print("commentDelete succussful", res)
+                print(res)
                 completionHandler()
                 
             case .requestErr(_):
