@@ -85,8 +85,6 @@ class NuteeAlertDialogue: UIViewController {
             $0.contentEdgeInsets = UIEdgeInsets(top: 7, left: 10, bottom: 7, right: 10)
             
             $0.backgroundColor = okButtonData[2] as? UIColor
-            
-            $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
         }
         _ = cancelButton.then {
             $0.clipsToBounds = true

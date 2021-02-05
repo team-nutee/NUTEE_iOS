@@ -480,6 +480,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         case 1:
             _ = firstImageViewWhenOne.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
@@ -487,6 +489,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         case 2:
             _ = firstImageViewWhenOne.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.alpha = 0.7
                 $0.isHidden = false
@@ -497,16 +501,22 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         case 3:
             _ = firstImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
             _ = secondImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
             _ = thirdImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
@@ -514,21 +524,29 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         case 4:
             _ = firstImageViewWhenFour.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
             _ = secondImageViewWhenFour.then {
                 $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
             _ = thirdImageViewWhenFour.then {
                 $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
             _ = fourthImageViewWhenFour.then {
                 $0.imageFromUrl(post?.body.images?[3].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
                 
                 $0.isHidden = false
             }
@@ -536,16 +554,22 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         default:
             _ = firstImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[0].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
 
                 $0.isHidden = false
             }
             _ = secondImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[1].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
 
                 $0.isHidden = false
             }
             _ = thirdImageViewWhenThree.then {
                 $0.imageFromUrl(post?.body.images?[2].src ?? "", defaultImgPath: "")
+                $0.contentMode = .scaleAspectFill
+                $0.clipsToBounds = true
 
                 $0.alpha = 0.7
                 $0.isHidden = false

@@ -140,7 +140,6 @@ struct ContentService {
                 if let value = response.result.value {
                     
                     if let status = response.response?.statusCode{
-                        print("response 코드", status)
                         switch status {
                         case 200:
                             do{
