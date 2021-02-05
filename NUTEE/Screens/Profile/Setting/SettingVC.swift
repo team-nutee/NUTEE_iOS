@@ -184,6 +184,7 @@ extension SettingVC : UITableViewDataSource {
                 _ in
                 KeychainWrapper.standard.remove(forKey: "userId")
                 KeychainWrapper.standard.remove(forKey: "pw")
+                KeychainWrapper.standard.remove(forKey: "id")
                 
                 sceneDelegate.window?.rootViewController = loginVC
                 sceneDelegate.window?.rootViewController?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
