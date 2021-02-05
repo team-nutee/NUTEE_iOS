@@ -102,10 +102,15 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             $0.right.equalTo(contentTextView.snp.right)
         }
         
-        okButton.snp.updateConstraints {
-            $0.top.equalTo(reasonView.snp.bottom).offset(20)
+        okButton.snp.remakeConstraints {
+            $0.width.greaterThanOrEqualTo(45)
+
+            $0.top.equalTo(reasonView.snp.bottom).offset(20).priority(999)
+            $0.left.equalTo(cancelButton.snp.right).offset(15)
+            $0.right.equalTo(contentTextView.snp.right)
+            $0.bottom.equalTo(windowView.snp.bottom).inset(20)
         }
-        
+      
     }
     
     func addReportPostAction() {
