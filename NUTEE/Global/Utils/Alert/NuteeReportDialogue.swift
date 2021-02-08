@@ -28,20 +28,20 @@ class NuteeReportDialogue: NuteeAlertDialogue {
         
         initView()
         makeConstraints()
-                
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidLoad()
+        
         addKeyboardNotification()
+        self.reasonTextField.becomeFirstResponder()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        var windowViewHeight = windowView.bounds.height
-        windowViewHeight = floor(windowViewHeight)
-        print(windowViewHeight / 2)
-        print("1: ",(windowViewBottomConstraint?.layoutConstraints[0].constant))
-        windowViewBottomConstraint?.layoutConstraints[0].constant -= -(windowViewHeight / 2)
-        print("2: ",windowViewBottomConstraint?.layoutConstraints[0].constant)
-
+        let windowViewHeight = windowView.bounds.height
+        windowViewBottomConstraint?.layoutConstraints[0].constant += (windowViewHeight / 2)
     }
     
     // MARK: - Helper
@@ -113,6 +113,10 @@ class NuteeReportDialogue: NuteeAlertDialogue {
       
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     func addReportPostAction() {
         okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
     }
@@ -151,7 +155,7 @@ extension NuteeReportDialogue {
                 .first?.windows
                 .filter({$0.isKeyWindow}).first
 
-            windowViewBottomConstraint?.layoutConstraints[0].constant = -500//-(keyboardHeight - tabbarHeight)
+            windowViewBottomConstraint?.layoutConstraints[0].constant = -200//-(keyboardHeight - tabbarHeight)
 
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
