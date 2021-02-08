@@ -25,10 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         // 자동로그인 유무 파악하기
-        let userId = KeychainWrapper.standard.string(forKey: "userId")
-        let password = KeychainWrapper.standard.string(forKey: "pw")
+        let token = KeychainWrapper.standard.string(forKey: "token")
 
-        if userId == nil && password == nil {
+        if token == nil {
             window?.rootViewController = LoginVC()
         } else {
             let nuteeApp = BuildTabBarController.shared.nuteeApp()
