@@ -183,8 +183,8 @@ extension SettingVC : UITableViewDataSource {
             UIView.transition(from: (sceneDelegate.window?.rootViewController?.view)!, to: loginVC.view, duration: 0.2, options: [.transitionCrossDissolve], completion: {
                 _ in
                 KeychainWrapper.standard.remove(forKey: "pw")
-                KeychainWrapper.standard.remove(forKey: "id")
                 KeychainWrapper.standard.remove(forKey: "userId")
+                KeychainWrapper.standard.remove(forKey: "id")
                 KeychainWrapper.standard.remove(forKey: "token")
                 
                 sceneDelegate.window?.rootViewController = loginVC
