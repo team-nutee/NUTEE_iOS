@@ -14,6 +14,8 @@ class LoginVC: UIViewController {
     // MARK: - UI components
     
     // 로그인 화면
+    let loadingIndicator = UIActivityIndicatorView()
+    
     let titleLogoLabel = UILabel()
     
     let idTextField = UITextField()
@@ -51,7 +53,6 @@ class LoginVC: UIViewController {
         makeConstraints()
         
 //        enterLoginVCAnimate()
-//        checkSignIn()
     }
     
     
@@ -161,6 +162,8 @@ class LoginVC: UIViewController {
     
     func makeConstraints() {
         // Add SubView
+        view.addSubview(loadingIndicator)
+        
         view.addSubview(titleLogoLabel)
         
         view.addSubview(idTextField)
@@ -183,6 +186,13 @@ class LoginVC: UIViewController {
         
         
         // Make Constraints
+        loadingIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.snp.bottom)
+        }
+        
         titleLogoLabel.snp.makeConstraints {
             $0.centerX.equalTo(view)
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
@@ -276,14 +286,17 @@ class LoginVC: UIViewController {
     }
     
     @objc func didTapLoginButton() {
-        //LoadingHUD.show()
+        loadingIndicatorSwitcher()
+        
+        let id = idTextField.text ?? ""
+        let pw = pwTextField.text ?? ""
         
         if autoLogin == true {
-            KeychainWrapper.standard.set(idTextField.text ?? "", forKey: "userId")
-            KeychainWrapper.standard.set(pwTextField.text ?? "", forKey: "pw")
+            KeychainWrapper.standard.set(id, forKey: "userId")
+            KeychainWrapper.standard.set(pw, forKey: "pw")
         }
         
-        signInService(idTextField.text!, pwTextField.text!)
+        signInService(id, pw)
     }
     
     @objc func didTapSignUpButton() {
@@ -306,15 +319,13 @@ class LoginVC: UIViewController {
         }
     }
     
-    func checkSignIn() {
-        let userId = KeychainWrapper.standard.string(forKey: "userId")
-        let password = KeychainWrapper.standard.string(forKey: "pw")
-
-        if userId != nil && password != nil {
-            signInService(userId!, password!)
+    func loadingIndicatorSwitcher() {
+        if loadingIndicator.isAnimating == false {
+            loadingIndicator.startAnimating()
+            view.alpha = 0.7
         } else {
-            Splash.hide()
-            return
+            loadingIndicator.stopAnimating()
+            view.alpha = 1.0
         }
     }
     
@@ -335,9 +346,14 @@ extension LoginVC {
         })
     }
     
-    private func errorAnimate() {
-        self.idTextField.addBorder(.bottom, color: .red, thickness: 1)
-        self.pwTextField.addBorder(.bottom, color: .red, thickness: 1)
+    private func errorAnimate(message: String) {
+        idErrorLabel.text = message
+        pwErrorLabel.text = message
+        idErrorLabel.sizeToFit()
+        pwErrorLabel.sizeToFit()
+        
+        idTextField.addBorder(.bottom, color: .red, thickness: 1)
+        pwTextField.addBorder(.bottom, color: .red, thickness: 1)
         
         UIView.animate(withDuration: 0.2,
                        delay: 0,
@@ -381,7 +397,7 @@ extension LoginVC: UITextFieldDelegate {
         
         // 로그인 입력 조건 확인
         let id = idTextField.text
-        if id != "" && pwTextField.text?.count ?? 0 >= 1 {
+        if id?.validateID() == true && pwTextField.text?.validatePassword() == true {
             loginButton.isEnabled = true
             
             loginButton.backgroundColor = .nuteeGreen
@@ -409,13 +425,6 @@ extension LoginVC: UITextFieldDelegate {
 // MARK: - server service
 
 extension LoginVC {
-    func error(){
-        self.idErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
-        self.pwErrorLabel.text = "아이디 혹은 비밀번호가 다릅니다"
-        self.idErrorLabel.sizeToFit()
-        self.pwErrorLabel.sizeToFit()
-        self.errorAnimate()
-    }
     
     func signInService(_ userId: String, _ password: String) {
         UserService.shared.signIn(userId, password) { [self] result in
@@ -427,6 +436,8 @@ extension LoginVC {
                 Splash.hide()
                 LoadingHUD.hide()
                 
+                loadingIndicatorSwitcher()
+                
                 let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
                 
                 let nuteeApp = BuildTabBarController.shared.nuteeApp()
@@ -434,35 +445,44 @@ extension LoginVC {
                 
             case .requestErr(let res):
                 let responseData = res as! SignIn
-                simpleNuteeAlertDialogue(title: "로그인 오류", message: responseData.message)
+                
+                let errorMessage = responseData.message
+                simpleNuteeAlertDialogue(title: "로그인 오류", message: errorMessage)
                 
                 LoadingHUD.hide()
-                self.error()
+                
+                loadingIndicatorSwitcher()
+                
+                self.errorAnimate(message: errorMessage)
                 print("request error")
                 
             case .pathErr:
                 LoadingHUD.hide()
-                self.error()
+                
+                loadingIndicatorSwitcher()
+                errorAnimate(message: "경로오류")
+                simpleNuteeAlertDialogue(title: "로그인 경로 오류", message: "개발사로 문의 바랍니다")
+                
                 print(".pathErr")
                 
             case .serverErr:
                 LoadingHUD.hide()
-                self.error()
-                self.idErrorLabel.text = "서버 에러입니다."
-                self.pwErrorLabel.text = "서버 에러입니다."
+                
+                loadingIndicatorSwitcher()
+                errorAnimate(message: "서버 에러입니다")
+                
                 print(".serverErr")
                 
             case .networkFail :
                 LoadingHUD.hide()
-                self.error()
-                self.idErrorLabel.text = "서버 에러입니다."
-                self.pwErrorLabel.text = "서버 에러입니다."
-                print("failure")
                 
+                loadingIndicatorSwitcher()
+                errorAnimate(message: "서버 에러입니다")
+                
+                print("failure")
             }
+            
         }
-        
     }
-    
     
 }

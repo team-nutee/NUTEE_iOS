@@ -182,9 +182,10 @@ extension SettingVC : UITableViewDataSource {
             let loginVC = LoginVC()
             UIView.transition(from: (sceneDelegate.window?.rootViewController?.view)!, to: loginVC.view, duration: 0.2, options: [.transitionCrossDissolve], completion: {
                 _ in
-                KeychainWrapper.standard.remove(forKey: "userId")
                 KeychainWrapper.standard.remove(forKey: "pw")
+                KeychainWrapper.standard.remove(forKey: "userId")
                 KeychainWrapper.standard.remove(forKey: "id")
+                KeychainWrapper.standard.remove(forKey: "token")
                 
                 sceneDelegate.window?.rootViewController = loginVC
                 sceneDelegate.window?.rootViewController?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")

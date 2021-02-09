@@ -12,6 +12,7 @@
 		37AE9D60D81DCEB874809E14 /* Pods_NUTEEUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 588AE79D185A6496A0FF5EAE /* Pods_NUTEEUITests.framework */; };
 		452AACB025CA6D8400FF3592 /* NuteeReportDialogue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */; };
 		4538F87D25A48C17004515C7 /* PostContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4538F87C25A48C17004515C7 /* PostContent.swift */; };
+		453D30F525D18F79005BFA2B /* UploadImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453D30F425D18F79005BFA2B /* UploadImage.swift */; };
 		455908302564FBE9009A5F5C /* FindVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4559082F2564FBE9009A5F5C /* FindVC.swift */; };
 		4561129125AC95A900B49546 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4561129025AC95A900B49546 /* Comment.swift */; };
 		4561129F25ACAD3B00B49546 /* NoReplyFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4561129E25ACAD3B00B49546 /* NoReplyFooterView.swift */; };
@@ -136,6 +137,7 @@
 		3F020B527E3089EEA90DCFFE /* Pods-NUTEEUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEEUITests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEEUITests/Pods-NUTEEUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeReportDialogue.swift; sourceTree = "<group>"; };
 		4538F87C25A48C17004515C7 /* PostContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostContent.swift; sourceTree = "<group>"; };
+		453D30F425D18F79005BFA2B /* UploadImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadImage.swift; sourceTree = "<group>"; };
 		4559082F2564FBE9009A5F5C /* FindVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindVC.swift; sourceTree = "<group>"; };
 		4561129025AC95A900B49546 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		4561129E25ACAD3B00B49546 /* NoReplyFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoReplyFooterView.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				4586B61425971917003968B0 /* Post.swift */,
 				4538F87C25A48C17004515C7 /* PostContent.swift */,
 				4561129025AC95A900B49546 /* Comment.swift */,
+				453D30F425D18F79005BFA2B /* UploadImage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -981,6 +984,7 @@
 				D58C93DE24CAE556005570D4 /* ReplyTVCell.swift in Sources */,
 				D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */,
 				D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */,
+				453D30F525D18F79005BFA2B /* UploadImage.swift in Sources */,
 				D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */,
 				45E6903725BA8BA4007FFEE7 /* MajorFeedCVCell.swift in Sources */,
 				5E8BA69A24C6D2D800A58F43 /* APIConstants.swift in Sources */,

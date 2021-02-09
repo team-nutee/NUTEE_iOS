@@ -251,24 +251,27 @@ struct ContentService {
 
             case .success(let upload, _, _):
                 upload.responseJSON { (response) in
-
-                    if let value = response.result.value {
-                        if let status = response.response?.statusCode {
-                            switch status {
-                            case 200, 201:
-                                completion(.success(value as Any))
-                            case 401:
-                                print("실패 401")
+                    
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200, 201:
+                            do{
+                                let result = try JSONDecoder().decode(UploadImage.self, from : response.data!)
+                                
+                                completion(.success(result.body))
+                            } catch {
                                 completion(.pathErr)
-                            case 500:
-                                print("실패 500")
-                                completion(.serverErr)
-                            default:
-                                break
                             }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            break
                         }
                     }
-                    
                 }
             case .failure(let encodingError):
                 print(encodingError.localizedDescription)
