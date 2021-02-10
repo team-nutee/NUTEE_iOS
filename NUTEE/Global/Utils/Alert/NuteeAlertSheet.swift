@@ -49,11 +49,10 @@ class NuteeAlertSheet : UIViewController {
     
     var detailNewsFeedVC: DetailNewsFeedVC?
     
-    var feedContainerCVCell: FeedContainerCVCell?
+    var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
 
     var postId: Int?
     var editPostContent: PostContent?
-    var editPostBody: PostBody?
     
     var commentId: Int?
     var editCommentContent: String?
@@ -368,7 +367,7 @@ class NuteeAlertSheet : UIViewController {
     func editPost() {
         let postVC = PostVC()
         // 의존성 주입 실패로 일단 파라미터 값을 통해 주입
-        postVC.setEditMode(postContent: editPostContent, postBody: editPostBody)
+        postVC.setEditMode(editPost: editPostContent)
         
         let navigationController = UINavigationController(rootViewController: postVC)
         navigationController.modalPresentationStyle = .currentContext
@@ -384,7 +383,7 @@ class NuteeAlertSheet : UIViewController {
         nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
         
-        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertDialogue.detailNewsFeedHeaderView = self.detailNewsFeedHeaderView
         nuteeAlertDialogue.postId = postId
         nuteeAlertDialogue.addDeletePostAction()
         
@@ -402,7 +401,7 @@ class NuteeAlertSheet : UIViewController {
         nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
-        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeReportDialogue.detailNewsFeedHeaderView = self.detailNewsFeedHeaderView
         nuteeReportDialogue.postId = postId
         nuteeReportDialogue.addReportPostAction()
         

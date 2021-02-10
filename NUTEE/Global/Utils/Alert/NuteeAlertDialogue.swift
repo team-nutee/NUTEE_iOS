@@ -24,10 +24,8 @@ class NuteeAlertDialogue: UIViewController {
     let cancelButton = HighlightedButton()
     
     // MARK: - Variables and Properties
-    
+    var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
     var detailNewsFeedVC: DetailNewsFeedVC?
-    
-    var feedContainerCVCell: FeedContainerCVCell?
 
     var postId: Int?
     var commentId: Int?
@@ -191,11 +189,8 @@ class NuteeAlertDialogue: UIViewController {
     }
     
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
-            self.feedContainerCVCell?.fetchNewsFeed()
+        detailNewsFeedHeaderView?.postDeleteService(postId: postId ?? 0, completionHandler: {
             
-            //let beforeVC = self.presentedViewController
-            self.dismiss(animated: true, completion: nil)
         })
     }
     

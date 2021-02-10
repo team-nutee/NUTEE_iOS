@@ -49,8 +49,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
    
     var detailNewsFeedVC: DetailNewsFeedVC?
     
-    var feedContainerCVCell: FeedContainerCVCell?
-    
     let TopAndBottomSpace = 10
     let leftAndRightSpace = 15
         
@@ -378,7 +376,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
         }
         
-        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertSheet.detailNewsFeedHeaderView = self
         nuteeAlertSheet.postId = post?.body.id
         nuteeAlertSheet.editPostContent = post
         
@@ -656,4 +654,50 @@ extension DetailNewsFeedHeaderView {
         }
     }
     
+    // MARK: - Delete post
+    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
+        ContentService.shared.deletePost(postId) { (responsedata) in
+
+            switch responsedata {
+            case .success(let res):
+                print("post delete succuss", res)
+                completionHandler()
+                
+            case .requestErr(_):
+                print("request error")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
+    
+    // MARK: - Report post
+    func reportPost(postId: Int, content: String) {
+        ContentService.shared.reportPost(postId, content) { (responsedata) in
+
+            switch responsedata {
+            case .success(let res):
+                print("post report success", res)
+
+            case .requestErr(_):
+                print("request error")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
 }

@@ -159,8 +159,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.post
-        cell.homeVC = self.homeVC
-        cell.feedContainerCVCell = self
         
         cell.fillDataToView()
         
@@ -172,7 +170,6 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
         detailNewsFeedVC.postId = postContent?[indexPath.row].id
-        detailNewsFeedVC.feedContainerCVCell = self
         if detailNewsFeedVC.postId != nil {
             homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
         }
@@ -269,53 +266,6 @@ extension FeedContainerCVCell{
             case .networkFail :
                 print("failure")
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-            }
-        }
-    }
-    
-    // MARK: - Delete post
-    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
-        ContentService.shared.deletePost(postId) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post delete succuss", res)
-                completionHandler()
-                
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
-            }
-        }
-    }
-    
-    // MARK: - Report post
-    func reportPost(postId: Int, content: String) {
-        ContentService.shared.reportPost(postId, content) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post report success", res)
-
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
             }
         }
     }

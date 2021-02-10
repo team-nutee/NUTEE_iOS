@@ -107,9 +107,6 @@ class NewsFeedTVCell: UITableViewCell {
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
-    
-    var feedContainerCVCell: FeedContainerCVCell?
-    
     var delegate: NewsFeedTVCellDelegate?
     
     var newsPost: PostBody?
@@ -291,22 +288,103 @@ class NewsFeedTVCell: UITableViewCell {
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
         
-        if newsPost?.user.id == KeychainWrapper.standard.integer(forKey: "id") {
-            nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
-                                          ["삭제", UIColor.red, "deletePost"]]
-        } else {
-            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
-        }
-        
-        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
-        nuteeAlertSheet.postId = newsPost?.id
-        nuteeAlertSheet.editPostBody = newsPost
+        nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
+                                      ["삭제", UIColor.red, "deletePost"],
+                                      ["🚨신고하기", UIColor.red, "reportPost"]]
         
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         homeVC?.present(nuteeAlertSheet, animated: true)
     }
 
+//    @IBAction func btnMore(sender: AnyObject) {
+//        let moreAlert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
+//        let editAction = UIAlertAction(title: "수정", style: .default){
+//            (action: UIAlertAction) in
+//            // Code to edit
+//            // Posting 창으로 전환
+//            let postSB = UIStoryboard(name: "Post", bundle: nil)
+//            let editPostingVC = postSB.instantiateViewController(withIdentifier: "PostVC") as! PostVC
+//
+//            editPostingVC.loadViewIfNeeded()
+//            editPostingVC.editNewsPost = self.newsPost
+//            editPostingVC.setEditMode()
+//
+//            editPostingVC.modalPresentationStyle = .fullScreen
+//            self.newsFeedVC?.present(editPostingVC, animated: true, completion: nil)
+//        }
+//        let deleteAction = UIAlertAction(title: "삭제", style: .destructive) {
+//            (action: UIAlertAction) in
+//            let deleteAlert = UIAlertController(title: nil, message: "삭제하시겠습니까?", preferredStyle: UIAlertController.Style.alert)
+//            let cancelAction = UIAlertAction(title: "취소", style: .default, handler: nil)
+//            let okAction = UIAlertAction(title: "삭제", style: .destructive) {
+//                (action: UIAlertAction) in
+//                // Code to 삭제
+//                self.deletePost()
+//            }
+//            deleteAlert.addAction(cancelAction)
+//            deleteAlert.addAction(okAction)
+//            self.newsFeedVC?.present(deleteAlert, animated: true, completion: nil)
+//        }
+//        let userReportAction = UIAlertAction(title: "신고하기🚨", style: .destructive) {
+//            (action: UIAlertAction) in
+//            // Code to 신고 기능
+//            let reportAlert = UIAlertController(title: "이 게시글을 신고하시겠습니까?", message: "", preferredStyle: UIAlertController.Style.alert)
+//            let cancelAction
+//                = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+//            let reportAction = UIAlertAction(title: "신고", style: .destructive) {
+//                (action: UIAlertAction) in
+//                let content = reportAlert.textFields?[0].text ?? "" // 신고 내용
+//                self.reportPost(content: content)
+//                //신고 여부 알림 <-- 서버연결 코드에서 구현됨
+//            }
+//            reportAlert.addTextField { (mytext) in
+//                mytext.tintColor = .nuteeGreen
+//                mytext.placeholder = "신고할 내용을 입력해주세요."
+//            }
+//            reportAlert.addAction(cancelAction)
+//            reportAlert.addAction(reportAction)
+//
+//            self.newsFeedVC?.present(reportAlert, animated: true, completion: nil)
+//        }
+//        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+//
+//        let userId = KeychainWrapper.standard.integer(forKey: "id")
+//
+//        if (userId == newsPost?.userID) {
+//            moreAlert.addAction(editAction)
+//            moreAlert.addAction(deleteAction)
+//            moreAlert.addAction(cancelAction)
+//        } else {
+//            moreAlert.addAction(userReportAction)
+//            moreAlert.addAction(cancelAction)
+//        }
+//
+//        newsFeedVC?.present(moreAlert, animated: true, completion: nil)
+//    }
+//
+//
+//    func showDetailNewsFeed() {
+//        // DetailNewsFeed 창으로 전환
+//        let detailNewsFeedSB = UIStoryboard(name: "DetailNewsFeed", bundle: nil)
+//        let showDetailNewsFeedVC = detailNewsFeedSB.instantiateViewController(withIdentifier: "DetailNewsFeed") as! DetailNewsFeedVC
+//
+//        // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
+//        showDetailNewsFeedVC.postId = self.newsPost?.id
+//        showDetailNewsFeedVC.getPostService(postId: showDetailNewsFeedVC.postId!, completionHandler: {(returnedData)-> Void in
+//            showDetailNewsFeedVC.replyTV.reloadData()
+//        })
+//
+//        newsFeedVC?.navigationController?.pushViewController(showDetailNewsFeedVC, animated: true)
+//    }
+//
+
+//    func setButtonAttributed(btn: UIButton, num: Int, color: UIColor, state: UIControl.State) {
+//        let stateAttributes = [NSAttributedString.Key.foregroundColor: color]
+//        btn.setAttributedTitle(NSAttributedString(string: " " + String(num), attributes: stateAttributes), for: state)
+//        btn.tintColor = color
+//    }
+//
 //    func deletePost() {
 //        self.postDeleteService(postId: self.newsPost?.id ?? 0, completionHandler: {() -> Void in
 //            // delegate로 NewsFeedVC와 통신하기
@@ -321,3 +399,61 @@ class NewsFeedTVCell: UITableViewCell {
 protocol NewsFeedTVCellDelegate: class {
     func updateNewsTV() // NewsFeedVC에 정의되어 있는 프로토콜 함수
 }
+
+// MARK: - Repost
+
+//extension NewsFeedTVCell {
+//    func reportPost( content: String) {
+//        let userid = KeychainWrapper.standard.string(forKey: "id") ?? ""
+//        ContentService.shared.reportPost(userid, content) { (responsedata) in
+//
+//            switch responsedata {
+//            case .success(_):
+//
+//                let successfulAlert = UIAlertController(title: "신고가 완료되었습니다", message: nil, preferredStyle: UIAlertController.Style.alert)
+//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
+//
+//                successfulAlert.addAction(okAction)
+//
+//                self.newsFeedVC?.present(successfulAlert, animated: true, completion: nil)
+//
+//            case .requestErr(_):
+//                print("request error")
+//
+//            case .pathErr:
+//                print(".pathErr")
+//
+//            case .serverErr:
+//                print(".serverErr")
+//
+//            case .networkFail :
+//                print("failure")
+//            }
+//        }
+//    }
+//
+//
+//    // MARK: - Post
+//    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void ) {
+//        ContentService.shared.postDelete(postId) { (responsedata) in
+//
+//            switch responsedata {
+//            case .success(let res):
+//
+//                print("postPost succussful", res)
+//                completionHandler()
+//            case .requestErr(_):
+//                print("request error")
+//
+//            case .pathErr:
+//                print(".pathErr")
+//
+//            case .serverErr:
+//                print(".serverErr")
+//
+//            case .networkFail :
+//                print("failure")
+//            }
+//        }
+//    }
+//}
