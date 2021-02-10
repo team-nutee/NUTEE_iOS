@@ -39,6 +39,8 @@ class DetailNewsFeedVC: UIViewController {
     var isEditCommentMode = false
     var commentId: Int?
     
+    var feedContainerCVCell: FeedContainerCVCell?
+    
     //MARK: - Dummy data
     
     //MARK: - Life Cycle
@@ -240,7 +242,6 @@ class DetailNewsFeedVC: UIViewController {
 }
 
 //MARK: - Build TableView
-
 extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
     // HeaderView
@@ -256,6 +257,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.DetailNewsFeedHeaderView) as? DetailNewsFeedHeaderView
         headerView?.detailNewsFeedVC = self
+        headerView?.feedContainerCVCell = self.feedContainerCVCell
         
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         headerView?.post = self.post
@@ -313,7 +315,6 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 }
 
 // MARK: - UITextView Delegate
-
 extension DetailNewsFeedVC: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {
@@ -357,7 +358,6 @@ extension DetailNewsFeedVC: UITextViewDelegate {
 }
 
 // MARK: - KeyBoard
-
 extension DetailNewsFeedVC {
 
     func addKeyboardNotification() {
@@ -406,7 +406,6 @@ extension DetailNewsFeedVC {
 }
 
 // MARK: - Server connect
-
 extension DetailNewsFeedVC {
     
     // 게시글 한 개 가져오기

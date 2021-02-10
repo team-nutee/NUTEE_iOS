@@ -5,7 +5,6 @@
 //  Created by eunwoo on 2021/02/03.
 //  Copyright © 2021 Nutee. All rights reserved.
 //
-
 import UIKit
 import SnapKit
 
@@ -137,14 +136,13 @@ class NuteeReportDialogue: NuteeAlertDialogue {
         if reasonTextField.text == "" {
             reasonLabel.alpha = 1.0
         } else {
-            detailNewsFeedHeaderView?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
+            feedContainerCVCell?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
             self.dismiss(animated: true)
         }
     }
 }
 
     // MARK: - KeyBoard
-
 extension NuteeReportDialogue {
 
     func addKeyboardNotification() {
@@ -186,4 +184,3 @@ extension NuteeReportDialogue {
         }
     }
 }
-

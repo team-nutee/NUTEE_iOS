@@ -5,7 +5,6 @@
 //  Created by Hee Jae Kim on 2020/07/24.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
 import UIKit
 
 import SafariServices
@@ -48,6 +47,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     // MARK: - Variables and Properties
    
     var detailNewsFeedVC: DetailNewsFeedVC?
+    
+    var feedContainerCVCell: FeedContainerCVCell?
     
     let TopAndBottomSpace = 10
     let leftAndRightSpace = 15
@@ -376,7 +377,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
         }
         
-        nuteeAlertSheet.detailNewsFeedHeaderView = self
+        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
         nuteeAlertSheet.postId = post?.body.id
         nuteeAlertSheet.editPostContent = post
         
@@ -591,7 +592,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let imgView = tapGestureRecognizer.view as! UIImageView
 //        print("your tapped image view tag is : \(imgView.tag)")
-
         //Give your image View tag
         if (imgView.tag == 1) {
             let nuteeImageViewer = NuteeImageViewer()
@@ -606,7 +606,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
 }
 
 // MARK: - Server connect
-
 extension DetailNewsFeedHeaderView {
 
     // MARK: - Like
@@ -654,50 +653,4 @@ extension DetailNewsFeedHeaderView {
         }
     }
     
-    // MARK: - Delete post
-    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
-        ContentService.shared.deletePost(postId) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post delete succuss", res)
-                completionHandler()
-                
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
-            }
-        }
-    }
-    
-    // MARK: - Report post
-    func reportPost(postId: Int, content: String) {
-        ContentService.shared.reportPost(postId, content) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post report success", res)
-
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
-            }
-        }
-    }
 }

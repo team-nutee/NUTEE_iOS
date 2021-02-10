@@ -5,14 +5,12 @@
 //  Created by Hee Jae Kim on 2020/08/18.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
 import UIKit
 import SnapKit
 
 class NuteeAlertDialogue: UIViewController {
     
     // MARK: - UI components
-
     let backgroundView = UIView()
     
     let windowView = UIView()
@@ -24,8 +22,10 @@ class NuteeAlertDialogue: UIViewController {
     let cancelButton = HighlightedButton()
     
     // MARK: - Variables and Properties
-    var detailNewsFeedHeaderView: DetailNewsFeedHeaderView?
+    
     var detailNewsFeedVC: DetailNewsFeedVC?
+    
+    var feedContainerCVCell: FeedContainerCVCell?
 
     var postId: Int?
     var commentId: Int?
@@ -189,7 +189,8 @@ class NuteeAlertDialogue: UIViewController {
     }
     
     @objc func didTapDeletePost() {
-        detailNewsFeedHeaderView?.postDeleteService(postId: postId ?? 0, completionHandler: {
+        feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
+            self.feedContainerCVCell?.fetchNewsFeed()
             
         })
     }
