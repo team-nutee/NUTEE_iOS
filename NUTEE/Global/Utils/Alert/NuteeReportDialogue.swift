@@ -21,6 +21,11 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     
     var windowViewBottomConstraint: Constraint?
     
+    var windowViewBottomOriginValue: CGFloat?
+    var windowViewBottomTerm: CGFloat?
+    
+    var subViewsInitFlag = true
+    
     //MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -40,8 +45,15 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let windowViewHeight = windowView.bounds.height
-        windowViewBottomConstraint?.layoutConstraints[0].constant += (windowViewHeight / 2)
+        if subViewsInitFlag { // 키보드가 올라올 때마다 실행되어 windowView 바텀 값이 계속 커지는 상황을 방지하기 위한 플래그
+            let windowViewHeight = windowView.bounds.height
+            
+            windowViewBottomConstraint?.layoutConstraints[0].constant += (windowViewHeight / 2)
+            windowViewBottomOriginValue = windowViewBottomConstraint?.layoutConstraints[0].constant ?? 0
+            windowViewBottomTerm = windowViewHeight / 2
+            
+            subViewsInitFlag = false
+        }
     }
     
     // MARK: - Helper
@@ -114,7 +126,7 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+        dismiss(animated: true, completion: nil)
     }
     
     func addReportPostAction() {
@@ -146,17 +158,11 @@ extension NuteeReportDialogue {
             let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
             let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
             let keyboardHeight = keyboardFrame.height
-
-            let tabbarHeight = self.tabBarController?.tabBar.frame.size.height ?? 0
-            _ = UIApplication.shared.connectedScenes
-                .filter({$0.activationState == .foregroundActive})
-                .map({$0 as? UIWindowScene})
-                .compactMap({$0})
-                .first?.windows
-                .filter({$0.isKeyWindow}).first
-
-            windowViewBottomConstraint?.layoutConstraints[0].constant = -200//-(keyboardHeight - tabbarHeight)
-
+            
+            if windowViewBottomOriginValue ?? 0 < keyboardHeight {
+                windowViewBottomConstraint?.layoutConstraints[0].constant = (windowViewBottomOriginValue ?? 0) - (windowViewBottomTerm ?? 0)
+            }
+            
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
@@ -168,8 +174,10 @@ extension NuteeReportDialogue {
         if let info = notification.userInfo {
             let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
             let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-
-            windowViewBottomConstraint?.layoutConstraints[0].constant = 0
+            
+            if windowViewBottomOriginValue != nil {
+                windowViewBottomConstraint?.layoutConstraints[0].constant = (windowViewBottomOriginValue ?? 0)
+            }
 
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
