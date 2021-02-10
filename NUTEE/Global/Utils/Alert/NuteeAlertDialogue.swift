@@ -85,6 +85,8 @@ class NuteeAlertDialogue: UIViewController {
             $0.contentEdgeInsets = UIEdgeInsets(top: 7, left: 10, bottom: 7, right: 10)
             
             $0.backgroundColor = okButtonData[2] as? UIColor
+            
+            $0.addTarget(self, action: #selector(dismissAction), for: .touchUpInside)
         }
         _ = cancelButton.then {
             $0.clipsToBounds = true
@@ -97,7 +99,7 @@ class NuteeAlertDialogue: UIViewController {
             
             $0.backgroundColor = cancelButtonData[2] as? UIColor
             
-            $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(dismissAction), for: .touchUpInside)
         }
         
     }
@@ -170,12 +172,8 @@ class NuteeAlertDialogue: UIViewController {
         okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
     }
     
-    @objc func didTapEditOkButton() {
-        self.dismiss(animated: true)
-    }
-    
-    @objc func didTapCancelButton() {
-        self.dismiss(animated: true)
+    @objc func dismissAction() {
+        dismiss(animated: true)
     }
     
     @objc func didTapCancelPost() {
