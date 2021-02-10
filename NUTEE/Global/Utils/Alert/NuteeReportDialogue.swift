@@ -137,7 +137,7 @@ class NuteeReportDialogue: NuteeAlertDialogue {
         if reasonTextField.text == "" {
             reasonLabel.alpha = 1.0
         } else {
-            detailNewsFeedHeaderView?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
+            feedContainerCVCell?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
             self.dismiss(animated: true)
         }
     }

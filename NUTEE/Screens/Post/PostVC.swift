@@ -50,6 +50,7 @@ class PostVC: UIViewController {
     
     var isEditMode = false
     
+    var editPostBody: PostBody?
     var editPostContent: PostContent?
     var editPostImage: [PostImage?] = []
     
@@ -282,13 +283,22 @@ class PostVC: UIViewController {
         }
     }
     
-    func setEditMode(editPost: PostContent?) {
+    func setEditMode(postContent: PostContent?, postBody: PostBody?) {
         isEditMode = true
-        editPostContent = editPost
-        postTitleTextField.text = editPostContent?.body.title ?? ""
-        postContentTextView.text = editPostContent?.body.content ?? ""
-        selectedCategory = editPostContent?.body.category ?? ""
-        editPostImage = editPostContent?.body.images ?? []
+        self.editPostContent = postContent
+        self.editPostBody = postBody
+        
+        if self.editPostContent != nil {
+            postTitleTextField.text = editPostContent?.body.title ?? ""
+            postContentTextView.text = editPostContent?.body.content ?? ""
+            selectedCategory = editPostContent?.body.category ?? ""
+            editPostImage = editPostContent?.body.images ?? []
+        } else {
+            postTitleTextField.text = editPostBody?.title ?? ""
+            postContentTextView.text = editPostBody?.content ?? ""
+            selectedCategory = editPostBody?.category ?? ""
+            editPostImage = editPostBody?.images ?? []
+        }
     }
     
     @objc func didTapClosePosting() {
@@ -343,12 +353,20 @@ class PostVC: UIViewController {
                     for uploadimg in self.uploadedImages {
                         images.append(uploadimg)
                     }
-                    self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                    
+                    if self.editPostContent != nil {
+                        self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                    } else {
+                        self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                    }
                 })
             } else {
-                self.editPostContent(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                if self.editPostContent != nil {
+                    self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                } else {
+                    self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                }
             }
-            
         }
     }
     
@@ -633,7 +651,6 @@ extension PostVC {
             
             switch data {
             case .success(_ ):
-                print("글 올리기 성공")
                 self.dismiss(animated: true, completion: nil)
             case .requestErr:
                 self.simpleNuteeAlertDialogue(title: "알림", message: "카테고리나 전공을 선택해주세요.")
@@ -665,7 +682,6 @@ extension PostVC {
             switch data {
             case .success(let res):
                 self.uploadedImages = res as! [NSString]
-                print(".successful uploadImage")
                 completionHandler(self.uploadedImages)
             case .requestErr:
                 self.simpleAlert(title: "실패", message: "")
@@ -684,7 +700,7 @@ extension PostVC {
         
     }
     
-    func editPostContent(postId: Int, title: String, content: String, images: [NSString]){
+    func editPost(postId: Int, title: String, content: String, images: [NSString]){
         ContentService.shared.editPost(postId: postId, title: title, content: content, images: images){
             [weak self]
             data in
