@@ -194,8 +194,7 @@ class NuteeAlertDialogue: UIViewController {
         feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
             self.feedContainerCVCell?.fetchNewsFeed()
             
-            //let beforeVC = self.presentedViewController
-            self.dismiss(animated: true, completion: nil)
+           
         })
     }
     
