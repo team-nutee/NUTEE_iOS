@@ -229,12 +229,12 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         contentView.addSubview(imageFrameView)
         
         imageFrameView.addSubview(firstImageViewWhenOne)
-        firstImageViewWhenOne.addSubview(oneMoreLabel)
+        imageFrameView.addSubview(oneMoreLabel)
 
         imageFrameView.addSubview(firstImageViewWhenThree)
         imageFrameView.addSubview(secondImageViewWhenThree)
         imageFrameView.addSubview(thirdImageViewWhenThree)
-        thirdImageViewWhenThree.addSubview(moreLabel)
+        imageFrameView.addSubview(moreLabel)
         
         imageFrameView.addSubview(firstImageViewWhenFour)
         imageFrameView.addSubview(secondImageViewWhenFour)
@@ -493,7 +493,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
                 $0.contentMode = .scaleAspectFill
                 $0.clipsToBounds = true
                 
-                $0.alpha = 0.7
+                $0.alpha = 0.5
                 $0.isHidden = false
             }
             
@@ -572,7 +572,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
                 $0.contentMode = .scaleAspectFill
                 $0.clipsToBounds = true
 
-                $0.alpha = 0.7
+                $0.alpha = 0.5
                 $0.isHidden = false
             }
 
