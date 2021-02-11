@@ -239,6 +239,13 @@ class DetailNewsFeedVC: UIViewController {
             })
         }
     }
+    
+    func setFetchDetailNewsFeedFail(failMessage: String?) {
+        activityIndicator.stopAnimating()
+        self.detailNewsFeedTableView.isHidden = false
+        
+        self.detailNewsFeedTableView.setEmptyView(title: "게시글 조회 실패", message: failMessage ?? "")
+    }
 }
 
 //MARK: - Build TableView
@@ -419,16 +426,16 @@ extension DetailNewsFeedVC {
                 completionHandler(self.post!)
                 
             case .requestErr(_):
-                print("request error")
+                self.setFetchDetailNewsFeedFail(failMessage: "요청에 실패했습니다")
                 
             case .pathErr:
-                print(".pathErr")
+                self.setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                print(".serverErr")
-                
+                self.setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
+
             case .networkFail :
-                print("failure")
+                self.setFetchDetailNewsFeedFail(failMessage: "네트워크에 오류가 있습니다")
             }
         }
     }
