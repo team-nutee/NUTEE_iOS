@@ -79,14 +79,16 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     
     func fetchNoticeFeed() {
         // default status
-        setFetchNoticeFeedFail()
+        setFetchNoticeFeedFail(message: "오류가 발생하였습니다")
         
         // <-- will override by subclass
     }
     
-    func setFetchNoticeFeedFail() {
+    func setFetchNoticeFeedFail(message: String) {
         activityIndicator.stopAnimating()
         noticeFeedTableView.isHidden = false
+        
+        noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: message)
         
         noticeFeedTableView.setEmptyView(title: "오류발생😢", message: "공지사항을 조회하지 못했습니다")
     }
@@ -154,23 +156,19 @@ extension NoticeFeedContainerCVCell {
                 completionHandler()
                 
             case .requestErr(let message):
-                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "\(message)")
-                setFetchNoticeFeedFail()
+                setFetchNoticeFeedFail(message: "\(message)")
                 completionHandler()
                 
             case .pathErr:
-                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "서버연결에 오류가 있습니다")
-                setFetchNoticeFeedFail()
+                setFetchNoticeFeedFail(message: "서버연결에 오류가 있습니다")
                 completionHandler()
                 
             case .serverErr:
-                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "서버에 오류가 있습니다")
-                setFetchNoticeFeedFail()
+                setFetchNoticeFeedFail(message: "서버에 오류가 있습니다")
                 completionHandler()
                 
             case .networkFail :
-                noticeVC?.simpleNuteeAlertDialogue(title: "공지사항 조회 실패", message: "네트워크 상태를 확인해주세요")
-                setFetchNoticeFeedFail()
+                setFetchNoticeFeedFail(message: "네트워크 상태를 확인해주세요")
                 completionHandler()
             }
         })
