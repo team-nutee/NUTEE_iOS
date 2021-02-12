@@ -20,7 +20,7 @@ class PasswordVC: SignUpViewController {
     
     let passwordCheckTitleLabel = UILabel()
     let passwordCheckTextField = UITextField()
-    let passwordCheckLabel = UILabel()
+    let passwordCheckIndicatorLabel = UILabel()
     
     let agreeTermsAndConditionsButton = HighlightedButton()
     let showTermsAndConditionsButton = HighlightedButton()
@@ -105,7 +105,7 @@ class PasswordVC: SignUpViewController {
             $0.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
             $0.addTarget(self, action: #selector(textFieldDidEndEditing(_:)), for: .editingDidEnd)
         }
-        _ = passwordCheckLabel.then {
+        _ = passwordCheckIndicatorLabel.then {
             $0.text = "passwordAvailableLabel"
             $0.font = .systemFont(ofSize: checkPasswordStatusLabelSize)
             
@@ -153,7 +153,7 @@ class PasswordVC: SignUpViewController {
         
         view.addSubview(passwordCheckTitleLabel)
         view.addSubview(passwordCheckTextField)
-        view.addSubview(passwordCheckLabel)
+        view.addSubview(passwordCheckIndicatorLabel)
         
         view.addSubview(agreeTermsAndConditionsButton)
         view.addSubview(showTermsAndConditionsButton)
@@ -189,14 +189,14 @@ class PasswordVC: SignUpViewController {
             $0.left.equalTo(passwordTextField.snp.left)
             $0.right.equalTo(passwordTextField.snp.right)
         }
-        passwordCheckLabel.snp.makeConstraints {
+        passwordCheckIndicatorLabel.snp.makeConstraints {
             $0.top.equalTo(passwordCheckTextField.snp.bottom).offset(3)
             $0.left.equalTo(passwordCheckTextField.snp.left)
             $0.right.equalTo(passwordCheckTextField.snp.right)
         }
         
         agreeTermsAndConditionsButton.snp.makeConstraints {
-            $0.top.equalTo(passwordCheckLabel).offset(40)
+            $0.top.equalTo(passwordCheckIndicatorLabel).offset(40)
             $0.left.equalTo(passwordCheckTextField.snp.left)
         }
         showTermsAndConditionsButton.snp.makeConstraints {
@@ -369,8 +369,8 @@ extension PasswordVC {
                         
                         self.passwordCheckTextField.alpha = 0.5
                         self.passwordCheckTextField.transform = CGAffineTransform.init(translationX: -50, y: 0)
-//                        self.passwordCheckLabel.alpha = 0
-                        self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
+//                        self.passwordCheckIndicatorLabel.alpha = 0
+                        self.passwordCheckIndicatorLabel.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
                         self.agreeTermsAndConditionsButton.alpha = 1
                         self.agreeTermsAndConditionsButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
@@ -390,7 +390,7 @@ extension PasswordVC {
                 $0.alpha = 0
             }
         } else {
-            _ = passwordCheckLabel.then {
+            _ = passwordCheckIndicatorLabel.then {
                 $0.text = successMessage
                 $0.textColor = .nuteeGreen
                 $0.alpha = 0
@@ -406,7 +406,7 @@ extension PasswordVC {
                         if targetTextField == self.passwordTextField {
                             self.passwordIndicatorLabel.alpha = 0
                         } else {
-                            self.passwordCheckLabel.alpha = 1
+                            self.passwordCheckIndicatorLabel.alpha = 1
                         }
         })
     }
@@ -423,7 +423,7 @@ extension PasswordVC {
                 $0.alpha = 1
             }
         } else {
-            _ = passwordCheckLabel.then {
+            _ = passwordCheckIndicatorLabel.then {
                 $0.text = errorMessage
                 $0.textColor = errorColor
                 $0.alpha = 1
@@ -439,7 +439,7 @@ extension PasswordVC {
                         if targetTextField == self.passwordTextField {
                             self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckIndicatorLabel.transform = CGAffineTransform.init(translationX: 5 - self.xPosAnimationRange, y: 0)
                         }
         })
         UIView.animate(withDuration: 0.2,
@@ -451,7 +451,7 @@ extension PasswordVC {
                         if targetTextField == self.passwordTextField {
                             self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckIndicatorLabel.transform = CGAffineTransform.init(translationX: -5 - self.xPosAnimationRange, y: 0)
                         }
         })
         UIView.animate(withDuration: 0.5,
@@ -463,7 +463,7 @@ extension PasswordVC {
                         if targetTextField == self.passwordTextField {
                             self.passwordIndicatorLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
                         } else {
-                            self.passwordCheckLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
+                            self.passwordCheckIndicatorLabel.transform = CGAffineTransform.init(translationX: 0 - self.xPosAnimationRange, y: 0)
                         }
         })
     }
