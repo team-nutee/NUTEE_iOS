@@ -38,7 +38,7 @@ class CategoryFeedVC: UIViewController {
         initView()
         makeConstraints()
         
-        fetchNewsFeed()
+        fetchCategoryFeed()
         
         setRefresh()
     }
@@ -85,7 +85,7 @@ class CategoryFeedVC: UIViewController {
         }
     }
     
-    func fetchNewsFeed() {
+    func fetchCategoryFeed() {
         getCategoryPostsService(category: self.category ?? "", lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.categoryFeedTableView.reloadData()
@@ -102,7 +102,7 @@ class CategoryFeedVC: UIViewController {
         }
     }
     
-    func setFetchNewsFeedFail() {
+    func setFetchCategoryFeedFail() {
         categoryFeedTableView.isHidden = false
 
         categoryFeedTableView.setEmptyView(title: "오류 발생😢", message: "피드를 조회하지 못했습니다")
@@ -142,6 +142,7 @@ extension CategoryFeedVC : SkeletonTableViewDataSource {
         cell.newsPost = self.post
         cell.homeVC = self.homeVC
         cell.feedContainerCVCell = self.feedContainerCVCell
+        cell.categoryFeedVC = self
         
         cell.fillDataToView()
         
@@ -208,19 +209,20 @@ extension CategoryFeedVC {
                 
             case .requestErr(_):
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchCategoryFeedFail()
                 
             case .pathErr:
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchCategoryFeedFail()
                 
             case .serverErr:
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchCategoryFeedFail()
                 
             case .networkFail :
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchCategoryFeedFail()
+                
             }
         }
     }

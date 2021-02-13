@@ -26,6 +26,8 @@ class NuteeAlertDialogue: UIViewController {
     var detailNewsFeedVC: DetailNewsFeedVC?
     
     var feedContainerCVCell: FeedContainerCVCell?
+    
+    var categoryFeedVC: CategoryFeedVC?
 
     var postId: Int?
     var commentId: Int?
@@ -192,6 +194,9 @@ class NuteeAlertDialogue: UIViewController {
         feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
             self.feedContainerCVCell?.fetchNewsFeed()
             
+            if self.categoryFeedVC != nil {
+                self.categoryFeedVC?.fetchCategoryFeed()
+            }
         })
     }
     

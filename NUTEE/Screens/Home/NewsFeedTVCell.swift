@@ -106,6 +106,8 @@ class NewsFeedTVCell: UITableViewCell {
     
     var feedContainerCVCell: FeedContainerCVCell?
     
+    var categoryFeedVC: CategoryFeedVC?
+    
     var delegate: NewsFeedTVCellDelegate?
     
     var newsPost: PostBody?
@@ -296,6 +298,7 @@ class NewsFeedTVCell: UITableViewCell {
         }
         
         nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertSheet.categoryFeedVC = self.categoryFeedVC
         nuteeAlertSheet.postId = newsPost?.id
         nuteeAlertSheet.editPostBody = newsPost
         

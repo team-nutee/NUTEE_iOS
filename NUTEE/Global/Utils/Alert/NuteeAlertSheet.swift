@@ -48,6 +48,8 @@ class NuteeAlertSheet : UIViewController {
     var detailNewsFeedVC: DetailNewsFeedVC?
     
     var feedContainerCVCell: FeedContainerCVCell?
+    
+    var categoryFeedVC: CategoryFeedVC?
 
     var postId: Int?
     var editPostContent: PostContent?
@@ -383,6 +385,7 @@ class NuteeAlertSheet : UIViewController {
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
         
         nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertDialogue.categoryFeedVC = self.categoryFeedVC
         nuteeAlertDialogue.postId = postId
         nuteeAlertDialogue.addDeletePostAction()
         
