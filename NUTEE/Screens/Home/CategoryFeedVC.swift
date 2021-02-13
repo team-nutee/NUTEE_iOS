@@ -1,26 +1,26 @@
 //
-//  FeedContainerCVCell.swift
+//  CategoryFeedVC.swift
 //  NUTEE
 //
-//  Created by Hee Jae Kim on 2020/07/31.
-//  Copyright © 2020 Nutee. All rights reserved.
+//  Created by eunwoo on 2021/02/13.
+//  Copyright © 2021 Nutee. All rights reserved.
 //
+
 import UIKit
 import SnapKit
 import SkeletonView
 
-class FeedContainerCVCell : UICollectionViewCell {
-    
-    static let identifier = Identify.FeedContainerCVCell
+class CategoryFeedVC: UIViewController {
     
     // MARK: - UI components
     
     let activityIndicator = UIActivityIndicatorView()
-    
-    let newsFeedTableView = UITableView()
+        
+    let categoryFeedTableView = UITableView()
     let refreshControl = UIRefreshControl()
     
     // MARK: - Variables and Properties
+    var feedContainerCVCell: FeedContainerCVCell?
     
     var homeVC: UIViewController?
     var category: String?
@@ -28,27 +28,27 @@ class FeedContainerCVCell : UICollectionViewCell {
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
     var postContent: [PostBody]? // 받아온 것 중에서 Body만
-    
+        
     // MARK: - Life Cycle
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationItem.title = "NUTEE"
+        view.backgroundColor = .white
         
         initView()
         makeConstraints()
         
-        fetchNewsFeed()
+        fetchCategoryFeed()
         
         setRefresh()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    // MARK: - helper
     
-    // MARK: - Helper
     func initView() {
-        _ = newsFeedTableView.then {
+        _ = categoryFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
             
@@ -57,7 +57,7 @@ class FeedContainerCVCell : UICollectionViewCell {
             $0.separatorInset.left = 0
             $0.separatorStyle = .none
             
-            $0.isHidden = true
+            $0.alpha = 0
         }
         
         _ = activityIndicator.then {
@@ -67,59 +67,75 @@ class FeedContainerCVCell : UICollectionViewCell {
     }
     
     func makeConstraints() {
-        contentView.addSubview(newsFeedTableView)
-        contentView.addSubview(activityIndicator)
+        view.addSubview(categoryFeedTableView)
+        view.addSubview(activityIndicator)
         
-        newsFeedTableView.snp.makeConstraints {
-            $0.top.equalTo(contentView.snp.top)
-            $0.left.equalTo(contentView.snp.left)
-            $0.right.equalTo(contentView.snp.right)
-            $0.bottom.equalTo(contentView.snp.bottom)
+        categoryFeedTableView.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.snp.bottom)
         }
         
         activityIndicator.snp.makeConstraints {
-            $0.top.equalTo(newsFeedTableView.snp.top)
-            $0.left.equalTo(newsFeedTableView.snp.left)
-            $0.right.equalTo(newsFeedTableView.snp.right)
-            $0.bottom.equalTo(newsFeedTableView.snp.bottom)
+            $0.top.equalTo(categoryFeedTableView.snp.top)
+            $0.left.equalTo(categoryFeedTableView.snp.left)
+            $0.right.equalTo(categoryFeedTableView.snp.right)
+            $0.bottom.equalTo(categoryFeedTableView.snp.bottom)
         }
     }
-
+    
     func setRefresh() {
-        newsFeedTableView.addSubview(refreshControl)
+        categoryFeedTableView.addSubview(refreshControl)
         refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
     }
-    
+
     @objc func updatePosts() {
-        setFetchNewsFeedFail()
+        getCategoryPostsService(category: self.category ?? "", lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.categoryFeedTableView.reloadData()
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+    func fetchCategoryFeed() {
+        getCategoryPostsService(category: self.category ?? "", lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.afterFetchCategoryFeed()
+        }
     }
     
     func loadMorePosts(lastId: Int) {
-        setFetchNewsFeedFail()
+        if postContent?.count != 0 {
+            getCategoryPostsService(category: self.category ?? "", lastId: lastId, limit: 10) { (Post) in
+                self.postContent?.append(contentsOf: Post.body)
+                self.categoryFeedTableView.reloadData()
+                self.categoryFeedTableView.tableFooterView = nil
+            }
+        }
     }
     
-    func fetchNewsFeed() {
-        setFetchNewsFeedFail()
+    func setFetchCategoryFeedFail() {
+        self.activityIndicator.stopAnimating()
+        categoryFeedTableView.alpha = 0
+
+        categoryFeedTableView.setEmptyView(title: "오류 발생😢", message: "피드를 조회하지 못했습니다")
     }
     
-    func setFetchNewsFeedFail() {
-        activityIndicator.stopAnimating()
-        newsFeedTableView.isHidden = false
+    func afterFetchCategoryFeed() {
+        categoryFeedTableView.reloadData()
         
-        newsFeedTableView.setEmptyView(title: "오류 발생😢", message: "피드를 조회하지 못했습니다")
-    }
-    
-    func afterFetchNewsFeed() {
-        newsFeedTableView.reloadData()
-        
         activityIndicator.stopAnimating()
-        newsFeedTableView.isHidden = false
+        categoryFeedTableView.alpha = 1
     }
 }
 
 // MARK: - TableView
-extension FeedContainerCVCell : SkeletonTableViewDelegate { }
-extension FeedContainerCVCell : SkeletonTableViewDataSource {
+extension CategoryFeedVC : SkeletonTableViewDelegate { }
+extension CategoryFeedVC : SkeletonTableViewDataSource {
     
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
         return Identify.NewsFeedTVCell
@@ -134,15 +150,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = self.postContent?.count ?? 0
-
-        if postItems == 0 {
-            newsFeedTableView.setEmptyView(title: "게시글이 없습니다", message: "게시글을 작성해주세요✏️")
-        } else {
-            newsFeedTableView.restore()
-        }
-
-        return postItems
+        return self.postContent?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -150,13 +158,15 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
         cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
+        cell.categoryButton.isUserInteractionEnabled = false
         
         post = postContent?[indexPath.row]
         
         // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
         cell.newsPost = self.post
         cell.homeVC = self.homeVC
-        cell.feedContainerCVCell = self
+        cell.feedContainerCVCell = self.feedContainerCVCell
+        cell.categoryFeedVC = self
         
         cell.fillDataToView()
         
@@ -168,7 +178,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         
         // 현재 게시물 id를 DetailNewsFeedVC로 넘겨줌
         detailNewsFeedVC.postId = postContent?[indexPath.row].id
-        detailNewsFeedVC.feedContainerCVCell = self
+        detailNewsFeedVC.feedContainerCVCell = self.feedContainerCVCell
         if detailNewsFeedVC.postId != nil {
             homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
         }
@@ -183,16 +193,16 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
             
             let spinner = UIActivityIndicatorView()
             
-            newsFeedTableView.tableFooterView = spinner
-            newsFeedTableView.tableFooterView?.isHidden = false
+            categoryFeedTableView.tableFooterView = spinner
+            categoryFeedTableView.tableFooterView?.isHidden = false
             
             if newsPost?.body.count != 0 && newsPost?.body.count != nil {
                 // 불러올 포스팅이 있을 경우
                 spinner.startAnimating()
-                spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: newsFeedTableView.bounds.width, height: CGFloat(44))
+                spinner.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: categoryFeedTableView.bounds.width, height: CGFloat(44))
                 spinner.hidesWhenStopped = true
-                newsFeedTableView.tableFooterView = spinner
-                newsFeedTableView.tableFooterView?.isHidden = false
+                categoryFeedTableView.tableFooterView = spinner
+                categoryFeedTableView.tableFooterView?.isHidden = false
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.loadMorePosts(lastId: self.post?.id ?? 0)
@@ -200,7 +210,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
                 
             } else {
                 // 사용자 NewsFeed의 마지막 포스팅일 경우
-                self.newsFeedTableView.tableFooterView?.isHidden = true
+                self.categoryFeedTableView.tableFooterView?.isHidden = true
                 spinner.stopAnimating()
             }
             
@@ -209,37 +219,9 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
     }
 }
 
-//MARK: - Server connect
-extension FeedContainerCVCell{
-    
-    func getFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getFavoritePosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
-                
-            case .pathErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
-                
-            case .serverErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
-                
-            case .networkFail :
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
-            }
-        }
-    }
-    
+// MARK: - Server Connect
+
+extension CategoryFeedVC {
     func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
         ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
             
@@ -251,68 +233,21 @@ extension FeedContainerCVCell{
                 
             case .requestErr(_):
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchCategoryFeedFail()
                 
             case .pathErr:
-                self.setFetchNewsFeedFail()
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.setFetchCategoryFeedFail()
                 
             case .serverErr:
-                self.setFetchNewsFeedFail()
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
+                self.setFetchCategoryFeedFail()
                 
             case .networkFail :
-                self.setFetchNewsFeedFail()
                 self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-            }
-        }
-    }
-    
-    // MARK: - Delete post
-    func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
-        ContentService.shared.deletePost(postId) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post delete succuss", res)
-                completionHandler()
+                self.setFetchCategoryFeedFail()
                 
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
             }
         }
     }
-    
-    // MARK: - Report post
-    func reportPost(postId: Int, content: String) {
-        ContentService.shared.reportPost(postId, content) { (responsedata) in
-
-            switch responsedata {
-            case .success(let res):
-                print("post report success", res)
-
-            case .requestErr(_):
-                print("request error")
-
-            case .pathErr:
-                print(".pathErr")
-
-            case .serverErr:
-                print(".serverErr")
-
-            case .networkFail :
-                print("failure")
-            }
-        }
-    }
-    
 }

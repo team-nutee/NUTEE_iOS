@@ -23,9 +23,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         $0.titleLabel?.font = .systemFont(ofSize: 11)
         $0.setTitleColor(.white, for: .normal)
-        
-        $0.isUserInteractionEnabled = false
-        
+                
         $0.isSkeletonable = true
     }
     var dateLabel = UILabel().then {
@@ -108,6 +106,8 @@ class NewsFeedTVCell: UITableViewCell {
     
     var feedContainerCVCell: FeedContainerCVCell?
     
+    var categoryFeedVC: CategoryFeedVC?
+    
     var delegate: NewsFeedTVCellDelegate?
     
     var newsPost: PostBody?
@@ -128,6 +128,7 @@ class NewsFeedTVCell: UITableViewCell {
     
     func makeConstraints() {
         moreButton.addTarget(self, action: #selector(didTapMoreButton), for: .touchUpInside)
+        categoryButton.addTarget(self, action: #selector(didTapCategoryButton), for: .touchUpInside)
         
         
         // Add SubViews
@@ -297,12 +298,23 @@ class NewsFeedTVCell: UITableViewCell {
         }
         
         nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertSheet.categoryFeedVC = self.categoryFeedVC
         nuteeAlertSheet.postId = newsPost?.id
         nuteeAlertSheet.editPostBody = newsPost
         
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         homeVC?.present(nuteeAlertSheet, animated: true)
+    }
+    
+    @objc func didTapCategoryButton() {
+        let categoryFeedVC = CategoryFeedVC()
+        
+        categoryFeedVC.feedContainerCVCell = self.feedContainerCVCell
+        categoryFeedVC.homeVC = self.homeVC
+        categoryFeedVC.category = newsPost?.category
+        
+        homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }
 
 //    func deletePost() {
