@@ -13,6 +13,8 @@ import SkeletonView
 class CategoryFeedVC: UIViewController {
     
     // MARK: - UI components
+    
+    let activityIndicator = UIActivityIndicatorView()
         
     let categoryFeedTableView = UITableView()
     let refreshControl = UIRefreshControl()
@@ -55,17 +57,31 @@ class CategoryFeedVC: UIViewController {
             $0.separatorInset.left = 0
             $0.separatorStyle = .none
             
+            $0.alpha = 0
+        }
+        
+        _ = activityIndicator.then {
+            $0.style = .medium
+            $0.startAnimating()
         }
     }
     
     func makeConstraints() {
         view.addSubview(categoryFeedTableView)
+        view.addSubview(activityIndicator)
         
         categoryFeedTableView.snp.makeConstraints {
             $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
+        }
+        
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(categoryFeedTableView.snp.top)
+            $0.left.equalTo(categoryFeedTableView.snp.left)
+            $0.right.equalTo(categoryFeedTableView.snp.right)
+            $0.bottom.equalTo(categoryFeedTableView.snp.bottom)
         }
     }
     
@@ -88,7 +104,7 @@ class CategoryFeedVC: UIViewController {
     func fetchCategoryFeed() {
         getCategoryPostsService(category: self.category ?? "", lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
-            self.categoryFeedTableView.reloadData()
+            self.afterFetchCategoryFeed()
         }
     }
     
@@ -103,9 +119,17 @@ class CategoryFeedVC: UIViewController {
     }
     
     func setFetchCategoryFeedFail() {
-        categoryFeedTableView.isHidden = false
+        self.activityIndicator.stopAnimating()
+        categoryFeedTableView.alpha = 0
 
         categoryFeedTableView.setEmptyView(title: "오류 발생😢", message: "피드를 조회하지 못했습니다")
+    }
+    
+    func afterFetchCategoryFeed() {
+        categoryFeedTableView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        categoryFeedTableView.alpha = 1
     }
 }
 
