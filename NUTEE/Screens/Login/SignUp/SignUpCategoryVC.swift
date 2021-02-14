@@ -1,5 +1,5 @@
 //
-//  CategoryVC.swift
+//  SignUpCategoryVC.swift
 //  NUTEE
 //
 //  Created by Hee Jae Kim on 2020/12/28.
@@ -10,7 +10,7 @@ import UIKit
 
 import SnapKit
 
-class CategoryVC: SignUpViewController {
+class SignUpCategoryVC: SignUpViewController {
     
     // MARK: - UI components
     
@@ -42,7 +42,7 @@ class CategoryVC: SignUpViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        enterCategoryVCAnimate()
+        enterSignUpCategoryVCAnimate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -129,12 +129,14 @@ class CategoryVC: SignUpViewController {
     }
     
     func selectCategoryButtonAligment() {
+        selectCategoryButton.titleLabel?.sizeToFit()
+        
         var space: CGFloat = 0.0
         space = selectCategoryButton.frame.width - (selectCategoryButton.titleLabel?.frame.width ?? 0) - (selectCategoryButton.imageView?.frame.width ?? 0)
         selectCategoryButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: space)
     }
     
-    func updateCategoryVC() {
+    func updateSelectedCategoryStatus() {
         categoryTableView.reloadData()
         
         if selectedCategoryList.isEmpty == true {
@@ -158,12 +160,11 @@ class CategoryVC: SignUpViewController {
             nextButton.isEnabled = true
             nextButton.setTitleColor(.nuteeGreen, for: .normal)
         }
-        selectCategoryButton.titleLabel?.sizeToFit()
     }
     
     @objc func didTapSelectCategoryButton() {
         let selectCategorySheet = NuteeAlertSheet()
-        selectCategorySheet.categoryVC = self
+        selectCategorySheet.signUpCategoryVC = self
         
         selectCategorySheet.handleArea = 0
         selectCategorySheet.titleContent = "카테고리를 선택해주세요"
@@ -187,13 +188,9 @@ class CategoryVC: SignUpViewController {
         present(majorVC, animated: false)
     }
     
-}
-
-// MARK: - CategoryVC Animation
-
-extension CategoryVC {
+    // MARK: - SignUpCategoryVC Animation
     
-    private func enterCategoryVCAnimate() {
+    func enterSignUpCategoryVCAnimate() {
         // select category button
         UIView.animate(withDuration: animationDuration,
                        delay: 1 + 0.4,
@@ -209,13 +206,12 @@ extension CategoryVC {
                         self.selectCategoryUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
     }
-    
 }
 
 // MARK: - optionList TableView
 
-extension CategoryVC : UITableViewDelegate { }
-extension CategoryVC : UITableViewDataSource {
+extension SignUpCategoryVC : UITableViewDelegate { }
+extension SignUpCategoryVC : UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return categoryTVCellHeight
@@ -233,7 +229,7 @@ extension CategoryVC : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.CategoryTVCell, for: indexPath) as! CategoryTVCell
         cell.selectionStyle = .none
         
-        cell.categoryVC = self
+        cell.signUpCategoryVC = self
         cell.indextPathRow = indexPath.row
         
         cell.initCell()
@@ -257,7 +253,7 @@ class CategoryTVCell : UITableViewCell {
     
     // MARK: - Variables and Properties
     
-    var categoryVC: CategoryVC?
+    var signUpCategoryVC: SignUpCategoryVC?
     var indextPathRow: Int?
     
     // MARK: - Life Cycle
@@ -278,7 +274,7 @@ class CategoryTVCell : UITableViewCell {
     
     func initCell() {
         _ = selectedCategoryLabel.then {
-            $0.text = categoryVC?.selectedCategoryList[indextPathRow!]
+            $0.text = signUpCategoryVC?.selectedCategoryList[indextPathRow!]
             $0.font = .systemFont(ofSize: 14)
             $0.textColor = .black
             $0.textAlignment = .left
@@ -312,13 +308,13 @@ class CategoryTVCell : UITableViewCell {
     }
     
     @objc func didTapDeleteCategoryButton() {
-        categoryVC?.selectedCategoryList.remove(at: indextPathRow!)
-        categoryVC?.updateCategoryVC()
+        signUpCategoryVC?.selectedCategoryList.remove(at: indextPathRow!)
+        signUpCategoryVC?.updateSelectedCategoryStatus()
     }
     
 }
 
 // MARK: - Server connect
 
-extension CategoryVC {
+extension SignUpCategoryVC {
 }

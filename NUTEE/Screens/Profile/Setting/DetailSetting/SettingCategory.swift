@@ -8,118 +8,128 @@
 
 import UIKit
 
-class SettingCategoryVC : UIViewController {
+class SettingCategoryVC: SignUpCategoryVC {
     
     // MARK: - UI components
     
-    let categoryTitleLabel = UILabel()
-    let saveButton = UIButton()
-    
-    let categoryTextField = UITextField()
-    let plusButton = UIButton()
-    
-    let categoryButton = UIButton()
+    let saveButton = HighlightedButton()
     
     // MARK: - Variables and Properties
+    
+    var originalCategoryList: [String] = ["카테고리1", "카테고리2"]
     
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         self.navigationItem.title = "설정"
         view.backgroundColor = .white
         
-        initView()
-        addSubView()
+        xPosAnimationRange = 0.0
+        yPosAnimationRange = 0.0
         
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapKeyboardOutSide)))
+        super.viewDidLoad()
+        
+        fetchUserCategoryList()
+    }
+   
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        saveButton.snp.updateConstraints {
+            $0.width.equalTo(saveButton.intrinsicContentSize.width)
+        }
     }
     
     // MARK: - Helper
     
-    func initView() {
-        _ = categoryTitleLabel.then {
-            $0.text = "선호하는 카테고리를 설정해주세요!!"
-            $0.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 18.0)
-        }
+    override func initView() {
+        super.initView()
+        
         _ = saveButton.then {
             $0.setTitle("저장하기", for: .normal)
             $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
-        }
-        
-        _ = categoryTextField.then {
-            $0.text = "카테고리를 설정하러 가볼까요?"
-            $0.font = .boldSystemFont(ofSize: 14)
+            
             $0.isEnabled = false
             
-            $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-            $0.tintColor = .nuteeGreen
-        }
-        _ = plusButton.then {
-            let configuration = UIImage.SymbolConfiguration(pointSize: 17, weight: .bold)
-            $0.setImage(UIImage(systemName: "plus", withConfiguration: configuration), for: .normal)
-            $0.tintColor = .nuteeGreen
+            $0.addTarget(self, action: #selector(didTapSaveButton), for: .touchUpInside)
         }
         
-        _ = categoryButton.then {
-            let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 13), NSAttributedString.Key.foregroundColor: UIColor.black]
-            $0.setAttributedTitle(NSAttributedString(string: "블라블라", attributes: attributes), for: .normal)
-            
-            $0.backgroundColor = UIColor(red: 196, green: 196, blue: 196)
+        _ = guideLabel.then {
+            $0.font = .boldSystemFont(ofSize: 18)
+            $0.alpha = 1
+        }
+        
+        _ = selectCategoryButton.then {
+            $0.alpha = 1
+        }
+        _ = selectCategoryUnderLineView.then {
+            $0.alpha = 1
         }
     }
-    
-    func addSubView() {
+
+    override func makeConstraints() {
+        super.makeConstraints()
         
-        view.addSubview(categoryTitleLabel)
-        view.addSubview(saveButton)
+        // remove SignUp style UI components
+        closeButton.removeFromSuperview()
+        progressView.removeFromSuperview()
         
-        view.addSubview(categoryTextField)
-        view.addSubview(plusButton)
-        
-        view.addSubview(categoryButton)
-        
-        
-        categoryTitleLabel.snp.makeConstraints {
+        // add replacement SignUp style UI components constraints
+        guideLabel.snp.makeConstraints {
             $0.top.equalTo(view.snp.top).offset(45)
             $0.left.equalTo(view.snp.left).offset(20)
         }
+        
+        previousButton.snp.updateConstraints {
+            $0.width.equalTo(0)
+            $0.height.equalTo(0)
+        }
+        
+        // add Subview
+        view.addSubview(saveButton)
+        
+        // make Constraints
         saveButton.snp.makeConstraints {
             $0.width.equalTo(saveButton.intrinsicContentSize.width)
             $0.height.equalTo(40)
             
-            $0.centerY.equalTo(categoryTitleLabel)
+            $0.centerY.equalTo(guideLabel)
             $0.right.equalTo(view.snp.right).inset(20)
         }
+    }
+
+    func fetchUserCategoryList() {
+        selectedCategoryList = originalCategoryList
         
-        categoryTextField.snp.makeConstraints {
-            $0.height.equalTo(35)
-            
-            $0.top.equalTo(categoryTitleLabel.snp.bottom).offset(40)
-            $0.left.equalTo(categoryTitleLabel.snp.left)
-            $0.right.equalTo(saveButton.snp.right)
-        }
-        plusButton.snp.makeConstraints {
-            $0.centerY.equalTo(categoryTextField)
-            $0.right.equalTo(categoryTextField.snp.right)
-        }
-        
-        categoryButton.snp.makeConstraints {
-            $0.width.equalTo(70)
-            $0.height.equalTo(30)
-            
-            $0.top.equalTo(categoryTextField.snp.bottom).offset(50)
-            $0.left.equalTo(categoryTextField.snp.left)
-        }
-        
+        updateSelectedCategoryStatus()
     }
     
-    @objc func didTapKeyboardOutSide() {
-        categoryTextField.resignFirstResponder()
+    override func updateSelectedCategoryStatus() {
+        super.updateSelectedCategoryStatus()
+        
+        if selectedCategoryList.isEmpty == false && selectedCategoryList != originalCategoryList {
+            saveButton.isEnabled = true
+        } else {
+            saveButton.isEnabled = false
+        }
+    }
+    
+    @objc func didTapSaveButton() {
+        simpleNuteeAlertDialogue(title: "카테고리 변경", message: "카테고리가 성공적으로 변경되었습니다")
+        saveButton.isEnabled = false
+    }
+    
+    // MARK: - Remove CategoryVC Animation
+    
+    override func enterCommonViewsAnimate() {
+        // <---- make do nothing
+    }
+    
+    override func enterSignUpCategoryVCAnimate() {
+        // <---- make do nothing
     }
     
 }
