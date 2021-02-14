@@ -128,11 +128,11 @@ class NicknameVC: SignUpViewController {
     @objc override func didTapNextButton() {
         nicknameTextField.resignFirstResponder()
         
-        let categoryVC = CategoryVC()
-        categoryVC.totalSignUpViews = totalSignUpViews
-        categoryVC.progressStatusCount = progressStatusCount
+        let signUpCategoryVC = SignUpCategoryVC()
+        signUpCategoryVC.totalSignUpViews = totalSignUpViews
+        signUpCategoryVC.progressStatusCount = progressStatusCount
         
-        present(categoryVC, animated: false)
+        present(signUpCategoryVC, animated: false)
     }
 
 }

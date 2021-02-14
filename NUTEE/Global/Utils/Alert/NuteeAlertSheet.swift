@@ -31,7 +31,7 @@ class NuteeAlertSheet : UIViewController {
     
     var isNeedCompleteButton = false
     
-    var categoryVC: CategoryVC?
+    var signUpCategoryVC: SignUpCategoryVC?
     var majorVC: MajorVC?
     var postVC: PostVC?
     
@@ -214,17 +214,17 @@ class NuteeAlertSheet : UIViewController {
                 selectedOptionList.append(selectedOption[0] as! String)
             }
         }
-        categoryVC?.selectedCategoryList = selectedOptionList
+        signUpCategoryVC?.selectedCategoryList = selectedOptionList
         
-        categoryVC?.updateCategoryVC()
-        categoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
-        UIView.animate(withDuration: categoryVC?.animationDuration ?? 1.4,
+        signUpCategoryVC?.updateSelectedCategoryStatus()
+        signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
+        UIView.animate(withDuration: signUpCategoryVC?.animationDuration ?? 1.4,
                        delay: 0.2,
                        usingSpringWithDamping: 0.6,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
                        animations: {
-                        self.categoryVC?.selectCategoryButton.titleLabel?.alpha = 1
+                        self.signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 1
         })
         
         didTapOutsideCardSheet()

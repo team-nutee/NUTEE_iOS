@@ -68,7 +68,7 @@
 		D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E85325A18F89007D8585 /* HighlightedButton.swift */; };
 		D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CF725418B5A009A1DC2 /* NotificationVC.swift */; };
 		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
-		D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* CategoryVC.swift */; };
+		D5381F112599EC8200C94A6F /* SignUpCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */; };
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
@@ -203,7 +203,7 @@
 		D527E85325A18F89007D8585 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
 		D5310CF725418B5A009A1DC2 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
-		D5381F102599EC8200C94A6F /* CategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
+		D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCategoryVC.swift; sourceTree = "<group>"; };
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
@@ -583,7 +583,7 @@
 				5E8BA6B924C6D5FF00A58F43 /* EmailVC.swift */,
 				D54FE03624F16CE400BA0361 /* IDVC.swift */,
 				D54FE03824F180DC00BA0361 /* NicknameVC.swift */,
-				D5381F102599EC8200C94A6F /* CategoryVC.swift */,
+				D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */,
 				D590451C259E09E40091FEC0 /* MajorVC.swift */,
 				D54FE03A24F34F6600BA0361 /* PasswordVC.swift */,
 			);
@@ -983,7 +983,7 @@
 				D50BB0AE24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift in Sources */,
 				D58C93DE24CAE556005570D4 /* ReplyTVCell.swift in Sources */,
 				D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */,
-				D5381F112599EC8200C94A6F /* CategoryVC.swift in Sources */,
+				D5381F112599EC8200C94A6F /* SignUpCategoryVC.swift in Sources */,
 				453D30F525D18F79005BFA2B /* UploadImage.swift in Sources */,
 				D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */,
 				45E6903725BA8BA4007FFEE7 /* MajorFeedCVCell.swift in Sources */,

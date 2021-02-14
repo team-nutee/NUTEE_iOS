@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingCategoryVC: CategoryVC {
+class SettingCategoryVC: SignUpCategoryVC {
     
     // MARK: - UI components
     
@@ -104,11 +104,11 @@ class SettingCategoryVC: CategoryVC {
     func fetchUserCategoryList() {
         selectedCategoryList = originalCategoryList
         
-        updateCategoryVC()
+        updateSelectedCategoryStatus()
     }
     
-    override func updateCategoryVC() {
-        super.updateCategoryVC()
+    override func updateSelectedCategoryStatus() {
+        super.updateSelectedCategoryStatus()
         
         if selectedCategoryList.isEmpty == false && selectedCategoryList != originalCategoryList {
             saveButton.isEnabled = true
@@ -128,7 +128,7 @@ class SettingCategoryVC: CategoryVC {
         // <---- make do nothing
     }
     
-    override func enterCategoryVCAnimate() {
+    override func enterSignUpCategoryVCAnimate() {
         // <---- make do nothing
     }
     
