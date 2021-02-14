@@ -129,6 +129,8 @@ class CategoryVC: SignUpViewController {
     }
     
     func selectCategoryButtonAligment() {
+        selectCategoryButton.titleLabel?.sizeToFit()
+        
         var space: CGFloat = 0.0
         space = selectCategoryButton.frame.width - (selectCategoryButton.titleLabel?.frame.width ?? 0) - (selectCategoryButton.imageView?.frame.width ?? 0)
         selectCategoryButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: space)
@@ -158,7 +160,6 @@ class CategoryVC: SignUpViewController {
             nextButton.isEnabled = true
             nextButton.setTitleColor(.nuteeGreen, for: .normal)
         }
-        selectCategoryButton.titleLabel?.sizeToFit()
     }
     
     @objc func didTapSelectCategoryButton() {
@@ -187,13 +188,9 @@ class CategoryVC: SignUpViewController {
         present(majorVC, animated: false)
     }
     
-}
-
-// MARK: - CategoryVC Animation
-
-extension CategoryVC {
+    // MARK: - CategoryVC Animation
     
-    private func enterCategoryVCAnimate() {
+    func enterCategoryVCAnimate() {
         // select category button
         UIView.animate(withDuration: animationDuration,
                        delay: 1 + 0.4,
@@ -209,7 +206,6 @@ extension CategoryVC {
                         self.selectCategoryUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
     }
-    
 }
 
 // MARK: - optionList TableView

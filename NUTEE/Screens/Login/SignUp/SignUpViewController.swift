@@ -31,8 +31,8 @@ class SignUpViewController: UIViewController {
     var progressStatusCount: Float = 0.0
     
     var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
+    var xPosAnimationRange: CGFloat = 50
+    var yPosAnimationRange: CGFloat = 50
     
     var previousButtonBottomConstraint: Constraint?
     
@@ -59,7 +59,7 @@ class SignUpViewController: UIViewController {
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         switch viewControllerToPresent {
         case is NuteeAlertDialogue, is NuteeAlertSheet:
-            viewControllerToPresent.modalPresentationStyle = .overCurrentContext
+            viewControllerToPresent.modalPresentationStyle = .custom
         default:
             viewControllerToPresent.modalPresentationStyle = .fullScreen
         }
@@ -151,7 +151,7 @@ class SignUpViewController: UIViewController {
             $0.right.equalTo(view.snp.right).inset(20)
         }
         
-        // specific constraints are here
+        // specific constraints will be here
         
         previousButton.snp.makeConstraints {
             $0.width.equalTo(view.frame.size.width / 2.0)
@@ -195,13 +195,9 @@ class SignUpViewController: UIViewController {
         view.endEditing(true)
     }
     
-}
-
-// MARK: - PasswordVC Animation
-
-extension SignUpViewController {
+    // MARK: - SignUpViewController Common Animation
     
-    private func enterCommonViewsAnimate() {
+    func enterCommonViewsAnimate() {
         // progressView
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
@@ -225,6 +221,7 @@ extension SignUpViewController {
     }
     
 }
+
 // MARK: - Keyboard
 
 extension SignUpViewController {
