@@ -47,6 +47,7 @@
 		5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C324C6D63D00A58F43 /* PostVC.swift */; };
 		5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C524C6D64300A58F43 /* SearchVC.swift */; };
 		5E8BA6C824C6D64A00A58F43 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8BA6C724C6D64A00A58F43 /* LoginVC.swift */; };
+		C5ACF8EF25DA700C00B179DD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5ACF8EE25DA700C00B179DD /* GoogleService-Info.plist */; };
 		D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD724D14714005F4580 /* Font+Enum.swift */; };
 		D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BD924D1472A005F4580 /* Identify+Enum.swift */; };
 		D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BDB24D14734005F4580 /* Image+Enum.swift */; };
@@ -182,6 +183,8 @@
 		98AE3E3C051A29A8490945A6 /* Pods-NUTEETests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.debug.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.debug.xcconfig"; sourceTree = "<group>"; };
 		A816ED88D6C73686EF0AFCD1 /* Pods-NUTEE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.release.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.release.xcconfig"; sourceTree = "<group>"; };
 		B68CB2F77807D8C93FCD9CD4 /* Pods-NUTEE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEE.debug.xcconfig"; path = "Target Support Files/Pods-NUTEE/Pods-NUTEE.debug.xcconfig"; sourceTree = "<group>"; };
+		C5ACF8EE25DA700C00B179DD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C5ACF8FC25DA72C500B179DD /* NUTEE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NUTEE.entitlements; sourceTree = "<group>"; };
 		D12D8BD724D14714005F4580 /* Font+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Enum.swift"; sourceTree = "<group>"; };
 		D12D8BD924D1472A005F4580 /* Identify+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Identify+Enum.swift"; sourceTree = "<group>"; };
 		D12D8BDB24D14734005F4580 /* Image+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Enum.swift"; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 		5E8BA65024C6D1AA00A58F43 /* NUTEE */ = {
 			isa = PBXGroup;
 			children = (
+				C5ACF8FC25DA72C500B179DD /* NUTEE.entitlements */,
+				C5ACF8EE25DA700C00B179DD /* GoogleService-Info.plist */,
 				5E8BA68524C6D1C800A58F43 /* Screens */,
 				5E8BA68424C6D1BF00A58F43 /* Global */,
 			);
@@ -820,6 +825,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5CC689224E6DEA400274451 /* TermsAndConditions.storyboard in Resources */,
+				C5ACF8EF25DA700C00B179DD /* GoogleService-Info.plist in Resources */,
 				5E8BA66124C6D1AC00A58F43 /* LaunchScreen.storyboard in Resources */,
 				5E8BA65E24C6D1AC00A58F43 /* Assets.xcassets in Resources */,
 			);
@@ -1193,9 +1199,10 @@
 			baseConfigurationReference = B68CB2F77807D8C93FCD9CD4 /* Pods-NUTEE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NUTEE/NUTEE.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 36BC59Q598;
+				DEVELOPMENT_TEAM = 78A867AHKF;
 				INFOPLIST_FILE = "NUTEE/Global/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1203,7 +1210,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.nutee.NUTEE;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.nutee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1215,9 +1222,10 @@
 			baseConfigurationReference = A816ED88D6C73686EF0AFCD1 /* Pods-NUTEE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NUTEE/NUTEE.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 36BC59Q598;
+				DEVELOPMENT_TEAM = 78A867AHKF;
 				INFOPLIST_FILE = "NUTEE/Global/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1225,7 +1233,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.nutee.NUTEE;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.nutee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
