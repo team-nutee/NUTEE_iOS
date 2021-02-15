@@ -312,7 +312,6 @@ struct ContentService {
                             do{
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(PostContent.self, from: value)
-                                print(result.body.images ?? [])
                                 completion(.success(result))
                             } catch {
                                 completion(.pathErr)
@@ -359,7 +358,7 @@ struct ContentService {
                 if let status = response.response?.statusCode {
                     switch status {
                     case 200:
-                        completion(.success("post 삭제 성공."))
+                        completion(.success(status))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)

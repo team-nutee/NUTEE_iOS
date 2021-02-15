@@ -273,8 +273,7 @@ extension FeedContainerCVCell{
         ContentService.shared.deletePost(postId) { (responsedata) in
 
             switch responsedata {
-            case .success(let res):
-                print("post delete succuss", res)
+            case .success(_):
                 completionHandler()
                 
             case .requestErr(_):
@@ -297,8 +296,8 @@ extension FeedContainerCVCell{
         ContentService.shared.reportPost(postId, content) { (responsedata) in
 
             switch responsedata {
-            case .success(let res):
-                print("post report success", res)
+            case .success(_):
+                break
 
             case .requestErr(_):
                 print("request error")
