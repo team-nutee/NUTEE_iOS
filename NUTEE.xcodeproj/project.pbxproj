@@ -22,7 +22,7 @@
 		45C92AF725878FFA00828E8A /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92AF625878FFA00828E8A /* SignIn.swift */; };
 		45C92B012587993400828E8A /* LoadingHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92B002587993400828E8A /* LoadingHUD.swift */; };
 		45C92B0625879A3900828E8A /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92B0525879A3900828E8A /* Splash.swift */; };
-		45D182112594B35B002810D0 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182102594B35B002810D0 /* SignUp.swift */; };
+		45D182112594B35B002810D0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182102594B35B002810D0 /* User.swift */; };
 		45D182192594B70D002810D0 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182182594B70D002810D0 /* UserService.swift */; };
 		45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */; };
 		45E6903725BA8BA4007FFEE7 /* MajorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903625BA8BA4007FFEE7 /* MajorFeedCVCell.swift */; };
@@ -148,7 +148,7 @@
 		45C92AF625878FFA00828E8A /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		45C92B002587993400828E8A /* LoadingHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingHUD.swift; sourceTree = "<group>"; };
 		45C92B0525879A3900828E8A /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
-		45D182102594B35B002810D0 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
+		45D182102594B35B002810D0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		45D182182594B70D002810D0 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteFeedCVCell.swift; sourceTree = "<group>"; };
 		45E6903625BA8BA4007FFEE7 /* MajorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MajorFeedCVCell.swift; sourceTree = "<group>"; };
@@ -420,7 +420,7 @@
 			children = (
 				5E8BA69724C6D2CC00A58F43 /* Notice.swift */,
 				45C92AF625878FFA00828E8A /* SignIn.swift */,
-				45D182102594B35B002810D0 /* SignUp.swift */,
+				45D182102594B35B002810D0 /* User.swift */,
 				4586B61425971917003968B0 /* Post.swift */,
 				4538F87C25A48C17004515C7 /* PostContent.swift */,
 				4561129025AC95A900B49546 /* Comment.swift */,
@@ -959,7 +959,7 @@
 				4586B61525971917003968B0 /* Post.swift in Sources */,
 				5E8BA6C424C6D63D00A58F43 /* PostVC.swift in Sources */,
 				45E6903F25BA9830007FFEE7 /* AllFeedCVCell.swift in Sources */,
-				45D182112594B35B002810D0 /* SignUp.swift in Sources */,
+				45D182112594B35B002810D0 /* User.swift in Sources */,
 				D5F8741425CB832300281196 /* TabBarHighlightedButton.swift in Sources */,
 				D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */,
 				D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */,

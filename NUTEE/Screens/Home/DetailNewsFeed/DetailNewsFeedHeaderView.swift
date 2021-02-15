@@ -370,7 +370,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
         
-        if post?.body.user.id == KeychainWrapper.standard.integer(forKey: "id") {
+        if post?.body.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
                                           ["삭제", UIColor.red, "deletePost"]]
         } else {
@@ -417,14 +417,10 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     func initPosting() {
         // 사용자 프로필 이미지 설정
-        if post?.body.user.image?.src != nil {
-            profileImageView.setImageNutee(post?.body.user.image?.src)
-        } else {
-            profileImageView.image = UIImage(named: "nutee_zigi_white")
-        }
+        profileImageView.setImageNutee(post?.body.user?.image?.src, profileImageView)
         
         // 사용자 이름 설정
-        nicknameLabel.text = post?.body.user.nickname
+        nicknameLabel.text = post?.body.user?.nickname
         
         // 게시글 게시 시간 설정
         if post?.body.createdAt == post?.body.updatedAt {

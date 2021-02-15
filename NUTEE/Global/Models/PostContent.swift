@@ -10,23 +10,7 @@ import Foundation
 
 // MARK: - PostContent
 struct PostContent: Codable {
-    let code: Int
-    let message: String
     let body: PostContentBody
-    let links: PostLinks
-
-    enum CodingKeys: String, CodingKey {
-        case code, message, body
-        case links
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        code = (try? values.decode(Int.self, forKey: .code)) ?? 0
-        message = (try? values.decode(String.self, forKey: .message)) ?? ""
-        body = (try? values.decode(PostContentBody.self, forKey: .body))!
-        links = (try? values.decode(PostLinks.self, forKey: .links)) ?? PostLinks.init(linksSelf: nil, updatePost: nil, removePost: nil, getFavoritePosts: nil, getCategoryPosts: nil, getComments: nil)
-    }
 }
 
 // MARK: - Body
@@ -34,7 +18,7 @@ struct PostContent: Codable {
 class PostContentBody: Codable {
     let id: Int
     let title, content, createdAt, updatedAt: String
-    let user: User
+    let user: UserBody?
     let images: [PostImage]?
     let likers: [Liker]?
     let comments: [CommentBody]?
@@ -62,7 +46,7 @@ class PostContentBody: Codable {
         createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
         blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
-        user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
+        user = (try? values.decode(UserBody.self, forKey: .user))
         images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
         comments = (try? values.decode([CommentBody].self, forKey: .comments)) ?? []
         retweet = (try? values.decode(PostBody.self, forKey: .retweet)) ?? nil

@@ -290,7 +290,7 @@ class NewsFeedTVCell: UITableViewCell {
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
         
-        if newsPost?.user.id == KeychainWrapper.standard.integer(forKey: "id") {
+        if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
                                           ["삭제", UIColor.red, "deletePost"]]
         } else {

@@ -29,19 +29,13 @@ extension UIImageView {
 
     }
 
-    func setImageNutee(_ urlString: String?){
+    func setImageNutee(_ urlString: String?, _ imageView: UIImageView){
         if urlString == "" || urlString == nil {
-            setImage(with: APIConstants.CurrentServiceURL + "/settings/nutee_profile.png")
+            image = UIImage(named: "nutee_zigi_white")
+            imageView.contentMode = .scaleAspectFit
         } else {
-            setImage(with: APIConstants.CurrentServiceURL + "/"  + (urlString ?? ""))
-        }
-    }
-    
-    func setImageContentMode(_ urlString: String?, imgvw: ImageView){
-        if urlString == "" || urlString == nil {
-            imgvw.contentMode = .scaleAspectFit
-        } else {
-            imgvw.contentMode = .scaleAspectFill
+            setImage(with: urlString ?? "")
+            imageView.contentMode = .scaleAspectFill
         }
     }
 

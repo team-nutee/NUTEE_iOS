@@ -1,5 +1,5 @@
 //
-//  SignUp.swift
+//  User.swift
 //  NUTEE
 //
 //  Created by eunwoo on 2020/12/21.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-// MARK: - SignUp
-struct SignUp: Codable {
-    let body: SignUpBody
+// MARK: - User
+struct User: Codable {
+    let body: UserBody
 }
 
-struct SignUpBody: Codable {
+struct UserBody: Codable {
     let id: Int
     let nickname: String
-    let image: UserProfileImage
+    let image: UserProfileImage?
     let interests: [Interest]
     let majors: [Major]
     let postNum, commentNum, likeNum: Int

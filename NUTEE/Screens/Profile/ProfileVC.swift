@@ -22,6 +22,7 @@ class ProfileVC: UIViewController {
     let userFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     // MARK: - Variables and Properties
+    var user: User?
     
     // MARK: - Dummy data
     
@@ -38,7 +39,10 @@ class ProfileVC: UIViewController {
         initView()
         makeConstraints()
         
-        fillDataToView()
+        getMyProfileService { (user) in
+            self.fillDataToView()
+        }
+        
     }
     
     // MARK: - Helper
@@ -146,8 +150,9 @@ class ProfileVC: UIViewController {
     }
     
     func fillDataToView() {
-        userProfileImageImageView.image = #imageLiteral(resourceName: "nutee_zigi_green")
-        userNickNameButton.setTitle("닉네임닉네임닉네임닉네임닉네임닉네임", for: .normal)
+        userProfileImageImageView.setImageNutee(user?.body.nickname, userProfileImageImageView)
+        
+        userNickNameButton.setTitle(user?.body.nickname, for: .normal)
         
         userMenuBar.profileVC = self
     }
@@ -222,5 +227,34 @@ extension ProfileVC : UICollectionViewDataSource {
         cell.homeVC = self
         
         return cell
+    }
+}
+
+// MARK: - Server connect
+
+extension ProfileVC {
+    
+    func getMyProfileService(completionHandler: @escaping (_ returnedData: User) -> Void ) {
+        UserService.shared.getMyProfile() { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! User
+                self.user = response
+                completionHandler(self.user!)
+                
+            case .requestErr(_):
+                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "요청에 오류가 있습니다")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "서버에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "서버 연결에 오류가 있습니다")
+
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
     }
 }

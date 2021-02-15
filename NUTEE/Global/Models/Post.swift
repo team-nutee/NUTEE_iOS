@@ -35,7 +35,7 @@ struct Post: Codable {
 class PostBody: Codable {
     let id: Int
     let title, content, createdAt, updatedAt: String
-    let user: User
+    let user: UserBody?
     let images: [PostImage]?
     let likers: [Liker]?
     let commentNum: Int
@@ -65,7 +65,7 @@ class PostBody: Codable {
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
         deleted = (try? values.decode(Bool.self, forKey: .deleted)) ?? false
         blocked = (try? values.decode(Bool.self, forKey: .blocked)) ?? false
-        user = (try? values.decode(User.self, forKey: .user)) ?? User.init(id: 0, nickname: "", image: nil)
+        user = (try? values.decode(UserBody.self, forKey: .user))
         images = (try? values.decode([PostImage].self, forKey: .images)) ?? []
         likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
         retweet = (try? values.decode(PostBody.self, forKey: .retweet)) ?? nil
@@ -85,7 +85,7 @@ struct PostImage: Codable {
 struct Liker: Codable {
     let id: Int?
     let nickname: String?
-    let image: UserImage?
+    let image: UserProfileImage?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -93,24 +93,6 @@ struct Liker: Codable {
         case image
     }
 }
-
-// MARK: - User
-
-struct User: Codable {
-    let id: Int?
-    let nickname: String?
-    let image: UserImage?
-
-    enum CodingKeys: String, CodingKey {
-        case id, nickname
-        case image
-    }
-}
-
-struct UserImage: Codable {
-    let src: String?
-}
-
 
 // MARK: - Links
 

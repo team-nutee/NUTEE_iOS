@@ -135,7 +135,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.titleHeight = 0
         
-        if comment?.user.id == KeychainWrapper.standard.integer(forKey: "id") {
+        if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editComment"],
                                           ["삭제", UIColor.red, "deleteComment"]]
         } else {
@@ -153,13 +153,9 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     func initComment() {
         // 사용자 프로필 설정
-        if comment?.user.image?.src != nil {
-            profileImageView.setImageNutee(comment?.user.image?.src)
-        } else {
-            profileImageView.image = UIImage(named: "nutee_zigi_white")
-        }
+        profileImageView.setImageNutee(comment?.user?.image?.src, profileImageView)
 
-        nicknameLabel.text = comment?.user.nickname
+        nicknameLabel.text = comment?.user?.nickname
 
         // 댓글 작성 시간 설정
         if comment?.createdAt == comment?.updatedAt {
