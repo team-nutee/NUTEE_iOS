@@ -157,7 +157,6 @@ extension CategoryFeedVC : SkeletonTableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
-        cell.categoryButton.isUserInteractionEnabled = false
         
         post = postContent?[indexPath.row]
         

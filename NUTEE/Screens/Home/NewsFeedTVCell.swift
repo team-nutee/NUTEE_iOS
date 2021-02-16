@@ -23,6 +23,7 @@ class NewsFeedTVCell: UITableViewCell {
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         $0.titleLabel?.font = .systemFont(ofSize: 11)
         $0.setTitleColor(.white, for: .normal)
+        $0.isUserInteractionEnabled = false
                 
         $0.isSkeletonable = true
     }

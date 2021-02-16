@@ -14,102 +14,90 @@ class SearchResultVC: UIViewController {
 
     // MARK: - UI components
     
+    let searchResultCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
     let searchResultTableView = UITableView()
 
     // MARK: - Variables and Properties
     
     var searchResult = ""
     
-    var newsPost: Post? // 초기에 전부 다 받아오는 애
-    var post: PostBody? // Body 요소 한 개
-    var postContent: [PostBody]? // 받아온 것 중에서 Body만
+    var newsPost: Post?
 
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        getSearchPostsService(word: searchResult, lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.searchResultTableView.reloadData()
-        }
         
-        setTableView()
+        setCollectionView()
     }
 
     // MARK: - Helper
     
-    func setTableView() {
-        _ = searchResultTableView.then {
+    func setCollectionView() {
+        _ = searchResultCollectionView.then {
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 0
+            layout.minimumInteritemSpacing = 0
+            
+            $0.collectionViewLayout = layout
+            
             $0.delegate = self
             $0.dataSource = self
             
-            $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: "NewsFeedTVCell")
+            $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
             
-            $0.separatorStyle = .none
-        }
-        
-        
-        self.view.addSubview(searchResultTableView)
-        
-        searchResultTableView.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.snp.bottom)
+            view.addSubview($0)
+            $0.snp.makeConstraints {
+                $0.top.equalTo(view.snp.top)
+                $0.left.equalTo(view.snp.left)
+                $0.right.equalTo(view.snp.right)
+                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            }
+            
+            $0.backgroundColor = .white
+            
+            $0.isPagingEnabled = true
+            $0.showsHorizontalScrollIndicator = false
         }
     }
 
 }
 
-// MARK: - TableView Delegate
-
-extension SearchResultVC: UITableViewDelegate { }
-extension SearchResultVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+// MARK: - CollectionView Delegate
+extension SearchResultVC : UICollectionViewDelegate { }
+extension SearchResultVC : UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView:UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.view.frame.width, height: collectionView.frame.height)
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let postItems = self.postContent?.count ?? 0
+}
+extension SearchResultVC : UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
 
-        if postItems == 0 {
-            searchResultTableView.setEmptyView(title: "검색 결과가 없습니다", message: "검색어를 확인해주세요")
-        } else {
-            searchResultTableView.restore()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = searchResultCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
+        
+        cell.homeVC = self
+        searchPostsService(word: self.searchResult, lastId: 0, limit: 10) { (newsPost) in
+            cell.postContent = self.newsPost?.body
+            cell.afterFetchNewsFeed()
         }
-
-        return postItems
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = searchResultTableView.dequeueReusableCell(withIdentifier: "NewsFeedTVCell", for: indexPath) as! NewsFeedTVCell
-        cell.selectionStyle = .none
-        cell.categoryButton.isUserInteractionEnabled = false
         
-        post = postContent?[indexPath.row]
-        
-        // 생성된 Cell 클래스로 NewsPost 정보 넘겨주기
-        cell.newsPost = self.post
-        
-        cell.fillDataToView()
-
         return cell
     }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailNewsFeedVC = DetailNewsFeedVC()
-        
-        self.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
-    }
-
 }
 
 // MARK: - Server connect
 
 extension SearchResultVC {
-    func getSearchPostsService(word: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getSearchPosts(word: word, lastId: lastId, limit: limit) { responsedata in
+    func searchPostsService(word: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.searchPosts(word: word, lastId: lastId, limit: limit) { responsedata in
 
             switch responsedata {
             case .success(let res):

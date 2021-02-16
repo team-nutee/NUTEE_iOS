@@ -732,7 +732,7 @@ struct ContentService {
     
     // MARK: - Search
     
-    func getSearchPosts(word: String, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+    func searchPosts(word: String, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
         
         let encodingText = word.stringByAddingPercentEncodingForFormData(plusForSpace: true)!
         let URL = APIConstants.Search + "/" + encodingText + "?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"

@@ -6,6 +6,7 @@
 //  Copyright © 2021 Nutee. All rights reserved.
 //
 
+import UIKit
 import Foundation
 
 class FavoriteFeedCVCell: FeedContainerCVCell {
@@ -28,6 +29,11 @@ class FavoriteFeedCVCell: FeedContainerCVCell {
         } else {
             print("더 이상 불러올 게시글이 없습니다.")
         }
+    }
+    
+    override func setRefresh() {
+        newsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
     }
     
     @objc override func updatePosts() {

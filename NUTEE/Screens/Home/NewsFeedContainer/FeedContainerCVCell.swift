@@ -88,22 +88,13 @@ class FeedContainerCVCell : UICollectionViewCell {
         }
     }
 
-    func setRefresh() {
-        newsFeedTableView.addSubview(refreshControl)
-        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
-    }
+    func setRefresh() { }
     
-    @objc func updatePosts() {
-        setFetchNewsFeedFail()
-    }
+    @objc func updatePosts() { }
     
-    func loadMorePosts(lastId: Int) {
-        setFetchNewsFeedFail()
-    }
+    func loadMorePosts(lastId: Int) { }
     
-    func fetchNewsFeed() {
-        setFetchNewsFeedFail()
-    }
+    func fetchNewsFeed() { }
     
     func setFetchNewsFeedFail() {
         activityIndicator.stopAnimating()
@@ -153,6 +144,7 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
         cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
+        cell.categoryButton.isUserInteractionEnabled = true
         
         post = postContent?[indexPath.row]
         
