@@ -207,8 +207,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             
             $0.tintColor = .systemPink
             
-            $0.setTitle("0", for: .normal)
-            $0.setTitle("1", for: .selected)
             $0.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
             $0.setTitleColor(.systemPink, for: .selected)
             
@@ -388,14 +386,16 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     @objc func didTapLikeButton(_ sender: UIButton) {
         if likeButton.isSelected {
-            setNormalLikeButton()
             likeCount! -= 1
-            
+            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+            setNormalLikeButton()
+
             deleteLikeService(postId: post?.body.id ?? 0)
         } else {
-            setSelectedLikeButton()
             likeCount! += 1
-            
+            likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+            setSelectedLikeButton()
+
             postLikeService(postId: post?.body.id ?? 0)
         }
     }
@@ -403,15 +403,12 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     func setNormalLikeButton() {
         likeButton.isSelected = false
         likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
         likeButton.setTitleColor(UIColor(red: 134, green: 134, blue: 134), for: .normal)
     }
     
     func setSelectedLikeButton() {
         likeButton.isSelected = true
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
-        likeCount! += 1
-        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
         likeButton.setTitleColor(.systemPink, for: .selected)
     }
     
@@ -447,6 +444,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         // Like 버튼
         likeCount = post?.body.likers?.count
+        likeButton.setTitle(String(likeCount ?? 0), for: .normal)
     
         for liker in post?.body.likers ?? [] {
             if liker.id == KeychainWrapper.standard.integer(forKey: "id") {
