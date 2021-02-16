@@ -213,7 +213,36 @@ extension FeedContainerCVCell : SkeletonTableViewDataSource {
 }
 
 //MARK: - Server connect
+
 extension FeedContainerCVCell{
+    
+    func getAllPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.getAllPosts(lastId: lastId, limit: limit) { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
+                
+            case .requestErr(_):
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
+                self.setFetchNewsFeedFail()
+                
+            case .pathErr:
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.setFetchNewsFeedFail()
+                
+            case .serverErr:
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
+                self.setFetchNewsFeedFail()
+                
+            case .networkFail :
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+                self.setFetchNewsFeedFail()
+            }
+        }
+    }
     
     func getFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
         ContentService.shared.getFavoritePosts(lastId: lastId, limit: limit) { responsedata in

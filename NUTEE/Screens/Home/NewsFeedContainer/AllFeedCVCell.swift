@@ -11,7 +11,7 @@ import Foundation
 class AllFeedCVCell: FeedContainerCVCell {
     override func fetchNewsFeed() {
         
-        getCategoryPostsService(category: "IT2", lastId: 0, limit: 10) { (Post) in
+        getAllPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.afterFetchNewsFeed()
         }
@@ -19,7 +19,7 @@ class AllFeedCVCell: FeedContainerCVCell {
     
     override func loadMorePosts(lastId: Int) {
         if postContent?.count != 0 {
-            getCategoryPostsService(category: "IT2", lastId: lastId, limit: 10) { (Post) in
+            getAllPostsService(lastId: lastId, limit: 10) { (Post) in
                 self.postContent?.append(contentsOf: Post.body)
                 self.newsFeedTableView.reloadData()
                 self.newsFeedTableView.tableFooterView = nil
@@ -30,7 +30,7 @@ class AllFeedCVCell: FeedContainerCVCell {
     }
     
     @objc override func updatePosts() {
-        getCategoryPostsService(category: "IT2", lastId: 0, limit: 10) { (Post) in
+        getAllPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.newsFeedTableView.reloadData()
             
