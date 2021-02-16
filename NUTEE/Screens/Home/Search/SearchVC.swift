@@ -162,6 +162,7 @@ class SearchVC: UIViewController {
         
         if removedBlankStr.count != 0 {
             searchResultVC.navigationItem.title = str
+            searchResultVC.searchResult = str
             saveSearchKeyword(toSaveKeyword: str)
             
             self.navigationController?.pushViewController(searchResultVC, animated: true)

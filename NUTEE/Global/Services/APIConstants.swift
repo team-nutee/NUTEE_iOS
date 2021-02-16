@@ -46,4 +46,7 @@ struct APIConstants {
 
     // Profile
     static let User = BackURL + "/user"
+    
+    // Search
+    static let Search = BackURL + "/search"
 }

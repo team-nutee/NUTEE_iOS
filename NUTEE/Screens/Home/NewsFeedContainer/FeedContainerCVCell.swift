@@ -272,34 +272,6 @@ extension FeedContainerCVCell{
         }
     }
     
-    func getCategoryPostsService(category: String, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getCategoryPosts(category: category, lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                
-            case .networkFail :
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-            }
-        }
-    }
-    
     func getUserPostsService(id: Int, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
         UserService.shared.getUserPosts(id: id, lastId: lastId, limit: limit) { responsedata in
             

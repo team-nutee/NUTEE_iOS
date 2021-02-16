@@ -60,7 +60,7 @@ class DetailNewsFeedVC: UIViewController {
         super.viewWillAppear(true)
         
         showActivityIndicator(activityIndicator: activityIndicator)
-        getPostService(postId: postId!, completionHandler: { [self] (returnedData)-> Void in
+        getPostService(postId: postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
             detailNewsFeedTableView.reloadData()
             
             hideActivityIndicator(activityIndicator: activityIndicator)
