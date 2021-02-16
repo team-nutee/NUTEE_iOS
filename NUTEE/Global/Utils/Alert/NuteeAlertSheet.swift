@@ -32,7 +32,7 @@ class NuteeAlertSheet : UIViewController {
     var isNeedCompleteButton = false
     
     var signUpCategoryVC: SignUpCategoryVC?
-    var majorVC: MajorVC?
+    var majorVC: SignUpMajorVC?
     var postVC: PostVC?
     
     var selectedOptionList: [String] = []
