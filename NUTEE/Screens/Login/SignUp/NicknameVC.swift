@@ -21,6 +21,8 @@ class NicknameVC: SignUpViewController {
   
     // MARK: - Variables and Properties
   
+    var verifiedNickname: String = ""
+    
     var userId: String = ""
     var email: String = ""
     var otp: String = ""
@@ -143,19 +145,30 @@ class NicknameVC: SignUpViewController {
 extension NicknameVC : UITextFieldDelegate {
   
     @objc func textFieldDidChange(_ textField: UITextField) {
-        if nicknameTextField.text != "" {
+        // next button이 활성화 된 후(닉네임 중복 확인 성공시 활성화) nickname textfield에 있는 값이 변경된 경우
+        if verifiedNickname != nicknameTextField.text {
+            nextButton.isEnabled = false
+            nextButton.setTitleColor(.veryLightPink, for: .normal)
+        }
+        
+        // 중복확인 버튼 활성화 조건
+        if nicknameTextField.text != "" && nicknameTextField.text?.nicknameLimitation() == true {
             successAnimate()
             
             checkNicknameButton.isEnabled = true
             checkNicknameButton.setTitleColor(.nuteeGreen, for: .normal)
             
         } else if nicknameTextField.text == "" {
-            
             successAnimate()
             
             checkNicknameButton.isEnabled = false
             checkNicknameButton.setTitleColor(.veryLightPink, for: .normal)
             
+        } else if nicknameTextField.text?.nicknameLimitation() == false {
+            errorAnimate(errorMessage: "최대 12자 사용가능")
+            
+            checkNicknameButton.isEnabled = false
+            checkNicknameButton.setTitleColor(.veryLightPink, for: .normal)
         }
     }
     
@@ -248,33 +261,38 @@ extension NicknameVC {
 // MARK: - Server connect
 
 extension NicknameVC {
+    
     @objc func checkNick(_ nick: String){
-        UserService.shared.checkNick(nick) { (responsedata) in
+        
+        UserService.shared.checkNick(nick) { [self] (responsedata) in
             switch responsedata {
             
             case .success(_):
-                _ = self.nicknameCheckLabel.then {
+                _ = nicknameCheckLabel.then {
                     $0.text = "사용할 수 있는 닉네임입니다"
                     $0.textColor = .nuteeGreen
                     $0.alpha = 1
                 }
                 
-                self.nextButton.isEnabled = true
-                self.nextButton.setTitleColor(.nuteeGreen, for: .normal)
+                verifiedNickname = nicknameTextField.text ?? ""
+                
+                nextButton.isEnabled = true
+                nextButton.setTitleColor(.nuteeGreen, for: .normal)
                 
             case .requestErr(_):
-                self.errorAnimate(errorMessage: "이미 사용 중인 닉네임입니다.")
+                errorAnimate(errorMessage: "이미 사용 중인 닉네임입니다.")
                 
             case .pathErr:
-                self.errorAnimate(errorMessage: "에러가 발생했습니다.")
+                errorAnimate(errorMessage: "에러가 발생했습니다.")
 
             case .serverErr:
-                self.errorAnimate(errorMessage: "서버 에러가 발생했습니다.")
+                errorAnimate(errorMessage: "서버 에러가 발생했습니다.")
 
             case .networkFail:
-                self.errorAnimate(errorMessage: "네트워크 에러가 발생했습니다.")
+                errorAnimate(errorMessage: "네트워크 에러가 발생했습니다.")
             }
         }
+        
     }
     
 }

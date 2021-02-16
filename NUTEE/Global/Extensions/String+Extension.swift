@@ -54,6 +54,15 @@ extension String {
         return predicate.evaluate(with: self)
     }
 
+    // 누티 닉네임 최대 12자로 제한
+    public func nicknameLimitation() -> Bool {
+        if self.count <= 12 {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     public func getDateFormat(time: String) -> Date? {
         let timeSplit = time.components(separatedBy: ["T", "."])
         let timeFormatted = timeSplit[0] + " " + timeSplit[1]
