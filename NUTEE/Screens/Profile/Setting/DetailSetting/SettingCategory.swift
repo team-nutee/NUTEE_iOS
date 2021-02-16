@@ -71,6 +71,18 @@ class SettingCategoryVC: SignUpCategoryVC {
     }
 
     override func makeConstraints() {
+        // add Subview
+        view.addSubview(saveButton)
+        
+        // make Constraints
+        saveButton.snp.makeConstraints {
+            $0.width.equalTo(saveButton.intrinsicContentSize.width)
+            $0.height.equalTo(40)
+            
+            $0.centerY.equalTo(guideLabel)
+            $0.right.equalTo(view.snp.right).inset(20)
+        }
+        
         super.makeConstraints()
         
         // remove SignUp style UI components
@@ -86,18 +98,6 @@ class SettingCategoryVC: SignUpCategoryVC {
         previousButton.snp.updateConstraints {
             $0.width.equalTo(0)
             $0.height.equalTo(0)
-        }
-        
-        // add Subview
-        view.addSubview(saveButton)
-        
-        // make Constraints
-        saveButton.snp.makeConstraints {
-            $0.width.equalTo(saveButton.intrinsicContentSize.width)
-            $0.height.equalTo(40)
-            
-            $0.centerY.equalTo(guideLabel)
-            $0.right.equalTo(view.snp.right).inset(20)
         }
     }
 
@@ -122,7 +122,7 @@ class SettingCategoryVC: SignUpCategoryVC {
         saveButton.isEnabled = false
     }
     
-    // MARK: - Remove CategoryVC Animation
+    // MARK: - Remove SignUpCategoryVC Animation
     
     override func enterCommonViewsAnimate() {
         // <---- make do nothing

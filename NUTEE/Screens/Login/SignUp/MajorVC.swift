@@ -239,13 +239,9 @@ class MajorVC: SignUpViewController {
         present(passwordVC, animated: false)
     }
     
-}
-
-// MARK: - MajorVC Animation
-
-extension MajorVC {
+    // MARK: - MajorVC Animation
     
-    private func enterMajorVCAnimate() {
+    func enterMajorVCAnimate() {
         // major guide & first major title
         UIView.animate(withDuration: animationDuration,
                        delay: 1 + 0.4,
@@ -295,7 +291,7 @@ extension MajorVC {
                         self.secondMajorUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
     }
-
+    
 }
 
 // MARK: - Server connect
