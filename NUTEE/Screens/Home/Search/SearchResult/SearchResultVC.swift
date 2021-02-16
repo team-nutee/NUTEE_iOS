@@ -16,8 +16,6 @@ class SearchResultVC: UIViewController {
     
     let searchResultCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    let searchResultTableView = UITableView()
-
     // MARK: - Variables and Properties
     
     var searchResult = ""
@@ -106,19 +104,16 @@ extension SearchResultVC {
                 completionHandler(self.newsPost!)
 
             case .requestErr(_):
-                self.searchResultTableView.setEmptyView(title: "요청 오류 발생😢", message: "피드를 조회하지 못했습니다")
+                self.simpleNuteeAlertDialogue(title: "요청 오류 발생", message: "피드를 조회하지 못했습니다")
 
             case .pathErr:
-                print("error")
-                self.searchResultTableView.setEmptyView(title: "서버 오류 발생😢", message: "피드를 조회하지 못했습니다")
+                self.simpleNuteeAlertDialogue(title: "서버 오류 발생", message: "피드를 조회하지 못했습니다")
 
             case .serverErr:
-                print("error")
-                self.searchResultTableView.setEmptyView(title: "서버 오류 발생", message: "피드를 조회하지 못했습니다")
+                self.simpleNuteeAlertDialogue(title: "서버 오류 발생", message: "피드를 조회하지 못했습니다")
 
             case .networkFail :
-                print("error")
-                self.searchResultTableView.setEmptyView(title: "네트워크 오류 발생", message: "피드를 조회하지 못했습니다")
+                self.simpleNuteeAlertDialogue(title: "네트워크 오류 발생", message: "피드를 조회하지 못했습니다")
 
             }
         }
