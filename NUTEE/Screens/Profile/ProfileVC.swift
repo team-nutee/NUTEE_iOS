@@ -1,5 +1,5 @@
 //
-//  UserVC.swift
+//  ProfileVC.swift
 //  NUTEE
 //
 //  Created by Junhyeon on 2020/07/21.
@@ -42,7 +42,6 @@ class ProfileVC: UIViewController {
         getMyProfileService { (user) in
             self.fillDataToView()
         }
-        
     }
     
     // MARK: - Helper
@@ -69,6 +68,8 @@ class ProfileVC: UIViewController {
 //            $0.menuList = ["내가 쓴 글", "내가 쓴 댓글", "내가 추천한 글"]
             $0.menuList = ["게시물", "댓글", "추천 게시글"]
             $0.userInfomationList = [1314, 2218, 2199]
+            
+            $0.profileVC = self
         }
         
         _ = separatorView.then {
@@ -150,11 +151,17 @@ class ProfileVC: UIViewController {
     }
     
     func fillDataToView() {
-        userProfileImageImageView.setImageNutee(user?.body.nickname, userProfileImageImageView)
+        userProfileImageImageView.setImageNutee(user?.body.image?.src, userProfileImageImageView)
         
         userNickNameButton.setTitle(user?.body.nickname, for: .normal)
         
-        userMenuBar.profileVC = self
+        userMenuBar.userInfomationList[0] = user?.body.postNum ?? 0
+        userMenuBar.userInfomationList[1] = user?.body.commentNum ?? 0
+        userMenuBar.userInfomationList[2] = user?.body.likeNum ?? 0
+
+        userMenuBar.menuBarCollectionView.reloadData()
+        let indexPath = IndexPath(item: 0, section: 0)
+        userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
     }
     
     func scrollToMenuIndex(menuIndex: Int) {
@@ -197,12 +204,6 @@ extension ProfileVC : UICollectionViewDataSource {
         }
         
         userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let menuIndex = Int(targetContentOffset.pointee.x / view.frame.width)
-        let indexPath = IndexPath(item: menuIndex, section: 0)
-        userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
