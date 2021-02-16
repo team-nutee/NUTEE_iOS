@@ -181,11 +181,11 @@ class SignUpCategoryVC: SignUpViewController {
     }
     
     @objc override func didTapNextButton() {
-        let majorVC = MajorVC()
-        majorVC.totalSignUpViews = totalSignUpViews
-        majorVC.progressStatusCount = progressStatusCount
+        let signUpMajorVC = SignUpMajorVC()
+        signUpMajorVC.totalSignUpViews = totalSignUpViews
+        signUpMajorVC.progressStatusCount = progressStatusCount
         
-        present(majorVC, animated: false)
+        present(signUpMajorVC, animated: false)
     }
     
     // MARK: - SignUpCategoryVC Animation

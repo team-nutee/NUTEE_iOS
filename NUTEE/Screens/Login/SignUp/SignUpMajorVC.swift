@@ -1,5 +1,5 @@
 //
-//  MajorVC.swift
+//  SignUpMajorVC.swift
 //  NUTEE
 //
 //  Created by Hee Jae Kim on 2020/12/31.
@@ -10,7 +10,7 @@ import UIKit
 
 import SnapKit
 
-class MajorVC: SignUpViewController {
+class SignUpMajorVC: SignUpViewController {
     
     // MARK: - UI components
     
@@ -296,5 +296,5 @@ class MajorVC: SignUpViewController {
 
 // MARK: - Server connect
 
-extension MajorVC {
+extension SignUpMajorVC {
 }

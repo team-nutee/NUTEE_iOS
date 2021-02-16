@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingMajorVC: MajorVC {
+class SettingMajorVC: SignUpMajorVC {
     
     // MARK: - UI components
     
