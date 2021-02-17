@@ -431,10 +431,10 @@ struct UserService {
     }
 
     
-    // MARK: -  유저가 쓴 게시글들(posts) 가져오기
+    // MARK: -  내가 쓴 게시글들(posts) 가져오기
     
-    func getUserPosts(id: Int, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.User + "/\(id)" + "/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+    func getMyPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.User + "/me/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -482,4 +482,105 @@ struct UserService {
         }
     }
     
+    // MARK: -  내가 쓴 댓글의 게시글들(posts) 가져오기
+    
+    func getMyCommentPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.User + "/me/comment/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Post.self, from: value)
+                                completion(.success(result))
+                                
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            print(status)
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: -  내가 좋아요를 누른 게시글들(posts) 가져오기
+    
+    func getMyFavoritePosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.User + "/me/like/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Post.self, from: value)
+                                completion(.success(result))
+                                
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            print(status)
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
 }
