@@ -14,16 +14,32 @@ class UserMenuBarCV: MenuBarCV {
     
     // MARK: - Variables and Properties
     
-    var userInfomationList = [0]
+    var userInfomationList = [0, 0, 0]
     
     let adjustItemLength: CGFloat = 30
     
     // MARK: - Life Cycle
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setUserMenuBarHeight()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Helper
     
     override func registerCVCell() {
         menuBarCollectionView.register(UserMenuBarCVCell.self, forCellWithReuseIdentifier: Identify.UserMenuBarCVCell)
+    }
+    
+    func setUserMenuBarHeight() {
+        menuBarCollectionView.snp.makeConstraints {
+            $0.height.equalTo(50)
+        }
     }
     
     // MARK: - Menu Bar CollectionView Delegate
