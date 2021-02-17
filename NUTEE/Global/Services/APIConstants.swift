@@ -23,7 +23,7 @@ struct APIConstants {
     static let FindPW = AuthURL + "/findpw"
     
     // SignUp
-    static let User = AuthURL + "/user"
+    static let SignUp = AuthURL + "/user"
     
     static let OTPSend = AuthURL + "/sendotp"
     static let OTPCheck = AuthURL + "/checkotp"
@@ -45,7 +45,7 @@ struct APIConstants {
     static let Image = BackURL + "/upload"
 
     // Profile
-    static let Profile = BackURL + "/user"
+    static let User = BackURL + "/user"
     
     // Search
     static let Search = BackURL + "/search"

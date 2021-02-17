@@ -24,8 +24,6 @@ class SettingVC : UIViewController {
         ["로그아웃"]
     ]
     
-    var userProfileImageSrc: String?
-    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -150,7 +148,6 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 0, section: 0):
             let settingProfileImageVC = SettingProfileImageVC()
-            settingProfileImageVC.userProfileImageSrc = self.userProfileImageSrc
             self.navigationController?.pushViewController(settingProfileImageVC, animated: true)
             
         case IndexPath(row: 1, section: 0):
