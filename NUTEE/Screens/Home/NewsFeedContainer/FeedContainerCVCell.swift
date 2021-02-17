@@ -29,9 +29,7 @@ class FeedContainerCVCell : UICollectionViewCell {
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
     var postContent: [PostBody]? // 받아온 것 중에서 Body만
-    
-    var memberId: Int? = KeychainWrapper.standard.integer(forKey: "id")
-    
+        
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {
@@ -264,8 +262,64 @@ extension FeedContainerCVCell{
         }
     }
     
-    func getUserPostsService(id: Int, lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        UserService.shared.getUserPosts(id: id, lastId: lastId, limit: limit) { responsedata in
+    func getMyPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        UserService.shared.getMyPosts(lastId: lastId, limit: limit) { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
+                
+            case .requestErr(_):
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
+                self.setFetchNewsFeedFail()
+                
+            case .pathErr:
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
+                
+            case .networkFail :
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
+    func getMyCommentPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        UserService.shared.getMyCommentPosts(lastId: lastId, limit: limit) { responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
+                
+            case .requestErr(_):
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
+                self.setFetchNewsFeedFail()
+                
+            case .pathErr:
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
+                
+            case .networkFail :
+                self.setFetchNewsFeedFail()
+                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
+    func getMyFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        UserService.shared.getMyFavoritePosts(lastId: lastId, limit: limit) { responsedata in
             
             switch responsedata {
             case .success(let res):

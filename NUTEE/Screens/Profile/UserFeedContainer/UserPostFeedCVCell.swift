@@ -6,13 +6,13 @@
 //  Copyright © 2021 Nutee. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class UserPostFeedCVCell: FeedContainerCVCell {
     
     override func fetchNewsFeed() {
         
-        getUserPostsService(id: self.memberId ?? 0, lastId: 0, limit: 10) { (Post) in
+        getMyPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.afterFetchNewsFeed()
         }
@@ -20,7 +20,7 @@ class UserPostFeedCVCell: FeedContainerCVCell {
     
     override func loadMorePosts(lastId: Int) {
         if postContent?.count != 0 {
-            getUserPostsService(id: self.memberId ?? 0, lastId: lastId, limit: 10) { (Post) in
+            getMyPostsService(lastId: lastId, limit: 10) { (Post) in
                 self.postContent?.append(contentsOf: Post.body)
                 self.newsFeedTableView.reloadData()
                 self.newsFeedTableView.tableFooterView = nil
@@ -30,8 +30,13 @@ class UserPostFeedCVCell: FeedContainerCVCell {
         }
     }
     
+    override func setRefresh() {
+        newsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
+    }
+    
     @objc override func updatePosts() {
-        getUserPostsService(id: self.memberId ?? 0, lastId: 0, limit: 10) { (Post) in
+        getMyPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.newsFeedTableView.reloadData()
             
