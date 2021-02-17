@@ -171,6 +171,7 @@ class ProfileVC: UIViewController {
     
     @objc func didTapSetting() {
         let settingVC = SettingVC()
+        settingVC.userProfileImageSrc = user?.body.image?.src
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }

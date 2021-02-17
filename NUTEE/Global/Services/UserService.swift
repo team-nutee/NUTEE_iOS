@@ -19,7 +19,7 @@ struct UserService {
     
     func signUp(_ userId: String, _ nickname: String, _ email: String, _ password: String, _ otp: String, _ interests: [String], _ majors: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
         
-        let URL = APIConstants.SignUp
+        let URL = APIConstants.User
         let headers: HTTPHeaders = [
             "Content-Type": "application/json;charset=UTF-8",
             "Accept": "application/hal+json"
@@ -381,8 +381,9 @@ struct UserService {
     }
     
     // MARK: -  내 정보 불러오기
+    
     func getMyProfile(completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.User + "/me"
+        let URL = APIConstants.Profile + "/me"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -434,7 +435,7 @@ struct UserService {
     // MARK: -  내가 쓴 게시글들(posts) 가져오기
     
     func getMyPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.User + "/me/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        let URL = APIConstants.Profile + "/me/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -485,7 +486,7 @@ struct UserService {
     // MARK: -  내가 쓴 댓글의 게시글들(posts) 가져오기
     
     func getMyCommentPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.User + "/me/comment/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        let URL = APIConstants.Profile + "/me/comment/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -536,7 +537,7 @@ struct UserService {
     // MARK: -  내가 좋아요를 누른 게시글들(posts) 가져오기
     
     func getMyFavoritePosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.User + "/me/like/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        let URL = APIConstants.Profile + "/me/like/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -583,4 +584,61 @@ struct UserService {
             }
         }
     }
+    
+    // MARK: - 프로필 이미지 변경하기
+    
+    func changeUserProfileImage(userProfileImage: NSString, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/profile"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "profileUrl" : userProfileImage
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status = response.response?.statusCode {
+                    print(status)
+                    switch status {
+                    case 200:
+                        completion(.success(status))
+                        
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    
+    // MARK: - 닉네임 변경하기
+    
+    // MARK: - 비밀번호 변경하기
+    
+    // MARK: - 관심 있는 카테고리 변경하기
+    
+    // MARK: - 전공 변경하기
 }
