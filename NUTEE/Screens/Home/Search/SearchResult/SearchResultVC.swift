@@ -85,6 +85,10 @@ extension SearchResultVC : UICollectionViewDataSource {
         searchPostsService(word: self.searchResult, lastId: 0, limit: 10) { (newsPost) in
             cell.postContent = self.newsPost?.body
             cell.afterFetchNewsFeed()
+            
+            if cell.postContent?.count == 0 {
+                cell.newsFeedTableView.setEmptyView(title: "검색 결과가 없습니다", message: "검색어를 확인해 주세요")
+            }
         }
         
         return cell
