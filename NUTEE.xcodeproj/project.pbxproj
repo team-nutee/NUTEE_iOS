@@ -67,8 +67,10 @@
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
 		D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D526E55A24D5B02600B80D37 /* TabBarController.swift */; };
 		D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E85325A18F89007D8585 /* HighlightedButton.swift */; };
+		D52A2E4325DD56590074EA16 /* SmallRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */; };
 		D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CF725418B5A009A1DC2 /* NotificationVC.swift */; };
 		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
+		D534F1A125DD42F500E7D640 /* UserInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F1A025DD42F500E7D640 /* UserInformationView.swift */; };
 		D5381F112599EC8200C94A6F /* SignUpCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */; };
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
@@ -204,8 +206,10 @@
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
 		D526E55A24D5B02600B80D37 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D527E85325A18F89007D8585 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
+		D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRefreshControl.swift; sourceTree = "<group>"; };
 		D5310CF725418B5A009A1DC2 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
+		D534F1A025DD42F500E7D640 /* UserInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformationView.swift; sourceTree = "<group>"; };
 		D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCategoryVC.swift; sourceTree = "<group>"; };
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
@@ -440,6 +444,7 @@
 				45C92B002587993400828E8A /* LoadingHUD.swift */,
 				45C92B0525879A3900828E8A /* Splash.swift */,
 				D5A4F3F125B1C21200AC3DCD /* PlaceholderTextView.swift */,
+				D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -461,6 +466,7 @@
 			isa = PBXGroup;
 			children = (
 				D5929F2925BC54940031F74E /* UserMenuBar */,
+				D534F1A025DD42F500E7D640 /* UserInformationView.swift */,
 				5E8BA6B524C6D5DC00A58F43 /* ProfileVC.swift */,
 				D5ABA77125BC2EDB006C64F9 /* UserFeedContainer */,
 				D5A18AFC24E12F920075B886 /* Setting */,
@@ -942,6 +948,7 @@
 				D576529525A5ABCA00A11E8D /* EventFeedCVCell.swift in Sources */,
 				D5CC689924E6F67D00274451 /* DeveloperInfoTVCell.swift in Sources */,
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
+				D534F1A125DD42F500E7D640 /* UserInformationView.swift in Sources */,
 				45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
@@ -980,6 +987,7 @@
 				D12D8BE624D14C61005F4580 /* UIButton+Extension.swift in Sources */,
 				D5A7D1BC24E7C40400016A99 /* NuteeAlertSheet.swift in Sources */,
 				45C92AF725878FFA00828E8A /* SignIn.swift in Sources */,
+				D52A2E4325DD56590074EA16 /* SmallRefreshControl.swift in Sources */,
 				D12D8BDA24D1472A005F4580 /* Identify+Enum.swift in Sources */,
 				D576528325A5A92E00A11E8D /* ExchangeFeedCVCell.swift in Sources */,
 				5E8BA6BE24C6D61800A58F43 /* PostImageCVCell.swift in Sources */,
