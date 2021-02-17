@@ -414,7 +414,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     func initPosting() {
         // 사용자 프로필 이미지 설정
-        profileImageView.setImageNutee(post?.body.user?.image?.src, profileImageView)
+        profileImageView.setImageNutee(post?.body.user?.image?.src)
         
         // 사용자 이름 설정
         nicknameLabel.text = post?.body.user?.nickname

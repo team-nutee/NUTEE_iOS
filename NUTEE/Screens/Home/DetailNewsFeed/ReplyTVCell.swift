@@ -153,7 +153,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     func initComment() {
         // 사용자 프로필 설정
-        profileImageView.setImageNutee(comment?.user?.image?.src, profileImageView)
+        profileImageView.setImageNutee(comment?.user?.image?.src)
 
         nicknameLabel.text = comment?.user?.nickname
 

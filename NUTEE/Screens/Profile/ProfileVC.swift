@@ -12,16 +12,19 @@ class ProfileVC: UIViewController {
 
     // MARK: - UI components
     
-    let userProfileImageImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    let userNickNameButton = UIButton()
+    let scrollView = UIScrollView()
+    
+    let refreshControl = SmallRefreshControl()
+    
+    let userInfoView = UserInformationView()
     
     let userMenuBar = UserMenuBarCV()
-    
     let separatorView = UIView()
     
     let userFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     // MARK: - Variables and Properties
+    
     var user: User?
     
     // MARK: - Dummy data
@@ -31,47 +34,58 @@ class ProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "프로필"
-        view.backgroundColor = .white
-        
-        setNavigationBarItem()
+        setNavigationBar()
         
         initView()
         makeConstraints()
         
-        getMyProfileService { (user) in
-            self.fillDataToView()
+        getMyProfileService { [self] (user) in
+            fillDataToView()
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        userFeedContainerCollectionView.snp.updateConstraints {
+            let height = scrollView.frame.size.height - userInfoView.frame.size.height - userMenuBar.frame.size.height
+            $0.height.equalTo(height)
+        }
+        userFeedContainerCollectionView.reloadData()
+    }
+
     // MARK: - Helper
     
-    func setNavigationBarItem() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "설정", style: .plain, target: self, action: #selector(didTapSetting))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+    func setNavigationBar() {
+        _ = navigationItem.then {
+            $0.title = "프로필"
+            
+            $0.rightBarButtonItem = UIBarButtonItem(title: "설정", style: .plain, target: self, action: #selector(didTapSetting))
+            $0.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        }
     }
     
     func initView() {
-        _ = userProfileImageImageView.then {
-            $0.contentMode = .scaleAspectFit
-            $0.cornerRadius = 0.5 * $0.frame.size.width
-            $0.clipsToBounds = true
-            }
-        _ = userNickNameButton.then {
-            $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
-            $0.setTitleColor(UIColor(red: 112, green: 112, blue: 112), for: .normal)
-            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            $0.contentHorizontalAlignment = .left
-            }
+        _ = view.then {
+            $0.backgroundColor = .white
+        }
+        
+        _ = refreshControl.then {
+            scrollView.addSubview($0)
+            $0.addTarget(self, action: #selector(updateUserInfo), for: UIControl.Event.valueChanged)
+        }
+        
+        _ = scrollView.then {
+            $0.showsVerticalScrollIndicator = false
+            
+            $0.delegate = self
+        }
         
         _ = userMenuBar.then {
-//            $0.menuList = ["내가 쓴 글", "내가 쓴 댓글", "내가 추천한 글"]
             $0.menuList = ["게시물", "댓글", "추천 게시글"]
-            $0.userInfomationList = [1314, 2218, 2199]
             
             $0.profileVC = self
         }
-        
         _ = separatorView.then {
             $0.backgroundColor = .lightGray
         }
@@ -101,67 +115,75 @@ class ProfileVC: UIViewController {
     }
     
     func makeConstraints() {
-        // Add SubViews
-        view.addSubview(userProfileImageImageView)
-        view.addSubview(userNickNameButton)
+        // Add Subviews
+        view.addSubview(scrollView)
         
-        view.addSubview(userMenuBar)
+        scrollView.addSubview(userInfoView)
         
-        view.addSubview(separatorView)
+        scrollView.addSubview(userMenuBar)
+        scrollView.addSubview(separatorView)
         
-        view.addSubview(userFeedContainerCollectionView)
+        scrollView.addSubview(userFeedContainerCollectionView)
         
         
         // Make Constraints
-        userProfileImageImageView.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(userProfileImageImageView.snp.width)
-            
-            $0.top.equalTo(view.snp.top).offset(5)
-            $0.left.equalTo(view.snp.left).offset(15)
-        }
-        userNickNameButton.snp.makeConstraints {
-            $0.centerY.equalTo(userProfileImageImageView)
-            $0.left.equalTo(userProfileImageImageView.snp.right).offset(10)
-            $0.right.equalTo(view.snp.right).inset(15)
-        }
-        
-        userMenuBar.snp.makeConstraints {
-            $0.height.equalTo(50)
-            
-            $0.top.equalTo(userProfileImageImageView.snp.bottom).offset(20)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)//.inset(10)
-        }
-        
-        separatorView.snp.makeConstraints {
-            $0.height.equalTo(0.3).priority(999)
-            
-            $0.top.equalTo(userMenuBar.snp.bottom)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-        }
-        
-        userFeedContainerCollectionView.snp.makeConstraints {
-            $0.top.equalTo(separatorView.snp.bottom)
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+        
+        userInfoView.snp.makeConstraints {
+            $0.width.equalTo(scrollView.snp.width)
+            
+            $0.top.equalTo(scrollView.snp.top)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        
+        userMenuBar.snp.makeConstraints {
+            $0.top.equalTo(userInfoView.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        separatorView.snp.makeConstraints {
+            $0.height.equalTo(0.3).priority(999)
+            
+            $0.top.equalTo(userMenuBar.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        
+        userFeedContainerCollectionView.snp.makeConstraints {
+            $0.height.equalTo(0) // 업데이트 전 임의 값 0인 height 생성
+            
+            $0.top.equalTo(separatorView.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+            $0.bottom.greaterThanOrEqualTo(scrollView.snp.bottom)
+        }
+    
     }
     
     func fillDataToView() {
-        userProfileImageImageView.setImageNutee(user?.body.image?.src, userProfileImageImageView)
-        
-        userNickNameButton.setTitle(user?.body.nickname, for: .normal)
+        userInfoView.userProfileImageImageView.setImageNutee(user?.body.image?.src)
+        userInfoView.userNickNameButton.setTitle(user?.body.nickname, for: .normal)
         
         userMenuBar.userInfomationList[0] = user?.body.postNum ?? 0
         userMenuBar.userInfomationList[1] = user?.body.commentNum ?? 0
         userMenuBar.userInfomationList[2] = user?.body.likeNum ?? 0
-
         userMenuBar.menuBarCollectionView.reloadData()
+        
         let indexPath = IndexPath(item: 0, section: 0)
         userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+    }
+    
+    @objc func updateUserInfo() {
+        print("updated user info")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.refreshControl.endRefreshing()
+        }
     }
     
     func scrollToMenuIndex(menuIndex: Int) {
@@ -191,19 +213,32 @@ extension ProfileVC : UICollectionViewDelegateFlowLayout {
 extension ProfileVC : UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var adjustStartPoint: CGFloat = userMenuBar.adjustItemLength / 2
-        
-        let fullWidth = scrollView.bounds.size.width
-        let currentWidth = scrollView.contentOffset.x
-        let currentPositionRatio = currentWidth / fullWidth
-        
-        let boundaryItemIndex = CGFloat(1)
-        
-        if currentPositionRatio < boundaryItemIndex {
-            adjustStartPoint *= currentPositionRatio
+        switch scrollView {
+            case self.scrollView :
+                // forbid bounce drag 'up' direction
+                if scrollView.contentOffset.y > 0 {
+                    scrollView.contentOffset.y = 0
+                }
+                
+            case userFeedContainerCollectionView :
+                // move 'Menu positionBar' to correct Feed index
+                var adjustStartPoint: CGFloat = userMenuBar.adjustItemLength / 2
+
+                let fullWidth = scrollView.bounds.size.width
+                let currentWidth = scrollView.contentOffset.x
+                let currentPositionRatio = currentWidth / fullWidth
+
+                let boundaryItemIndex = CGFloat(1)
+
+                if currentPositionRatio < boundaryItemIndex {
+                    adjustStartPoint *= currentPositionRatio
+                }
+                
+                userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
+                
+            default :
+                break
         }
-        
-        userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

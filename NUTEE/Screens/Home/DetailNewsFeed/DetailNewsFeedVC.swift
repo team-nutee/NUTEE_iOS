@@ -17,9 +17,9 @@ class DetailNewsFeedVC: UIViewController {
     
     let activityIndicator = UIActivityIndicatorView()
     
-    let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
+    let refreshControl = SmallRefreshControl()
     
-    let refreshControl = UIRefreshControl()
+    let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
     let commentView = UIView()
     let commentTextView = PlaceholderTextView()

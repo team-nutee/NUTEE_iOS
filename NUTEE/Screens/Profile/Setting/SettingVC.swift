@@ -62,7 +62,6 @@ class SettingVC : UIViewController {
             
             $0.separatorStyle = .none
             $0.backgroundColor = .white
-            $0.contentInset = UIEdgeInsets(top: view.frame.size.height / 8, left: 0, bottom: 0, right: 0)
         }
         
         view.addSubview(settingListTableView)

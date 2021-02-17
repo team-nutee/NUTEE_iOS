@@ -18,8 +18,9 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     let activityIndicator = UIActivityIndicatorView()
     
+    let refreshControl = SmallRefreshControl()
+    
     let newsFeedTableView = UITableView()
-    let refreshControl = UIRefreshControl()
     
     // MARK: - Variables and Properties
     
@@ -97,6 +98,8 @@ class FeedContainerCVCell : UICollectionViewCell {
     func fetchNewsFeed() { }
     
     func setFetchNewsFeedFail() {
+        refreshControl.endRefreshing()
+        
         activityIndicator.stopAnimating()
         newsFeedTableView.isHidden = false
         
@@ -112,8 +115,9 @@ class FeedContainerCVCell : UICollectionViewCell {
 }
 
 // MARK: - TableView
-extension FeedContainerCVCell : SkeletonTableViewDelegate { }
-extension FeedContainerCVCell : SkeletonTableViewDataSource {
+
+extension FeedContainerCVCell : UITableViewDelegate { }
+extension FeedContainerCVCell : UITableViewDataSource {
     
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
         return Identify.NewsFeedTVCell
