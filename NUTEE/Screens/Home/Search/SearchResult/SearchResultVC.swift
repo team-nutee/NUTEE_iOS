@@ -20,8 +20,6 @@ class SearchResultVC: UIViewController {
     
     var searchResult = ""
     
-    var newsPost: Post?
-
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -82,8 +80,8 @@ extension SearchResultVC : UICollectionViewDataSource {
         let cell = searchResultCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
         
         cell.homeVC = self
-        searchPostsService(word: self.searchResult, lastId: 0, limit: 10) { (newsPost) in
-            cell.postContent = self.newsPost?.body
+        searchPostsService(word: self.searchResult, lastId: 0, limit: 10) { (Post) in
+            cell.postContent = Post.body
             cell.afterFetchNewsFeed()
             
             if cell.postContent?.count == 0 {
@@ -104,8 +102,7 @@ extension SearchResultVC {
             switch responsedata {
             case .success(let res):
                 let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
+                completionHandler(response)
 
             case .requestErr(_):
                 self.simpleNuteeAlertDialogue(title: "요청 오류 발생", message: "피드를 조회하지 못했습니다")

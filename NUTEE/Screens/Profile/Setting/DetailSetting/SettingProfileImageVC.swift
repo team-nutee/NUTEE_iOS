@@ -19,6 +19,12 @@ class SettingProfileImageVC : UIViewController {
     
     // MARK: - Variables and Properties
     
+    var userProfileImageSrc: String?
+    
+    var pickedIMG: [UIImage] = []
+    
+    var uploadedImages: [NSString] = []
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -44,7 +50,7 @@ class SettingProfileImageVC : UIViewController {
     
     func initView() {
         _ = profileImageView.then {
-            $0.image = #imageLiteral(resourceName: "nutee_zigi_green")
+            $0.setImageNutee(userProfileImageSrc)
             $0.contentMode = .scaleAspectFit
         }
         _ = profileImagePicker.then {
@@ -55,6 +61,8 @@ class SettingProfileImageVC : UIViewController {
             $0.setTitle("저장하기", for: .normal)
             $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
+            
+            $0.addTarget(self, action: #selector(didTapSaveButton), for: .touchUpInside)
         }
     }
     
@@ -116,30 +124,12 @@ class SettingProfileImageVC : UIViewController {
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         present(nuteeAlertSheet, animated: true)
-        
-        
-        
-        
-        
-//        let profileImageAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        profileImageAlert.view.tintColor = .nuteeGreen
-//
-//        let albumAction = UIAlertAction(title: "앨범에서 프로필 사진 선택", style: .default) { action in
-//            self.openLibrary()
-//        }
-//        let cameraAction = UIAlertAction(title: "카메라로 프로필 사진 찍기", style: .default) { action in
-//            self.openCamera()
-//        }
-//        let cancel = UIAlertAction(title: "취소", style: .cancel)
-//
-//        profileImageAlert.addAction(albumAction)
-//        profileImageAlert.addAction(cancel)
-//
-//        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-//            profileImageAlert.addAction(cameraAction)
-//        }
-//
-//        present(profileImageAlert, animated: true)
+    }
+    
+    @objc func didTapSaveButton() {
+        postImage(images: self.pickedIMG, completionHandler: {(returnedData)-> Void in
+            self.changeProfileImageService(image: self.uploadedImages[0])
+        })
     }
 }
 
@@ -185,10 +175,75 @@ extension SettingProfileImageVC : UIImagePickerControllerDelegate, UINavigationC
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            self.pickedIMG = []
+            self.pickedIMG.append(image)
             profileImageView.image = image
             profileImageView.contentMode = .scaleAspectFill
         }
         dismiss(animated: true, completion: nil)
     }
     
+}
+
+// MARK: - Server connect
+
+extension SettingProfileImageVC {
+    func postImage(images: [UIImage],
+                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
+        dump(images[0])
+        
+        ContentService.shared.uploadImage(images: images){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.uploadedImages = res as! [NSString]
+                completionHandler(self.uploadedImages)
+            case .requestErr:
+                self.simpleAlert(title: "실패", message: "")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail:
+                print(".networkFail")
+                
+            }
+        }
+        
+    }
+    
+    func changeProfileImageService(image: NSString){
+        UserService.shared.changeProfileImage(image){
+            [weak self]
+            data in
+
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+
+            case .requestErr:
+                print("requestErr")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+
+            }
+        }
+    }
 }

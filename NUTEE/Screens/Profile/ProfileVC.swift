@@ -180,7 +180,6 @@ class ProfileVC: UIViewController {
     }
     
     @objc func updateUserInfo() {
-        print("updated user info")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.refreshControl.endRefreshing()
         }
@@ -193,6 +192,7 @@ class ProfileVC: UIViewController {
     
     @objc func didTapSetting() {
         let settingVC = SettingVC()
+        settingVC.userProfileImageSrc = user?.body.image?.src
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
