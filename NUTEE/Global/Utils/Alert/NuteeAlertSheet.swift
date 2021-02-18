@@ -15,21 +15,16 @@ class NuteeAlertSheet : UIViewController {
     
     let cardView = UIView()
     let handleView = UIView()
-    let titleLabel = UILabel()
-    let completeButton = HighlightedButton()
-    
     let optionTableView = UITableView()
     
     // MARK: - Variables and Properties
     
+    let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
+    var cardViewHeight: CGFloat = 0
+    
     // to store the card view top constraint value before the dragging start
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
-    
-    var titleContent = ""
-    var titleHeight: CGFloat = 50
-    
-    var isNeedCompleteButton = false
     
     var signUpCategoryVC: SignUpCategoryVC?
     var majorVC: SignUpMajorVC?
@@ -37,8 +32,7 @@ class NuteeAlertSheet : UIViewController {
     
     var selectedOptionList: [String] = []
     
-    var optionList = [["", UIColor.self, "", Bool.self]]
-    var optionContentAligment = "center"
+    var optionList = [["", UIColor.self, ""]]
     var optionHeight: CGFloat = 50
 
     var cardViewTopConstraint: Constraint?
@@ -64,7 +58,9 @@ class NuteeAlertSheet : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        setCardViewHeight()
+        
         makeConstraints()
         initView()
         
@@ -86,11 +82,11 @@ class NuteeAlertSheet : UIViewController {
     // MARK: - Helper
     
     func initView() {
-        
         _ = backgroundView.then {
             $0.backgroundColor = .clear
-            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCardSheet)))
+            
             $0.isUserInteractionEnabled = true
+            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCardSheet)))
         }
         
         _ = cardView.then {
@@ -106,25 +102,6 @@ class NuteeAlertSheet : UIViewController {
             $0.backgroundColor = .lightGray
             $0.alpha = 0.5
         }
-        _ = titleLabel.then {
-            $0.text = titleContent
-            $0.textColor = .black
-            $0.font = .boldSystemFont(ofSize: 18)
-            
-            $0.textAlignment = .center
-            
-            $0.backgroundColor = .white
-        }
-        _ = completeButton.then {
-            if isNeedCompleteButton == true {
-                $0.setTitle("완료", for: .normal)
-                $0.setTitleColor(.black, for: .normal)
-                $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
-                
-                $0.addTarget(self, action: #selector(didTapCompleteButton), for: .touchUpInside)
-            }
-        }
-        
         _ = optionTableView.then {
             $0.delegate = self
             $0.dataSource = self
@@ -134,7 +111,6 @@ class NuteeAlertSheet : UIViewController {
             $0.separatorStyle = .none
             $0.isScrollEnabled = false
         }
-        
     }
     
     func makeConstraints() {
@@ -143,9 +119,6 @@ class NuteeAlertSheet : UIViewController {
         
         view.addSubview(cardView)
         cardView.addSubview(handleView)
-        cardView.addSubview(titleLabel)
-        cardView.addSubview(completeButton)
-        
         cardView.addSubview(optionTableView)
         
         
@@ -156,10 +129,9 @@ class NuteeAlertSheet : UIViewController {
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
         }
-
-        let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
+        
         cardView.snp.makeConstraints {
-            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)).constraint
+            cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(cardViewHeight).constraint
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.snp.bottom)
@@ -171,23 +143,8 @@ class NuteeAlertSheet : UIViewController {
             $0.centerX.equalTo(cardView)
             $0.top.equalTo(cardView.snp.top).offset(10)
         }
-        titleLabel.snp.makeConstraints{
-            $0.height.equalTo(titleHeight)
-            
-            $0.top.equalTo(cardView.snp.top).offset(handleArea)
-            $0.left.equalTo(cardView.snp.left)
-            $0.right.equalTo(cardView.snp.right)
-        }
-        completeButton.snp.makeConstraints{
-            $0.width.equalTo(70)
-            $0.height.equalTo(titleLabel.snp.height)
-            
-            $0.centerY.equalTo(titleLabel)
-            $0.right.equalTo(titleLabel.snp.right)
-        }
-        
         optionTableView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom)
+            $0.top.equalTo(cardView.snp.top).offset(handleArea)
             $0.left.equalTo(cardView.snp.left)
             $0.right.equalTo(cardView.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
@@ -199,168 +156,8 @@ class NuteeAlertSheet : UIViewController {
         self.dismiss(animated: true)
     }
     
-    @objc func didTapCompleteButton() {
-        switch optionList[0][2] as? String {
-        case "selectCategory":
-            didTapSelectCategoryCompleteButton()
-        default:
-            didTapOutsideCardSheet()
-        }
-    }
-    
-    @objc func didTapSelectCategoryCompleteButton() {
-        for selectedOption in optionList {
-            if selectedOption[3] as? Bool == false {
-                selectedOptionList.append(selectedOption[0] as! String)
-            }
-        }
-        signUpCategoryVC?.selectedCategoryList = selectedOptionList
-        
-        signUpCategoryVC?.updateSelectedCategoryStatus()
-        signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
-        UIView.animate(withDuration: signUpCategoryVC?.animationDuration ?? 1.4,
-                       delay: 0.2,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 1
-        })
-        
-        didTapOutsideCardSheet()
-        
-    }
-    
-    // MARK: - Pan Recognizer
-    
-    func addPanGestureRecognizer() {
-        // add pan gesture recognizer to the view controller's view (the whole screen)
-        let viewPan = UIPanGestureRecognizer(target: self, action: #selector(viewPanned(_:)))
-        
-        // by default iOS will delay the touch before recording the drag/pan information
-        // we want the drag gesture to be recorded down immediately, hence setting no delay
-        viewPan.delaysTouchesBegan = false
-        viewPan.delaysTouchesEnded = false
-
-        self.view.addGestureRecognizer(viewPan)
-    }
-    
-    // this function will be called when user pan/drag the view
-    @objc func viewPanned(_ panRecognizer: UIPanGestureRecognizer) {
-      // how much has user dragged
-      let translation = panRecognizer.translation(in: self.view)
-      
-      switch panRecognizer.state {
-      case .began:
-        cardPanStartingTopConstant = cardViewTopConstraint?.layoutConstraints[0].constant ?? 0
-        
-      case .changed :
-        
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
-            
-            let standardPos = safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)
-            
-            let swipeDownSensitivity: CGFloat = 1.5
-            if self.cardPanStartingTopConstant + translation.y > standardPos {
-                if self.cardPanStartingTopConstant + translation.y * swipeDownSensitivity > 30.0 {
-                    cardView.snp.updateConstraints {
-                        $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(self.cardPanStartingTopConstant + translation.y * swipeDownSensitivity)
-                    }
-                    
-                    // change the backgroundView alpha based on how much user has dragged
-                    self.presentingViewController?.view.alpha = dimAlphaWithCardTopConstraint(value: self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0)
-                }
-                
-                
-            } else {
-                
-                let swipeUpSensitivity: CGFloat = 0.5
-                if self.cardPanStartingTopConstant + translation.y * swipeUpSensitivity > 30.0 {
-                    cardView.snp.updateConstraints {
-                        $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(self.cardPanStartingTopConstant + translation.y * swipeUpSensitivity)
-                    }
-                    
-                    // change the backgroundView alpha based on how much user has dragged
-                    self.presentingViewController?.view.alpha = dimAlphaWithCardTopConstraint(value: self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0)
-                }
-                
-            }
-            
-        }
-         
-      case .ended :
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
-          
-            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count)) * 0.25 {
-            // show the card at normal state
-                setRegularPosition()
-          } else if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight) - 200 {
-            // show the card at normal state
-                setRegularPosition()
-          } else {
-            // hide the card and dismiss current view controller
-            didTapOutsideCardSheet()
-          }
-        }
-        
-      default:
-        break
-      }
-    }
-    
-    private func setRegularPosition() {
-        // ensure there's no pending layout changes before animation runs
-        self.view.layoutIfNeeded()
-        
-        // set the new top constraint value for card view
-        // card view won't move up just yet, we need to call layoutIfNeeded()
-        // to tell the app to refresh the frame/position of card view
-        if let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height {
-            
-            cardView.snp.updateConstraints {
-                $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
-            }
-        }
-        
-        // move card up from bottom by telling the app to refresh the frame/position of view
-        // create a new property animator
-        let showCard = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
-            self.view.layoutIfNeeded()
-        })
-        
-        // run the animation
-        showCard.startAnimation()
-    }
-    
-    // MARK: - Change alpha value by position
-    
-    private func dimAlphaWithCardTopConstraint(value: CGFloat) -> CGFloat {
-      let fullBackgroundViewAlpha: CGFloat = 0.7
-      
-      // ensure safe area height and safe area bottom padding is not nil
-        guard let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height,
-        let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom else {
-        return fullBackgroundViewAlpha
-      }
-      
-      // when card view top constraint value is equal to this, the darkest alpha (0.7)
-      let fullDimPosition = (safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(optionList.count))
-      
-      // when card view top constraint value is equal to this, the lightest alpha (0.0)
-      let noDimPosition = safeAreaHeight + bottomPadding
-      
-      // if card view top constraint is lesser than fullDimPosition, it is darkest
-      if value < fullDimPosition {
-        return fullBackgroundViewAlpha
-      }
-      
-      // if card view top constraint is more than noDimPosition, it is lighest
-      if value > noDimPosition {
-        return 0.0
-      }
-      
-      // else return an alpha value in between 0.0 and 0.7 based on the top constraint value
-        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) * 0.4
+    func setCardViewHeight() {
+        cardViewHeight = safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)
     }
     
 // MARK: - Custom Settings
@@ -451,14 +248,15 @@ class NuteeAlertSheet : UIViewController {
 }
 
 // MARK: - SettingProfileImageVC와 통신하기 위한 프로토콜 정의
+
 protocol SettingProfileImageVCDelegate: class {
     func openSettingProfileImageVCLibrary()
     func openSettingProfileImageVCCamera()
 }
 
 // MARK: - optionList TableView
-extension NuteeAlertSheet : UITableViewDelegate { }
-extension NuteeAlertSheet : UITableViewDataSource {
+
+extension NuteeAlertSheet: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return optionHeight
@@ -477,12 +275,7 @@ extension NuteeAlertSheet : UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.nuteeAlertSheet = self
-        cell.indexPathRow = indexPath.row
-        
-        cell.optionContentAligment = optionContentAligment
-        
-        cell.initCell()
-        cell.addContentView()
+        cell.setOptionItem(indexPath: indexPath.row)
 
         return cell
     }
@@ -503,31 +296,6 @@ extension NuteeAlertSheet : UITableViewDataSource {
             openLibrary()
         case "openCamera":
             openCamera()
-        case "selectCategory":
-            let cell = tableView.cellForRow(at: indexPath) as? OptionListTVCell
-            if optionList[indexPath.row][3] as? Bool == true {
-                cell?.selectedOptionImageView.isHidden = false
-                optionList[indexPath.row][3] = false
-            } else {
-                cell?.selectedOptionImageView.isHidden = true
-                optionList[indexPath.row][3] = true
-            }
-        case "selectFirstMajor":
-            majorVC?.firstMajor = optionList[indexPath.row][0] as? String ?? ""
-            majorVC?.updateFirstMajorButtonStatus()
-            didTapOutsideCardSheet()
-        case "selectSecondMajor":
-            majorVC?.secondMajor = optionList[indexPath.row][0] as? String ?? ""
-            majorVC?.updateSecondMajorButtonStatus()
-            didTapOutsideCardSheet()
-        case "selectPostCategory":
-            postVC?.selectedCategory = optionList[indexPath.row][0] as? String ?? ""
-            postVC?.updatePostCategoryButtonStatus()
-            didTapOutsideCardSheet()
-        case "selectPostMajor":
-            postVC?.selectedMajor = optionList[indexPath.row][0] as? String ?? ""
-            postVC?.updatePostMajorButtonStatus()
-            didTapOutsideCardSheet()
         default:
             simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
         }
@@ -535,83 +303,181 @@ extension NuteeAlertSheet : UITableViewDataSource {
 
 }
 
+// MARK: - Pan Recognizer
+
+extension NuteeAlertSheet {
+    
+    func addPanGestureRecognizer() {
+        // add pan gesture recognizer to the view controller's view (the whole screen)
+        let viewPan = UIPanGestureRecognizer(target: self, action: #selector(viewPanned(_:)))
+        
+        // by default iOS will delay the touch before recording the drag/pan information
+        // we want the drag gesture to be recorded down immediately, hence setting no delay
+        viewPan.delaysTouchesBegan = false
+        viewPan.delaysTouchesEnded = false
+
+        self.view.addGestureRecognizer(viewPan)
+    }
+    
+    // this function will be called when user pan/drag the view
+    @objc func viewPanned(_ panRecognizer: UIPanGestureRecognizer) {
+      // how much has user dragged
+      let translation = panRecognizer.translation(in: self.view)
+      
+      switch panRecognizer.state {
+      case .began:
+        cardPanStartingTopConstant = cardViewTopConstraint?.layoutConstraints[0].constant ?? 0
+        
+      case .changed :
+    
+        let standardPos = cardViewHeight
+        
+        let swipeDownSensitivity: CGFloat = 1.5
+        if self.cardPanStartingTopConstant + translation.y > standardPos {
+            if self.cardPanStartingTopConstant + translation.y * swipeDownSensitivity > 30.0 {
+                cardView.snp.updateConstraints {
+                    $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(self.cardPanStartingTopConstant + translation.y * swipeDownSensitivity)
+                }
+                
+                // change the backgroundView alpha based on how much user has dragged
+                self.presentingViewController?.view.alpha = dimAlphaWithCardTopConstraint(value: self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0)
+            }
+            
+            
+        } else {
+            
+            let swipeUpSensitivity: CGFloat = 0.5
+            if self.cardPanStartingTopConstant + translation.y * swipeUpSensitivity > 30.0 {
+                cardView.snp.updateConstraints {
+                    $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(self.cardPanStartingTopConstant + translation.y * swipeUpSensitivity)
+                }
+                
+                // change the backgroundView alpha based on how much user has dragged
+                self.presentingViewController?.view.alpha = dimAlphaWithCardTopConstraint(value: self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0)
+            }
+            
+        }
+       
+      case .ended :
+            if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < cardViewHeight * 0.25 {
+            // show the card at normal state
+                setRegularPosition()
+          } else if self.cardViewTopConstraint?.layoutConstraints[0].constant ?? 0 < (safeAreaHeight) - 200 {
+            // show the card at normal state
+                setRegularPosition()
+          } else {
+            // hide the card and dismiss current view controller
+            didTapOutsideCardSheet()
+          }
+        
+      default:
+        break
+      }
+    }
+    
+    private func setRegularPosition() {
+        // ensure there's no pending layout changes before animation runs
+        self.view.layoutIfNeeded()
+        
+        // set the new top constraint value for card view
+        // card view won't move up just yet, we need to call layoutIfNeeded()
+        // to tell the app to refresh the frame/position of card view
+        cardView.snp.updateConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(cardViewHeight)
+        }
+        
+        // move card up from bottom by telling the app to refresh the frame/position of view
+        // create a new property animator
+        let showCard = UIViewPropertyAnimator(duration: 0.25, curve: .easeOut, animations: {
+            self.view.layoutIfNeeded()
+        })
+        
+        // run the animation
+        showCard.startAnimation()
+    }
+    
+    // MARK: - Change alpha value by position
+    
+    private func dimAlphaWithCardTopConstraint(value: CGFloat) -> CGFloat {
+      let fullBackgroundViewAlpha: CGFloat = 0.7
+      
+      // ensure safe area height and safe area bottom padding is not nil
+        guard let bottomPadding = UIApplication.shared.windows.first?.safeAreaInsets.bottom else {
+        return fullBackgroundViewAlpha
+      }
+      
+      // when card view top constraint value is equal to this, the darkest alpha (0.7)
+      let fullDimPosition = cardViewHeight
+      
+      // when card view top constraint value is equal to this, the lightest alpha (0.0)
+      let noDimPosition = safeAreaHeight + bottomPadding
+      
+      // if card view top constraint is lesser than fullDimPosition, it is darkest
+      if value < fullDimPosition {
+        return fullBackgroundViewAlpha
+      }
+      
+      // if card view top constraint is more than noDimPosition, it is lighest
+      if value > noDimPosition {
+        return 0.0
+      }
+      
+      // else return an alpha value in between 0.0 and 0.7 based on the top constraint value
+        return fullBackgroundViewAlpha * 1 + ((value - fullDimPosition) / fullDimPosition) * 0.4
+    }
+}
+
 // MARK: - Setting TableViewCell
-class OptionListTVCell : UITableViewCell {
+
+class OptionListTVCell: UITableViewCell {
     
     static let identifier = Identify.OptionListTVCell
     
     // MARK: - UI components
     
     let optionItemLabel = UILabel()
-    let selectedOptionImageView = UIImageView()
     
     // MARK: - Variables and Properties
     
-    var optionContentAligment = "center"
-    
     var nuteeAlertSheet: NuteeAlertSheet?
-    var indexPathRow: Int?
     
     // MARK: - Life Cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        initCell()
+        addContentView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     // MARK: - Helper
     
     func initCell() {
         _ = optionItemLabel.then {
-            $0.text = nuteeAlertSheet?.optionList[indexPathRow!][0] as? String
             $0.font = .systemFont(ofSize: 20)
-            $0.textColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
-            
-            switch optionContentAligment {
-            case "left" :
-                $0.textAlignment = .left
-            default :
-                $0.textAlignment = .center
-            }
-        }
-        _ = selectedOptionImageView.then {
-            let configuration = UIImage.SymbolConfiguration(weight: .bold)
-            $0.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
-            $0.tintColor = nuteeAlertSheet?.optionList[indexPathRow!][1] as? UIColor
-            
-            $0.isHidden = true
-            if nuteeAlertSheet?.optionList[indexPathRow!].count ?? 0 >= 4 && nuteeAlertSheet?.optionList[indexPathRow!][3] as? Bool == false {
-                $0.isHidden = false
-            }
         }
     }
     
     func addContentView() {
         contentView.addSubview(optionItemLabel)
-        contentView.addSubview(selectedOptionImageView)
         
         optionItemLabel.snp.makeConstraints {
+            $0.centerX.equalTo(contentView)
             $0.centerY.equalTo(contentView)
-            $0.left.equalTo(contentView.snp.left).offset(20)
-            $0.right.equalTo(contentView.snp.right).inset(20)
-        }
-        selectedOptionImageView.snp.makeConstraints {
-            $0.width.equalTo(selectedOptionImageView.snp.height)
-            $0.height.equalTo(20)
-            
-            $0.centerY.equalTo(optionItemLabel)
-//            $0.left.equalTo(optionItemLabel.snp.right)
-            $0.right.equalTo(optionItemLabel.snp.right)
         }
     }
-
+    
+    func setOptionItem(indexPath: Int) {
+        _ = optionItemLabel.then {
+            $0.text = nuteeAlertSheet?.optionList[indexPath][0] as? String
+            $0.textColor = nuteeAlertSheet?.optionList[indexPath][1] as? UIColor
+        }
+    }
+    
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         
