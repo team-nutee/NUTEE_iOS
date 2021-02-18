@@ -56,7 +56,7 @@ extension String {
 
     // 누티 닉네임 최대 12자로 제한
     public func nicknameLimitation() -> Bool {
-        if self.count <= 12 {
+        if self.count > 0 && self.count <= 12 {
             return true
         } else {
             return false

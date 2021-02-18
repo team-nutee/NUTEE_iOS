@@ -20,7 +20,7 @@ class SettingNicknameVC: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var originalNickname = "이게머선129"
+    var originalNickname: String?
     
     // MARK: - Dummy data
     
@@ -52,12 +52,12 @@ class SettingNicknameVC: UIViewController {
         }
         
         _ = nicknameLabel.then {
-            $0.text = "닉네임"
+            $0.text = originalNickname
             $0.font = .systemFont(ofSize: 17)
             $0.sizeToFit()
         }
         _ = nicknameTextField.then {
-            $0.placeholder = "닉네임"
+            $0.placeholder = "변경할 닉네임을 입력해 주세요"
             $0.font = .systemFont(ofSize: 14)
             
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
@@ -112,8 +112,10 @@ class SettingNicknameVC: UIViewController {
     }
     
     @objc func didTapSaveButton() {
-        simpleNuteeAlertDialogue(title: "닉네임 변경", message: "닉네임이 성공적으로 변경되었습니다")
-        saveButton.isEnabled = false
+        changeNicknameService(nickname: nicknameTextField.text ?? "")
+        self.simpleNuteeAlertDialogue(title: "닉네임 변경", message: "성공적으로 변경되었습니다")
+        self.nicknameLabel.text = self.nicknameTextField.text ?? ""
+        self.saveButton.isEnabled = false
     }
     
     func checkSaveButtonEnableCondition() {
@@ -173,4 +175,36 @@ extension SettingNicknameVC {
         }
     }
     
+}
+
+// MARK: - Server connect
+
+extension SettingNicknameVC {
+    func changeNicknameService(nickname: String) {
+        UserService.shared.changeNickname(nickname){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+
+            case .requestErr:
+                print("requestErr")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+
+            }
+        }
+    }
 }

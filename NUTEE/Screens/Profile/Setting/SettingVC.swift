@@ -25,6 +25,7 @@ class SettingVC : UIViewController {
     ]
     
     var userProfileImageSrc: String?
+    var originalNickname: String?
     
     // MARK: - Dummy data
     
@@ -154,6 +155,7 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 1, section: 0):
             let settingNicknameVC = SettingNicknameVC()
+            settingNicknameVC.originalNickname = self.originalNickname ?? ""
             self.navigationController?.pushViewController(settingNicknameVC, animated: true)
             
         case IndexPath(row: 2, section: 0):

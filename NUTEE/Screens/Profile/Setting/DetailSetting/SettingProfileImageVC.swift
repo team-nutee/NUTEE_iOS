@@ -15,7 +15,7 @@ class SettingProfileImageVC : UIViewController {
     let profileImageView = UIImageView()
     let profileImagePicker = UIImagePickerController()
     
-    let saveButton = UIButton()
+    let saveButton = HighlightedButton()
     
     // MARK: - Variables and Properties
     
@@ -61,6 +61,8 @@ class SettingProfileImageVC : UIViewController {
             $0.setTitle("저장하기", for: .normal)
             $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
+            
+            $0.isEnabled = false
             
             $0.addTarget(self, action: #selector(didTapSaveButton), for: .touchUpInside)
         }
@@ -129,6 +131,8 @@ class SettingProfileImageVC : UIViewController {
     @objc func didTapSaveButton() {
         postImage(images: self.pickedIMG, completionHandler: {(returnedData)-> Void in
             self.changeProfileImageService(image: self.uploadedImages[0])
+            self.simpleNuteeAlertDialogue(title: "프로필 이미지 변경", message: "성공적으로 변경되었습니다")
+            self.saveButton.isEnabled = false
         })
     }
 }
@@ -177,8 +181,11 @@ extension SettingProfileImageVC : UIImagePickerControllerDelegate, UINavigationC
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             self.pickedIMG = []
             self.pickedIMG.append(image)
+            
             profileImageView.image = image
             profileImageView.contentMode = .scaleAspectFill
+            
+            self.saveButton.isEnabled = true
         }
         dismiss(animated: true, completion: nil)
     }
