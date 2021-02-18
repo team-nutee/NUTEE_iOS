@@ -208,9 +208,9 @@ class SettingPasswordVC : UIViewController {
     }
     
     @objc func didTapSaveButton() {
-//        if currentPasswordTextField.text?.validatePassword() == false {
-//            errorAnimate(targetTextField: currentPasswordTextField, errorMessage: "비밀번호를 입력하세요")
-//        }
+        changePwService(currentPw: currentPasswordTextField.text ?? "", changePw: newPasswordTextField.text ?? "")
+        simpleNuteeAlertDialogue(title: "비밀번호 변경", message: "성공적으로 변경되었습니다")
+        saveButton.isEnabled = false
     }
     
 }
@@ -400,5 +400,31 @@ extension SettingPasswordVC {
 // MARK: - Server connect
 
 extension SettingPasswordVC {
-    
+    func changePwService(currentPw: String, changePw: String) {
+        UserService.shared.changePassword(currentPw, changePw){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+
+            case .requestErr:
+                print("requestErr")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+
+            }
+        }
+    }
 }
