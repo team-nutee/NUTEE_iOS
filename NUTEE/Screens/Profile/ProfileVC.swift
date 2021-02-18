@@ -193,7 +193,13 @@ class ProfileVC: UIViewController {
     @objc func didTapSetting() {
         let settingVC = SettingVC()
         settingVC.userProfileImageSrc = user?.body.image?.src
+        
         settingVC.originalNickname = user?.body.nickname
+        
+        settingVC.originalCategoryList = user?.body.interests ?? []
+        
+        settingVC.originalFirstMajor = user?.body.majors[0]
+        settingVC.originalSecondMajor = user?.body.majors[1]
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }

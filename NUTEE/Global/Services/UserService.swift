@@ -731,7 +731,99 @@ struct UserService {
         }
     }
     
-    // MARK: - 관심 있는 카테고리 변경하기
+    // MARK: - 관심사 변경하기
+    
+    func changeInterests(_ interests: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/interests"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "interests" : interests,
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        print("관심사 변경 성공")
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
     
     // MARK: - 전공 변경하기
+    
+    func changeMajors(_ majors: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/majors"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "majors" : majors,
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        print("전공 변경 성공")
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
 }

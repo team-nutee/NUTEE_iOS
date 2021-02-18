@@ -25,7 +25,13 @@ class SettingVC : UIViewController {
     ]
     
     var userProfileImageSrc: String?
+    
     var originalNickname: String?
+
+    var originalCategoryList: [String] = []
+    
+    var originalFirstMajor: String?
+    var originalSecondMajor: String?
     
     // MARK: - Dummy data
     
@@ -164,10 +170,13 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 3, section: 0):
             let settingCategoryVC = SettingCategoryVC()
+            settingCategoryVC.originalCategoryList = self.originalCategoryList
             self.navigationController?.pushViewController(settingCategoryVC, animated: true)
             
         case IndexPath(row: 4, section: 0):
             let settingMajorVC = SettingMajorVC()
+            settingMajorVC.originalFirstMajor = self.originalFirstMajor ?? ""
+            settingMajorVC.originalSecondMajor = self.originalSecondMajor ?? ""
             self.navigationController?.pushViewController(settingMajorVC, animated: true)
             
         case IndexPath(row: 0, section: 1):

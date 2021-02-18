@@ -113,7 +113,7 @@
 		D5FFA5A624E2C189005B3C33 /* SettingNicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */; };
 		D5FFA5A824E2CBC6005B3C33 /* SettingPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */; };
 		D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */; };
-		D5FFA5AC24E2E027005B3C33 /* SettingCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5AB24E2E027005B3C33 /* SettingCategory.swift */; };
+		D5FFA5AC24E2E027005B3C33 /* SettingCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FFA5AB24E2E027005B3C33 /* SettingCategoryVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,7 +252,7 @@
 		D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingNicknameVC.swift; sourceTree = "<group>"; };
 		D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPasswordVC.swift; sourceTree = "<group>"; };
 		D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMajorVC.swift; sourceTree = "<group>"; };
-		D5FFA5AB24E2E027005B3C33 /* SettingCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCategory.swift; sourceTree = "<group>"; };
+		D5FFA5AB24E2E027005B3C33 /* SettingCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCategoryVC.swift; sourceTree = "<group>"; };
 		D6E0877B786222ABBF52C173 /* Pods-NUTEETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUTEETests.release.xcconfig"; path = "Target Support Files/Pods-NUTEETests/Pods-NUTEETests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -679,7 +679,7 @@
 				D5FFA5A324E29CAD005B3C33 /* SettingProfileImageVC.swift */,
 				D5FFA5A524E2C189005B3C33 /* SettingNicknameVC.swift */,
 				D5FFA5A724E2CBC6005B3C33 /* SettingPasswordVC.swift */,
-				D5FFA5AB24E2E027005B3C33 /* SettingCategory.swift */,
+				D5FFA5AB24E2E027005B3C33 /* SettingCategoryVC.swift */,
 				D5FFA5A924E2DB27005B3C33 /* SettingMajorVC.swift */,
 				D5CC689424E6F47C00274451 /* TermAndConditions */,
 				D5CC689524E6F55000274451 /* DeveloperInfo */,
@@ -1028,7 +1028,7 @@
 				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,
 				5E8BA6C624C6D64300A58F43 /* SearchVC.swift in Sources */,
 				D5ABA78525BC4413006C64F9 /* UserMenuBarCVCell.swift in Sources */,
-				D5FFA5AC24E2E027005B3C33 /* SettingCategory.swift in Sources */,
+				D5FFA5AC24E2E027005B3C33 /* SettingCategoryVC.swift in Sources */,
 				5E8BA69824C6D2CC00A58F43 /* Notice.swift in Sources */,
 				D12D8BE424D14C4D005F4580 /* UITextView+Extension.swift in Sources */,
 				D5ABA77325BC2F16006C64F9 /* UserPostFeedCVCell.swift in Sources */,

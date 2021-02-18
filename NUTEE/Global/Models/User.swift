@@ -17,8 +17,8 @@ struct UserBody: Codable {
     let id: Int
     let nickname: String
     let image: UserProfileImage?
-    let interests: [Interest]
-    let majors: [Major]
+    let interests: [String]
+    let majors: [String]
     let postNum, commentNum, likeNum: Int
 
     enum CodingKeys: String, CodingKey {
@@ -35,8 +35,8 @@ struct UserBody: Codable {
         id = (try? values.decode(Int.self, forKey: .id)) ?? 0
         nickname = (try? values.decode(String.self, forKey: .nickname)) ?? ""
         image = (try? values.decode(UserProfileImage.self, forKey: .image)) ?? UserProfileImage.init(src: "")
-        interests = (try? values.decode([Interest].self, forKey: .interests)) ?? []
-        majors = (try? values.decode([Major].self, forKey: .majors)) ?? []
+        interests = (try? values.decode([String].self, forKey: .interests)) ?? []
+        majors = (try? values.decode([String].self, forKey: .majors)) ?? []
         postNum = (try? values.decode(Int.self, forKey: .postNum)) ?? 0
         commentNum = (try? values.decode(Int.self, forKey: .commentNum)) ?? 0
         likeNum = (try? values.decode(Int.self, forKey: .likeNum)) ?? 0
@@ -46,14 +46,4 @@ struct UserBody: Codable {
 // MARK: - Image
 struct UserProfileImage: Codable {
     let src: String
-}
-
-// MARK: - Interest
-struct Interest: Codable {
-    let interest: String
-}
-
-// MARK: - Major
-struct Major: Codable {
-    let major: String
 }

@@ -16,8 +16,9 @@ class SettingMajorVC: SignUpMajorVC {
     
     // MARK: - Variables and Properties
     
-    var originalFirstMajor = "우주기운학"
+    var originalFirstMajor = ""
     var originalSecondMajor = ""
+    var newMajors: [String] = []
     
     // MARK: - Dummy data
     
@@ -136,7 +137,11 @@ class SettingMajorVC: SignUpMajorVC {
     }
     
     @objc func didTapSaveButton() {
-        simpleNuteeAlertDialogue(title: "전공 변경", message: "전공이 성공적으로 변경되었습니다")
+        newMajors.append(firstMajor)
+        newMajors.append(secondMajor)
+        changeMajorsService(majors: newMajors)
+        
+        simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
         saveButton.isEnabled = false
     }
     
@@ -150,4 +155,35 @@ class SettingMajorVC: SignUpMajorVC {
         // <---- make do nothing
     }
     
+}
+
+// MARK: - Server connect
+
+extension SettingMajorVC {
+    func changeMajorsService(majors: [String]) {
+        UserService.shared.changeMajors(majors){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+
+            case .requestErr:
+                print("requestErr")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+            }
+        }
+    }
 }

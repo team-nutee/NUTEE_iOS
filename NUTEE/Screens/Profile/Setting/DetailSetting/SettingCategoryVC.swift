@@ -1,5 +1,5 @@
 //
-//  SettingCategory.swift
+//  SettingCategoryVC.swift
 //  NUTEE
 //
 //  Created by Hee Jae Kim on 2020/08/11.
@@ -16,7 +16,7 @@ class SettingCategoryVC: SignUpCategoryVC {
     
     // MARK: - Variables and Properties
     
-    var originalCategoryList: [String] = ["카테고리1", "카테고리2"]
+    var originalCategoryList: [String] = []
     
     // MARK: - Dummy data
     
@@ -118,7 +118,8 @@ class SettingCategoryVC: SignUpCategoryVC {
     }
     
     @objc func didTapSaveButton() {
-        simpleNuteeAlertDialogue(title: "카테고리 변경", message: "카테고리가 성공적으로 변경되었습니다")
+        changeInterestsService(interests: selectedCategoryList)
+        simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
         saveButton.isEnabled = false
     }
     
@@ -132,4 +133,35 @@ class SettingCategoryVC: SignUpCategoryVC {
         // <---- make do nothing
     }
     
+}
+
+// MARK: - Server connect
+
+extension SettingCategoryVC {
+    func changeInterestsService(interests: [String]) {
+        UserService.shared.changeInterests(interests){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+
+            case .requestErr:
+                print("requestErr")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail:
+                print(".networkFail")
+
+            }
+        }
+    }
 }
