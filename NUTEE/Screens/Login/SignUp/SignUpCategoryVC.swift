@@ -163,19 +163,16 @@ class SignUpCategoryVC: SignUpViewController {
     }
     
     @objc func didTapSelectCategoryButton() {
-        let selectCategorySheet = NuteeAlertSheet()
+        let selectCategorySheet = NuteeCheckSheet()
         selectCategorySheet.signUpCategoryVC = self
         
-        selectCategorySheet.handleArea = 0
         selectCategorySheet.titleContent = "카테고리를 선택해주세요"
-        selectCategorySheet.isNeedCompleteButton = true
         
         var optionList = [[Any]]()
         for category in categoryList {
             optionList.append([category, UIColor.gray, "selectCategory", true])
         }
         selectCategorySheet.optionList = optionList
-        selectCategorySheet.optionContentAligment = "left"
         
         present(selectCategorySheet, animated: true)
     }

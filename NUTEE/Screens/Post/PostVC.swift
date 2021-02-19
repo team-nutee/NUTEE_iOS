@@ -381,10 +381,9 @@ class PostVC: UIViewController {
     }
 
     @objc func didTapSelectPostCategoryButton() {
-        let selectCategorySheet = NuteeAlertSheet()
+        let selectCategorySheet = NuteeSelectSheet()
         selectCategorySheet.postVC = self
-
-        selectCategorySheet.handleArea = 0
+        
         selectCategorySheet.titleContent = "카테고리를 선택해주세요"
 
         var optionList = [[Any]]()
@@ -392,10 +391,8 @@ class PostVC: UIViewController {
             optionList.append([category, UIColor.gray, "selectPostCategory", true])
         }
         selectCategorySheet.optionList = optionList
-        selectCategorySheet.optionContentAligment = "left"
         
         selectCategorySheet.modalPresentationStyle = .custom
-
         present(selectCategorySheet, animated: true)
     }
     
@@ -411,10 +408,9 @@ class PostVC: UIViewController {
     }
 
     @objc func didTapSelectPostMajorButton() {
-        let selectMajorSheet = NuteeAlertSheet()
+        let selectMajorSheet = NuteeSelectSheet()
         selectMajorSheet.postVC = self
-
-        selectMajorSheet.handleArea = 0
+        
         selectMajorSheet.titleContent = "전공을 선택해주세요"
 
         var optionList = [[Any]]()
@@ -422,10 +418,8 @@ class PostVC: UIViewController {
             optionList.append([major, UIColor.gray, "selectPostMajor", true])
         }
         selectMajorSheet.optionList = optionList
-        selectMajorSheet.optionContentAligment = "left"
         
         selectMajorSheet.modalPresentationStyle = .custom
-
         present(selectMajorSheet, animated: true)
     }
 }

@@ -289,7 +289,6 @@ class NewsFeedTVCell: UITableViewCell {
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
-        nuteeAlertSheet.titleHeight = 0
         
         if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
@@ -304,7 +303,6 @@ class NewsFeedTVCell: UITableViewCell {
         nuteeAlertSheet.editPostBody = newsPost
         
         nuteeAlertSheet.modalPresentationStyle = .custom
-        
         homeVC?.present(nuteeAlertSheet, animated: true)
     }
     
