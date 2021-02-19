@@ -65,6 +65,8 @@
 		D50BB0AE24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */; };
 		D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
+		D5220C7425DE478000716456 /* NuteeCheckSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5220C7325DE478000716456 /* NuteeCheckSheet.swift */; };
+		D5220C8425DEB5F300716456 /* NuteeSelectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */; };
 		D526E55B24D5B02600B80D37 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D526E55A24D5B02600B80D37 /* TabBarController.swift */; };
 		D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527E85325A18F89007D8585 /* HighlightedButton.swift */; };
 		D52A2E4325DD56590074EA16 /* SmallRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */; };
@@ -204,6 +206,8 @@
 		D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedContainerCVCell.swift; sourceTree = "<group>"; };
 		D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedTVCell.swift; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
+		D5220C7325DE478000716456 /* NuteeCheckSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeCheckSheet.swift; sourceTree = "<group>"; };
+		D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeSelectSheet.swift; sourceTree = "<group>"; };
 		D526E55A24D5B02600B80D37 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		D527E85325A18F89007D8585 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
 		D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRefreshControl.swift; sourceTree = "<group>"; };
@@ -601,6 +605,25 @@
 			path = SignUp;
 			sourceTree = "<group>";
 		};
+		D541832125DF5E420000D533 /* Sheet */ = {
+			isa = PBXGroup;
+			children = (
+				D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */,
+				D5220C7325DE478000716456 /* NuteeCheckSheet.swift */,
+				D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */,
+			);
+			path = Sheet;
+			sourceTree = "<group>";
+		};
+		D541832225DF5EA60000D533 /* Dialogue */ = {
+			isa = PBXGroup;
+			children = (
+				D5FC7B6724EBE7220029BEAE /* NuteeAlertDialogue.swift */,
+				452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */,
+			);
+			path = Dialogue;
+			sourceTree = "<group>";
+		};
 		D576528125A5A8A900A11E8D /* NoticeFeedContainerCVCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -647,9 +670,8 @@
 		D5A7D1BA24E7C3E100016A99 /* Alert */ = {
 			isa = PBXGroup;
 			children = (
-				D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */,
-				D5FC7B6724EBE7220029BEAE /* NuteeAlertDialogue.swift */,
-				452AACAF25CA6D8400FF3592 /* NuteeReportDialogue.swift */,
+				D541832125DF5E420000D533 /* Sheet */,
+				D541832225DF5EA60000D533 /* Dialogue */,
 			);
 			path = Alert;
 			sourceTree = "<group>";
@@ -950,6 +972,7 @@
 				D58C93D624C9D1D7005570D4 /* UIColor+Extension.swift in Sources */,
 				D534F1A125DD42F500E7D640 /* UserInformationView.swift in Sources */,
 				45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */,
+				D5220C8425DEB5F300716456 /* NuteeSelectSheet.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
@@ -1023,6 +1046,7 @@
 				45C92B0625879A3900828E8A /* Splash.swift in Sources */,
 				5E8BA6BA24C6D5FF00A58F43 /* EmailVC.swift in Sources */,
 				D588072824E419FE0037384F /* NoticeService.swift in Sources */,
+				D5220C7425DE478000716456 /* NuteeCheckSheet.swift in Sources */,
 				D12D8BF024D14CDE005F4580 /* UITabbar+Extension.swift in Sources */,
 				D5FFA5AA24E2DB27005B3C33 /* SettingMajorVC.swift in Sources */,
 				D5FFA5A424E29CAD005B3C33 /* SettingProfileImageVC.swift in Sources */,

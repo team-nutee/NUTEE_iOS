@@ -275,7 +275,7 @@ extension NuteeAlertSheet: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.nuteeAlertSheet = self
-        cell.setOptionItem(indexPath: indexPath.row)
+        cell.setDataToOptionItem(indexPath: indexPath.row)
 
         return cell
     }
@@ -471,7 +471,7 @@ class OptionListTVCell: UITableViewCell {
         }
     }
     
-    func setOptionItem(indexPath: Int) {
+    func setDataToOptionItem(indexPath: Int) {
         _ = optionItemLabel.then {
             $0.text = nuteeAlertSheet?.optionList[indexPath][0] as? String
             $0.textColor = nuteeAlertSheet?.optionList[indexPath][1] as? UIColor
