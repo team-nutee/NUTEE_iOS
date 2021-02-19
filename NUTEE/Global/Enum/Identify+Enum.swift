@@ -58,6 +58,9 @@ enum Identify {
     static let SettingTVCell = "SettingTVCell"
     static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     
+    // NuteeAlertSheet
     static let OptionListTVCell = "OptionListTVCell"
+    static let SelectOptionListTVCell = "SelectOptionListTVCell"
+    static let CheckOptionListTVCell = "CheckOptionListTVCell"
     
 }

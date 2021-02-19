@@ -133,7 +133,6 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
-        nuteeAlertSheet.titleHeight = 0
         
         if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editComment"],

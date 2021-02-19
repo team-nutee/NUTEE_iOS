@@ -366,7 +366,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     @objc func didTapMoreButton() {
         let nuteeAlertSheet = NuteeAlertSheet()
-        nuteeAlertSheet.titleHeight = 0
         
         if post?.body.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
