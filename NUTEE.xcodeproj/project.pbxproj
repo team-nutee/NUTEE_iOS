@@ -74,6 +74,7 @@
 		D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */; };
 		D534F1A125DD42F500E7D640 /* UserInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F1A025DD42F500E7D640 /* UserInformationView.swift */; };
 		D5381F112599EC8200C94A6F /* SignUpCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */; };
+		D541833325DF87890000D533 /* NuteeAlertActionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D541833225DF87890000D533 /* NuteeAlertActionDelegate.swift */; };
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
@@ -215,6 +216,7 @@
 		D5310CFC25418CB3009A1DC2 /* NotificationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTVCell.swift; sourceTree = "<group>"; };
 		D534F1A025DD42F500E7D640 /* UserInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformationView.swift; sourceTree = "<group>"; };
 		D5381F102599EC8200C94A6F /* SignUpCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCategoryVC.swift; sourceTree = "<group>"; };
+		D541833225DF87890000D533 /* NuteeAlertActionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeAlertActionDelegate.swift; sourceTree = "<group>"; };
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
@@ -670,6 +672,7 @@
 		D5A7D1BA24E7C3E100016A99 /* Alert */ = {
 			isa = PBXGroup;
 			children = (
+				D541833225DF87890000D533 /* NuteeAlertActionDelegate.swift */,
 				D541832125DF5E420000D533 /* Sheet */,
 				D541832225DF5EA60000D533 /* Dialogue */,
 			);
@@ -973,6 +976,7 @@
 				D534F1A125DD42F500E7D640 /* UserInformationView.swift in Sources */,
 				45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */,
 				D5220C8425DEB5F300716456 /* NuteeSelectSheet.swift in Sources */,
+				D541833325DF87890000D533 /* NuteeAlertActionDelegate.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
