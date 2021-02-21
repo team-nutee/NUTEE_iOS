@@ -614,7 +614,7 @@ struct UserService {
                     response.response?.statusCode {
                     switch status {
                     case 200:
-                        print("프로필 이미지 변경 성공")
+                        completion(.success("프로필 이미지 변경 성공"))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)
@@ -663,7 +663,7 @@ struct UserService {
                     response.response?.statusCode {
                     switch status {
                     case 200:
-                        print("닉네임 변경 성공")
+                        completion(.success("닉네임 변경 성공"))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)
@@ -712,7 +712,7 @@ struct UserService {
                     response.response?.statusCode {
                     switch status {
                     case 200:
-                        print("비밀번호 변경 성공")
+                        completion(.success("비밀번호 변경 성공"))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)
@@ -760,7 +760,7 @@ struct UserService {
                     response.response?.statusCode {
                     switch status {
                     case 200:
-                        print("관심사 변경 성공")
+                        completion(.success("관심사 변경 성공"))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)
@@ -808,7 +808,7 @@ struct UserService {
                     response.response?.statusCode {
                     switch status {
                     case 200:
-                        print("전공 변경 성공")
+                        completion(.success("전공 변경 성공"))
                     case 401:
                         print("실패 401")
                         completion(.pathErr)

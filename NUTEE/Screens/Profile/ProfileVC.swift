@@ -198,15 +198,13 @@ class ProfileVC: UIViewController {
         
         settingVC.originalCategoryList = user?.body.interests ?? []
         
-        print(user?.body.majors)
-        
-//        if user?.body.majors != [] {
-//            settingVC.originalFirstMajor = user?.body.majors[0]
-//
-//            if user?.body.majors.count ?? 0 > 1 {
-//                settingVC.originalSecondMajor = user?.body.majors[1]
-//            }
-//        }
+        if user?.body.majors != [] {
+            settingVC.originalFirstMajor = user?.body.majors[0]
+
+            if user?.body.majors.count ?? 0 > 1 {
+                settingVC.originalSecondMajor = user?.body.majors[1]
+            }
+        }
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
