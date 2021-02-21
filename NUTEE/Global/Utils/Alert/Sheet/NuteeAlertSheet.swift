@@ -11,6 +11,7 @@ import SnapKit
 class NuteeAlertSheet : UIViewController {
     
     // MARK: - UI components
+    
     let backgroundView = UIView()
     
     let cardView = UIView()
@@ -26,18 +27,17 @@ class NuteeAlertSheet : UIViewController {
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
     
-    var signUpCategoryVC: SignUpCategoryVC?
     var majorVC: SignUpMajorVC?
     var postVC: PostVC?
     
     var selectedOptionList: [String] = []
     
-    var optionList = [["", UIColor.self, ""]]
+    var optionList = [["", UIColor.self]]
     var optionHeight: CGFloat = 50
 
     var cardViewTopConstraint: Constraint?
     
-    weak var settingProfileImageVCDelegate: SettingProfileImageVCDelegate?
+    var nuteeAlertActionDelegate: NuteeAlertActionDelegate?
     
     var detailNewsFeedVC: DetailNewsFeedVC?
     
@@ -238,20 +238,6 @@ class NuteeAlertSheet : UIViewController {
         })
     }
     
-    func openLibrary() {
-        settingProfileImageVCDelegate?.openSettingProfileImageVCLibrary()
-    }
-   
-    func openCamera() {
-        settingProfileImageVCDelegate?.openSettingProfileImageVCCamera()
-    }
-}
-
-// MARK: - SettingProfileImageVC와 통신하기 위한 프로토콜 정의
-
-protocol SettingProfileImageVCDelegate: class {
-    func openSettingProfileImageVCLibrary()
-    func openSettingProfileImageVCCamera()
 }
 
 // MARK: - optionList TableView
@@ -281,24 +267,32 @@ extension NuteeAlertSheet: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch optionList[indexPath.row][2] as? String {
-        case "editPost":
-            editPost()
-        case "deletePost":
-            deletePost()
-        case "reportPost":
-            reportPost()
-        case "editComment":
-            editComment()
-        case "deleteComment":
-            deleteComment()
-        case "openLibrary":
-            openLibrary()
-        case "openCamera":
-            openCamera()
-        default:
-            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
-        }
+        
+        nuteeAlertActionDelegate?.nuteeAlertSheetAction(indexPath: indexPath.row)
+        
+        
+        
+//        switch optionList[indexPath.row][2] as? String {
+//        case "editPost":
+//            editPost()
+//        case "deletePost":
+//            deletePost()
+//        case "reportPost":
+//            reportPost()
+//        case "editComment":
+//            editComment()
+//        case "deleteComment":
+//            deleteComment()
+//        case "openLibrary":
+//            openLibrary()
+//        case "openCamera":
+//            openCamera()
+//        default:
+//            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
+//        }
+        
+        
+        
     }
 
 }
