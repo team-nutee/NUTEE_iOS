@@ -95,13 +95,15 @@ class FeedContainerCVCell : UICollectionViewCell {
     
     func fetchNewsFeed() { }
     
-    func setFetchNewsFeedFail() {
+    func setFetchNewsFeedFail(_ message: String) {
         refreshControl.endRefreshing()
         
         activityIndicator.stopAnimating()
         newsFeedTableView.isHidden = false
         
         newsFeedTableView.setEmptyView(title: "오류 발생😢", message: "피드를 조회하지 못했습니다")
+        
+        self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: message)
     }
     
     func afterFetchNewsFeed() {
@@ -219,21 +221,17 @@ extension FeedContainerCVCell{
                 self.newsPost = response
                 completionHandler(self.newsPost!)
                 
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .networkFail :
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
             }
         }
     }
@@ -247,21 +245,17 @@ extension FeedContainerCVCell{
                 self.newsPost = response
                 completionHandler(self.newsPost!)
                 
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
                 
             case .networkFail :
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
-                self.setFetchNewsFeedFail()
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
             }
         }
     }
@@ -275,21 +269,18 @@ extension FeedContainerCVCell{
                 self.newsPost = response
                 completionHandler(self.newsPost!)
                 
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                
+                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
+
             case .networkFail :
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+
             }
         }
     }
@@ -303,21 +294,18 @@ extension FeedContainerCVCell{
                 self.newsPost = response
                 completionHandler(self.newsPost!)
                 
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                
+                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
+
             case .networkFail :
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+
             }
         }
     }
@@ -331,21 +319,18 @@ extension FeedContainerCVCell{
                 self.newsPost = response
                 completionHandler(self.newsPost!)
                 
-            case .requestErr(_):
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "요청에 실패했습니다")
-                self.setFetchNewsFeedFail()
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "서버에 오류가 있습니다")
-                
+                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
+
             case .networkFail :
-                self.setFetchNewsFeedFail()
-                self.homeVC?.simpleNuteeAlertDialogue(title: "피드 조회 실패", message: "네트워크에 오류가 있습니다")
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+
             }
         }
     }
