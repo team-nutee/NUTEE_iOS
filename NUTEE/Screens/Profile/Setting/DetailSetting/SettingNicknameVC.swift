@@ -112,10 +112,11 @@ class SettingNicknameVC: UIViewController {
     }
     
     @objc func didTapSaveButton() {
-        changeNicknameService(nickname: nicknameTextField.text ?? "")
-        self.simpleNuteeAlertDialogue(title: "닉네임 변경", message: "성공적으로 변경되었습니다")
-        self.nicknameLabel.text = self.nicknameTextField.text ?? ""
-        self.saveButton.isEnabled = false
+        changeNicknameService(nickname: nicknameTextField.text ?? "", completionHandler: {
+            self.simpleNuteeAlertDialogue(title: "닉네임 변경", message: "성공적으로 변경되었습니다")
+            self.nicknameLabel.text = self.nicknameTextField.text ?? ""
+            self.saveButton.isEnabled = false
+        })
     }
     
     func checkSaveButtonEnableCondition() {
@@ -126,6 +127,10 @@ class SettingNicknameVC: UIViewController {
             errorAnimate(targetTextField: nicknameTextField, errorMessage: "최대 12자 사용가능")
             saveButton.isEnabled = false
         }
+    }
+    
+    func failToChangeNickname(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "닉네임 변경 실패", message: message)
     }
     
 }
@@ -180,31 +185,26 @@ extension SettingNicknameVC {
 // MARK: - Server connect
 
 extension SettingNicknameVC {
-    func changeNicknameService(nickname: String) {
-        UserService.shared.changeNickname(nickname){
-            [weak self]
-            data in
-            
-            guard let `self` = self else { return }
+    func changeNicknameService(nickname: String, completionHandler: @escaping () -> Void) {
+        UserService.shared.changeNickname(nickname, completion: { (returnedData) -> Void in
 
-            switch data {
+            switch returnedData {
             case .success(_ ):
-                self.dismiss(animated: true, completion: nil)
+                completionHandler()
 
-            case .requestErr:
-                print("requestErr")
+            case .requestErr(let message):
+                self.failToChangeNickname("\(message)")
 
             case .pathErr:
-                print(".pathErr")
+                self.failToChangeNickname("서버 에러입니다")
 
             case .serverErr:
-                print(".serverErr")
+                self.failToChangeNickname("서버 에러입니다")
 
             case .networkFail:
-                print(".networkFail")
-
+                self.failToChangeNickname("네트워크 에러입니다")
 
             }
-        }
+        })
     }
 }

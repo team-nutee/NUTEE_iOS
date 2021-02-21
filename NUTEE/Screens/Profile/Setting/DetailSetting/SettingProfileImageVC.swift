@@ -129,10 +129,15 @@ class SettingProfileImageVC : UIViewController {
     
     @objc func didTapSaveButton() {
         postImage(images: self.pickedIMG, completionHandler: {(returnedData)-> Void in
-            self.changeProfileImageService(image: self.uploadedImages[0])
-            self.simpleNuteeAlertDialogue(title: "프로필 이미지 변경", message: "성공적으로 변경되었습니다")
-            self.saveButton.isEnabled = false
+            self.changeProfileImageService(image: self.uploadedImages[0], completionHandler: {
+                self.simpleNuteeAlertDialogue(title: "프로필 이미지 변경", message: "성공적으로 변경되었습니다")
+                self.saveButton.isEnabled = false
+            })
         })
+    }
+    
+    func failToChangeProfile(_ title: String, _ message: String) {
+        self.simpleNuteeAlertDialogue(title: title, message: message)
     }
 }
 
@@ -208,48 +213,44 @@ extension SettingProfileImageVC {
             case .success(let res):
                 self.uploadedImages = res as! [NSString]
                 completionHandler(self.uploadedImages)
-            case .requestErr:
-                self.simpleAlert(title: "실패", message: "")
                 
+            case .requestErr(let message):
+                self.failToChangeProfile("이미지 업로드 실패", "\(message)")
+
             case .pathErr:
-                print(".pathErr")
+                self.failToChangeProfile("이미지 업로드 실패", "서버 에러입니다")
                 
             case .serverErr:
-                print(".serverErr")
-                
+                self.failToChangeProfile("이미지 업로드 실패", "서버 에러입니다")
+
             case .networkFail:
-                print(".networkFail")
-                
+                self.failToChangeProfile("이미지 업로드 실패", "네트워크 에러입니다")
+
             }
         }
         
     }
     
-    func changeProfileImageService(image: NSString){
-        UserService.shared.changeProfileImage(image){
-            [weak self]
-            data in
-
-            guard let `self` = self else { return }
-
-            switch data {
+    func changeProfileImageService(image: NSString, completionHandler: @escaping () -> Void) {
+        UserService.shared.changeProfileImage(image, completion: { (returnedData) -> Void in
+       
+            switch returnedData {
             case .success(_ ):
-                self.dismiss(animated: true, completion: nil)
+                completionHandler()
 
-            case .requestErr:
-                print("requestErr")
+            case .requestErr(let message):
+                self.failToChangeProfile("프로필 이미지 변경 실패", "\(message)")
 
             case .pathErr:
-                print(".pathErr")
+                self.failToChangeProfile("프로필 이미지 변경 실패", "서버 에러입니다")
 
             case .serverErr:
-                print(".serverErr")
+                self.failToChangeProfile("프로필 이미지 변경 실패", "서버 에러입니다")
 
             case .networkFail:
-                print(".networkFail")
-
+                self.failToChangeProfile("프로필 이미지 변경 실패", "네트워크 에러입니다")
 
             }
-        }
+        })
     }
 }

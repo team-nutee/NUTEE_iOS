@@ -208,9 +208,14 @@ class SettingPasswordVC : UIViewController {
     }
     
     @objc func didTapSaveButton() {
-        changePwService(currentPw: currentPasswordTextField.text ?? "", changePw: newPasswordTextField.text ?? "")
-        simpleNuteeAlertDialogue(title: "비밀번호 변경", message: "성공적으로 변경되었습니다")
-        saveButton.isEnabled = false
+        changePwService(currentPw: currentPasswordTextField.text ?? "", changePw: newPasswordTextField.text ?? "", completionHandler: {
+            self.simpleNuteeAlertDialogue(title: "비밀번호 변경", message: "성공적으로 변경되었습니다")
+            self.saveButton.isEnabled = false
+        })
+    }
+    
+    func failToChangePassword(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "비밀번호 변경 실패", message: message)
     }
     
 }
@@ -400,31 +405,26 @@ extension SettingPasswordVC {
 // MARK: - Server connect
 
 extension SettingPasswordVC {
-    func changePwService(currentPw: String, changePw: String) {
-        UserService.shared.changePassword(currentPw, changePw){
-            [weak self]
-            data in
-            
-            guard let `self` = self else { return }
+    func changePwService(currentPw: String, changePw: String, completionHandler: @escaping () -> Void) {
+        UserService.shared.changePassword(currentPw, changePw, completion: { (returnedData) -> Void in
 
-            switch data {
+            switch returnedData {
             case .success(_ ):
-                self.dismiss(animated: true, completion: nil)
+                completionHandler()
 
-            case .requestErr:
-                print("requestErr")
+            case .requestErr(let message):
+                self.failToChangePassword("\(message)")
 
             case .pathErr:
-                print(".pathErr")
+                self.failToChangePassword("서버 에러입니다")
 
             case .serverErr:
-                print(".serverErr")
+                self.failToChangePassword("서버 에러입니다")
 
             case .networkFail:
-                print(".networkFail")
-
+                self.failToChangePassword("네트워크 에러입니다")
 
             }
-        }
+        })
     }
 }

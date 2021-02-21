@@ -139,10 +139,14 @@ class SettingMajorVC: SignUpMajorVC {
     @objc func didTapSaveButton() {
         newMajors.append(firstMajor)
         newMajors.append(secondMajor)
-        changeMajorsService(majors: newMajors)
-        
-        simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
-        saveButton.isEnabled = false
+        self.changeMajorsService(majors: newMajors, completionHandler: {
+            self.simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
+            self.saveButton.isEnabled = false
+        })
+    }
+    
+    func failToChangeMajor(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "전공 변경 실패", message: message)
     }
     
     // MARK: - Remove SignUpMajorVC Animation
@@ -160,30 +164,26 @@ class SettingMajorVC: SignUpMajorVC {
 // MARK: - Server connect
 
 extension SettingMajorVC {
-    func changeMajorsService(majors: [String]) {
-        UserService.shared.changeMajors(majors){
-            [weak self]
-            data in
-            
-            guard let `self` = self else { return }
+    func changeMajorsService(majors: [String], completionHandler: @escaping () -> Void) {
+        UserService.shared.changeMajors(majors, completion: { (returnedData) -> Void in
 
-            switch data {
+            switch returnedData {
             case .success(_ ):
-                self.dismiss(animated: true, completion: nil)
+                completionHandler()
 
-            case .requestErr:
-                print("requestErr")
+            case .requestErr(let message):
+                self.failToChangeMajor("\(message)")
 
             case .pathErr:
-                print(".pathErr")
+                self.failToChangeMajor("서버 에러입니다")
 
             case .serverErr:
-                print(".serverErr")
+                self.failToChangeMajor("서버 에러입니다")
 
             case .networkFail:
-                print(".networkFail")
+                self.failToChangeMajor("네트워크 에러입니다")
 
             }
-        }
+        })
     }
 }
