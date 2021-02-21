@@ -118,9 +118,14 @@ class SettingCategoryVC: SignUpCategoryVC {
     }
     
     @objc func didTapSaveButton() {
-        changeInterestsService(interests: selectedCategoryList)
-        simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
-        saveButton.isEnabled = false
+        changeInterestsService(interests: selectedCategoryList, completionHandler: {
+            self.simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
+            self.saveButton.isEnabled = false
+        })
+    }
+    
+    func failToChangeCategory(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "관심사 변경 실패", message: message)
     }
     
     // MARK: - Remove SignUpCategoryVC Animation
@@ -138,30 +143,26 @@ class SettingCategoryVC: SignUpCategoryVC {
 // MARK: - Server connect
 
 extension SettingCategoryVC {
-    func changeInterestsService(interests: [String]) {
-        UserService.shared.changeInterests(interests){
-            [weak self]
-            data in
+    func changeInterestsService(interests: [String], completionHandler: @escaping () -> Void) {
+        UserService.shared.changeInterests(interests, completion: { (returnedData) -> Void in
             
-            guard let `self` = self else { return }
-
-            switch data {
+            switch returnedData {
             case .success(_ ):
-                self.dismiss(animated: true, completion: nil)
+                completionHandler()
 
-            case .requestErr:
-                print("requestErr")
+            case .requestErr(let message):
+                self.failToChangeCategory("\(message)")
 
             case .pathErr:
-                print(".pathErr")
+                self.failToChangeCategory("서버 에러입니다")
 
             case .serverErr:
-                print(".serverErr")
+                self.failToChangeCategory("서버 에러입니다")
 
             case .networkFail:
-                print(".networkFail")
+                self.failToChangeCategory("네트워크 에러입니다")
 
             }
-        }
+        })
     }
 }

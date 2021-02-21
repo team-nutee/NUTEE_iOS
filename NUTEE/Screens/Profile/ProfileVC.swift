@@ -198,12 +198,22 @@ class ProfileVC: UIViewController {
         
         settingVC.originalCategoryList = user?.body.interests ?? []
         
-        settingVC.originalFirstMajor = user?.body.majors[0]
-        settingVC.originalSecondMajor = user?.body.majors[1]
+        print(user?.body.majors)
+        
+//        if user?.body.majors != [] {
+//            settingVC.originalFirstMajor = user?.body.majors[0]
+//
+//            if user?.body.majors.count ?? 0 > 1 {
+//                settingVC.originalSecondMajor = user?.body.majors[1]
+//            }
+//        }
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
+    func failToGetProfile(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: message)
+    }
 }
 
 // MARK: - NewsFeed CollectionView Container
@@ -286,17 +296,17 @@ extension ProfileVC {
                 self.user = response
                 completionHandler(self.user!)
                 
-            case .requestErr(_):
-                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "요청에 오류가 있습니다")
+            case .requestErr(let message):
+                self.failToGetProfile("\(message)")
                 
             case .pathErr:
-                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "서버에 오류가 있습니다")
-                
+                self.failToGetProfile("서버 에러입니다")
+
             case .serverErr:
-                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "서버 연결에 오류가 있습니다")
+                self.failToGetProfile("서버 에러입니다")
 
             case .networkFail :
-                self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: "네트워크에 오류가 있습니다")
+                self.failToGetProfile("네트워크 에러입니다")
             }
         }
     }
