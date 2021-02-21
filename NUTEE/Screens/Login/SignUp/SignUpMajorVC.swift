@@ -26,7 +26,7 @@ class SignUpMajorVC: SignUpViewController {
     
     let majorButtonPlaceHolder = "전공을 선택해주세요"
     
-    var majorList = ["앱등전자공학", "갈낙지생명공학", "우주기운학", "충전기환경보호학", "종강심리학", "펭생철학과", "라떼고고학"]
+    var majorList: [String] = []
     var firstMajor = ""
     var secondMajor = ""
     
@@ -37,6 +37,8 @@ class SignUpMajorVC: SignUpViewController {
 
         initView()
         makeConstraints()
+        
+        getMajorsService()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -290,4 +292,29 @@ class SignUpMajorVC: SignUpViewController {
 // MARK: - Server connect
 
 extension SignUpMajorVC {
+    func getMajorsService() {
+        ContentService.shared.getMajors() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.majorList = res as! [String]
+                
+            case .requestErr(let message):
+                self.failToGetList("전공 목록 조회 실패", "\(message)")
+
+            case .pathErr:
+                self.failToGetList("전공 목록 조회 실패", "서버 에러입니다")
+                
+            case .serverErr:
+                self.failToGetList("전공 목록 조회 실패", "서버 에러입니다")
+                
+            case .networkFail:
+                self.failToGetList("전공 목록 조회 실패", "네트워크 에러입니다")
+            }
+        }
+    }
 }

@@ -15,9 +15,8 @@ struct ContentService {
     
     static let shared = ContentService()
     
-    //MARK: - 게시글(Post) 받아오기
+    // MARK: - 모든 게시글 가져오기
     
-    // 모든 게시글 가져오기
     func getAllPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.Post + "/all?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
@@ -67,7 +66,8 @@ struct ContentService {
         }
     }
     
-    // 즐겨찾기한 카테고리 게시글 가져오기
+    // MARK: - 즐겨찾기한 카테고리 게시글 가져오기
+    
     func getFavoritePosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.Post + "/favorite" + "?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
@@ -117,10 +117,11 @@ struct ContentService {
         }
     }
     
-    // 전공 게시글 가져오기
+    // MARK: - 전공 게시글 가져오기
     
     
-    // 카테고리에 있는 게시글들(posts) 가져오기
+    // MARK: - 카테고리에 있는 게시글들(posts) 가져오기
+    
     func getCategoryPosts(category: String, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.Post + "/category/" + category + "?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
@@ -170,7 +171,8 @@ struct ContentService {
         }
     }
     
-    // 게시글(post) 하나 가져오기
+    // MARK: - 게시글(post) 하나 가져오기
+    
     func getPost(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void){
         let URL = APIConstants.Post + "/" + String(postId)
         
@@ -220,7 +222,96 @@ struct ContentService {
         }
     }
     
-    // 게시물 생성
+    // MARK: - 카테고리 목록 불러오기
+    
+    func getCategories(completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Category + "/interests"
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status = response.response?.statusCode{
+                    switch status {
+                    case 200:
+                        do{
+                            let result = try JSONDecoder().decode(UploadImage.self, from : response.data!)
+                            
+                            completion(.success(result.body))
+                        } catch {
+                            completion(.pathErr)
+                        }
+                    case 409:
+                        print("실패 409")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        print(status)
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: - 전공 목록 불러오기
+    
+    func getMajors(completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Category + "/majors"
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json"
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status = response.response?.statusCode{
+                    switch status {
+                    case 200:
+                        do{
+                            let result = try JSONDecoder().decode(UploadImage.self, from : response.data!)
+                            
+                            completion(.success(result.body))
+                        } catch {
+                            completion(.pathErr)
+                        }
+                    case 409:
+                        print("실패 409")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        print(status)
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: - 게시물 생성
+    
     func createPost(title: String, content: String, category: String, images: [NSString], completion: @escaping (NetworkResult<Any>) -> Void) {
         
         var token = "Bearer "
@@ -278,6 +369,8 @@ struct ContentService {
         }
     }
     
+    // MARK: - 사진 업로드
+    
     func uploadImage(images: [UIImage], completion: @escaping(NetworkResult<Any>)->Void) {
 
         var token = "Bearer "
@@ -329,7 +422,8 @@ struct ContentService {
         }
     }
     
-    // 게시물 수정
+    // MARK: - 게시물 수정
+    
     func editPost(postId: Int, title: String, content: String, images: [NSString], completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId)
@@ -385,7 +479,8 @@ struct ContentService {
         }
     }
     
-    // 포스트 삭제
+    // MARK: - 포스트 삭제
+    
     func deletePost(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId)
@@ -430,7 +525,8 @@ struct ContentService {
         }
     }
     
-    // 게시물 신고하기
+    // MARK: - 게시물 신고하기
+    
     func reportPost(_ postId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/report"
@@ -483,7 +579,8 @@ struct ContentService {
         }
     }
     
-    // 좋아요
+    // MARK: - 게시물 좋아요
+    
     func postLike(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/like"
@@ -532,7 +629,8 @@ struct ContentService {
         }
     }
     
-    // 좋아요 취소
+    // MARK: - 게시물 좋아요 취소
+    
     func deleteLike(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/like"

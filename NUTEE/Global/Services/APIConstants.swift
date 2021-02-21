@@ -40,6 +40,9 @@ struct APIConstants {
     static let NoticeGeneral = NoticeURL + "/ilban"
     static let NoticeEvent = NoticeURL + "/hangsa"
     
+    // Category
+    static let Category = BackURL + "/category"
+    
     // Post
     static let Post = BackURL + "/post"
     static let Image = BackURL + "/upload"

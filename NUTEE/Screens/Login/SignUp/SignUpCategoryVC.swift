@@ -27,7 +27,7 @@ class SignUpCategoryVC: SignUpViewController {
 
     var categoryTVCellHeight: CGFloat = 50
     
-    var categoryList = ["카테고리1", "카테고리2", "카테고리3"]
+    var categoryList: [String] = []
     var selectedCategoryList: [String] = []
     
     // MARK: - Life Cycle
@@ -37,6 +37,8 @@ class SignUpCategoryVC: SignUpViewController {
 
         makeConstraints()
         initView()
+        
+        getCategoriesService()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -309,9 +311,35 @@ class CategoryTVCell : UITableViewCell {
         signUpCategoryVC?.updateSelectedCategoryStatus()
     }
     
+    
 }
 
 // MARK: - Server connect
 
 extension SignUpCategoryVC {
+    func getCategoriesService() {
+        ContentService.shared.getCategories() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.categoryList = res as! [String]
+                
+            case .requestErr(let message):
+                self.failToGetList("카테고리 목록 조회 실패", "\(message)")
+
+            case .pathErr:
+                self.failToGetList("카테고리 목록 조회 실패", "서버 에러입니다")
+                
+            case .serverErr:
+                self.failToGetList("카테고리 목록 조회 실패", "서버 에러입니다")
+                
+            case .networkFail:
+                self.failToGetList("카테고리 목록 조회 실패", "네트워크 에러입니다")
+            }
+        }
+    }
 }

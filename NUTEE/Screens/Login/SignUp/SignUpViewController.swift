@@ -191,6 +191,10 @@ class SignUpViewController: UIViewController {
     @objc func didTapNextButton() {
     }
     
+    func failToGetList(_ title: String, _ message: String) {
+        self.simpleNuteeAlertDialogue(title: title, message: message)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
