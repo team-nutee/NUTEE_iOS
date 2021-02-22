@@ -17,6 +17,9 @@ class NuteeCheckSheet: NuteeSelectSheet {
     
     // MARK: - Variables and Properties
     
+    var itemList = [""]
+    var itemCheckList = [false]
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -54,63 +57,43 @@ class NuteeCheckSheet: NuteeSelectSheet {
         }
     }
     
-    @objc func didTapCompleteButton() {
-        switch optionList[0][2] as? String {
-        case "selectCategory":
-            didTapSelectCategoryCompleteButton()
-        default:
-            didTapOutsideCardSheet()
-        }
+    override func setCardViewHeight() {
+        handleArea = 0
+        cardViewHeight = safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(itemList.count)
     }
     
-    @objc func didTapSelectCategoryCompleteButton() {
-        for selectedOption in optionList {
-            if selectedOption[3] as? Bool == false {
-                selectedOptionList.append(selectedOption[0] as! String)
-            }
-        }
-        signUpCategoryVC?.selectedCategoryList = selectedOptionList
-        
-        signUpCategoryVC?.updateSelectedCategoryStatus()
-        signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 0.5
-        UIView.animate(withDuration: signUpCategoryVC?.animationDuration ?? 1.4,
-                       delay: 0.2,
-                       usingSpringWithDamping: 0.6,
-                       initialSpringVelocity: 1,
-                       options: [.curveEaseIn],
-                       animations: {
-                        self.signUpCategoryVC?.selectCategoryButton.titleLabel?.alpha = 1
-        })
-        
+    @objc func didTapCompleteButton() {
         didTapOutsideCardSheet()
     }
+    
 }
 
 // MARK: - optionList TableView
 
 extension NuteeCheckSheet {
     
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return itemList.count
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.CheckOptionListTVCell, for: indexPath) as! CheckOptionListTVCell
         cell.selectionStyle = .none
         
-        cell.optionItemLabel.text = optionList[indexPath.row][0] as? String
+        cell.optionItemLabel.text = itemList[indexPath.row]
+//        let isSelected = itemCheckList[indexPath.row]
+        cell.selectedOptionImageView.isHidden = !itemCheckList[indexPath.row]
         
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch optionList[indexPath.row][2] as? String {
-        case "selectCategory":
-            let cell = tableView.cellForRow(at: indexPath) as! CheckOptionListTVCell
-            
-            let isHidden = cell.selectedOptionImageView.isHidden
-            cell.selectedOptionImageView.isHidden = !isHidden
-            optionList[indexPath.row][3] = !isHidden
-            
-        default:
-            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
-        }
+        let cell = tableView.cellForRow(at: indexPath) as! CheckOptionListTVCell
+        
+        let isHidden = cell.selectedOptionImageView.isHidden
+        cell.selectedOptionImageView.isHidden = !isHidden
+        
+        nuteeAlertActionDelegate?.nuteeAlertSheetAction(indexPath: indexPath.row)
     }
 
 }
@@ -136,8 +119,6 @@ class CheckOptionListTVCell: SelectOptionListTVCell {
             let configuration = UIImage.SymbolConfiguration(weight: .bold)
             $0.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
             $0.tintColor = .gray
-
-            $0.isHidden = true
         }
     }
 
