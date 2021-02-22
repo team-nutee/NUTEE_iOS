@@ -25,8 +25,8 @@ struct APIConstants {
     // SignUp
     static let User = AuthURL + "/user"
     
-    static let OTPSend = AuthURL + "/sendotp"
-    static let OTPCheck = AuthURL + "/checkotp"
+    static let OTPSend = AuthURL + "/otp"
+    static let OTPCheck = AuthURL + "/check/otp"
     static let IDCheck = AuthURL + "/checkid"
     static let NickCheck = AuthURL + "/checknickname"
 

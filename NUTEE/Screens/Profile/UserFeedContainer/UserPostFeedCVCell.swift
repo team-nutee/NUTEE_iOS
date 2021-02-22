@@ -15,6 +15,10 @@ class UserPostFeedCVCell: FeedContainerCVCell {
         getMyPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.afterFetchNewsFeed()
+            
+            if self.postContent?.count == 0 {
+                self.newsFeedTableView.setEmptyView(title: "작성한 게시물", message: "작성한 게시물이 여기에 표시됩니다.")
+            }
         }
     }
     

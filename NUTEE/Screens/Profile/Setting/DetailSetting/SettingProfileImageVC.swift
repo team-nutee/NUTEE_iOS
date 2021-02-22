@@ -12,7 +12,7 @@ class SettingProfileImageVC : UIViewController {
     
     // MARK: - UI components
     
-    let profileImageView = UIImageView()
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     let profileImagePicker = UIImagePickerController()
     
     let saveButton = HighlightedButton()
@@ -50,8 +50,9 @@ class SettingProfileImageVC : UIViewController {
     
     func initView() {
         _ = profileImageView.then {
+            $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
             $0.setImageNutee(userProfileImageSrc)
-            $0.contentMode = .scaleAspectFit
+            $0.clipsToBounds = true
         }
         _ = profileImagePicker.then {
             $0.delegate = self

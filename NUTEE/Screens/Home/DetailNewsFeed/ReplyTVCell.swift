@@ -16,7 +16,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     //MARK: - UI components
     
-    let profileImageView = UIImageView()
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     let nicknameLabel = UILabel()
     
     let dateLabel = UILabel()
@@ -49,9 +49,10 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     func initCell () {
         
         _ = profileImageView.then {
-            $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
+            $0.layer.cornerRadius = 0.4 * profileImageView.frame.size.width
             $0.image = UIImage(named: "nutee_zigi_white")
             $0.contentMode = .scaleAspectFit
+            $0.clipsToBounds = true
         }
         _ = nicknameLabel.then {
             $0.text = "닉네임"

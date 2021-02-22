@@ -387,8 +387,8 @@ extension EmailVC {
             case .success(_):
                 self.certificationAnimate()
                 
-            case .requestErr(_):
-                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "이미 인증된 이메일입니다.")
+            case .requestErr(let res):
+                self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "\(res)")
                 
             case .pathErr:
                 self.errorAnimate(targetTextField: self.emailTextField, errorMessage: "에러가 발생했습니다.")

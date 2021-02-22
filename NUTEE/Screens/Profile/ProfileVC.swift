@@ -39,9 +39,9 @@ class ProfileVC: UIViewController {
         initView()
         makeConstraints()
         
-        getMyProfileService { [self] (user) in
-            fillDataToView()
-        }
+        getMyProfileService(completionHandler: {
+            self.fillDataToView()
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -180,9 +180,13 @@ class ProfileVC: UIViewController {
     }
     
     @objc func updateUserInfo() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.refreshControl.endRefreshing()
-        }
+        getMyProfileService(completionHandler: {
+            self.fillDataToView()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        })
     }
     
     func scrollToMenuIndex(menuIndex: Int) {
@@ -285,14 +289,14 @@ extension ProfileVC : UICollectionViewDataSource {
 
 extension ProfileVC {
     
-    func getMyProfileService(completionHandler: @escaping (_ returnedData: User) -> Void ) {
-        UserService.shared.getMyProfile() { responsedata in
+    func getMyProfileService(completionHandler: @escaping () -> Void ) {
+        UserService.shared.getMyProfile(completion: { (returnedData) -> Void in
             
-            switch responsedata {
+            switch returnedData {
             case .success(let res):
                 let response = res as! User
                 self.user = response
-                completionHandler(self.user!)
+                completionHandler()
                 
             case .requestErr(let message):
                 self.failToGetProfile("\(message)")
@@ -306,6 +310,6 @@ extension ProfileVC {
             case .networkFail :
                 self.failToGetProfile("네트워크 에러입니다")
             }
-        }
+        })
     }
 }

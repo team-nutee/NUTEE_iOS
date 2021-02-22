@@ -19,7 +19,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     let testView = UIView()
     
-    let profileImageView = UIImageView()
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     let nicknameLabel = UILabel()
     let dateLabel = UILabel()
     
@@ -104,6 +104,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
             $0.image = UIImage(named: "nutee_zigi_white")
             $0.contentMode = .scaleAspectFit
+            $0.clipsToBounds = true
         }
         _ = nicknameLabel.then {
             $0.text = "닉네임"

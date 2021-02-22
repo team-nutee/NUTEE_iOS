@@ -160,7 +160,7 @@ struct UserService {
                     case 500:
                         completion(.serverErr)
                     default:
-                        break
+                        completion(.requestErr(response))
                     }
                 }
                 
