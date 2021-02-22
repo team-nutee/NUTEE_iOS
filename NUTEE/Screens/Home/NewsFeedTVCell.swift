@@ -154,7 +154,7 @@ class NewsFeedTVCell: UITableViewCell {
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 20
         categoryButton.snp.makeConstraints {
-            $0.width.equalTo(56)
+            $0.width.greaterThanOrEqualTo(56)
             $0.height.equalTo(24)
             
             $0.top.equalTo(contentView.snp.top).offset(TopAndBottomSpace)
