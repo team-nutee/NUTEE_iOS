@@ -117,9 +117,6 @@ struct ContentService {
         }
     }
     
-    // MARK: - 전공 게시글 가져오기
-    
-    
     // MARK: - 카테고리에 있는 게시글들(posts) 가져오기
     
     func getCategoryPosts(category: String, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){

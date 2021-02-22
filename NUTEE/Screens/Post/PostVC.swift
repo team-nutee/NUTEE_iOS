@@ -640,17 +640,19 @@ extension PostVC {
             switch data {
             case .success(_ ):
                 self.dismiss(animated: true, completion: nil)
-            case .requestErr:
-                self.simpleNuteeAlertDialogue(title: "알림", message: "카테고리나 전공을 선택해주세요.")
+            
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "\(message)")
+
             case .pathErr:
-                print(".pathErr")
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
             case .serverErr:
-                print(".serverErr")
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버에 오류가 있습니다")
+
             case .networkFail:
-                print(".networkFail")
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "네트워크에 오류가 있습니다")
+
                 
             }
         }
@@ -671,18 +673,19 @@ extension PostVC {
             case .success(let res):
                 self.uploadedImages = res as! [NSString]
                 completionHandler(self.uploadedImages)
-            case .requestErr:
-                self.simpleAlert(title: "실패", message: "")
                 
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "\(message)")
+
             case .pathErr:
-                print(".pathErr")
-                
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
             case .serverErr:
-                print(".serverErr")
-                
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "서버에 오류가 있습니다")
+
             case .networkFail:
-                print(".networkFail")
-                
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "네트워크에 오류가 있습니다")
+
             }
         }
         
@@ -697,22 +700,20 @@ extension PostVC {
             
             switch data {
             case .success(_ ):
-                
-                LoadingHUD.hide()
                 self.dismiss(animated: true, completion: nil)
-            case .requestErr:
-                LoadingHUD.hide()
-                print("requestErr")
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "\(message)")
+
             case .pathErr:
-                print(".pathErr")
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
             case .serverErr:
-                print(".serverErr")
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버에 오류가 있습니다")
+
             case .networkFail:
-                print(".networkFail")
-                
-                
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "네트워크에 오류가 있습니다")
+
             }
         }
         
