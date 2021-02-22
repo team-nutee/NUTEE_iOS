@@ -17,7 +17,7 @@ class UserCommentFeedCVCell: FeedContainerCVCell {
             self.afterFetchNewsFeed()
             
             if self.postContent?.count == 0 {
-                self.newsFeedTableView.setEmptyView(title: "댓글을 작성한 게시물", message: "댓글을 작성한 게시물이 여기에 표시됩니다.")
+                self.newsFeedTableView.setEmptyView(title: "댓글을 작성한 게시물", message: "댓글을 작성한 게시물이 여기에 표시됩니다")
             }
         }
     }
@@ -43,6 +43,10 @@ class UserCommentFeedCVCell: FeedContainerCVCell {
         getMyCommentPostsService(lastId: 0, limit: 10) { (Post) in
             self.postContent = Post.body
             self.newsFeedTableView.reloadData()
+            
+            if self.postContent?.count == 0 {
+                self.newsFeedTableView.setEmptyView(title: "댓글을 작성한 게시물", message: "댓글을 작성한 게시물이 여기에 표시됩니다")
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.refreshControl.endRefreshing()
