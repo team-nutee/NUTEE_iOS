@@ -35,11 +35,13 @@ class PostVC: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var categoryList = ["카테고리11111", "IT2", "카테고리3"]
+    var categoryList: [String] = []
     var selectedCategory: String?
     
-    var majorList = ["앱등전자공학", "갈낙지생명공학", "우주기운학", "충전기환경보호학", "종강심리학", "펭생철학과", "라떼고고학"]
+    var majorList: [String] = []
     var selectedMajor: String?
+    
+    var pickedCategory: String?
 
     var pickedIMG : [UIImage] = []
     
@@ -65,6 +67,9 @@ class PostVC: UIViewController {
         setNavigationBarItem()
         initPostingView()
         addSubView()
+        
+        getCategoriesService()
+        getMyProfileService()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,14 +84,10 @@ class PostVC: UIViewController {
         self.postTitleTextField.becomeFirstResponder()
         
         if isEditMode {
-            if selectedCategory != "" {
-                updatePostCategoryButtonStatus()
-            } else if selectedMajor != "" {
-                updatePostMajorButtonStatus()
-            }
-            
+            categoryButton.setTitle(selectedCategory, for: .normal)
             categoryButton.isEnabled = false
-            majorButton.isEnabled = false
+            
+            majorButton.isHidden = true
         }
     }
     
@@ -335,10 +336,10 @@ class PostVC: UIViewController {
             // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
             if pickedIMG != [] {
                 postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-                    self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.selectedCategory ?? "")
+                    self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.pickedCategory ?? "")
                 })
             } else {
-                uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.selectedCategory ?? "")
+                uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.pickedCategory ?? "")
             }
         } else {
             // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
@@ -372,6 +373,7 @@ class PostVC: UIViewController {
     func updatePostCategoryButtonStatus() {
         categoryButton.alpha = 1.0
         categoryButton.setTitle(selectedCategory, for: .normal)
+        pickedCategory = selectedCategory
         
         if selectedMajor != "" {
             selectedMajor = ""
@@ -399,6 +401,7 @@ class PostVC: UIViewController {
     func updatePostMajorButtonStatus() {
         majorButton.alpha = 1.0
         majorButton.setTitle(selectedMajor, for: .normal)
+        pickedCategory = selectedMajor
         
         if selectedCategory != "" {
             selectedCategory = ""
@@ -630,6 +633,7 @@ extension PostVC {
 
 // MARK: - PostVC 서버 연결
 extension PostVC {
+    
     func uploadPost(images: [NSString], title: String, content: String, category: String){
         ContentService.shared.createPost(title: title, content: content, category: category, images: images){
             [weak self]
@@ -652,11 +656,8 @@ extension PostVC {
 
             case .networkFail:
                 self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "네트워크에 오류가 있습니다")
-
-                
             }
         }
-        
     }
 
     func postImage(images: [UIImage],
@@ -688,7 +689,6 @@ extension PostVC {
 
             }
         }
-        
     }
     
     func editPost(postId: Int, title: String, content: String, images: [NSString]){
@@ -716,6 +716,54 @@ extension PostVC {
 
             }
         }
-        
+    }
+    
+    func getCategoriesService() {
+        ContentService.shared.getCategories() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.categoryList = res as! [String]
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
+    func getMyProfileService() {
+        UserService.shared.getMyProfile(completion: { (returnedData) -> Void in
+            
+            switch returnedData {
+            case .success(let res):
+                let response = res as! User
+                self.majorList = response.body.majors
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        })
     }
 }

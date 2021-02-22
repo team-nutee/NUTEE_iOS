@@ -768,6 +768,7 @@ struct UserService {
                         print("실패 500")
                         completion(.serverErr)
                     default:
+                        completion(.requestErr("해당하는 관심주제 카테고리가 없습니다."))
                         break
                     }
                 }
@@ -816,6 +817,7 @@ struct UserService {
                         print("실패 500")
                         completion(.serverErr)
                     default:
+                        completion(.requestErr("해당하는 전공이 없습니다."))
                         break
                     }
                 }
