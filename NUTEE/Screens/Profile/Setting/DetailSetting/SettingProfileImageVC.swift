@@ -46,6 +46,7 @@ class SettingProfileImageVC : UIViewController {
         
         initViewAfterLoadLayout()
     }
+    
     // MARK: - Helper
     
     func initView() {
@@ -113,19 +114,7 @@ class SettingProfileImageVC : UIViewController {
     }
     
     @objc func didTapProfileImageView() {
-        let nuteeAlertSheet = NuteeAlertSheet()
-        
-        nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen, "openLibrary"]]
-        
-        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen, "openCamera"]])
-        }
-        
-        nuteeAlertSheet.settingProfileImageVCDelegate = self
-        
-        nuteeAlertSheet.modalPresentationStyle = .custom
-        
-        present(nuteeAlertSheet, animated: true)
+        showNuteeAlertSheet()
     }
     
     @objc func didTapSaveButton() {
@@ -142,16 +131,39 @@ class SettingProfileImageVC : UIViewController {
     }
 }
 
-extension SettingProfileImageVC : SettingProfileImageVCDelegate {
-    func openSettingProfileImageVCLibrary() {
-        dismiss(animated: true)
-        openLibrary()
+// MARK: - NuteeAlert Action Definition
+
+extension SettingProfileImageVC: NuteeAlertActionDelegate {
+    
+    func showNuteeAlertSheet() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.nuteeAlertActionDelegate = self
+        
+        nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen]]
+        
+        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
+            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen]])
+        }
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        present(nuteeAlertSheet, animated: true)
     }
     
-    func openSettingProfileImageVCCamera() {
-        dismiss(animated: true)
-        openCamera()
+    func nuteeAlertSheetAction(indexPath: Int) {
+        switch indexPath {
+        case 0:
+            dismiss(animated: true)
+            openLibrary()
+        case 1:
+            dismiss(animated: true)
+            openCamera()
+        default:
+            break
+        }
     }
+    
+    func nuteeAlertDialogueAction() { }
+    
 }
 
 // MARK: - 프로필 이미지 선택 창 전환 기능 구현

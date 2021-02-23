@@ -28,7 +28,9 @@ class SignUpCategoryVC: SignUpViewController {
     var categoryTVCellHeight: CGFloat = 50
     
     var categoryList: [String] = []
-    var selectedCategoryList: [String] = []
+//    var selectedCategoryList: [String] = []
+//    var categoryList = ["카테고리1", "카테고리2", "카테고리3"]
+    var categoryCheckList = [false, false, false]
     
     // MARK: - Life Cycle
     
@@ -141,7 +143,7 @@ class SignUpCategoryVC: SignUpViewController {
     func updateSelectedCategoryStatus() {
         categoryTableView.reloadData()
         
-        if selectedCategoryList.isEmpty == true {
+        if categoryCheckList.contains(true) == false {
             selectCategoryButton.titleLabel?.alpha = 0.5
             UIView.animate(withDuration: animationDuration,
                            delay: 0.1,
@@ -165,18 +167,7 @@ class SignUpCategoryVC: SignUpViewController {
     }
     
     @objc func didTapSelectCategoryButton() {
-        let selectCategorySheet = NuteeCheckSheet()
-        selectCategorySheet.signUpCategoryVC = self
-        
-        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
-        
-        var optionList = [[Any]]()
-        for category in categoryList {
-            optionList.append([category, UIColor.gray, "selectCategory", true])
-        }
-        selectCategorySheet.optionList = optionList
-        
-        present(selectCategorySheet, animated: true)
+        showNuteeAlertSheet()
     }
     
     @objc override func didTapNextButton() {
@@ -196,15 +187,53 @@ class SignUpCategoryVC: SignUpViewController {
                        usingSpringWithDamping: 0.6,
                        initialSpringVelocity: 1,
                        options: [.curveEaseIn],
-                       animations: {
+                       animations: { [self] in
                         
-                        self.selectCategoryButton.alpha = 1
-                        self.selectCategoryButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        selectCategoryButton.alpha = 1
+                        selectCategoryButton.transform = CGAffineTransform.init(translationX: -50, y: 0)
                         
-                        self.selectCategoryUnderLineView.alpha = 1
-                        self.selectCategoryUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
+                        selectCategoryUnderLineView.alpha = 1
+                        selectCategoryUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
     }
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension SignUpCategoryVC: NuteeAlertActionDelegate {
+    
+    func showNuteeAlertSheet() {
+        let selectCategorySheet = NuteeCheckSheet()
+        selectCategorySheet.nuteeAlertActionDelegate = self
+        
+        selectCategorySheet.completeButton.addTarget(self, action: #selector(didTapSelectCategoryCompleteButton), for: .touchUpInside)
+        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+        
+        selectCategorySheet.itemList = categoryList
+        selectCategorySheet.itemCheckList = categoryCheckList
+        
+        present(selectCategorySheet, animated: true)
+    }
+    
+    @objc func didTapSelectCategoryCompleteButton() {
+        updateSelectedCategoryStatus()
+        selectCategoryButton.titleLabel?.alpha = 0.5
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 1,
+                       options: [.curveEaseIn],
+                       animations: { [self] in
+                        selectCategoryButton.titleLabel?.alpha = 1
+        })
+    }
+    
+    func nuteeAlertSheetAction(indexPath: Int) {
+        categoryCheckList[indexPath] = !categoryCheckList[indexPath]
+    }
+    
+    func nuteeAlertDialogueAction() { }
+    
 }
 
 // MARK: - optionList TableView
@@ -221,7 +250,14 @@ extension SignUpCategoryVC : UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return selectedCategoryList.count
+        var selectedItemCount = 0
+        for isSelected in categoryCheckList {
+            if isSelected == true {
+                selectedItemCount += 1
+            }
+        }
+        
+        return selectedItemCount
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -229,11 +265,20 @@ extension SignUpCategoryVC : UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.signUpCategoryVC = self
-        cell.indextPathRow = indexPath.row
         
-        cell.initCell()
-        cell.addContentView()
-
+        var selectedItemCount = 0
+        for index in 0...categoryList.count - 1 {
+            if categoryCheckList[index] == true {
+                if selectedItemCount == indexPath.row {
+                    cell.selectedCategoryLabel.text = categoryList[index]
+                    cell.selectedCategoryIndex = index
+                    break
+                } else {
+                    selectedItemCount += 1
+                }
+            }
+        }
+        
         return cell
     }
     
@@ -241,7 +286,7 @@ extension SignUpCategoryVC : UITableViewDataSource {
 
 // MARK: - Setting TableViewCell
 
-class CategoryTVCell : UITableViewCell {
+class CategoryTVCell: UITableViewCell {
     
     static let identifier = Identify.CategoryTVCell
     
@@ -253,27 +298,25 @@ class CategoryTVCell : UITableViewCell {
     // MARK: - Variables and Properties
     
     var signUpCategoryVC: SignUpCategoryVC?
-    var indextPathRow: Int?
+    var selectedCategoryIndex: Int?
     
     // MARK: - Life Cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        initCell()
+        addContentView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     // MARK: - Helper
     
     func initCell() {
         _ = selectedCategoryLabel.then {
-            $0.text = signUpCategoryVC?.selectedCategoryList[indextPathRow!]
             $0.font = .systemFont(ofSize: 14)
             $0.textColor = .black
             $0.textAlignment = .left
@@ -307,7 +350,7 @@ class CategoryTVCell : UITableViewCell {
     }
     
     @objc func didTapDeleteCategoryButton() {
-        signUpCategoryVC?.selectedCategoryList.remove(at: indextPathRow!)
+        signUpCategoryVC?.categoryCheckList[selectedCategoryIndex!] = false
         signUpCategoryVC?.updateSelectedCategoryStatus()
     }
     
