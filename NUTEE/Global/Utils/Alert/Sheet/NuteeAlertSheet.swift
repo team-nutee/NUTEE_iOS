@@ -20,6 +20,8 @@ class NuteeAlertSheet : UIViewController {
     
     // MARK: - Variables and Properties
     
+    let viewPan = UIPanGestureRecognizer()
+    
     let safeAreaHeight = UIApplication.shared.windows.first?.safeAreaLayoutGuide.layoutFrame.size.height ?? 0
     var cardViewHeight: CGFloat = 0
     
@@ -69,6 +71,8 @@ class NuteeAlertSheet : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        checkNumberOfOptionList(targetCount: optionList.count)
         
         self.presentingViewController?.view.alpha = 0.7
     }
@@ -158,6 +162,20 @@ class NuteeAlertSheet : UIViewController {
     
     func setCardViewHeight() {
         cardViewHeight = safeAreaHeight - handleArea - optionHeight * CGFloat(optionList.count)
+    }
+    
+    func checkNumberOfOptionList(targetCount: Int) {
+        if targetCount > 7 {
+            cardViewHeight = safeAreaHeight - handleArea - optionHeight * 7
+            
+            cardView.snp.updateConstraints {
+                cardViewTopConstraint = $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(cardViewHeight).constraint
+            }
+            
+            _ = optionTableView.then {
+                $0.isScrollEnabled = true
+            }
+        }
     }
     
 // MARK: - Custom Settings
@@ -303,13 +321,13 @@ extension NuteeAlertSheet {
     
     func addPanGestureRecognizer() {
         // add pan gesture recognizer to the view controller's view (the whole screen)
-        let viewPan = UIPanGestureRecognizer(target: self, action: #selector(viewPanned(_:)))
+        viewPan.addTarget(self, action: #selector(viewPanned(_:)))
         
         // by default iOS will delay the touch before recording the drag/pan information
         // we want the drag gesture to be recorded down immediately, hence setting no delay
         viewPan.delaysTouchesBegan = false
         viewPan.delaysTouchesEnded = false
-
+        
         self.view.addGestureRecognizer(viewPan)
     }
     

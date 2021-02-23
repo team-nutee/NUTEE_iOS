@@ -24,6 +24,12 @@ class NuteeCheckSheet: NuteeSelectSheet {
     
     // MARK: - Life Cycle
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        checkNumberOfOptionList(targetCount: itemList.count)
+    }
+    
     // MARK: - Helper
     
     override func initView() {
