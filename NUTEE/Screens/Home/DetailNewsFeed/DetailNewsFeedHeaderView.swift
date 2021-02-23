@@ -57,7 +57,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     var imageFrameViewHeight: CGFloat = 300
    
     var post: PostContent?
+    
     var likeCount: Int?
+    
     var loginUser = false
         
     //MARK: - Dummy data

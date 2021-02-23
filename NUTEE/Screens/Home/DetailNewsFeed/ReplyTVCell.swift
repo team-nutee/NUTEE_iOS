@@ -23,11 +23,18 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     let moreButton = UIButton()
     
     let replyTextView = UITextView()
+    
+    let likeButton = UIButton()
+    let likeLabel = UILabel()
 
     //MARK: - Variables and Properties
 
     var detailNewsFeedVC: DetailNewsFeedVC?
     var comment: CommentBody?
+    
+    var loginUser = false
+    
+    var likeCount: Int? = 5
     
     //MARK: - Life Cycle
 
@@ -85,6 +92,24 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
         }
         
+        _ = likeButton.then {
+            $0.contentHorizontalAlignment = .left
+            
+            $0.setImage(UIImage(systemName: "heart"), for: .normal)
+            $0.setImage(UIImage(systemName: "heart.fill"), for: .selected)
+            
+            $0.tintColor = .systemPink
+            
+            $0.addTarget(self, action: #selector(didTapLikeButton(_:)), for: .touchUpInside)
+        }
+        
+        _ = likeLabel.then {
+            $0.text = "좋아요 0"
+            $0.font = .systemFont(ofSize: 12)
+            $0.textColor = UIColor(red: 134, green: 134, blue: 134)
+            $0.sizeToFit()
+        }
+        
     }
     
     func makeConstraints() {
@@ -96,6 +121,8 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         
         contentView.addSubview(replyTextView)
         
+        contentView.addSubview(likeButton)
+        contentView.addSubview(likeLabel)
         
         let TopAndBottomSpace = 10
         let leftAndRightSpace = 20
@@ -112,14 +139,14 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         }
         
         dateLabel.snp.makeConstraints {
-            $0.centerY.equalTo(nicknameLabel)
-            $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(TopAndBottomSpace)
+            $0.centerX.equalTo(profileImageView)
         }
         moreButton.snp.makeConstraints {
             $0.width.equalTo(24)
             $0.height.equalTo(12)
             
-            $0.top.equalTo(replyTextView.snp.top)
+            $0.centerY.equalTo(profileImageView)
             $0.right.equalTo(contentView.snp.right).inset(leftAndRightSpace)
         }
         
@@ -127,9 +154,21 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(5)
             $0.left.equalTo(nicknameLabel.snp.left)
             $0.right.equalTo(moreButton.snp.left).inset(-10)
+        }
+        
+        likeButton.snp.makeConstraints {
+            $0.width.equalTo(17)
+            $0.height.equalTo(14)
+            
+            $0.top.equalTo(replyTextView.snp.bottom).offset(15)
+            $0.left.equalTo(replyTextView.snp.left)
             $0.bottom.equalTo(contentView.snp.bottom).inset(TopAndBottomSpace)
         }
         
+        likeLabel.snp.makeConstraints {
+            $0.left.equalTo(likeButton.snp.right).offset(5)
+            $0.centerY.equalTo(likeButton)
+        }
     }
     
     @objc func didTapMoreButton() {
@@ -170,6 +209,23 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         }
 
         replyTextView.text = comment?.content
+        
+        likeCount = comment?.likers?.count
+        likeLabel.text = "좋아요 \(likeCount ?? 0)"
+
+        for liker in comment?.likers ?? [] {
+            if liker.id == KeychainWrapper.standard.integer(forKey: "id") {
+                loginUser = true
+            }
+        }
+        
+        if loginUser {
+            // 로그인 한 사용자가 좋아요를 누른 상태일 경우
+            setSelectedLikeButton()
+        } else {
+            // 로그인 한 사용자가 좋아요를 누르지 않은 상태일 경우
+            setNormalLikeButton()
+        }
     }
 
     // 프로필 이미지에 탭 인식하게 만들기
@@ -196,6 +252,32 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     func showUserProfile() {
         // when user profile image clicked, it will show user info with bottom sheet
+    }
+    
+    @objc func didTapLikeButton(_ sender: UIButton) {
+        if likeButton.isSelected {
+            likeCount! -= 1
+            likeLabel.text = "좋아요 \(likeCount ?? 0)"
+            setNormalLikeButton()
+
+            //deleteCommentLikeService(postId: comment?.id ?? 0)
+        } else {
+            likeCount! += 1
+            likeLabel.text = "좋아요 \(likeCount ?? 0)"
+            setSelectedLikeButton()
+
+            //postCommentLikeService(postId: comment?.id ?? 0)
+        }
+    }
+    
+    func setNormalLikeButton() {
+        likeButton.isSelected = false
+        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+    }
+    
+    func setSelectedLikeButton() {
+        likeButton.isSelected = true
+        likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
     }
 
 }

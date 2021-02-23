@@ -182,6 +182,7 @@ class ProfileVC: UIViewController {
     @objc func updateUserInfo() {
         getMyProfileService(completionHandler: {
             self.fillDataToView()
+            self.scrollToMenuIndex(menuIndex: 0)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.refreshControl.endRefreshing()

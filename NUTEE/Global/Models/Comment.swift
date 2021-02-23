@@ -18,12 +18,14 @@ struct CommentBody: Codable {
     let id: Int
     let content: String
     let createdAt, updatedAt: String
+    let likers: [Liker]?
     let reComment: [CommentBody]?
     let user: UserBody?
     
     enum CodingKeys: String, CodingKey {
         case id, content, createdAt, updatedAt
         case reComment
+        case likers
         case user
     }
     
@@ -33,6 +35,7 @@ struct CommentBody: Codable {
         content = (try? values.decode(String.self, forKey: .content)) ?? ""
         createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
+        likers = (try? values.decode([Liker].self, forKey: .likers)) ?? []
         reComment = (try? values.decode([CommentBody].self, forKey: .reComment)) ?? []
         user = (try? values.decode(UserBody.self, forKey: .user))
     }
