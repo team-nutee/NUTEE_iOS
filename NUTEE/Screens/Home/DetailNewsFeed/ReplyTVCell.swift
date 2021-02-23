@@ -33,9 +33,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     var comment: CommentBody?
     
     var postId: Int?
-    
-    var loginUser = false
-    
+        
     var likeCount: Int? = 5
     
     //MARK: - Life Cycle
@@ -213,6 +211,8 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         
         likeCount = comment?.likers?.count
         likeLabel.text = "좋아요 \(likeCount ?? 0)"
+        
+        var loginUser = false
 
         for liker in comment?.likers ?? [] {
             if liker.id == KeychainWrapper.standard.integer(forKey: "id") {

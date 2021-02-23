@@ -59,8 +59,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     var post: PostContent?
     
     var likeCount: Int?
-    
-    var loginUser = false
         
     //MARK: - Dummy data
     
@@ -447,6 +445,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         // Like 버튼
         likeCount = post?.body.likers?.count
         likeButton.setTitle(String(likeCount ?? 0), for: .normal)
+        
+        var loginUser = false
     
         for liker in post?.body.likers ?? [] {
             if liker.id == KeychainWrapper.standard.integer(forKey: "id") {
