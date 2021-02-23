@@ -81,7 +81,6 @@ extension NuteeCheckSheet {
         cell.selectionStyle = .none
         
         cell.optionItemLabel.text = itemList[indexPath.row]
-//        let isSelected = itemCheckList[indexPath.row]
         cell.selectedOptionImageView.isHidden = !itemCheckList[indexPath.row]
         
         return cell

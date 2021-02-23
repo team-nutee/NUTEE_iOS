@@ -18,6 +18,8 @@ class SettingCategoryVC: SignUpCategoryVC {
     
     var originalCategoryList: [String] = []
     
+    var selectedCategoryList = [""]//[true, false, true]
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -110,7 +112,7 @@ class SettingCategoryVC: SignUpCategoryVC {
     override func updateSelectedCategoryStatus() {
         super.updateSelectedCategoryStatus()
         
-        if selectedCategoryList.isEmpty == false && selectedCategoryList != originalCategoryList {
+        if categoryCheckList.contains(true) == false && selectedCategoryList != originalCategoryList {
             saveButton.isEnabled = true
         } else {
             saveButton.isEnabled = false
