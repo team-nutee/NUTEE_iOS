@@ -17,8 +17,7 @@ class SettingCategoryVC: SignUpCategoryVC {
     // MARK: - Variables and Properties
     
     var originalCategoryList: [String] = []
-    
-    var selectedCategoryList = [""]//[true, false, true]
+    var originalCategoryCheckList: [Bool] = []
     
     // MARK: - Dummy data
     
@@ -32,8 +31,6 @@ class SettingCategoryVC: SignUpCategoryVC {
         yPosAnimationRange = 0.0
         
         super.viewDidLoad()
-        
-        fetchUserCategoryList()
     }
    
     override func viewDidLayoutSubviews() {
@@ -103,16 +100,27 @@ class SettingCategoryVC: SignUpCategoryVC {
         }
     }
 
-    func fetchUserCategoryList() {
-        selectedCategoryList = originalCategoryList
-        
-        updateSelectedCategoryStatus()
+    override func fetchCategoryList() {
+        getCategoriesService(completionHandler: { [self] fetchedCategoryList in
+            var checkList: [Bool] = []
+            for categoryList in fetchedCategoryList {
+                if originalCategoryList.contains(categoryList) == true {
+                    checkList.append(true)
+                } else {
+                    checkList.append(false)
+                }
+            }
+            originalCategoryCheckList = checkList
+            categoryCheckList = checkList
+            
+            updateSelectedCategoryStatus()
+        })
     }
     
     override func updateSelectedCategoryStatus() {
         super.updateSelectedCategoryStatus()
         
-        if categoryCheckList.contains(true) == false && selectedCategoryList != originalCategoryList {
+        if categoryCheckList.contains(true) == true && categoryCheckList != originalCategoryCheckList {
             saveButton.isEnabled = true
         } else {
             saveButton.isEnabled = false
@@ -120,9 +128,11 @@ class SettingCategoryVC: SignUpCategoryVC {
     }
     
     @objc func didTapSaveButton() {
-        changeInterestsService(interests: selectedCategoryList, completionHandler: {
-            self.simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
-            self.saveButton.isEnabled = false
+        let selectedCategoryList = getUserSelectedCategoryList()
+        
+        changeInterestsService(interests: selectedCategoryList, completionHandler: { [self] in
+            simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
+            saveButton.isEnabled = false
         })
     }
     
