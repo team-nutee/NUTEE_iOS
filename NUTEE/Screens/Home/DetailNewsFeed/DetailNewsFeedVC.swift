@@ -294,6 +294,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         
         cell.detailNewsFeedVC = self
         cell.comment = post?.body.comments?[indexPath.row]
+        cell.postId = postId
         cell.initComment()
 
         return cell

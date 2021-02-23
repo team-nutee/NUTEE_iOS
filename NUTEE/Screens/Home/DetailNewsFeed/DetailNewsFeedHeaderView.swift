@@ -392,7 +392,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             likeButton.setTitle(String(likeCount ?? 0), for: .normal)
             setNormalLikeButton()
 
-            deleteLikeService(postId: post?.body.id ?? 0)
+            postUnlikeService(postId: post?.body.id ?? 0)
         } else {
             likeCount! += 1
             likeButton.setTitle(String(likeCount ?? 0), for: .normal)
@@ -627,8 +627,8 @@ extension DetailNewsFeedHeaderView {
         }
     }
 
-    func deleteLikeService(postId: Int) {
-        ContentService.shared.deleteLike(postId) { (responsedata) in
+    func postUnlikeService(postId: Int) {
+        ContentService.shared.postUnlike(postId) { (responsedata) in
 
             switch responsedata {
             case .success(let res):

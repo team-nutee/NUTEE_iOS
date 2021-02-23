@@ -32,6 +32,8 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     var detailNewsFeedVC: DetailNewsFeedVC?
     var comment: CommentBody?
     
+    var postId: Int?
+    
     var loginUser = false
     
     var likeCount: Int? = 5
@@ -104,7 +106,6 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         }
         
         _ = likeLabel.then {
-            $0.text = "좋아요 0"
             $0.font = .systemFont(ofSize: 12)
             $0.textColor = UIColor(red: 134, green: 134, blue: 134)
             $0.sizeToFit()
@@ -260,13 +261,13 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
             likeLabel.text = "좋아요 \(likeCount ?? 0)"
             setNormalLikeButton()
 
-            //deleteCommentLikeService(postId: comment?.id ?? 0)
+            commentUnlikeService(postId: postId ?? 0, commentId: comment?.id ?? 0)
         } else {
             likeCount! += 1
             likeLabel.text = "좋아요 \(likeCount ?? 0)"
             setSelectedLikeButton()
 
-            //postCommentLikeService(postId: comment?.id ?? 0)
+            commentLikeService(postId: postId ?? 0, commentId: comment?.id ?? 0)
         }
     }
     
@@ -282,70 +283,52 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
 
 }
 
-// MARK: - 서버 연결 코드 구간
+// MARK: - Server connect
 
 extension ReplyTVCell {
-    // 뎃글 신고 <-- 확인 필요
-    func reportCommentService(reportReason: String) {
-//        let userid = KeychainWrapper.standard.string(forKey: "id") ?? "" // <-- 수정 必
-//        ContentService.shared.reportPost(userid, reportReason) { (responsedata) in // <-- 현재 작성된 API는 게시글(post)에 대한 신고기능
-//
-//            switch responsedata {
-//            case .success(let res):
-//
-//                print(res)
-//
-//                let successfulAlert = UIAlertController(title: "신고가 완료되었습니다", message: nil, preferredStyle: UIAlertController.Style.alert)
-//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//
-//                successfulAlert.addAction(okAction)
-//
-//                self.RootVC?.present(successfulAlert, animated: true, completion: nil)
-//
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//                }
-//        }
+    
+    // MARK: - Like
+    func commentLikeService(postId: Int, commentId: Int) {
+        ContentService.shared.commentLike(postId, commentId) { (responsedata) in
+
+            switch responsedata {
+            case .success(_):
+                print("post like success")
+                
+            case .requestErr(let message):
+                print("request error: \(message)")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail :
+                print("failure")
+            }
+        }
     }
 
-    // 댓글 삭제
-    func deleteCommentService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
-//        ContentService.shared.commentDelete(postId, commentId: commentId) { (responsedata) in
-//
-//            switch responsedata {
-//            case .success(let res):
-//
-//                print("commentDelete succussful", res)
-//                completionHandler()
-//
-//            case .requestErr(_):
-//                let errorAlert = UIAlertController(title: "오류발생😵", message: "오류가 발생하여 댓글을 삭제하지 못했습니다", preferredStyle: UIAlertController.Style.alert)
-//                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//
-//                errorAlert.addAction(okAction)
-//
-//                self.RootVC?.present(errorAlert, animated: true, completion: nil)
-//
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//                }
-//        }
+    func commentUnlikeService(postId: Int, commentId: Int) {
+        ContentService.shared.commentUnlike(postId, commentId) { (responsedata) in
+
+            switch responsedata {
+            case .success(_):
+                print("post unlike success")
+                
+            case .requestErr(let message):
+                print("request error: \(message)")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail :
+                print("failure")
+            }
+        }
     }
 }

@@ -628,9 +628,9 @@ struct ContentService {
     
     // MARK: - 게시물 좋아요 취소
     
-    func deleteLike(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
+    func postUnlike(_ postId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
-        let URL = APIConstants.Post + "/" + String(postId) + "/like"
+        let URL = APIConstants.Post + "/" + String(postId) + "/unlike"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""
@@ -814,6 +814,104 @@ struct ContentService {
                             print("실패 500")
                             completion(.serverErr)
                         default:
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    func commentLike(_ postId: Int, _ commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId) + "/like"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .post, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Comment.self, from: value)
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            completion(.requestErr(response))
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+        
+    func commentUnlike(_ postId: Int, _ commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.Post + "/" + String(postId) +  "/comment/" + String(commentId) + "/unlike"
+
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .delete, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Comment.self, from: value)
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            completion(.requestErr(response))
                             break
                         }
                     }
