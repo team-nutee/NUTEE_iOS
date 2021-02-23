@@ -12,6 +12,8 @@ class ProfileVC: UIViewController {
 
     // MARK: - UI components
     
+    let rightNavigationBarButton = HighlightedButton()
+    
     let scrollView = UIScrollView()
     
     let refreshControl = SmallRefreshControl()
@@ -57,11 +59,16 @@ class ProfileVC: UIViewController {
     // MARK: - Helper
     
     func setNavigationBar() {
+        _ = rightNavigationBarButton.then {
+            $0.setImage(UIImage(systemName: "gearshape"), for: .normal)
+            $0.tintColor = .black
+            
+            $0.addTarget(self, action: #selector(didTapSetting), for: .touchUpInside)
+        }
+        
         _ = navigationItem.then {
             $0.title = "프로필"
-            
-            $0.rightBarButtonItem = UIBarButtonItem(title: "설정", style: .plain, target: self, action: #selector(didTapSetting))
-            $0.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+            $0.rightBarButtonItem = UIBarButtonItem(customView: rightNavigationBarButton)
         }
     }
     
