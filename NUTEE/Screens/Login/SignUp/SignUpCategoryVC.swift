@@ -28,9 +28,7 @@ class SignUpCategoryVC: SignUpViewController {
     var categoryTVCellHeight: CGFloat = 50
     
     var categoryList: [String] = []
-//    var selectedCategoryList: [String] = []
-//    var categoryList = ["카테고리1", "카테고리2", "카테고리3"]
-    var categoryCheckList = [false, false, false]
+    var categoryCheckList: [Bool] = []
     
     // MARK: - Life Cycle
     
@@ -40,7 +38,7 @@ class SignUpCategoryVC: SignUpViewController {
         makeConstraints()
         initView()
         
-        getCategoriesService()
+        fetchCategoryList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,6 +138,16 @@ class SignUpCategoryVC: SignUpViewController {
         selectCategoryButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: space)
     }
     
+    func fetchCategoryList() {
+        getCategoriesService(completionHandler: { [self] fetchedCategoryList in
+            var checkList: [Bool] = []
+            for _ in 0..<fetchedCategoryList.count {
+                checkList.append(false)
+            }
+            categoryCheckList = checkList
+        })
+    }
+    
     func updateSelectedCategoryStatus() {
         categoryTableView.reloadData()
         
@@ -168,6 +176,17 @@ class SignUpCategoryVC: SignUpViewController {
     
     @objc func didTapSelectCategoryButton() {
         showNuteeAlertSheet()
+    }
+    
+    func getUserSelectedCategoryList() -> [String] {
+        var selectedCategoryList: [String] = []
+        for index in 0...categoryCheckList.count - 1 {
+            if categoryCheckList[index] == true {
+                selectedCategoryList.append(categoryList[index])
+            }
+        }
+        
+        return selectedCategoryList
     }
     
     @objc override func didTapNextButton() {
@@ -360,7 +379,7 @@ class CategoryTVCell: UITableViewCell {
 // MARK: - Server connect
 
 extension SignUpCategoryVC {
-    func getCategoriesService() {
+    func getCategoriesService(completionHandler: @escaping (_ returnedData: [String]) -> Void) {
         ContentService.shared.getCategories() {
             [weak self]
             data in
@@ -370,6 +389,7 @@ extension SignUpCategoryVC {
             switch data {
             case .success(let res):
                 self.categoryList = res as! [String]
+                completionHandler(self.categoryList)
                 
             case .requestErr(let message):
                 self.failToGetList("카테고리 목록 조회 실패", "\(message)")

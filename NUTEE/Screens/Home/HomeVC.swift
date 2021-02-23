@@ -73,7 +73,7 @@ class HomeVC: UIViewController {
                 $0.height.equalTo(50)
             }
             
-            $0.menuList = ["추천 게시글", "내 전공", "전체 게시글"]
+            $0.menuList = ["카테고리", "내 전공", "전체 게시글"]
             $0.homeVC = self
         }
     }

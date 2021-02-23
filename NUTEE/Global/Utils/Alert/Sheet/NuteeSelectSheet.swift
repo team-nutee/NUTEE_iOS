@@ -24,6 +24,12 @@ class NuteeSelectSheet: NuteeAlertSheet {
     
     // MARK: - Life Cycle
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        removePanGestureRecognizer()
+    }
+    
     // MARK: - Helper
     
     override func initView() {
@@ -76,6 +82,10 @@ class NuteeSelectSheet: NuteeAlertSheet {
         handleArea = 0
         super.setCardViewHeight()
         cardViewHeight -= titleHeight
+    }
+    
+    func removePanGestureRecognizer() {
+        view.removeGestureRecognizer(viewPan)
     }
     
 }

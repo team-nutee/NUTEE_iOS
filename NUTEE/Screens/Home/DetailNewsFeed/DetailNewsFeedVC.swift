@@ -93,6 +93,8 @@ class DetailNewsFeedVC: UIViewController {
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
             
+            $0.keyboardDismissMode = .onDrag
+            
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
             
             $0.isHidden = true
@@ -187,29 +189,30 @@ class DetailNewsFeedVC: UIViewController {
     @objc func didTapSubmitButton(_ sender: UIButton) {
         if isEditCommentMode {
             // 댓글 수정 모드일 때 실행될 문장
-            self.editCommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {() -> Void in
-                self.commentTextView.text = ""
-                self.commentTextView.endEditing(true)
+            self.editCommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: { [self] () -> Void in
+                commentTextView.text = ""
+                commentTextView.endEditing(true)
                 
                 // 수정모드 종료
-                self.isEditCommentMode = false
-                self.textViewDidChange(self.commentTextView)
+                isEditCommentMode = false
+                textViewDidChange(commentTextView)
                 
-                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-                    self.detailNewsFeedTableView.reloadData()
+                getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    detailNewsFeedTableView.reloadData()
                 })
             })
         } else {
             // 댓글 수정x, 새로 작성할 때
-            self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) {
-                self.commentTextView.text = ""
-                self.commentTextView.endEditing(true)
+            self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) { [self] in
+                commentTextView.text = ""
+                commentTextView.endEditing(true)
+                textViewDidChange(commentTextView)
                 
-                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-                    self.detailNewsFeedTableView.reloadData()
+                getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    detailNewsFeedTableView.reloadData()
                     
-                    let lastRow = IndexPath(row: (self.post?.body.comments?.count ?? 1) - 1, section: 0)
-                    self.detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                    let lastRow = IndexPath(row: (post?.body.comments?.count ?? 1) - 1, section: 0)
+                    detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
                 })
             }
         }
@@ -233,9 +236,9 @@ class DetailNewsFeedVC: UIViewController {
     }
     
     func deleteComment(deleteCommentId: Int) {
-        deleteCommentService(postId: postId ?? 0, commentId: deleteCommentId) {
-            self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-                self.detailNewsFeedTableView.reloadData()
+        deleteCommentService(postId: postId ?? 0, commentId: deleteCommentId) { [self] in
+            getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                detailNewsFeedTableView.reloadData()
             })
         }
     }

@@ -83,8 +83,6 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         }
         
         _ = replyTextView.then {
-            $0.text = "대대대댇글대대대댇글대대대댇글대대대댇글대대대댇글"
-            $0.textContainer.maximumNumberOfLines = 3
             $0.textContainer.lineBreakMode = .byTruncatingTail
             $0.font = .systemFont(ofSize: 14)
             $0.isUserInteractionEnabled = false
