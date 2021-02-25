@@ -78,6 +78,7 @@
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
+		D556523925E7DC220010E6EA /* NuteeSelectMajorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */; };
 		D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */; };
 		D56CAD9425C5A5D200827BAA /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */; };
 		D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */; };
@@ -220,6 +221,7 @@
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
+		D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeSelectMajorSheet.swift; sourceTree = "<group>"; };
 		D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeImageViewer.swift; sourceTree = "<group>"; };
 		D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachelorFeedCVCell.swift; sourceTree = "<group>"; };
@@ -613,6 +615,7 @@
 				D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */,
 				D5220C7325DE478000716456 /* NuteeCheckSheet.swift */,
 				D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */,
+				D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */,
 			);
 			path = Sheet;
 			sourceTree = "<group>";
@@ -986,6 +989,7 @@
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
 				455908302564FBE9009A5F5C /* FindVC.swift in Sources */,
+				D556523925E7DC220010E6EA /* NuteeSelectMajorSheet.swift in Sources */,
 				4586B61A25972701003968B0 /* ContentService.swift in Sources */,
 				D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */,
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
