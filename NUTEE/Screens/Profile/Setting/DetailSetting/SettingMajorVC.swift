@@ -109,8 +109,10 @@ class SettingMajorVC: SignUpMajorVC {
     }
     
     func fetchUserMajorInfo() {
+        firstMajor = originalFirstMajor
+        
         _ = firstMajorButton.then {
-            $0.setTitle(originalFirstMajor, for: .normal)
+            $0.setTitle(firstMajor, for: .normal)
             $0.titleLabel?.sizeToFit()
             $0.setTitleColor(.black, for: .normal)
         }
