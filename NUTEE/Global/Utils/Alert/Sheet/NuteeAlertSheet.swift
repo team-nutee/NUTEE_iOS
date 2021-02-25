@@ -29,10 +29,7 @@ class NuteeAlertSheet : UIViewController {
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
     
-    var majorVC: SignUpMajorVC?
     var postVC: PostVC?
-    
-    var selectedOptionList: [String] = []
     
     var optionList = [["", UIColor.self]]
     var optionHeight: CGFloat = 50

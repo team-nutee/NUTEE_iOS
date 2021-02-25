@@ -104,32 +104,25 @@ extension NuteeSelectSheet {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch optionList[indexPath.row][2] as? String {
-        case "selectFirstMajor":
-            majorVC?.firstMajor = optionList[indexPath.row][0] as? String ?? ""
-            majorVC?.updateFirstMajorButtonStatus()
-            didTapOutsideCardSheet()
-        case "selectSecondMajor":
-            majorVC?.secondMajor = optionList[indexPath.row][0] as? String ?? ""
-            majorVC?.updateSecondMajorButtonStatus()
-            didTapOutsideCardSheet()
+//        super.tableView(tableView, didSelectRowAt: indexPath)
+        nuteeAlertActionDelegate?.nuteeAlertSheetAction(indexPath: indexPath.row)
+        didTapOutsideCardSheet()
+        
+            
+//        case "selectPostCategory":
+//            postVC?.selectedCategory = optionList[indexPath.row][0] as? String ?? ""
+//            postVC?.updatePostCategoryButtonStatus()
+//            didTapOutsideCardSheet()
+//        case "selectPostMajor":
+//            postVC?.selectedMajor = optionList[indexPath.row][0] as? String ?? ""
+//            postVC?.updatePostMajorButtonStatus()
+//            didTapOutsideCardSheet()
             
             
             
-        case "selectPostCategory":
-            postVC?.selectedCategory = optionList[indexPath.row][0] as? String ?? ""
-            postVC?.updatePostCategoryButtonStatus()
-            didTapOutsideCardSheet()
-        case "selectPostMajor":
-            postVC?.selectedMajor = optionList[indexPath.row][0] as? String ?? ""
-            postVC?.updatePostMajorButtonStatus()
-            didTapOutsideCardSheet()
-            
-            
-            
-        default:
-            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
-        }
+//        default:
+//            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
+//        }
     }
 
 }

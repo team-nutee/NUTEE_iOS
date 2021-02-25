@@ -187,14 +187,15 @@ class SignUpMajorVC: SignUpViewController {
     }
     
     @objc func didTapFirstMajorButton() {
-        let selectFirstMajorSheet = NuteeSelectSheet()
+        let selectFirstMajorSheet = NuteeSelectMajorSheet()
         selectFirstMajorSheet.majorVC = self
+        selectFirstMajorSheet.selectMajorMode = .first
         
         selectFirstMajorSheet.titleContent = majorButtonPlaceHolder
         
         var optionList = [[Any]]()
         for major in majorList {
-            optionList.append([major, UIColor.gray, "selectFirstMajor", true])
+            optionList.append([major, UIColor.gray])
         }
         selectFirstMajorSheet.optionList = optionList
         
@@ -203,8 +204,9 @@ class SignUpMajorVC: SignUpViewController {
     
     @objc func didTapSecondMajorButton() {
         if firstMajor != "" {
-            let selectFirstMajorSheet = NuteeSelectSheet()
+            let selectFirstMajorSheet = NuteeSelectMajorSheet()
             selectFirstMajorSheet.majorVC = self
+            selectFirstMajorSheet.selectMajorMode = .second
             
             selectFirstMajorSheet.titleContent = "두 번째 " + majorButtonPlaceHolder
             
@@ -217,7 +219,6 @@ class SignUpMajorVC: SignUpViewController {
             }
             selectFirstMajorSheet.optionList = optionList
             
-            selectFirstMajorSheet.modalPresentationStyle = .custom
             present(selectFirstMajorSheet, animated: true)
         }
     }
