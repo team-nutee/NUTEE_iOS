@@ -20,6 +20,10 @@ class NuteeSelectSheet: NuteeAlertSheet {
     var titleContent = ""
     var titleHeight: CGFloat = 50
     
+    var itemList = [""]
+    
+    var selectMode: SelectMode = .none
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -28,6 +32,12 @@ class NuteeSelectSheet: NuteeAlertSheet {
         super.viewDidLoad()
         
         removePanGestureRecognizer()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        checkNumberOfOptionList(targetCount: itemList.count)
     }
     
     // MARK: - Helper
@@ -80,8 +90,7 @@ class NuteeSelectSheet: NuteeAlertSheet {
     
     override func setCardViewHeight() {
         handleArea = 0
-        super.setCardViewHeight()
-        cardViewHeight -= titleHeight
+        cardViewHeight = safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(itemList.count)
     }
     
     func removePanGestureRecognizer() {
@@ -94,35 +103,23 @@ class NuteeSelectSheet: NuteeAlertSheet {
 
 extension NuteeSelectSheet {
     
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return itemList.count
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.SelectOptionListTVCell, for: indexPath) as! SelectOptionListTVCell
         cell.selectionStyle = .none
         
-        cell.optionItemLabel.text = optionList[indexPath.row][0] as? String
+        cell.optionItemLabel.text = itemList[indexPath.row]
 
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        super.tableView(tableView, didSelectRowAt: indexPath)
-        nuteeAlertActionDelegate?.nuteeAlertSheetAction(indexPath: indexPath.row)
-        didTapOutsideCardSheet()
+        nuteeAlertActionDelegate?.nuteeSelectSheetAction(selectedOptionItem: itemList[indexPath.row], sheetMode: selectMode)
         
-            
-//        case "selectPostCategory":
-//            postVC?.selectedCategory = optionList[indexPath.row][0] as? String ?? ""
-//            postVC?.updatePostCategoryButtonStatus()
-//            didTapOutsideCardSheet()
-//        case "selectPostMajor":
-//            postVC?.selectedMajor = optionList[indexPath.row][0] as? String ?? ""
-//            postVC?.updatePostMajorButtonStatus()
-//            didTapOutsideCardSheet()
-            
-            
-            
-//        default:
-//            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
-//        }
+        didTapOutsideCardSheet()
     }
 
 }

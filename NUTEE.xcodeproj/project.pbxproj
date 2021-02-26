@@ -64,6 +64,7 @@
 		D12D8BF224D14E32005F4580 /* CALayer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12D8BF124D14E32005F4580 /* CALayer+Extension.swift */; };
 		D50BB0AE24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */; };
 		D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */; };
+		D51648A925E8E1E500FFEA2A /* SelectMode+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51648A825E8E1E500FFEA2A /* SelectMode+Enum.swift */; };
 		D51A442B24C87B9600B0FC6E /* NewsFeedTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */; };
 		D5220C7425DE478000716456 /* NuteeCheckSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5220C7325DE478000716456 /* NuteeCheckSheet.swift */; };
 		D5220C8425DEB5F300716456 /* NuteeSelectSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */; };
@@ -78,7 +79,6 @@
 		D54FE03724F16CE400BA0361 /* IDVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03624F16CE400BA0361 /* IDVC.swift */; };
 		D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03824F180DC00BA0361 /* NicknameVC.swift */; };
 		D54FE03B24F34F6600BA0361 /* PasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54FE03A24F34F6600BA0361 /* PasswordVC.swift */; };
-		D556523925E7DC220010E6EA /* NuteeSelectMajorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */; };
 		D564FBC525AC3C1C000A578A /* NuteeImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */; };
 		D56CAD9425C5A5D200827BAA /* MenuBarCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */; };
 		D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */; };
@@ -207,6 +207,7 @@
 		D12D8BF124D14E32005F4580 /* CALayer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+Extension.swift"; sourceTree = "<group>"; };
 		D50BB0AD24E3D9E0001E8C43 /* NoticeFeedContainerCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedContainerCVCell.swift; sourceTree = "<group>"; };
 		D50BB0AF24E3DA94001E8C43 /* NoticeFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeFeedTVCell.swift; sourceTree = "<group>"; };
+		D51648A825E8E1E500FFEA2A /* SelectMode+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectMode+Enum.swift"; sourceTree = "<group>"; };
 		D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedTVCell.swift; sourceTree = "<group>"; };
 		D5220C7325DE478000716456 /* NuteeCheckSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeCheckSheet.swift; sourceTree = "<group>"; };
 		D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeSelectSheet.swift; sourceTree = "<group>"; };
@@ -221,7 +222,6 @@
 		D54FE03624F16CE400BA0361 /* IDVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDVC.swift; sourceTree = "<group>"; };
 		D54FE03824F180DC00BA0361 /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
 		D54FE03A24F34F6600BA0361 /* PasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordVC.swift; sourceTree = "<group>"; };
-		D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeSelectMajorSheet.swift; sourceTree = "<group>"; };
 		D564FBC425AC3C1C000A578A /* NuteeImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuteeImageViewer.swift; sourceTree = "<group>"; };
 		D56CAD9325C5A5D200827BAA /* MenuBarCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarCVCell.swift; sourceTree = "<group>"; };
 		D576527725A565F300A11E8D /* BachelorFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BachelorFeedCVCell.swift; sourceTree = "<group>"; };
@@ -569,6 +569,7 @@
 			children = (
 				D12D8BD724D14714005F4580 /* Font+Enum.swift */,
 				D12D8BD924D1472A005F4580 /* Identify+Enum.swift */,
+				D51648A825E8E1E500FFEA2A /* SelectMode+Enum.swift */,
 				D12D8BDB24D14734005F4580 /* Image+Enum.swift */,
 				D12D8BDD24D1483A005F4580 /* UserDefaultKeys+Enum.swift */,
 				D12D8BDF24D14850005F4580 /* KeyChainKeys+Enum.swift */,
@@ -613,9 +614,8 @@
 			isa = PBXGroup;
 			children = (
 				D5A7D1BB24E7C40400016A99 /* NuteeAlertSheet.swift */,
-				D5220C7325DE478000716456 /* NuteeCheckSheet.swift */,
 				D5220C8325DEB5F300716456 /* NuteeSelectSheet.swift */,
-				D556523825E7DC220010E6EA /* NuteeSelectMajorSheet.swift */,
+				D5220C7325DE478000716456 /* NuteeCheckSheet.swift */,
 			);
 			path = Sheet;
 			sourceTree = "<group>";
@@ -982,6 +982,7 @@
 				D541833325DF87890000D533 /* NuteeAlertActionDelegate.swift in Sources */,
 				D5A18AFE24E12FD60075B886 /* SettingVC.swift in Sources */,
 				D5CC689724E6F58900274451 /* DeveloperInfoVC.swift in Sources */,
+				D51648A925E8E1E500FFEA2A /* SelectMode+Enum.swift in Sources */,
 				D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */,
 				D576527D25A5A6CF00A11E8D /* ClassFeedCVCell.swift in Sources */,
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
@@ -989,7 +990,6 @@
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
 				455908302564FBE9009A5F5C /* FindVC.swift in Sources */,
-				D556523925E7DC220010E6EA /* NuteeSelectMajorSheet.swift in Sources */,
 				4586B61A25972701003968B0 /* ContentService.swift in Sources */,
 				D12D8BDC24D14734005F4580 /* Image+Enum.swift in Sources */,
 				5E8BA65224C6D1AA00A58F43 /* AppDelegate.swift in Sources */,
