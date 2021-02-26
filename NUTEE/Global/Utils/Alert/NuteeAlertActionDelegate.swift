@@ -8,10 +8,21 @@
 
 // MARK: - NuteeAlert Sheet/Dialogue와 통신하기 위한 프로토콜 정의
 
+import Foundation
+
 protocol NuteeAlertActionDelegate: class {
     
     func nuteeAlertSheetAction(indexPath: Int)
     
-    func nuteeAlertDialogueAction()
+    func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode)
+    
+}
+
+// To make function 'optional' (make default implementation)
+extension NuteeAlertActionDelegate {
+    
+    func nuteeAlertSheetAction(indexPath: Int) { }
+    
+    func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode) { }
     
 }
