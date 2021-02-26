@@ -17,18 +17,11 @@ class NuteeCheckSheet: NuteeSelectSheet {
     
     // MARK: - Variables and Properties
     
-    var itemList = [""]
     var itemCheckList = [false]
     
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        checkNumberOfOptionList(targetCount: itemList.count)
-    }
     
     // MARK: - Helper
     
@@ -63,11 +56,6 @@ class NuteeCheckSheet: NuteeSelectSheet {
         }
     }
     
-    override func setCardViewHeight() {
-        handleArea = 0
-        cardViewHeight = safeAreaHeight - handleArea - titleHeight - optionHeight * CGFloat(itemList.count)
-    }
-    
     @objc func didTapCompleteButton() {
         didTapOutsideCardSheet()
     }
@@ -77,10 +65,6 @@ class NuteeCheckSheet: NuteeSelectSheet {
 // MARK: - optionList TableView
 
 extension NuteeCheckSheet {
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemList.count
-    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.CheckOptionListTVCell, for: indexPath) as! CheckOptionListTVCell

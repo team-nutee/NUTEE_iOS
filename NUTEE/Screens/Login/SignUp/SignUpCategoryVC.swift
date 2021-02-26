@@ -251,8 +251,6 @@ extension SignUpCategoryVC: NuteeAlertActionDelegate {
         categoryCheckList[indexPath] = !categoryCheckList[indexPath]
     }
     
-    func nuteeAlertDialogueAction() { }
-    
 }
 
 // MARK: - optionList TableView

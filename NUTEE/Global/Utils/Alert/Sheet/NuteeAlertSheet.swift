@@ -29,8 +29,6 @@ class NuteeAlertSheet : UIViewController {
     var cardPanStartingTopConstant : CGFloat = 30.0 //default is 30 pt from safe area top
     var handleArea: CGFloat = 30
     
-    var postVC: PostVC?
-    
     var optionList = [["", UIColor.self]]
     var optionHeight: CGFloat = 50
 
@@ -298,10 +296,7 @@ extension NuteeAlertSheet: UITableViewDelegate, UITableViewDataSource {
 //            editComment()
 //        case "deleteComment":
 //            deleteComment()
-//        case "openLibrary":
-//            openLibrary()
-//        case "openCamera":
-//            openCamera()
+        
 //        default:
 //            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
 //        }

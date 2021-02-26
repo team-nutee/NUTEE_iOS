@@ -162,8 +162,6 @@ extension SettingProfileImageVC: NuteeAlertActionDelegate {
         }
     }
     
-    func nuteeAlertDialogueAction() { }
-    
 }
 
 // MARK: - 프로필 이미지 선택 창 전환 기능 구현

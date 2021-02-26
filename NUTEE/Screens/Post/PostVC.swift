@@ -370,34 +370,6 @@ class PostVC: UIViewController {
         }
     }
     
-    func updatePostCategoryButtonStatus() {
-        categoryButton.alpha = 1.0
-        categoryButton.setTitle(selectedCategory, for: .normal)
-        pickedCategory = selectedCategory
-        
-        if selectedMajor != "" {
-            selectedMajor = ""
-            majorButton.setTitle("내 전공", for: .normal)
-        }
-        majorButton.alpha = 0.5
-    }
-
-    @objc func didTapSelectPostCategoryButton() {
-        let selectCategorySheet = NuteeSelectSheet()
-        selectCategorySheet.postVC = self
-        
-        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
-
-        var optionList = [[Any]]()
-        for category in categoryList {
-            optionList.append([category, UIColor.gray, "selectPostCategory", true])
-        }
-        selectCategorySheet.optionList = optionList
-        
-        selectCategorySheet.modalPresentationStyle = .custom
-        present(selectCategorySheet, animated: true)
-    }
-    
     func updatePostMajorButtonStatus() {
         majorButton.alpha = 1.0
         majorButton.setTitle(selectedMajor, for: .normal)
@@ -409,24 +381,71 @@ class PostVC: UIViewController {
         }
         categoryButton.alpha = 0.5
     }
-
+    
+    func updatePostCategoryButtonStatus() {
+        categoryButton.alpha = 1.0
+        categoryButton.setTitle(selectedCategory, for: .normal)
+        pickedCategory = selectedCategory
+        
+        if selectedMajor != "" {
+            selectedMajor = ""
+            majorButton.setTitle("내 전공", for: .normal)
+        }
+        majorButton.alpha = 0.5
+    }
+    
+    @objc func didTapSelectPostCategoryButton() {
+        showCategoryListSheet()
+    }
+    
     @objc func didTapSelectPostMajorButton() {
+        showMajorListSheet()
+    }
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension PostVC: NuteeAlertActionDelegate {
+    
+    func showCategoryListSheet() {
+        let selectCategorySheet = NuteeSelectSheet()
+        selectCategorySheet.nuteeAlertActionDelegate = self
+        selectCategorySheet.selectMode = .category
+        
+        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+        
+        selectCategorySheet.itemList = categoryList
+        
+        selectCategorySheet.modalPresentationStyle = .custom
+        present(selectCategorySheet, animated: true)
+    }
+    
+    func showMajorListSheet() {
         let selectMajorSheet = NuteeSelectSheet()
-        selectMajorSheet.postVC = self
+        selectMajorSheet.nuteeAlertActionDelegate = self
+        selectMajorSheet.selectMode = .major
         
         selectMajorSheet.titleContent = "전공을 선택해주세요"
-
-        var optionList = [[Any]]()
-        for major in majorList {
-            optionList.append([major, UIColor.gray, "selectPostMajor", true])
-        }
-        selectMajorSheet.optionList = optionList
+        
+        selectMajorSheet.itemList = majorList
         
         selectMajorSheet.modalPresentationStyle = .custom
         present(selectMajorSheet, animated: true)
     }
+    
+    func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode) {
+        switch sheetMode {
+        case .category:
+            selectedCategory = selectedOptionItem
+            updatePostCategoryButtonStatus()
+        case .major:
+            selectedMajor = selectedOptionItem
+            updatePostMajorButtonStatus()
+        default:
+            break
+        }
+    }
 }
-
 
 // MARK: - imageCollectionView Delegate
 extension PostVC : UICollectionViewDelegate { }
