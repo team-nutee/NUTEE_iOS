@@ -187,40 +187,11 @@ class SignUpMajorVC: SignUpViewController {
     }
     
     @objc func didTapFirstMajorButton() {
-        let selectFirstMajorSheet = NuteeSelectMajorSheet()
-        selectFirstMajorSheet.majorVC = self
-        selectFirstMajorSheet.selectMajorMode = .first
-        
-        selectFirstMajorSheet.titleContent = majorButtonPlaceHolder
-        
-        var optionList = [[Any]]()
-        for major in majorList {
-            optionList.append([major, UIColor.gray])
-        }
-        selectFirstMajorSheet.optionList = optionList
-        
-        present(selectFirstMajorSheet, animated: true)
+        showSelectFirstMajorSheet()
     }
     
     @objc func didTapSecondMajorButton() {
-        if firstMajor != "" {
-            let selectFirstMajorSheet = NuteeSelectMajorSheet()
-            selectFirstMajorSheet.majorVC = self
-            selectFirstMajorSheet.selectMajorMode = .second
-            
-            selectFirstMajorSheet.titleContent = "두 번째 " + majorButtonPlaceHolder
-            
-            var optionList = [[Any]]()
-            optionList.append(["없음", UIColor.gray, "selectSecondMajor", true])
-            for major in majorList {
-                if major != firstMajor {
-                    optionList.append([major, UIColor.gray, "selectSecondMajor", true])
-                }
-            }
-            selectFirstMajorSheet.optionList = optionList
-            
-            present(selectFirstMajorSheet, animated: true)
-        }
+        showSelectSecondMajorSheet()
     }
     
     @objc override func didTapNextButton() {
@@ -286,6 +257,58 @@ class SignUpMajorVC: SignUpViewController {
                         self.secondMajorUnderLineView.alpha = 1
                         self.secondMajorUnderLineView.transform = CGAffineTransform.init(translationX: -50, y: 0)
         })
+    }
+    
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension SignUpMajorVC: NuteeAlertActionDelegate {
+    
+    func showSelectFirstMajorSheet() {
+        let selectFirstMajorSheet = NuteeSelectSheet()
+        selectFirstMajorSheet.nuteeAlertActionDelegate = self
+        selectFirstMajorSheet.selectMode = .firstMajor
+        
+        selectFirstMajorSheet.titleContent = majorButtonPlaceHolder
+        
+        selectFirstMajorSheet.itemList = majorList
+        
+        present(selectFirstMajorSheet, animated: true)
+    }
+    
+    func showSelectSecondMajorSheet() {
+        if firstMajor != "" {
+            let selectSecondMajorSheet = NuteeSelectSheet()
+            selectSecondMajorSheet.nuteeAlertActionDelegate = self
+            selectSecondMajorSheet.selectMode = .secondMajor
+            
+            selectSecondMajorSheet.titleContent = "두 번째 " + majorButtonPlaceHolder
+            
+            var itemList: [String] = []
+            itemList.append("없음")
+            for major in majorList {
+                if major != firstMajor {
+                    itemList.append(major)
+                }
+            }
+            selectSecondMajorSheet.itemList = itemList
+            
+            present(selectSecondMajorSheet, animated: true)
+        }
+    }
+    
+    func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode) {
+        switch sheetMode {
+        case .firstMajor:
+            firstMajor = selectedOptionItem
+            updateFirstMajorButtonStatus()
+        case .secondMajor:
+            secondMajor = selectedOptionItem
+            updateSecondMajorButtonStatus()
+        default:
+            break
+        }
     }
     
 }
