@@ -650,9 +650,7 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
             nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red]]
             
         }
-        
-        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
-        
+                
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)

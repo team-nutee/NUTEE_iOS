@@ -321,6 +321,7 @@ class NewsFeedTVCell: UITableViewCell {
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
         
         nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertDialogue.postId = newsPost?.id
         nuteeAlertDialogue.addDeletePostAction()
         
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
@@ -337,6 +338,7 @@ class NewsFeedTVCell: UITableViewCell {
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
         nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeReportDialogue.postId = newsPost?.id
         nuteeReportDialogue.addReportPostAction()
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
@@ -364,9 +366,7 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
             nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red]]
             
         }
-        
-        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
-        
+                
         nuteeAlertSheet.modalPresentationStyle = .custom
         
         homeVC?.present(nuteeAlertSheet, animated: true)

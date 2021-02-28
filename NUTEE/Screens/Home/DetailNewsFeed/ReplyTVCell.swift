@@ -169,22 +169,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     }
     
     @objc func didTapMoreButton() {
-        let nuteeAlertSheet = NuteeAlertSheet()
-        
-        if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
-            nuteeAlertSheet.optionList = [["수정", UIColor.black, "editComment"],
-                                          ["삭제", UIColor.red, "deleteComment"]]
-        } else {
-            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
-        }
-        
-        nuteeAlertSheet.detailNewsFeedVC = self.detailNewsFeedVC
-        nuteeAlertSheet.commentId = comment?.id
-        nuteeAlertSheet.editCommentContent = comment?.content
-        
-        nuteeAlertSheet.modalPresentationStyle = .custom
-        
-        detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
+        showNuteeAlertSheet()
     }
     
     func initComment() {
@@ -278,7 +263,79 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         likeButton.isSelected = true
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
     }
+    
+    func editComment() {
+        detailNewsFeedVC?.setEditCommentMode(editCommentId: comment?.id ?? 0, content: comment?.content ?? "")
+    
+        detailNewsFeedVC?.dismiss(animated: true, completion: nil)
+    }
+    
+    func deleteComment() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
+        
+        nuteeAlertDialogue.detailNewsFeedVC = self.detailNewsFeedVC
+        nuteeAlertDialogue.commentId = comment?.id
+        nuteeAlertDialogue.addDeleteCommentAction()
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        detailNewsFeedVC?.dismiss(animated: true, completion: {
+            self.detailNewsFeedVC?.present(nuteeAlertDialogue, animated: true)
+        })
+    }
+    
+    func reportComment() {
+        // 댓글 신고 기능 구현
+    }
 
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension ReplyTVCell: NuteeAlertActionDelegate {
+    
+    func showNuteeAlertSheet() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.nuteeAlertActionDelegate = self
+        
+        if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
+            nuteeAlertSheet.optionList = [["수정", UIColor.black],
+                                          ["삭제", UIColor.red]]
+            
+        } else {
+            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red]]
+            
+        }
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
+    }
+    
+    func nuteeAlertSheetAction(indexPath: Int) {
+        
+        if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
+            switch indexPath {
+            case 0:
+                editComment()
+            case 1:
+                deleteComment()
+            default:
+                break
+            }
+            
+        } else {
+            switch indexPath {
+            case 0:
+                reportComment()
+            default:
+                break
+            }
+        }
+    }
 }
 
 // MARK: - Server connect
