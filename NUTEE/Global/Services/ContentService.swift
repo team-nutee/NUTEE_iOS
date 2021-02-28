@@ -120,7 +120,9 @@ struct ContentService {
     // MARK: - 카테고리에 있는 게시글들(posts) 가져오기
     
     func getCategoryPosts(category: String, lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
-        let URL = APIConstants.Post + "/category/" + category + "?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        let encodingText = category.stringByAddingPercentEncodingForFormData(plusForSpace: true)!
+        let URL = APIConstants.Post + "/category/" + encodingText + "?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
         
         var token = "Bearer "
         token += KeychainWrapper.standard.string(forKey: "token") ?? ""

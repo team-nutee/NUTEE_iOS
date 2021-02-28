@@ -348,7 +348,7 @@ extension ReplyTVCell {
 
             switch responsedata {
             case .success(_):
-                print("post like success")
+                print("comment like success")
                 
             case .requestErr(let message):
                 print("request error: \(message)")
@@ -370,7 +370,7 @@ extension ReplyTVCell {
 
             switch responsedata {
             case .success(_):
-                print("post unlike success")
+                print("comment unlike success")
                 
             case .requestErr(let message):
                 print("request error: \(message)")
