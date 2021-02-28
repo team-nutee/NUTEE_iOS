@@ -21,12 +21,12 @@ class NicknameVC: SignUpViewController {
   
     // MARK: - Variables and Properties
   
-    var verifiedNickname: String = ""
-    
-    var userId: String = ""
     var email: String = ""
     var otp: String = ""
-
+    var userId: String = ""
+    
+    var verifiedNickname: String = ""
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -133,6 +133,12 @@ class NicknameVC: SignUpViewController {
         let signUpCategoryVC = SignUpCategoryVC()
         signUpCategoryVC.totalSignUpViews = totalSignUpViews
         signUpCategoryVC.progressStatusCount = progressStatusCount
+        
+        signUpCategoryVC.email = self.email
+        signUpCategoryVC.otp = self.otp
+        signUpCategoryVC.userId = self.userId
+        
+        signUpCategoryVC.nickname = verifiedNickname
         
         present(signUpCategoryVC, animated: false)
     }
@@ -265,6 +271,7 @@ extension NicknameVC {
     @objc func checkNick(_ nick: String){
         
         UserService.shared.checkNick(nick) { [self] (responsedata) in
+            
             switch responsedata {
             
             case .success(_):

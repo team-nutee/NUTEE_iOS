@@ -14,6 +14,8 @@ class PasswordVC: SignUpViewController {
     
     // MARK: - UI components
     
+    let loadingIndicator = UIActivityIndicatorView()
+    
     let passwordTitleLabel = UILabel()
     let passwordTextField = UITextField()
     let passwordIndicatorLabel = UILabel()
@@ -147,6 +149,8 @@ class PasswordVC: SignUpViewController {
     
     func makeConstraints() {
         // Add SubView
+        view.addSubview(loadingIndicator)
+        
         view.addSubview(passwordTitleLabel)
         view.addSubview(passwordTextField)
         view.addSubview(passwordIndicatorLabel)
@@ -159,6 +163,13 @@ class PasswordVC: SignUpViewController {
         view.addSubview(showTermsAndConditionsButton)
         
         // Make Constraints
+        loadingIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.snp.bottom)
+        }
+        
         passwordTitleLabel.snp.makeConstraints {
             $0.top.equalTo(guideLabel.snp.bottom).offset(40)
             $0.left.equalTo(guideLabel.snp.left)
@@ -241,12 +252,22 @@ class PasswordVC: SignUpViewController {
     }
     
     @objc override func didTapNextButton() {
-        let rootVC = view.window?.rootViewController
-        self.view.window!.rootViewController?.dismiss(animated: true, completion: {
-            rootVC?.simpleNuteeAlertDialogue(title: "회원가입 성공", message: "회원가입이 완료되었습니다😁")
-        })
+        loadingIndicatorSwitcher()
         
-        //signUpService(<#T##userId: String##String#>, <#T##nickname: String##String#>, <#T##email: String##String#>, <#T##password: String##String#>, otp: <#T##String#>, interests: <#T##[String]#>, majors: <#T##[String]#>)
+        let password = passwordTextField.text ?? ""
+        if password != "" && password == passwordCheckTextField.text {
+            signUpService(userId, nickname, email, password, otp, interests, majors)
+        }
+    }
+    
+    func loadingIndicatorSwitcher() {
+        if loadingIndicator.isAnimating == false {
+            loadingIndicator.startAnimating()
+            view.alpha = 0.7
+        } else {
+            loadingIndicator.stopAnimating()
+            view.alpha = 1.0
+        }
     }
     
 }
@@ -474,16 +495,14 @@ extension PasswordVC {
 
 extension PasswordVC {
     
-    func error() {
-        self.errorAnimate(targetTextField: passwordTextField, errorMessage: "에러로 인해 회원가입이 진행되지 않았습니다")
-        self.errorAnimate(targetTextField: passwordCheckTextField, errorMessage: "에러로 인해 회원가입이 진행되지 않았습니다.")
+    func setFailSignUp(message: String) {
+        loadingIndicatorSwitcher()
+        simpleNuteeAlertDialogue(title: "회원가입 실패", message: message)
     }
     
-    func signUpService(_ userId: String, _ nickname: String, _ email: String, _ password: String, _ otp: String) {
-        UserService.shared.signUp(userId, nickname, email, password, otp, interests, majors) { responsedata in
-            
+    func signUpService(_ userId: String, _ nickname: String, _ email: String, _ password: String, _ otp: String, _ interests: [String], _ majors: [String]) {
+        UserService.shared.signUp(userId, nickname, email, password, otp, interests, majors) { [self] responsedata in
             switch responsedata {
-            
             // NetworkResult 의 요소들
             case .success(_):
                 let rootVC = self.view.window?.rootViewController
@@ -492,18 +511,19 @@ extension PasswordVC {
                 })
                 
             case .requestErr(_):
-                self.error()
+                setFailSignUp(message: "회원정보 입력 오류로 인해 회원가입에 실패하였습니다")
+                print(".requestErr")
                 
             case .pathErr:
-                self.error()
+                setFailSignUp(message: "전송 경로 오류로 인해 회원가입에 실패하였습니다")
                 print(".pathErr")
                 
             case .serverErr:
-                self.error()
+                setFailSignUp(message: "서버 오류로 인해 회원가입에 실패하였습니다")
                 print(".serverErr")
                 
             case .networkFail :
-                self.error()
+                setFailSignUp(message: "네트워크 오류로 인해 회원가입에 실패하였습니다")
                 print("failure")
             }
         }

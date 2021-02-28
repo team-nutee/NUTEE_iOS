@@ -24,6 +24,13 @@ class SignUpMajorVC: SignUpViewController {
     
     // MARK: - Variables and Properties
     
+    var email: String = ""
+    var otp: String = ""
+    var userId: String = ""
+    var nickname: String = ""
+    var interests: [String] = []
+    var majors: [String] = []
+    
     let majorButtonPlaceHolder = "전공을 선택해주세요"
     
     var majorList: [String] = []
@@ -199,9 +206,18 @@ class SignUpMajorVC: SignUpViewController {
         passwordVC.totalSignUpViews = totalSignUpViews
         passwordVC.progressStatusCount = progressStatusCount
 
-//        passwordVC.userId = self.userId
-//        passwordVC.nickname = nicknameTextField.text ?? ""
-//        passwordVC.email = self.email
+        passwordVC.userId = self.userId
+        passwordVC.email = self.email
+        passwordVC.otp = self.otp
+        passwordVC.nickname = self.nickname
+        passwordVC.interests = self.interests
+        
+        var userSelectedMajors: [String] = []
+        userSelectedMajors.append(firstMajor)
+        if secondMajor != "" {
+            userSelectedMajors.append(secondMajor)
+        }
+        passwordVC.majors = userSelectedMajors
         
         present(passwordVC, animated: false)
     }

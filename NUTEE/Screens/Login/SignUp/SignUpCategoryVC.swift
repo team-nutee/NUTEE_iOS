@@ -21,9 +21,10 @@ class SignUpCategoryVC: SignUpViewController {
     
     // MARK: - Variables and Properties
     
-//    var userId: String = ""
-//    var email: String = ""
-//    var otp: String = ""
+    var email: String = ""
+    var otp: String = ""
+    var userId: String = ""
+    var nickname: String = ""
 
     var categoryTVCellHeight: CGFloat = 50
     
@@ -193,6 +194,19 @@ class SignUpCategoryVC: SignUpViewController {
         let signUpMajorVC = SignUpMajorVC()
         signUpMajorVC.totalSignUpViews = totalSignUpViews
         signUpMajorVC.progressStatusCount = progressStatusCount
+        
+        signUpMajorVC.userId = self.userId
+        signUpMajorVC.email = self.email
+        signUpMajorVC.otp = self.otp
+        signUpMajorVC.nickname = self.nickname
+        
+        var interests: [String] = []
+        for index in 0...categoryCheckList.count - 1 {
+            if categoryCheckList[index] == true {
+                interests.append(categoryList[index])
+            }
+        }
+        signUpMajorVC.interests = interests
         
         present(signUpMajorVC, animated: false)
     }
