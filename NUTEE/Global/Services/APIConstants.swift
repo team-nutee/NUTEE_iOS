@@ -27,8 +27,8 @@ struct APIConstants {
     
     static let OTPSend = AuthURL + "/otp"
     static let OTPCheck = AuthURL + "/check/otp"
-    static let IDCheck = AuthURL + "/checkid"
-    static let NickCheck = AuthURL + "/checknickname"
+    static let IDCheck = AuthURL + "/check/user-id"
+    static let NickCheck = AuthURL + "/check/nickname"
 
     // Notice
     static let NoticeURL = "http://nutee.kr:9709/crawl"

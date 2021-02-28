@@ -45,7 +45,7 @@ struct UserService {
                 if let value = response.result.value {
                     if let status = response.response?.statusCode {
                         switch status {
-                        case 200:
+                        case 200, 201:
                             do{
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(User.self, from: value)
@@ -59,7 +59,7 @@ struct UserService {
                         case 500:
                             completion(.serverErr)
                         default:
-                            break
+                            completion(.requestErr(status))
                         }
                     }
                 }
