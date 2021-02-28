@@ -68,6 +68,8 @@ class PostVC: UIViewController {
         initPostingView()
         addSubView()
         
+        setEditMode(postContent: editPostContent, postBody: editPostBody)
+        
         getCategoriesService()
         getMyProfileService()
     }
@@ -284,7 +286,6 @@ class PostVC: UIViewController {
     }
     
     func setEditMode(postContent: PostContent?, postBody: PostBody?) {
-        isEditMode = true
         self.editPostContent = postContent
         self.editPostBody = postBody
         

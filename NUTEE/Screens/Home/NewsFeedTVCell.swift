@@ -288,22 +288,7 @@ class NewsFeedTVCell: UITableViewCell {
     }
     
     @objc func didTapMoreButton() {
-        let nuteeAlertSheet = NuteeAlertSheet()
-        
-        if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
-            nuteeAlertSheet.optionList = [["수정", UIColor.black, "editPost"],
-                                          ["삭제", UIColor.red, "deletePost"]]
-        } else {
-            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red, "reportPost"]]
-        }
-        
-        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
-        nuteeAlertSheet.categoryFeedVC = self.categoryFeedVC
-        nuteeAlertSheet.postId = newsPost?.id
-        nuteeAlertSheet.editPostBody = newsPost
-        
-        nuteeAlertSheet.modalPresentationStyle = .custom
-        homeVC?.present(nuteeAlertSheet, animated: true)
+        showNuteeAlertSheet()
     }
     
     @objc func didTapCategoryButton() {
@@ -316,12 +301,100 @@ class NewsFeedTVCell: UITableViewCell {
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }
 
-//    func deletePost() {
-//        self.postDeleteService(postId: self.newsPost?.id ?? 0, completionHandler: {() -> Void in
-//            // delegate로 NewsFeedVC와 통신하기
-//            self.delegate?.updateNewsTV()
-//        })
-//    }
+    func editPost() {
+        let postVC = PostVC()
+    
+        postVC.editPostBody = newsPost
+        postVC.isEditMode = true
+        
+        let navigationController = UINavigationController(rootViewController: postVC)
+        navigationController.modalPresentationStyle = .currentContext
+        
+        homeVC?.dismiss(animated: true, completion: {
+            self.homeVC?.present(navigationController, animated: true)
+        })
+    }
+    
+    func deletePost() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
+        
+        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertDialogue.addDeletePostAction()
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+    
+        homeVC?.dismiss(animated: true, completion: {
+            self.homeVC?.present(nuteeAlertDialogue, animated: true)
+        })
+    }
+    
+    func reportPost() {
+        let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        
+        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeReportDialogue.addReportPostAction()
+        
+        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
+        
+        homeVC?.dismiss(animated: true, completion: {
+            self.homeVC?.present(nuteeReportDialogue, animated: true)
+        })
+    }
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension NewsFeedTVCell: NuteeAlertActionDelegate {
+    
+    func showNuteeAlertSheet() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.nuteeAlertActionDelegate = self
+        
+        if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
+            nuteeAlertSheet.optionList = [["수정", UIColor.black],
+                                          ["삭제", UIColor.red]]
+            
+        } else {
+            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red]]
+            
+        }
+        
+        nuteeAlertSheet.feedContainerCVCell = self.feedContainerCVCell
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        
+        homeVC?.present(nuteeAlertSheet, animated: true)
+    }
+    
+    func nuteeAlertSheetAction(indexPath: Int) {
+        
+        if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
+            switch indexPath {
+            case 0:
+                editPost()
+            case 1:
+                deletePost()
+            default:
+                break
+            }
+            
+        } else {
+            switch indexPath {
+            case 0:
+                reportPost()
+            default:
+                break
+            }
+        }
+        
+    }
+    
 }
 
 // MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의
