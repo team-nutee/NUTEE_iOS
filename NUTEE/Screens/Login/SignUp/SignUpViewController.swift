@@ -173,7 +173,7 @@ class SignUpViewController: UIViewController {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.windowWidth = 270
         nuteeAlertDialogue.dialogueData = ["나가기", "입력하신 회원정보가 저장되지 않습니다\n그래도 나가시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["나기기", UIColor.white, UIColor.red]
+        nuteeAlertDialogue.okButtonData = ["나가기", UIColor.white, UIColor.red]
         nuteeAlertDialogue.cancelButtonData[0] = "취소"
         
         nuteeAlertDialogue.addCancelSigUpAction()
