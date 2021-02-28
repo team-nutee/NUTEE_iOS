@@ -116,6 +116,13 @@ class SettingMajorVC: SignUpMajorVC {
             $0.titleLabel?.sizeToFit()
             $0.setTitleColor(.black, for: .normal)
         }
+        
+        secondMajor = originalSecondMajor
+        _ = secondMajorButton.then {
+            $0.setTitle(secondMajor, for: .normal)
+            $0.titleLabel?.sizeToFit()
+            $0.setTitleColor(.black, for: .normal)
+        }
     }
     
     override func updateFirstMajorButtonStatus() {
