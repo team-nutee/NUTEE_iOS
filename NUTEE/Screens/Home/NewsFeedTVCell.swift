@@ -321,6 +321,7 @@ class NewsFeedTVCell: UITableViewCell {
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
         
         nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
+        nuteeAlertDialogue.categoryFeedVC = self.categoryFeedVC
         nuteeAlertDialogue.postId = newsPost?.id
         nuteeAlertDialogue.addDeletePostAction()
         
