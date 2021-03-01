@@ -311,7 +311,7 @@ class NewsFeedTVCell: UITableViewCell {
         navigationController.modalPresentationStyle = .currentContext
         
         homeVC?.dismiss(animated: true, completion: {
-            self.homeVC?.present(navigationController, animated: true)
+            self.homeVC?.tabBarController?.present(navigationController, animated: true)
         })
     }
     

@@ -68,7 +68,7 @@ class PostVC: UIViewController {
         initPostingView()
         addSubView()
         
-        setEditMode(postContent: editPostContent, postBody: editPostBody)
+        setEditMode()
         
         getCategoriesService()
         getMyProfileService()
@@ -285,10 +285,7 @@ class PostVC: UIViewController {
         }
     }
     
-    func setEditMode(postContent: PostContent?, postBody: PostBody?) {
-        self.editPostContent = postContent
-        self.editPostBody = postBody
-        
+    func setEditMode() {
         if self.editPostContent != nil {
             postTitleTextField.text = editPostContent?.body.title ?? ""
             postContentTextView.text = editPostContent?.body.content ?? ""

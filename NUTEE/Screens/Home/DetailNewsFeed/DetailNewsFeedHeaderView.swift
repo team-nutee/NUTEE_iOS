@@ -594,7 +594,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         navigationController.modalPresentationStyle = .currentContext
         
         detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(navigationController, animated: true)
+            self.detailNewsFeedVC?.tabBarController?.present(navigationController, animated: true)
         })
     }
     
