@@ -91,6 +91,7 @@ class SignUpCategoryVC: SignUpViewController {
             $0.register(CategoryTVCell.self, forCellReuseIdentifier: Identify.CategoryTVCell)
             
             $0.separatorStyle = .none
+            $0.showsVerticalScrollIndicator = false
             $0.isScrollEnabled = false
         }
     }
@@ -169,6 +170,18 @@ class SignUpCategoryVC: SignUpViewController {
             nextButton.setTitleColor(.veryLightPink, for: .normal)
         } else {
             selectCategoryButton.setTitle("선택한 카테고리를 확인해주세요", for: .normal)
+            
+            var count: CGFloat = 0
+            for categoryCheck in categoryCheckList {
+                if categoryCheck == true {
+                    count += 1
+                }
+            }
+            if count * categoryTVCellHeight > categoryTableView.frame.size.height {
+                categoryTableView.isScrollEnabled = true
+            } else {
+                categoryTableView.isScrollEnabled = false
+            }
             
             nextButton.isEnabled = true
             nextButton.setTitleColor(.nuteeGreen, for: .normal)
