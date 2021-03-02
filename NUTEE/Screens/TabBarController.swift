@@ -16,6 +16,8 @@ class TabBarController: UITabBarController {
     
     // MARK: - Variables and Properties
     
+    let toPostIndex = 2
+    
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
@@ -35,8 +37,13 @@ class TabBarController: UITabBarController {
         super.viewDidLayoutSubviews()
         
         toPostButton.snp.makeConstraints {
-            $0.width.equalTo(tabBar.frame.size.width / CGFloat(viewControllers?.count ?? 0))
+            let tabsCount = CGFloat(viewControllers?.count ?? 0)
+            let tabIconWidth = tabBar.frame.size.width / tabsCount
+            
+            $0.width.equalTo(tabIconWidth)
             $0.height.equalTo(tabBar.frame.size.height - view.safeAreaInsets.bottom)
+            
+            $0.left.equalTo(view.snp.left).offset(tabIconWidth * CGFloat(toPostIndex))
         }
     }
     
@@ -66,8 +73,6 @@ class TabBarController: UITabBarController {
         
         view.addSubview(toPostButton)
         toPostButton.snp.makeConstraints {
-            $0.centerX.equalTo(view)
-            
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
@@ -88,7 +93,7 @@ class TabBarController: UITabBarController {
 extension TabBarController : UITabBarControllerDelegate {
   
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        if viewController == tabBarController.viewControllers?[2] {
+        if viewController == tabBarController.viewControllers?[toPostIndex] {
             // 해당 탭 화면('+' 버튼에 해당하는)으로 VC 전환 금지
             return false
         } else {
@@ -107,14 +112,15 @@ struct BuildTabBarController {
     
     func nuteeApp() -> TabBarController {
         let HomeTab = setTabBarViewController(viewcontroller: HomeVC(), image: "home", selectedImage: "home_fill")
-        let NotificationTab = setTabBarViewController(viewcontroller: NotificationVC(), image: "notice", selectedImage: "notice_fill")
+//        let NotificationTab = setTabBarViewController(viewcontroller: NotificationVC(), image: "notice", selectedImage: "notice_fill")
         let PostTab = UINavigationController()
         let NoticeTab = setTabBarViewController(viewcontroller: NoticeVC(), image: "speaker", selectedImage: "speaker_fill")
         let ProfileTab = setTabBarViewController(viewcontroller: ProfileVC(), image: "user", selectedImage: "user_fill")
         
         // TabBarController Settings
         let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
+//        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
+        tabBarController.viewControllers = [HomeTab, NoticeTab, PostTab, ProfileTab]
         
         return tabBarController
     }
