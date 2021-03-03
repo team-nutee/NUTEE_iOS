@@ -97,6 +97,7 @@
 		D58C93DC24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93DB24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift */; };
 		D58C93DE24CAE556005570D4 /* ReplyTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58C93DD24CAE556005570D4 /* ReplyTVCell.swift */; };
 		D58CEE6925A04DEB00AAE31F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */; };
+		D5901E1925EF83B000D765E5 /* ResizableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5901E1825EF83B000D765E5 /* ResizableButton.swift */; };
 		D590451D259E09E40091FEC0 /* SignUpMajorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D590451C259E09E40091FEC0 /* SignUpMajorVC.swift */; };
 		D5929F2B25BC54D60031F74E /* UserMenuBarCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5929F2A25BC54D60031F74E /* UserMenuBarCV.swift */; };
 		D592A92B24D3F9C600D49F62 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D592A92A24D3F9C600D49F62 /* HomeVC.swift */; };
@@ -242,6 +243,7 @@
 		D58C93DB24CAE53F005570D4 /* DetailNewsFeedHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNewsFeedHeaderView.swift; sourceTree = "<group>"; };
 		D58C93DD24CAE556005570D4 /* ReplyTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyTVCell.swift; sourceTree = "<group>"; };
 		D58CEE6825A04DEB00AAE31F /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		D5901E1825EF83B000D765E5 /* ResizableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableButton.swift; sourceTree = "<group>"; };
 		D590451C259E09E40091FEC0 /* SignUpMajorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpMajorVC.swift; sourceTree = "<group>"; };
 		D5929F2A25BC54D60031F74E /* UserMenuBarCV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMenuBarCV.swift; sourceTree = "<group>"; };
 		D592A92A24D3F9C600D49F62 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
@@ -743,6 +745,7 @@
 			isa = PBXGroup;
 			children = (
 				D527E85325A18F89007D8585 /* HighlightedButton.swift */,
+				D5901E1825EF83B000D765E5 /* ResizableButton.swift */,
 				D5F8741325CB832300281196 /* TabBarHighlightedButton.swift */,
 			);
 			path = CustomButton;
@@ -1010,6 +1013,7 @@
 				D5310CF825418B5A009A1DC2 /* NotificationVC.swift in Sources */,
 				D576527825A565F300A11E8D /* BachelorFeedCVCell.swift in Sources */,
 				D58C93DA24CAE52A005570D4 /* DetailNewsFeedVC.swift in Sources */,
+				D5901E1925EF83B000D765E5 /* ResizableButton.swift in Sources */,
 				455AA63425D7959E00BDE11D /* CategoryFeedVC.swift in Sources */,
 				D5310CFD25418CB3009A1DC2 /* NotificationTVCell.swift in Sources */,
 				D50BB0B024E3DA94001E8C43 /* NoticeFeedTVCell.swift in Sources */,
