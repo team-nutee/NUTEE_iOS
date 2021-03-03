@@ -12,6 +12,8 @@ class CategoryCV: UICollectionView {
     
     // MARK: - UI components
     
+    let dummyButton = ResizableButton()
+    
     // MARK: - Variables and Properties
     
     var categoryList = ["자유", "연애", "기숙사", "어쩌고", "저쩌고", "길게한번써보기","어쩌구저쩌구카테고리", "기숙사", "어쩌고", "저쩌고", "길게한번써보기","어쩌구저쩌구카테고리", "길게한번써보기","어쩌구저쩌구카테고리", "기숙사","어쩌구저쩌구카테고리", "기숙사"]
@@ -34,9 +36,16 @@ class CategoryCV: UICollectionView {
         let layout = TagsLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 20
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.minimumInteritemSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .vertical
+//        layout.minimumLineSpacing = 10
+//        layout.minimumInteritemSpacing = 10
+//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         self.collectionViewLayout = layout
         self.backgroundColor = .white
@@ -47,18 +56,29 @@ class CategoryCV: UICollectionView {
         register(CategoryCVCell.self, forCellWithReuseIdentifier: Identify.CategoryCVCell)
         
     }
+    
 }
 
 // MARK: - CollectionView Container
 
 extension CategoryCV : UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let cellSize = categoryList[indexPath.row].count
-//        if cellSize * 12 < 67 {
-//            return categoryList[indexPath.row].siz//CGSize(width: 67, height: 30)
-//        }
-//        return CGSize(width: 100, height: 30)
-//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        _ = dummyButton.then {
+            $0.setTitle(categoryList[indexPath.row], for: .normal)
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            $0.titleLabel?.sizeToFit()
+        }
+        
+        var size = dummyButton.titleLabel?.bounds.size.width ?? 0
+        if size <= dummyButton.minimumWidth {
+            size = dummyButton.minimumWidth
+        } else {
+            size += dummyButton.insetLeftRight * 2
+        }
+
+        return CGSize(width: size, height: dummyButton.height)
+    }
 }
 
 extension CategoryCV: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -84,7 +104,7 @@ class CategoryCVCell: UICollectionViewCell {
 
     // MARK: - UI components
     
-    let categoryButton = UIButton()
+    let categoryButton = ResizableButton()
     
     // MARK: - Variables and Properties
         
@@ -106,24 +126,15 @@ class CategoryCVCell: UICollectionViewCell {
         _ = categoryButton.then {
             $0.layer.cornerRadius = 14
             $0.backgroundColor = .white
-
-            $0.titleLabel?.adjustsFontSizeToFitWidth = true
-            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
-            $0.titleLabel?.font = .systemFont(ofSize: 13)
-            $0.setTitleColor(.black, for: .normal)
-            $0.titleLabel?.sizeToFit()
-
+            
             $0.setBorder(borderColor: .veryLightPink, borderWidth: 1)
         }
         
         contentView.addSubview(categoryButton)
         categoryButton.snp.makeConstraints {
-            $0.width.greaterThanOrEqualTo(67)
-            $0.height.equalTo(28)
-            
             $0.centerX.equalTo(contentView)
             $0.centerY.equalTo(contentView)
-        }
+        }   
     }
 
 }
