@@ -12,7 +12,7 @@ class CategoryCV: UICollectionView {
     
     // MARK: - UI components
     
-    let dummyButton = ResizableButton()
+    let cell = CategoryCVCell()
     
     // MARK: - Variables and Properties
     
@@ -40,13 +40,6 @@ class CategoryCV: UICollectionView {
         layout.sectionInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
-//        let layout = UICollectionViewFlowLayout()
-//        layout.scrollDirection = .vertical
-//        layout.minimumLineSpacing = 10
-//        layout.minimumInteritemSpacing = 10
-//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-//        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        
         self.collectionViewLayout = layout
         self.backgroundColor = .white
         
@@ -64,20 +57,20 @@ class CategoryCV: UICollectionView {
 extension CategoryCV : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        _ = dummyButton.then {
+        _ = cell.categoryButton.then {
             $0.setTitle(categoryList[indexPath.row], for: .normal)
             $0.titleLabel?.adjustsFontSizeToFitWidth = true
             $0.titleLabel?.sizeToFit()
         }
         
-        var size = dummyButton.titleLabel?.bounds.size.width ?? 0
-        if size <= dummyButton.minimumWidth {
-            size = dummyButton.minimumWidth
+        var size = cell.categoryButton.titleLabel?.bounds.size.width ?? 0
+        if size <= cell.categoryButton.minimumWidth {
+            size = cell.categoryButton.minimumWidth
         } else {
-            size += dummyButton.insetLeftRight * 2
+            size += cell.categoryButton.insetLeftRight * 2
         }
 
-        return CGSize(width: size, height: dummyButton.height)
+        return CGSize(width: size, height: cell.categoryButton.height)
     }
 }
 

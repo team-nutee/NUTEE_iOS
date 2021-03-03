@@ -459,6 +459,7 @@
 				45C92B0525879A3900828E8A /* Splash.swift */,
 				D5A4F3F125B1C21200AC3DCD /* PlaceholderTextView.swift */,
 				D52A2E4225DD56590074EA16 /* SmallRefreshControl.swift */,
+				453ACDC025EE876A001B1E06 /* TagsLayout.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -514,7 +515,6 @@
 				45F97E6725ED1B3A00861387 /* CategoryCV.swift */,
 				D5C9C31F24DFAC05006621D6 /* SearchHistoryTV.swift */,
 				D5FD580D24E454CC0021D869 /* SearchResult */,
-				453ACDC025EE876A001B1E06 /* TagsLayout.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";

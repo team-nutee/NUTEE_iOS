@@ -19,6 +19,7 @@ class SearchVC: UIViewController {
     
 //    let searchHistoryTableView = SearchHistoryTV()
     
+    let categoryView = UIView()
     let categoryLabel = UILabel()
     let categoryCollectionView = CategoryCV()
     
@@ -127,8 +128,9 @@ class SearchVC: UIViewController {
         view.addSubview(searchButton)
         
 //        view.addSubview(searchHistoryTableView)
-        view.addSubview(categoryLabel)
-        view.addSubview(categoryCollectionView)
+        view.addSubview(categoryView)
+        categoryView.addSubview(categoryLabel)
+        categoryView.addSubview(categoryCollectionView)
         
         
         searchTextField.snp.makeConstraints {
@@ -157,16 +159,24 @@ class SearchVC: UIViewController {
 //            $0.right.equalTo(view.snp.right)
 //            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
 //        }
-        categoryLabel.snp.makeConstraints {
+        categoryView.snp.makeConstraints {
             $0.top.equalTo(searchTextField.snp.bottom).offset(20)
             $0.left.equalTo(searchTextField.snp.left)
             $0.right.equalTo(searchTextField.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
         }
+        
+        categoryLabel.snp.makeConstraints {
+            $0.top.equalTo(categoryView.snp.top)
+            $0.left.equalTo(categoryView.snp.left)
+            $0.right.equalTo(categoryView.snp.right)
+        }
+        
         categoryCollectionView.snp.makeConstraints {
             $0.top.equalTo(categoryLabel.snp.bottom).offset(10)
-            $0.left.equalTo(view.snp.left).offset(15)
-            $0.right.equalTo(view.snp.right).inset(15)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+            $0.left.equalTo(categoryView.snp.left)
+            $0.right.equalTo(categoryView.snp.right)
+            $0.bottom.equalTo(categoryView.snp.bottom)
         }
     }
     
