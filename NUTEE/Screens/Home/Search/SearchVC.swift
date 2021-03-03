@@ -13,6 +13,8 @@ class SearchVC: UIViewController {
     
     // MARK: - UI components
     
+    let activityIndicator = UIActivityIndicatorView()
+    
     let searchTextField = UITextField()
     let deleteAllTextButton = UIButton()
     let searchButton = UIButton()
@@ -39,6 +41,7 @@ class SearchVC: UIViewController {
         initView()
         
         makeConstraints()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,6 +84,11 @@ class SearchVC: UIViewController {
     }
     
     func initView(){
+        _ = activityIndicator.then {
+            $0.style = .medium
+            $0.startAnimating()
+        }
+        
         _ = searchTextField.then {
             $0.delegate = self
             
@@ -90,6 +98,8 @@ class SearchVC: UIViewController {
             $0.tintColor = .nuteeGreen
             
             $0.becomeFirstResponder()
+            
+            $0.alpha = 0
         }
         _ = deleteAllTextButton.then {
             $0.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
@@ -109,11 +119,16 @@ class SearchVC: UIViewController {
             $0.alpha = 0.5
             
             $0.addTarget(self, action: #selector(didTapSearchButton), for: .touchUpInside)
+            
+            $0.alpha = 0
         }
         
 //        _ = searchHistoryTableView.then {
 //            $0.searchVC = self
 //        }
+        _ = categoryView.then {
+            $0.alpha = 0
+        }
         
         _ = categoryLabel.then {
             $0.text = "카테고리"
@@ -123,6 +138,8 @@ class SearchVC: UIViewController {
     }
     
     func makeConstraints() {
+        view.addSubview(activityIndicator)
+
         view.addSubview(searchTextField)
         view.addSubview(deleteAllTextButton)
         view.addSubview(searchButton)
@@ -131,7 +148,13 @@ class SearchVC: UIViewController {
         view.addSubview(categoryView)
         categoryView.addSubview(categoryLabel)
         categoryView.addSubview(categoryCollectionView)
-        
+
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.snp.bottom)
+        }
         
         searchTextField.snp.makeConstraints {
             $0.height.equalTo(40)
@@ -256,6 +279,16 @@ class SearchVC: UIViewController {
         }
     }
     
+    func afterFetchCategoryView() {
+        categoryCollectionView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        
+        searchButton.alpha = 1
+        searchTextField.alpha = 1
+        categoryView.alpha = 1
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
     }
@@ -293,4 +326,36 @@ extension SearchVC : UITextFieldDelegate {
         return true
     }
     
+}
+
+// MARK: - Server connect
+
+extension SearchVC {
+    func getCategoriesService(completionHandler: @escaping () -> Void ) {
+        ContentService.shared.getCategories() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.categoryCollectionView.categoryList = res as! [String]
+                self.categoryCollectionView.reloadData()
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "\(message)")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
 }

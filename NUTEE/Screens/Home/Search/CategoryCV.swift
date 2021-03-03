@@ -16,7 +16,7 @@ class CategoryCV: UICollectionView {
     
     // MARK: - Variables and Properties
     
-    var categoryList = ["자유", "연애", "기숙사", "어쩌고", "저쩌고", "길게한번써보기","어쩌구저쩌구카테고리", "기숙사", "어쩌고", "저쩌고", "길게한번써보기","어쩌구저쩌구카테고리", "길게한번써보기","어쩌구저쩌구카테고리", "기숙사","어쩌구저쩌구카테고리", "기숙사"]
+    var categoryList: [String] = []
     
     // MARK: - Life Cycle
     
