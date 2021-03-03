@@ -17,7 +17,10 @@ class SearchVC: UIViewController {
     let deleteAllTextButton = UIButton()
     let searchButton = UIButton()
     
-    let searchHistoryTableView = SearchHistoryTV()
+//    let searchHistoryTableView = SearchHistoryTV()
+    
+    let categoryLabel = UILabel()
+    let categoryCollectionView = CategoryCV()
     
     // MARK: - Variables and Properties
     
@@ -42,9 +45,9 @@ class SearchVC: UIViewController {
         
         hideTabBarController(isHidden: true)
         
-        getSearchHistory(completion: {
-            searchHistoryTableView.reloadData()
-        })
+//        getSearchHistory(completion: {
+//            searchHistoryTableView.reloadData()
+//        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,8 +110,14 @@ class SearchVC: UIViewController {
             $0.addTarget(self, action: #selector(didTapSearchButton), for: .touchUpInside)
         }
         
-        _ = searchHistoryTableView.then {
-            $0.searchVC = self
+//        _ = searchHistoryTableView.then {
+//            $0.searchVC = self
+//        }
+        
+        _ = categoryLabel.then {
+            $0.text = "카테고리"
+            $0.font = .boldSystemFont(ofSize: 16)
+            $0.textColor = .black
         }
     }
     
@@ -117,7 +126,9 @@ class SearchVC: UIViewController {
         view.addSubview(deleteAllTextButton)
         view.addSubview(searchButton)
         
-        view.addSubview(searchHistoryTableView)
+//        view.addSubview(searchHistoryTableView)
+        view.addSubview(categoryLabel)
+        view.addSubview(categoryCollectionView)
         
         
         searchTextField.snp.makeConstraints {
@@ -140,10 +151,21 @@ class SearchVC: UIViewController {
             $0.right.equalTo(searchTextField.snp.right)
         }
         
-        searchHistoryTableView.snp.makeConstraints {
-            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
+//        searchHistoryTableView.snp.makeConstraints {
+//            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
+//            $0.left.equalTo(view.snp.left)
+//            $0.right.equalTo(view.snp.right)
+//            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+//        }
+        categoryLabel.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(20)
+            $0.left.equalTo(searchTextField.snp.left)
+            $0.right.equalTo(searchTextField.snp.right)
+        }
+        categoryCollectionView.snp.makeConstraints {
+            $0.top.equalTo(categoryLabel.snp.bottom).offset(10)
+            $0.left.equalTo(view.snp.left).offset(15)
+            $0.right.equalTo(view.snp.right).inset(15)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
         }
     }

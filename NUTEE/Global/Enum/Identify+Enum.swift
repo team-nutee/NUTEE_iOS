@@ -31,6 +31,7 @@ enum Identify {
     // Search
     static let SearchHistoryTVHeaderView = "SearchHistoryTVHeaderView"
     static let SearchHistoryTVCell = "SearchHistoryTVCell"
+    static let CategoryCVCell = "CategoryCVCell"
     
     // Notification
     static let NotificationTVCell = "NotificationTVCell"
