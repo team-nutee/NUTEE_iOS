@@ -109,8 +109,6 @@ class NewsFeedTVCell: UITableViewCell {
     
     var categoryFeedVC: CategoryFeedVC?
     
-    var delegate: NewsFeedTVCellDelegate?
-    
     var newsPost: PostBody?
     
     // MARK: - Life Cycle
@@ -300,7 +298,13 @@ class NewsFeedTVCell: UITableViewCell {
         
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }
+    
+}
 
+// MARK: - NuteeAlert Action Definition
+
+extension NewsFeedTVCell: NuteeAlertActionDelegate {
+    
     func editPost() {
         let postVC = PostVC()
     
@@ -329,24 +333,27 @@ class NewsFeedTVCell: UITableViewCell {
         })
     }
     
-    func reportPost() {
-        let nuteeReportDialogue = NuteeReportDialogue()
-        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
-        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-        nuteeReportDialogue.okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
-        
-        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
-        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
-        
-        homeVC?.dismiss(animated: true, completion: {
-            self.homeVC?.present(nuteeReportDialogue, animated: true)
-        })
-    }
-    
     @objc func didTapDeletePost() {
         feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: {
             self.feedContainerCVCell?.afterFetchNewsFeed()
         })
+    }
+    
+    func reportPost() {
+        let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
+        
+        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        
+        
+        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
+        
+//        homeVC?.dismiss(animated: true, completion: {
+//            self.homeVC?.present(nuteeReportDialogue, animated: true)
+        homeVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
+//        })
     }
     
     @objc func didTapReportPost() {
@@ -357,11 +364,6 @@ class NewsFeedTVCell: UITableViewCell {
 //            self.dismiss(animated: true)
 //        }
     }
-}
-
-// MARK: - NuteeAlert Action Definition
-
-extension NewsFeedTVCell: NuteeAlertActionDelegate {
     
     func showNuteeAlertSheet() {
         let nuteeAlertSheet = NuteeAlertSheet()
@@ -382,6 +384,7 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertSheetAction(indexPath: Int) {
+        homeVC?.dismiss(animated: true)
         
         if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             switch indexPath {
@@ -401,12 +404,13 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
                 break
             }
         }
-        
     }
     
-}
-
-// MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의
-protocol NewsFeedTVCellDelegate: class {
-    func updateNewsTV() // NewsFeedVC에 정의되어 있는 프로토콜 함수
+    func nuteeAlertDialogueAction(text: String) {
+        homeVC?.dismiss(animated: true)
+        
+        // 포스트 하나 삭제 구현 코드
+        print(text)
+    }
+    
 }
