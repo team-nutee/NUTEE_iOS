@@ -270,14 +270,25 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         detailNewsFeedVC?.dismiss(animated: true, completion: nil)
     }
     
+    func reportComment() {
+        let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        nuteeReportDialogue.okButton.addTarget(self, action: #selector(didTapReportComment), for: .touchUpInside)
+        
+        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
+        
+        detailNewsFeedVC?.dismiss(animated: true, completion: {
+            self.detailNewsFeedVC?.present(nuteeReportDialogue, animated: true)
+        })
+    }
+    
     func deleteComment() {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-        
-        nuteeAlertDialogue.detailNewsFeedVC = self.detailNewsFeedVC
-        nuteeAlertDialogue.commentId = comment?.id
-        nuteeAlertDialogue.addDeleteCommentAction()
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
         
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
@@ -287,7 +298,11 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         })
     }
     
-    func reportComment() {
+    @objc func didTapDeleteComment() {
+        detailNewsFeedVC?.deleteComment(deleteCommentId: comment?.id ?? 0)
+    }
+    
+    @objc func didTapReportComment() {
         // 댓글 신고 기능 구현
     }
 

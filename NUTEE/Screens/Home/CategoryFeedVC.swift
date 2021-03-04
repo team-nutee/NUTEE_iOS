@@ -13,6 +13,14 @@ class CategoryFeedVC: FeedContainerVC {
     // MARK: - Variables and Properties
     
     var category = ""
+    
+    // MARK: - Life Cycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationItem.title = "NUTEE"
+    }
 
     // MARK: - Helper
 

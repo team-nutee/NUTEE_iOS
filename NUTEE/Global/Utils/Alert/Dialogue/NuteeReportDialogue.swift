@@ -25,6 +25,10 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     
     var subViewsInitFlag = true
     
+    var feedContainerCVCell: FeedContainerCVCell?
+
+    var postId: Int?
+    
     //MARK: - Life Cycle
     
     override func viewDidLoad() {

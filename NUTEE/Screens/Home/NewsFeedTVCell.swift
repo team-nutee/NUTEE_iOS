@@ -319,11 +319,7 @@ class NewsFeedTVCell: UITableViewCell {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-        
-        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeAlertDialogue.categoryFeedVC = self.categoryFeedVC
-        nuteeAlertDialogue.postId = newsPost?.id
-        nuteeAlertDialogue.addDeletePostAction()
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
         
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
@@ -337,10 +333,7 @@ class NewsFeedTVCell: UITableViewCell {
         let nuteeReportDialogue = NuteeReportDialogue()
         nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-        
-        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeReportDialogue.postId = newsPost?.id
-        nuteeReportDialogue.addReportPostAction()
+        nuteeReportDialogue.okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
         nuteeReportDialogue.modalTransitionStyle = .crossDissolve
@@ -348,6 +341,21 @@ class NewsFeedTVCell: UITableViewCell {
         homeVC?.dismiss(animated: true, completion: {
             self.homeVC?.present(nuteeReportDialogue, animated: true)
         })
+    }
+    
+    @objc func didTapDeletePost() {
+        feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: {
+            self.feedContainerCVCell?.afterFetchNewsFeed()
+        })
+    }
+    
+    @objc func didTapReportPost() {
+//        if reasonTextField.text == "" {
+//            reasonLabel.alpha = 1.0
+//        } else {
+//            feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: reasonTextField.text ?? "")
+//            self.dismiss(animated: true)
+//        }
     }
 }
 
