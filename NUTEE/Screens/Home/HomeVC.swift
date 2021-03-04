@@ -121,6 +121,7 @@ class HomeVC: UIViewController {
         searchVC.getCategoriesService(completionHandler: {
             searchVC.afterFetchCategoryView()
         })
+        searchVC.homeVC = self
         
         self.navigationController?.pushViewController(searchVC, animated: true)
     }

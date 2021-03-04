@@ -18,6 +18,8 @@ class CategoryCV: UICollectionView {
     
     var categoryList: [String] = []
     
+    var homeVC: HomeVC?
+    
     // MARK: - Life Cycle
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
@@ -87,6 +89,15 @@ extension CategoryCV: UICollectionViewDataSource, UICollectionViewDelegate {
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let categoryFeedVC = CategoryFeedVC()
+        
+        categoryFeedVC.homeVC = self.homeVC
+        categoryFeedVC.category = categoryList[indexPath.row]
+        
+        homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
+    }
 }
 
 // MARK: - Cell Definition
@@ -119,6 +130,7 @@ class CategoryCVCell: UICollectionViewCell {
         _ = categoryButton.then {
             $0.layer.cornerRadius = 14
             $0.backgroundColor = .white
+            $0.isUserInteractionEnabled = false
             
             $0.setBorder(borderColor: .veryLightPink, borderWidth: 1)
         }

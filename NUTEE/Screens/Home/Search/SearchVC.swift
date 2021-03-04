@@ -30,6 +30,8 @@ class SearchVC: UIViewController {
     var searchHistoryObjectList: [NSManagedObject] = []
     var searchHistoryList: [String] = []
     
+    var homeVC: HomeVC?
+    
     // MARK: - Dummy data
      
     // MARK: - Life Cycle
@@ -341,7 +343,7 @@ extension SearchVC {
             switch data {
             case .success(let res):
                 self.categoryCollectionView.categoryList = res as! [String]
-                self.categoryCollectionView.reloadData()
+                self.categoryCollectionView.homeVC = self.homeVC
                 completionHandler()
                 
             case .requestErr(let message):

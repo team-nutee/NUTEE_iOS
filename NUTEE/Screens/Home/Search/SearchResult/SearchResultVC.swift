@@ -8,76 +8,25 @@
 
 import UIKit
 
-import SwiftKeychainWrapper
-
-class SearchResultVC: UIViewController {
-
-    // MARK: - UI components
-    
-    let searchResultCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+class SearchResultVC: FeedContainerVC {
     
     // MARK: - Variables and Properties
     
     var searchResult = ""
-    
-    // MARK: - Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setCollectionView()
-    }
 
     // MARK: - Helper
-    
-    func setCollectionView() {
-        _ = searchResultCollectionView.then {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-            layout.minimumLineSpacing = 0
-            layout.minimumInteritemSpacing = 0
-            
-            $0.collectionViewLayout = layout
-            
-            $0.delegate = self
-            $0.dataSource = self
-            
-            $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
-            
-            view.addSubview($0)
-            $0.snp.makeConstraints {
-                $0.top.equalTo(view.snp.top)
-                $0.left.equalTo(view.snp.left)
-                $0.right.equalTo(view.snp.right)
-                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            }
-            
-            $0.backgroundColor = .white
-            
-            $0.isPagingEnabled = true
-            $0.showsHorizontalScrollIndicator = false
-        }
-    }
 
+    @objc override func updatePosts() {
+        // 글 업데이트 되는 코드 구현
+    }
 }
 
 // MARK: - CollectionView Delegate
-extension SearchResultVC : UICollectionViewDelegate { }
-extension SearchResultVC : UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView:UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: collectionView.frame.height)
-    }
 
-}
-extension SearchResultVC : UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
-    }
+extension SearchResultVC {
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = searchResultCollectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: indexPath) as! FeedContainerCVCell
         
         cell.homeVC = self
         searchPostsService(word: self.searchResult, lastId: 0, limit: 10) { (Post) in
