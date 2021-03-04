@@ -344,18 +344,13 @@ class NewsFeedTVCell: UITableViewCell {
     }
     
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: {
-            self.feedContainerCVCell?.afterFetchNewsFeed()
-        })
+        feedContainerCVCell?.deletePost(postId: newsPost?.id ?? 0)
     }
     
-    @objc func didTapReportPost() {
-//        if reasonTextField.text == "" {
-//            reasonLabel.alpha = 1.0
-//        } else {
-//            feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: reasonTextField.text ?? "")
-//            self.dismiss(animated: true)
-//        }
+    @objc func didTapReportPost(reason: String) {
+        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: reason, completionHandler: {
+            self.homeVC?.dismiss(animated: true)
+        })
     }
 }
 

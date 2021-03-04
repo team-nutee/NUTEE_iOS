@@ -131,19 +131,6 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         dismiss(animated: true, completion: nil)
     }
-    
-    func addReportPostAction() {
-        okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
-    }
-    
-    @objc func didTapReportPost() {
-        if reasonTextField.text == "" {
-            reasonLabel.alpha = 1.0
-        } else {
-            feedContainerCVCell?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
-            self.dismiss(animated: true)
-        }
-    }
 }
 
     // MARK: - KeyBoard

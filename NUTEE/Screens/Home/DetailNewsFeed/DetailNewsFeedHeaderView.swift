@@ -626,20 +626,14 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         })
     }
     
-    
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.postDeleteService(postId: post?.body.id ?? 0, completionHandler: {
-            self.feedContainerCVCell?.afterFetchNewsFeed()
-        })
+        feedContainerCVCell?.deletePost(postId: post?.body.id ?? 0)
     }
     
     @objc func didTapReportPost() {
-//        if reasonTextField.text == "" {
-//            reasonLabel.alpha = 1.0
-//        } else {
-//            feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: reasonTextField.text ?? "")
-//            self.dismiss(animated: true)
-//        }
+        feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: "reason", completionHandler: {
+            self.detailNewsFeedVC?.dismiss(animated: true)
+        })
     }
     
 }

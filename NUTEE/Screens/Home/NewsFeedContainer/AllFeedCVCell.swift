@@ -10,40 +10,28 @@ import UIKit
 import Foundation
 
 class AllFeedCVCell: FeedContainerCVCell {
-    override func fetchNewsFeed() {
-        
-        getAllPostsService(lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.afterFetchNewsFeed()
-        }
-    }
     
-    override func loadMorePosts(lastId: Int) {
-        if postContent?.count != 0 {
-            getAllPostsService(lastId: lastId, limit: 10) { (Post) in
-                self.postContent?.append(contentsOf: Post.body)
-                self.newsFeedTableView.reloadData()
-                self.newsFeedTableView.tableFooterView = nil
-            }
-        } else {
-            print("더 이상 불러올 게시글이 없습니다.")
-        }
-    }
-    
-    override func setRefresh() {
-        newsFeedTableView.addSubview(refreshControl)
-        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
-    }
-    
-    @objc override func updatePosts() {
-        getAllPostsService(lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.newsFeedTableView.reloadData()
+    override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.getAllPosts(lastId: lastId, limit: limit) { responsedata in
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.refreshControl.endRefreshing()
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.newsPost = response
+                completionHandler(self.newsPost!)
+                
+            case .requestErr(let message):
+                self.setFetchNewsFeedFail("\(message)")
+                
+            case .pathErr:
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
+                
+            case .networkFail :
+                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
             }
         }
     }
-    
 }

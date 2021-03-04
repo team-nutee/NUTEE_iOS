@@ -87,13 +87,40 @@ class FeedContainerCVCell : UICollectionViewCell {
         }
     }
 
-    func setRefresh() { }
+    func setRefresh() {
+        newsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
+    }
     
-    @objc func updatePosts() { }
+    @objc func updatePosts() {
+        getPostsService(lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.newsFeedTableView.reloadData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
     
-    func loadMorePosts(lastId: Int) { }
+    func loadMorePosts(lastId: Int) {
+        if postContent?.count != 0 {
+            getPostsService(lastId: lastId, limit: 10) { (Post) in
+                self.postContent?.append(contentsOf: Post.body)
+                self.newsFeedTableView.reloadData()
+                self.newsFeedTableView.tableFooterView = nil
+            }
+        } else {
+            print("더 이상 불러올 게시글이 없습니다.")
+        }
+    }
     
-    func fetchNewsFeed() { }
+    func fetchNewsFeed() {
+        getPostsService(lastId: 0, limit: 10) { (Post) in
+            self.postContent = Post.body
+            self.afterFetchNewsFeed()
+        }
+    }
     
     func setFetchNewsFeedFail(_ message: String) {
         refreshControl.endRefreshing()
@@ -112,6 +139,14 @@ class FeedContainerCVCell : UICollectionViewCell {
         activityIndicator.stopAnimating()
         newsFeedTableView.isHidden = false
     }
+    
+    func deletePost(postId: Int) {
+        postDeleteService(postId: postId, completionHandler: {
+            self.fetchNewsFeed()
+        })
+    }
+    
+    func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) { }
 }
 
 // MARK: - TableView
@@ -212,129 +247,6 @@ extension FeedContainerCVCell : UITableViewDataSource {
 
 extension FeedContainerCVCell{
     
-    func getAllPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getAllPosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-            }
-        }
-    }
-    
-    func getFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getFavoritePosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
-                
-            case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-            }
-        }
-    }
-    
-    func getMyPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        UserService.shared.getMyPosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
-
-            case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-
-            }
-        }
-    }
-    
-    func getMyCommentPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        UserService.shared.getMyCommentPosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
-
-            case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-
-            }
-        }
-    }
-    
-    func getMyFavoritePostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        UserService.shared.getMyFavoritePosts(lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
-                
-            case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
-
-            case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-
-            }
-        }
-    }
-    
     // MARK: - Delete post
     func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
         ContentService.shared.deletePost(postId) { (responsedata) in
@@ -359,7 +271,7 @@ extension FeedContainerCVCell{
     }
     
     // MARK: - Report post
-    func reportPost(postId: Int, content: String) {
+    func reportPost(postId: Int, content: String, completionHandler: @escaping () -> Void) {
         ContentService.shared.reportPost(postId, content) { (responsedata) in
 
             switch responsedata {
