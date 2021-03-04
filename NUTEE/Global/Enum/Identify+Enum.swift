@@ -20,6 +20,7 @@ enum Identify {
     static let FavoriteFeedCVCell = "FavoriteFeedCVCell"
     static let MajorFeedCVCell = "MajorFeedCVCell"
     static let AllFeedCVCell = "AllFeedCVCell"
+    static let CategoryFeedCVCell = "CategoryFeedCVCell"
     
     static let NewsFeedTVCell = "NewsFeedTVCell"
     
@@ -31,6 +32,8 @@ enum Identify {
     // Search
     static let SearchHistoryTVHeaderView = "SearchHistoryTVHeaderView"
     static let SearchHistoryTVCell = "SearchHistoryTVCell"
+    static let SearchResultFeedCVCell = "SearchResultFeedCVCell"
+    
     static let CategoryCVCell = "CategoryCVCell"
     
     // Notification

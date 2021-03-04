@@ -39,6 +39,8 @@ class FeedContainerVC: UIViewController {
             $0.dataSource = self
             
             $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
+            $0.register(CategoryFeedCVCell.self, forCellWithReuseIdentifier: Identify.CategoryFeedCVCell)
+            $0.register(SearchResultFeedCVCell.self, forCellWithReuseIdentifier: Identify.SearchResultFeedCVCell)
             
             view.addSubview($0)
             $0.snp.makeConstraints {

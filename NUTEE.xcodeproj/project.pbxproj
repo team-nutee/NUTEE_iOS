@@ -24,6 +24,8 @@
 		45C92AF725878FFA00828E8A /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92AF625878FFA00828E8A /* SignIn.swift */; };
 		45C92B012587993400828E8A /* LoadingHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92B002587993400828E8A /* LoadingHUD.swift */; };
 		45C92B0625879A3900828E8A /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C92B0525879A3900828E8A /* Splash.swift */; };
+		45CD1BEB25F116BC00384498 /* CategoryFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CD1BEA25F116BC00384498 /* CategoryFeedCVCell.swift */; };
+		45CD1BF025F11B0300384498 /* SearchResultFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CD1BEF25F11B0300384498 /* SearchResultFeedCVCell.swift */; };
 		45D182112594B35B002810D0 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182102594B35B002810D0 /* User.swift */; };
 		45D182192594B70D002810D0 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D182182594B70D002810D0 /* UserService.swift */; };
 		45E6903225BA8B73007FFEE7 /* FavoriteFeedCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */; };
@@ -160,6 +162,8 @@
 		45C92AF625878FFA00828E8A /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		45C92B002587993400828E8A /* LoadingHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingHUD.swift; sourceTree = "<group>"; };
 		45C92B0525879A3900828E8A /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
+		45CD1BEA25F116BC00384498 /* CategoryFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryFeedCVCell.swift; sourceTree = "<group>"; };
+		45CD1BEF25F11B0300384498 /* SearchResultFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultFeedCVCell.swift; sourceTree = "<group>"; };
 		45D182102594B35B002810D0 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		45D182182594B70D002810D0 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		45E6903125BA8B73007FFEE7 /* FavoriteFeedCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteFeedCVCell.swift; sourceTree = "<group>"; };
@@ -474,8 +478,9 @@
 				D51A442A24C87B9600B0FC6E /* NewsFeedTVCell.swift */,
 				5E8BA69024C6D24400A58F43 /* Search */,
 				D58C93D724CAE4FA005570D4 /* DetailNewsFeed */,
-				455AA63325D7959E00BDE11D /* CategoryFeedVC.swift */,
 				4542A5FA25F0AE2E0097A423 /* FeedContainerVC.swift */,
+				455AA63325D7959E00BDE11D /* CategoryFeedVC.swift */,
+				45CD1BEA25F116BC00384498 /* CategoryFeedCVCell.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -758,6 +763,7 @@
 			isa = PBXGroup;
 			children = (
 				5E8BA6BB24C6D60D00A58F43 /* SearchResultVC.swift */,
+				45CD1BEF25F11B0300384498 /* SearchResultFeedCVCell.swift */,
 			);
 			path = SearchResult;
 			sourceTree = "<group>";
@@ -1000,6 +1006,7 @@
 				D527E85425A18F89007D8585 /* HighlightedButton.swift in Sources */,
 				D5A4F3F225B1C21200AC3DCD /* PlaceholderTextView.swift in Sources */,
 				D54FE03924F180DC00BA0361 /* NicknameVC.swift in Sources */,
+				45CD1BEB25F116BC00384498 /* CategoryFeedCVCell.swift in Sources */,
 				453ACDC125EE876A001B1E06 /* TagsLayout.swift in Sources */,
 				D12D8BD824D14714005F4580 /* Font+Enum.swift in Sources */,
 				455908302564FBE9009A5F5C /* FindVC.swift in Sources */,
@@ -1064,6 +1071,7 @@
 				D12D8BEA24D14C90005F4580 /* Date+Extension.swift in Sources */,
 				4538F87D25A48C17004515C7 /* PostContent.swift in Sources */,
 				D5ABA78025BC3255006C64F9 /* UserRecommendFeedCVCell.swift in Sources */,
+				45CD1BF025F11B0300384498 /* SearchResultFeedCVCell.swift in Sources */,
 				D5C9C32024DFAC05006621D6 /* SearchHistoryTV.swift in Sources */,
 				D5CC689024E6D9BE00274451 /* TermsAndConditionsVC.swift in Sources */,
 				D56CAD9425C5A5D200827BAA /* MenuBarCVCell.swift in Sources */,

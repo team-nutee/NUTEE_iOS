@@ -25,7 +25,6 @@ class FeedContainerCVCell : UICollectionViewCell {
     // MARK: - Variables and Properties
     
     var homeVC: UIViewController?
-    var category: String?
     
     var newsPost: Post? // 초기에 전부 다 받아오는 애
     var post: PostBody? // Body 요소 한 개
