@@ -192,10 +192,10 @@ class NuteeAlertDialogue: UIViewController {
     
     @objc func didTapDeletePost() {
         feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
-            if self.categoryFeedVC != nil {
-                self.categoryFeedVC?.fetchCategoryFeed()
-                return
-            }
+//            if self.categoryFeedVC != nil {
+//                self.categoryFeedVC?.fetchCategoryFeed()
+//                return
+//            }
             self.feedContainerCVCell?.fetchNewsFeed()
         })
     }

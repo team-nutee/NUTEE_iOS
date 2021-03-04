@@ -294,9 +294,9 @@ class NewsFeedTVCell: UITableViewCell {
     @objc func didTapCategoryButton() {
         let categoryFeedVC = CategoryFeedVC()
         
-        categoryFeedVC.feedContainerCVCell = self.feedContainerCVCell
-        categoryFeedVC.homeVC = self.homeVC
-        categoryFeedVC.category = newsPost?.category
+        //categoryFeedVC.feedContainerCVCell = self.feedContainerCVCell
+        //categoryFeedVC.homeVC = self.homeVC
+        categoryFeedVC.category = newsPost?.category ?? ""
         
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }

@@ -17,7 +17,17 @@ class SearchResultVC: FeedContainerVC {
     // MARK: - Helper
 
     @objc override func updatePosts() {
-        // 글 업데이트 되는 코드 구현
+        let index = IndexPath(item: 1, section: 1)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.FeedContainerCVCell, for: index) as! FeedContainerCVCell
+        
+        searchPostsService(word: searchResult, lastId: 0, limit: 10) { (Post) in
+            cell.postContent = Post.body
+            cell.newsFeedTableView.reloadData() // 이 부분이 안됨
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        }
     }
 }
 
@@ -53,8 +63,8 @@ extension SearchResultVC {
                 let response = res as! Post
                 completionHandler(response)
 
-            case .requestErr(_):
-                self.simpleNuteeAlertDialogue(title: "요청 오류 발생", message: "피드를 조회하지 못했습니다")
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "요청 오류 발생", message: "\(message)")
 
             case .pathErr:
                 self.simpleNuteeAlertDialogue(title: "서버 오류 발생", message: "피드를 조회하지 못했습니다")

@@ -93,7 +93,7 @@ extension CategoryCV: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let categoryFeedVC = CategoryFeedVC()
         
-        categoryFeedVC.homeVC = self.homeVC
+        //categoryFeedVC.homeVC = self.homeVC
         categoryFeedVC.category = categoryList[indexPath.row]
         
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
