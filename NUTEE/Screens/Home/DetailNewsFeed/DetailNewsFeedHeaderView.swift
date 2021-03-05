@@ -614,28 +614,20 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     func reportPost() {
         let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
+        
         nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-        nuteeReportDialogue.okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
         nuteeReportDialogue.modalTransitionStyle = .crossDissolve
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeReportDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
     }
     
     @objc func didTapDeletePost() {
         feedContainerCVCell?.deletePost(postId: post?.body.id ?? 0)
     }
-    
-    @objc func didTapReportPost() {
-        feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: "reason", completionHandler: {
-            self.detailNewsFeedVC?.dismiss(animated: true)
-        })
-    }
-    
 }
 
 // MARK: - NuteeAlert Action Definition
@@ -681,6 +673,14 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
             }
         }
         
+    }
+    
+    func nuteeAlertDialogueAction(text: String) {
+        detailNewsFeedVC?.dismiss(animated: true)
+        
+        feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
+            self.detailNewsFeedVC?.dismiss(animated: true)
+        })
     }
     
 }
