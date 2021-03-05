@@ -1,18 +1,19 @@
 //
-//  AllPostsFeedCVCell.swift
+//  CategoryFeedCVCell.swift
 //  NUTEE
 //
-//  Created by eunwoo on 2021/01/22.
+//  Created by eunwoo on 2021/03/04.
 //  Copyright © 2021 Nutee. All rights reserved.
 //
 
-import UIKit
 import Foundation
 
-class AllFeedCVCell: FeedContainerCVCell {
+class CategoryFeedCVCell: FeedContainerCVCell {
+    
+    var category = ""
     
     override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.getAllPosts(lastId: lastId, limit: limit) { responsedata in
+        ContentService.shared.getCategoryPosts(category: self.category, lastId: lastId, limit: limit) { responsedata in
             
             switch responsedata {
             case .success(let res):
@@ -27,10 +28,11 @@ class AllFeedCVCell: FeedContainerCVCell {
                 self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
+                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
+
             case .networkFail :
                 self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+
             }
         }
     }

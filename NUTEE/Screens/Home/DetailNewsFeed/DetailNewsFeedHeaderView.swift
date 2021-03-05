@@ -593,45 +593,37 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let navigationController = UINavigationController(rootViewController: postVC)
         navigationController.modalPresentationStyle = .currentContext
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.tabBarController?.present(navigationController, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(navigationController, animated: true)
     }
     
     func deletePost() {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-        
-        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeAlertDialogue.postId = post?.body.id
-        nuteeAlertDialogue.addDeletePostAction()
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
         
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
     
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeAlertDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
     }
     
     func reportPost() {
         let nuteeReportDialogue = NuteeReportDialogue()
-        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
-        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
         
-        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeReportDialogue.postId = post?.body.id
-        nuteeReportDialogue.addReportPostAction()
+        nuteeReportDialogue.dialogueData = ["게시물 신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
         nuteeReportDialogue.modalTransitionStyle = .crossDissolve
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeReportDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
     }
     
+    @objc func didTapDeletePost() {
+        feedContainerCVCell?.deletePost(postId: post?.body.id ?? 0)
+    }
 }
 
 // MARK: - NuteeAlert Action Definition
@@ -677,6 +669,14 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
             }
         }
         
+    }
+    
+    func nuteeAlertDialogueAction(text: String) {
+        detailNewsFeedVC?.dismiss(animated: true)
+        
+        feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
+            self.detailNewsFeedVC?.dismiss(animated: true)
+        })
     }
     
 }

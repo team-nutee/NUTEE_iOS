@@ -20,10 +20,12 @@ class NuteeReportDialogue: NuteeAlertDialogue {
     
     var windowViewBottomConstraint: Constraint?
     
-    var windowViewBottomOriginValue: CGFloat?
-    var windowViewBottomTerm: CGFloat?
+    var windowViewBottomOriginalPos: CGFloat = 0
+    var minimumSpace: CGFloat = 20
     
-    var subViewsInitFlag = true
+    var feedContainerCVCell: FeedContainerCVCell?
+
+    var postId: Int?
     
     //MARK: - Life Cycle
     
@@ -32,33 +34,30 @@ class NuteeReportDialogue: NuteeAlertDialogue {
         
         initView()
         makeConstraints()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewDidLoad()
         
         addKeyboardNotification()
-        self.reasonTextField.becomeFirstResponder()
+        
+        reasonTextField.becomeFirstResponder()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if subViewsInitFlag { // 키보드가 올라올 때마다 실행되어 windowView 바텀 값이 계속 커지는 상황을 방지하기 위한 플래그
-            let windowViewHeight = windowView.bounds.height
-            
-            windowViewBottomConstraint?.layoutConstraints[0].constant += (windowViewHeight / 2)
-            windowViewBottomOriginValue = windowViewBottomConstraint?.layoutConstraints[0].constant ?? 0
-            windowViewBottomTerm = windowViewHeight / 2
-            
-            subViewsInitFlag = false
-        }
+        let deviceHeight = UIScreen.main.bounds.height
+        let windowViewHeight = windowView.bounds.height
+        
+        windowViewBottomOriginalPos = deviceHeight / 2 - windowViewHeight / 2
     }
     
     // MARK: - Helper
     
     override func initView() {
         super.initView()
+        
+        _ = okButton.then {
+            $0.removeTarget(self, action: #selector(dismissAction), for: .touchUpInside)
+            $0.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
+        }
         
         _ = reasonView.then {
             $0.backgroundColor = .white
@@ -69,11 +68,10 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             $0.placeholder = "내용을 입력해주세요"
             $0.font = .systemFont(ofSize: 14)
             $0.tintColor = .nuteeGreen
-            
         }
         _ = reasonLabel.then {
             $0.text = "신고 사유를 입력해주세요"
-            $0.font = .systemFont(ofSize: 11)
+            $0.font = .systemFont(ofSize: 10)
             $0.textColor = .red
             
             $0.alpha = 0
@@ -91,11 +89,10 @@ class NuteeReportDialogue: NuteeAlertDialogue {
         windowView.snp.remakeConstraints {
             $0.width.equalTo(windowWidth)
             
-            let deviceHeight = UIScreen.main.bounds.height
-            windowViewBottomConstraint = $0.bottom.equalTo(view.snp.bottom).inset(deviceHeight / 2).priority(999).constraint
             $0.centerX.equalTo(view)
+            windowViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
         }
-
+        
         reasonView.snp.makeConstraints {
             $0.top.equalTo(contentTextView.snp.bottom).offset(10)
             $0.left.equalTo(contentTextView.snp.left)
@@ -108,7 +105,7 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             $0.bottom.equalTo(reasonView.snp.bottom).inset(5)
         }
         reasonLabel.snp.makeConstraints {
-            $0.top.equalTo(reasonView.snp.bottom)
+            $0.top.equalTo(reasonView.snp.bottom).offset(1)
             $0.left.equalTo(contentTextView.snp.left)
             $0.right.equalTo(contentTextView.snp.right)
         }
@@ -121,23 +118,20 @@ class NuteeReportDialogue: NuteeAlertDialogue {
             $0.right.equalTo(contentTextView.snp.right)
             $0.bottom.equalTo(windowView.snp.bottom).inset(20)
         }
-      
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func addReportPostAction() {
-        okButton.addTarget(self, action: #selector(didTapReportPost), for: .touchUpInside)
+        view.endEditing(true)
     }
     
     @objc func didTapReportPost() {
-        if reasonTextField.text == "" {
-            reasonLabel.alpha = 1.0
+        let reportReason = reasonTextField.text ?? ""
+        if reportReason != "" {
+            nuteeAlertActionDelegate?.nuteeAlertDialogueAction(text: reportReason)
         } else {
-            feedContainerCVCell?.reportPost(postId: postId ?? 0, content: reasonTextField.text ?? "")
-            self.dismiss(animated: true)
+            UIView.animate(withDuration: 0.2) { [self] in
+                reasonLabel.alpha = 1.0
+            }
         }
     }
 }
@@ -157,14 +151,20 @@ extension NuteeReportDialogue {
             let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
             let keyboardHeight = keyboardFrame.height
             
-            if windowViewBottomOriginValue ?? 0 < keyboardHeight {
-                windowViewBottomConstraint?.layoutConstraints[0].constant = (windowViewBottomOriginValue ?? 0) - (windowViewBottomTerm ?? 0)
-            }
             
-            self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
-            })
+            let targetContraints = abs(windowViewBottomConstraint?.layoutConstraints[0].constant ?? 0)
+            let baseBottomConstraints = keyboardHeight + minimumSpace
+            
+            if targetContraints < baseBottomConstraints {
+                windowViewBottomConstraint?.layoutConstraints[0].constant = -baseBottomConstraints
+                
+                self.view.setNeedsLayout()
+                UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: { [self] in
+                    if targetContraints != 0 {
+                        view.layoutIfNeeded()
+                    }
+                })
+            }
         }
     }
 
@@ -173,13 +173,11 @@ extension NuteeReportDialogue {
             let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
             let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
             
-            if windowViewBottomOriginValue != nil {
-                windowViewBottomConstraint?.layoutConstraints[0].constant = (windowViewBottomOriginValue ?? 0)
-            }
-
+            windowViewBottomConstraint?.layoutConstraints[0].constant = -windowViewBottomOriginalPos
+            
             self.view.setNeedsLayout()
-            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-                self.view.layoutIfNeeded()
+            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: { [self] in
+                view.layoutIfNeeded()
             })
         }
     }

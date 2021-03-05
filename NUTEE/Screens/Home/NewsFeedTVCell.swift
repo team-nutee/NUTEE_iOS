@@ -109,8 +109,6 @@ class NewsFeedTVCell: UITableViewCell {
     
     var categoryFeedVC: CategoryFeedVC?
     
-    var delegate: NewsFeedTVCellDelegate?
-    
     var newsPost: PostBody?
     
     // MARK: - Life Cycle
@@ -294,13 +292,17 @@ class NewsFeedTVCell: UITableViewCell {
     @objc func didTapCategoryButton() {
         let categoryFeedVC = CategoryFeedVC()
         
-        categoryFeedVC.feedContainerCVCell = self.feedContainerCVCell
-        categoryFeedVC.homeVC = self.homeVC
-        categoryFeedVC.category = newsPost?.category
+        categoryFeedVC.category = newsPost?.category ?? ""
         
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }
+    
+}
 
+// MARK: - NuteeAlert Action Definition
+
+extension NewsFeedTVCell: NuteeAlertActionDelegate {
+    
     func editPost() {
         let postVC = PostVC()
     
@@ -310,50 +312,39 @@ class NewsFeedTVCell: UITableViewCell {
         let navigationController = UINavigationController(rootViewController: postVC)
         navigationController.modalPresentationStyle = .currentContext
         
-        homeVC?.dismiss(animated: true, completion: {
-            self.homeVC?.tabBarController?.present(navigationController, animated: true)
-        })
+        homeVC?.tabBarController?.present(navigationController, animated: true)
     }
     
     func deletePost() {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
         nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-        
-        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeAlertDialogue.categoryFeedVC = self.categoryFeedVC
-        nuteeAlertDialogue.postId = newsPost?.id
-        nuteeAlertDialogue.addDeletePostAction()
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
         
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
     
-        homeVC?.dismiss(animated: true, completion: {
-            self.homeVC?.present(nuteeAlertDialogue, animated: true)
+        homeVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
+    }
+    
+    @objc func didTapDeletePost() {
+        feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: {
+            self.feedContainerCVCell?.afterFetchNewsFeed()
         })
     }
     
     func reportPost() {
         let nuteeReportDialogue = NuteeReportDialogue()
-        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
-        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
         
-        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
-        nuteeReportDialogue.postId = newsPost?.id
-        nuteeReportDialogue.addReportPostAction()
+        nuteeReportDialogue.dialogueData = ["게시물 신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
         nuteeReportDialogue.modalTransitionStyle = .crossDissolve
         
-        homeVC?.dismiss(animated: true, completion: {
-            self.homeVC?.present(nuteeReportDialogue, animated: true)
-        })
+        homeVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
     }
-}
-
-// MARK: - NuteeAlert Action Definition
-
-extension NewsFeedTVCell: NuteeAlertActionDelegate {
     
     func showNuteeAlertSheet() {
         let nuteeAlertSheet = NuteeAlertSheet()
@@ -374,6 +365,7 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertSheetAction(indexPath: Int) {
+        homeVC?.dismiss(animated: true)
         
         if newsPost?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             switch indexPath {
@@ -393,12 +385,14 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
                 break
             }
         }
-        
     }
     
-}
-
-// MARK: - NewsFeedVC와 통신하기 위한 프로토콜 정의
-protocol NewsFeedTVCellDelegate: class {
-    func updateNewsTV() // NewsFeedVC에 정의되어 있는 프로토콜 함수
+    func nuteeAlertDialogueAction(text: String) {
+        homeVC?.dismiss(animated: true)
+        
+        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: {
+            self.homeVC?.dismiss(animated: true)
+        })
+    }
+    
 }
