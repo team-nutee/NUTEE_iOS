@@ -266,22 +266,19 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     
     func editComment() {
         detailNewsFeedVC?.setEditCommentMode(editCommentId: comment?.id ?? 0, content: comment?.content ?? "")
-    
-        detailNewsFeedVC?.dismiss(animated: true, completion: nil)
     }
     
     func reportComment() {
         let nuteeReportDialogue = NuteeReportDialogue()
-        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
+        
+        nuteeReportDialogue.dialogueData = ["댓글 신고하기", "신고 사유를 입력해주세요."]
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-        nuteeReportDialogue.okButton.addTarget(self, action: #selector(didTapReportComment), for: .touchUpInside)
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
         nuteeReportDialogue.modalTransitionStyle = .crossDissolve
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeReportDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
     }
     
     func deleteComment() {
@@ -293,17 +290,11 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeAlertDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
     }
     
     @objc func didTapDeleteComment() {
         detailNewsFeedVC?.deleteComment(deleteCommentId: comment?.id ?? 0)
-    }
-    
-    @objc func didTapReportComment() {
-        // 댓글 신고 기능 구현
     }
 
 }
@@ -331,6 +322,7 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertSheetAction(indexPath: Int) {
+        detailNewsFeedVC?.dismiss(animated: true, completion: nil)
         
         if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             switch indexPath {
@@ -350,6 +342,12 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
                 break
             }
         }
+    }
+    
+    func nuteeAlertDialogueAction(text: String) {
+        detailNewsFeedVC?.dismiss(animated: true, completion: nil)
+
+        // 댓글 신고 기능 구현
     }
 }
 

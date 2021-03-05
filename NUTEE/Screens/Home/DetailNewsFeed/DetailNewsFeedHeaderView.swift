@@ -593,9 +593,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         let navigationController = UINavigationController(rootViewController: postVC)
         navigationController.modalPresentationStyle = .currentContext
         
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.tabBarController?.present(navigationController, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(navigationController, animated: true)
     }
     
     func deletePost() {
@@ -607,16 +605,14 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
     
-        detailNewsFeedVC?.dismiss(animated: true, completion: {
-            self.detailNewsFeedVC?.present(nuteeAlertDialogue, animated: true)
-        })
+        detailNewsFeedVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
     }
     
     func reportPost() {
         let nuteeReportDialogue = NuteeReportDialogue()
         nuteeReportDialogue.nuteeAlertActionDelegate = self
         
-        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.dialogueData = ["게시물 신고하기", "신고 사유를 입력해주세요."]
         nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
         
         nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
