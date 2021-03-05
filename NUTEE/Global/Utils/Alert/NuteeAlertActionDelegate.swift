@@ -16,6 +16,8 @@ protocol NuteeAlertActionDelegate: class {
     
     func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode)
     
+    func nuteeAlertDialogueAction(text: String)
+    
 }
 
 // To make function 'optional' (make default implementation)
@@ -24,5 +26,7 @@ extension NuteeAlertActionDelegate {
     func nuteeAlertSheetAction(indexPath: Int) { }
     
     func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode) { }
+    
+    func nuteeAlertDialogueAction(text: String) { }
     
 }

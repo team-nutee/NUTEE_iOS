@@ -182,7 +182,6 @@ extension FeedContainerCVCell : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
         cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
-        cell.categoryButton.isUserInteractionEnabled = true
         
         post = postContent?[indexPath.row]
         

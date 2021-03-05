@@ -13,9 +13,7 @@ class FeedContainerVC: UIViewController {
     // MARK: - UI components
     
     let activityIndicator = UIActivityIndicatorView()
-        
-    let refreshControl = UIRefreshControl()
-    
+            
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     // MARK: - Variables and Properties
@@ -27,8 +25,6 @@ class FeedContainerVC: UIViewController {
         
         initView()
         makeConstraint()
-        
-        setRefresh()
     }
 
     // MARK: - Helper
@@ -51,8 +47,6 @@ class FeedContainerVC: UIViewController {
             }
             
             $0.backgroundColor = .white
-            
-            $0.alwaysBounceVertical = true
         }
         
         _ = activityIndicator.then {
@@ -79,16 +73,6 @@ class FeedContainerVC: UIViewController {
             $0.bottom.equalTo(collectionView.snp.bottom)
         }
     }
-    
-    func setRefresh() {
-        collectionView.addSubview(refreshControl)
-        refreshControl.addTarget(self, action: #selector(updatePosts), for: UIControl.Event.valueChanged)
-    }
-
-    @objc func updatePosts() {
-        // 글 업데이트 되는 코드 구현
-    }
-
 }
 
 // MARK: - CollectionView Delegate

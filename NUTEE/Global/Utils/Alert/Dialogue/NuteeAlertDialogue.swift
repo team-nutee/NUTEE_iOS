@@ -32,6 +32,8 @@ class NuteeAlertDialogue: UIViewController {
 //    var postId: Int?
 //    var commentId: Int?
     
+    weak var nuteeAlertActionDelegate: NuteeAlertActionDelegate?
+    
     var windowWidth: CGFloat = 245
     
     var dialogueData = ["", ""]

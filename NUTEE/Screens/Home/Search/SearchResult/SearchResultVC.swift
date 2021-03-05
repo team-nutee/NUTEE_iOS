@@ -9,16 +9,14 @@
 import UIKit
 
 class SearchResultVC: FeedContainerVC {
-    
-    // MARK: - Variables and Properties
-    
-    var searchResult = ""
+        
+    var searchResult: String?
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.SearchResultFeedCVCell, for: indexPath) as! SearchResultFeedCVCell
         
+        cell.word = self.searchResult ?? ""
         cell.homeVC = self
-        cell.word = self.searchResult
         cell.getPostsService(lastId: 0, limit: 10) { (Post) in
             cell.postContent = Post.body
             cell.afterFetchNewsFeed()
