@@ -345,9 +345,6 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        detailNewsFeedVC?.dismiss(animated: true, completion: nil)
-
-        // 댓글 신고 기능 구현
         reportComment(postId: postId ?? 0, commentId: comment?.id ?? 0, content: text, completionHandler: {
             self.detailNewsFeedVC?.dismiss(animated: true)
         })
@@ -408,7 +405,7 @@ extension ReplyTVCell {
 
             switch responsedata {
             case .success(_):
-                break
+                completionHandler()
 
             case .requestErr(_):
                 print("request error")

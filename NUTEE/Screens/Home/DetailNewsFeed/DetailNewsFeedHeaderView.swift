@@ -673,8 +673,6 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        detailNewsFeedVC?.dismiss(animated: true)
-        
         feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
             self.detailNewsFeedVC?.dismiss(animated: true)
         })

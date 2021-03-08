@@ -388,8 +388,6 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        homeVC?.dismiss(animated: true)
-        
         feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: {
             self.homeVC?.dismiss(animated: true)
         })
