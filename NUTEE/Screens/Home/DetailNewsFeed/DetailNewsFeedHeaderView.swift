@@ -649,6 +649,7 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertSheetAction(indexPath: Int) {
+        detailNewsFeedVC?.dismiss(animated: true)
         
         if post?.body.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             switch indexPath {

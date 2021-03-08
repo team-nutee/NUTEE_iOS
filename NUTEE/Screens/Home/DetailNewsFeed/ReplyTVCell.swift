@@ -132,7 +132,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         }
         nicknameLabel.snp.makeConstraints {
             $0.top.equalTo(profileImageView.snp.top)
-            $0.left.equalTo(profileImageView.snp.right).offset(15)
+            $0.left.equalTo(profileImageView.snp.right).offset(leftAndRightSpace)
         }
         
         dateLabel.snp.makeConstraints {
