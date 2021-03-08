@@ -756,23 +756,29 @@ struct UserService {
             switch response.result {
             
             case .success:
-                if let status =
-                    response.response?.statusCode {
-                    switch status {
-                    case 200:
-                        completion(.success("관심사 변경 성공"))
-                    case 401:
-                        print("실패 401")
-                        completion(.pathErr)
-                    case 500:
-                        print("실패 500")
-                        completion(.serverErr)
-                    default:
-                        completion(.requestErr("해당하는 관심주제 카테고리가 없습니다."))
-                        break
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200:
+                            do {
+                                let decoder = JSONDecoder()
+                                let responseCategory = try decoder.decode(ResponseChangeCategory.self, from: value)
+                            completion(.success(responseCategory))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            completion(.requestErr("해당하는 관심주제 카테고리가 없습니다."))
+                            break
+                        }
                     }
                 }
-                
             case .failure(let err):
                 print(err.localizedDescription)
                 completion(.networkFail)
