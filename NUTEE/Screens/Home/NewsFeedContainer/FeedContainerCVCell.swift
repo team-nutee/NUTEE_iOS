@@ -115,9 +115,9 @@ class FeedContainerCVCell : UICollectionViewCell {
     }
     
     func fetchNewsFeed() {
-        getPostsService(lastId: 0, limit: 10) { (Post) in
-            self.postContent = Post.body
-            self.afterFetchNewsFeed()
+        getPostsService(lastId: 0, limit: 10) { [self] (Post) in
+            postContent = Post.body
+            afterFetchNewsFeed()
         }
     }
     

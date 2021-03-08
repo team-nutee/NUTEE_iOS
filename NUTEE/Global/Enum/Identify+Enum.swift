@@ -27,6 +27,7 @@ enum Identify {
     // Detail NewsFeed
     static let DetailNewsFeedHeaderView = "DetailNewsFeedHeaderView"
     static let ReplyTVCell = "ReplyTVCell"
+    static let ReReplyTVCell = "ReReplyTVCell"
     static let NoReplyFooterView = "NoReplyFooterView"
     
     // Search

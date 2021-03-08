@@ -15,12 +15,12 @@ struct Comment: Codable {
 
 // MARK: - Body
 struct CommentBody: Codable {
-    let id: Int
-    let content: String
-    let createdAt, updatedAt: String
-    let likers: [Liker]?
-    let reComment: [CommentBody]?
-    let user: UserBody?
+    var id: Int
+    var content: String
+    var createdAt, updatedAt: String
+    var likers: [Liker]?
+    var reComment: [CommentBody]?
+    var user: UserBody?
     
     enum CodingKeys: String, CodingKey {
         case id, content, createdAt, updatedAt
