@@ -16,7 +16,8 @@ class SettingCategoryVC: SignUpCategoryVC {
     
     // MARK: - Variables and Properties
     
-    var originalCategoryList: [String] = []
+    var originalUserInfo: User?
+    
     var originalCategoryCheckList: [Bool] = []
     
     // MARK: - Dummy data
@@ -104,7 +105,8 @@ class SettingCategoryVC: SignUpCategoryVC {
         getCategoriesService(completionHandler: { [self] fetchedCategoryList in
             var checkList: [Bool] = []
             for categoryList in fetchedCategoryList {
-                if originalCategoryList.contains(categoryList) == true {
+//                if originalCategoryList.contains(categoryList) == true {
+                if originalUserInfo?.body.interests.contains(categoryList) == true {
                     checkList.append(true)
                 } else {
                     checkList.append(false)
@@ -132,6 +134,10 @@ class SettingCategoryVC: SignUpCategoryVC {
         
         changeInterestsService(interests: selectedCategoryList, completionHandler: { [self] in
             simpleNuteeAlertDialogue(title: "관심사 변경", message: "성공적으로 변경되었습니다")
+            
+            NotificationCenter.default.post(name: ProfileVC.notificationName, object: originalUserInfo)
+            updateSelectedCategoryStatus()
+            
             saveButton.isEnabled = false
         })
     }
@@ -156,10 +162,12 @@ class SettingCategoryVC: SignUpCategoryVC {
 
 extension SettingCategoryVC {
     func changeInterestsService(interests: [String], completionHandler: @escaping () -> Void) {
-        UserService.shared.changeInterests(interests, completion: { (returnedData) -> Void in
+        UserService.shared.changeInterests(interests, completion: { [self] (returnedData) -> Void in
             
             switch returnedData {
-            case .success(_ ):
+            case .success(let message):
+                let responseCategory = message as? ResponseChangeCategory
+                originalUserInfo?.body.interests = responseCategory?.body ?? []
                 completionHandler()
 
             case .requestErr(let message):

@@ -20,7 +20,7 @@ class SettingNicknameVC: UIViewController {
     
     // MARK: - Variables and Properties
     
-    var originalNickname: String?
+    var originalUserInfo: User?
     
     // MARK: - Dummy data
     
@@ -34,6 +34,8 @@ class SettingNicknameVC: UIViewController {
         
         initView()
         addSubView()
+        
+        fillDataToView()
         
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapKeyboardOutSide)))
     }
@@ -52,7 +54,6 @@ class SettingNicknameVC: UIViewController {
         }
         
         _ = nicknameLabel.then {
-            $0.text = originalNickname
             $0.font = .systemFont(ofSize: 17)
             $0.sizeToFit()
         }
@@ -107,14 +108,19 @@ class SettingNicknameVC: UIViewController {
         }
     }
     
-    @objc func didTapKeyboardOutSide() {
-        nicknameTextField.resignFirstResponder()
+    func fillDataToView() {
+        nicknameLabel.text = originalUserInfo?.body.nickname
     }
     
     @objc func didTapSaveButton() {
-        changeNicknameService(nickname: nicknameTextField.text ?? "", completionHandler: {
+        changeNicknameService(nickname: nicknameTextField.text ?? "", completionHandler: { [self] in
             self.simpleNuteeAlertDialogue(title: "닉네임 변경", message: "성공적으로 변경되었습니다")
-            self.nicknameLabel.text = self.nicknameTextField.text ?? ""
+            
+            originalUserInfo?.body.nickname = nicknameTextField.text ?? ""
+            nicknameTextField.text = ""
+            fillDataToView()
+            NotificationCenter.default.post(name: ProfileVC.notificationName, object: originalUserInfo)
+            
             self.saveButton.isEnabled = false
         })
     }
@@ -131,6 +137,10 @@ class SettingNicknameVC: UIViewController {
     
     func failToChangeNickname(_ message: String) {
         self.simpleNuteeAlertDialogue(title: "닉네임 변경 실패", message: message)
+    }
+    
+    @objc func didTapKeyboardOutSide() {
+        nicknameTextField.resignFirstResponder()
     }
     
 }

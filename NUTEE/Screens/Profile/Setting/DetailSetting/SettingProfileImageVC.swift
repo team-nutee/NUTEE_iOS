@@ -19,7 +19,9 @@ class SettingProfileImageVC : UIViewController {
     
     // MARK: - Variables and Properties
     
-    var userProfileImageSrc: String?
+    var originalUserInfo: User?
+    
+//    var userProfileImageSrc: String?
     
     var pickedIMG: [UIImage] = []
     
@@ -38,6 +40,8 @@ class SettingProfileImageVC : UIViewController {
         initView()
         addSubView()
         
+        fillDataToView()
+        
         setProfileImageClickActions()
     }
     
@@ -52,7 +56,7 @@ class SettingProfileImageVC : UIViewController {
     func initView() {
         _ = profileImageView.then {
             $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
-            $0.setImageNutee(userProfileImageSrc)
+//            $0.setImageNutee(userProfileImageSrc)
             $0.clipsToBounds = true
         }
         _ = profileImagePicker.then {
@@ -78,7 +82,6 @@ class SettingProfileImageVC : UIViewController {
     }
     
     func addSubView() {
-        
         view.addSubview(profileImageView)
         view.addSubview(saveButton)
         
@@ -95,7 +98,11 @@ class SettingProfileImageVC : UIViewController {
             $0.top.equalTo(profileImageView.snp.bottom).offset(20)
             $0.centerX.equalTo(profileImageView)
         }
-        
+    }
+    
+    
+    func fillDataToView() {
+        profileImageView.setImageNutee(originalUserInfo?.body.image?.src)
     }
     
     func setProfileImageClickActions() {
