@@ -18,20 +18,13 @@ class SettingVC : UIViewController {
     
     // MARK: - Variables and Properties
     
+    var originalUserInfo: User?
+    
     let settingList = [
         ["프로필 이미지를 설정하고 싶으신가요?", "닉네임을 변경하고 싶으신가요?", "비밀번호를 변경하고 싶으신가요?", "카테고리를 변경하고 싶으신가요?", "전공을 변경하고 싶으신가요?"],
         ["NUTEE 서비스 이용약관", "개발자 정보"],
         ["로그아웃"]
     ]
-    
-    var userProfileImageSrc: String?
-    
-    var originalNickname: String?
-
-    var originalCategoryList: [String] = []
-    
-    var originalFirstMajor: String?
-    var originalSecondMajor: String?
     
     // MARK: - Dummy data
     
@@ -44,6 +37,8 @@ class SettingVC : UIViewController {
         view.backgroundColor = .white
         
         setTableView()
+        
+        addUserInfoNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -156,12 +151,13 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 0, section: 0):
             let settingProfileImageVC = SettingProfileImageVC()
-            settingProfileImageVC.userProfileImageSrc = self.userProfileImageSrc
+//            settingProfileImageVC.userProfileImageSrc = originalUserInfo?.body.image?.src
+            settingProfileImageVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingProfileImageVC, animated: true)
             
         case IndexPath(row: 1, section: 0):
             let settingNicknameVC = SettingNicknameVC()
-            settingNicknameVC.originalNickname = self.originalNickname ?? ""
+            settingNicknameVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingNicknameVC, animated: true)
             
         case IndexPath(row: 2, section: 0):
@@ -170,13 +166,12 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 3, section: 0):
             let settingCategoryVC = SettingCategoryVC()
-            settingCategoryVC.originalCategoryList = self.originalCategoryList
+            settingCategoryVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingCategoryVC, animated: true)
             
         case IndexPath(row: 4, section: 0):
             let settingMajorVC = SettingMajorVC()
-            settingMajorVC.originalFirstMajor = self.originalFirstMajor ?? ""
-            settingMajorVC.originalSecondMajor = self.originalSecondMajor ?? ""
+            settingMajorVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingMajorVC, animated: true)
             
         case IndexPath(row: 0, section: 1):
@@ -291,6 +286,21 @@ class SettingTVCell : UITableViewCell {
         } else {
             contentView.backgroundColor = .white
         }
+    }
+    
+}
+
+// MARK: - UserInfo Sync Notification
+
+extension SettingVC {
+    
+    func addUserInfoNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(syncAfterChangeUserInfo(_:)), name: ProfileVC.notificationName, object: nil)
+    }
+    
+    @objc func syncAfterChangeUserInfo(_ notification: Notification) {
+        let updatedUserInfo = notification.object as? User
+        originalUserInfo = updatedUserInfo
     }
     
 }

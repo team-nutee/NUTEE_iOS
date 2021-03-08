@@ -177,7 +177,7 @@ class SignUpMajorVC: SignUpViewController {
     }
     
     func updateSecondMajorButtonStatus() {
-        if secondMajor == "없음" || secondMajor == firstMajor {
+        if secondMajor == "" || secondMajor == "없음" || secondMajor == firstMajor {
             secondMajor = ""
             _ = secondMajorButton.then {
                 $0.setTitle(majorButtonPlaceHolder, for: .normal)

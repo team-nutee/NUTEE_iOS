@@ -16,9 +16,12 @@ class SettingMajorVC: SignUpMajorVC {
     
     // MARK: - Variables and Properties
     
+    var originalUserInfo: User?
+    
     var originalFirstMajor = ""
     var originalSecondMajor = ""
-    var newMajors: [String] = []
+    
+//    var newMajors: [String] = []
     
     // MARK: - Dummy data
     
@@ -109,20 +112,18 @@ class SettingMajorVC: SignUpMajorVC {
     }
     
     func fetchUserMajorInfo() {
-        firstMajor = originalFirstMajor
-        
-        _ = firstMajorButton.then {
-            $0.setTitle(firstMajor, for: .normal)
-            $0.titleLabel?.sizeToFit()
-            $0.setTitleColor(.black, for: .normal)
+        let originalMajors = originalUserInfo?.body.majors ?? []
+        if originalMajors != [] {
+            originalFirstMajor = originalUserInfo?.body.majors[0] ?? ""
+            firstMajor = originalFirstMajor
+            if originalMajors.count > 1 {
+                originalSecondMajor = originalUserInfo?.body.majors[1] ?? ""
+                secondMajor = originalSecondMajor
+            }
         }
         
-        secondMajor = originalSecondMajor
-        _ = secondMajorButton.then {
-            $0.setTitle(secondMajor, for: .normal)
-            $0.titleLabel?.sizeToFit()
-            $0.setTitleColor(.black, for: .normal)
-        }
+        updateFirstMajorButtonStatus()
+        updateSecondMajorButtonStatus()
     }
     
     override func updateFirstMajorButtonStatus() {
@@ -146,11 +147,20 @@ class SettingMajorVC: SignUpMajorVC {
     }
     
     @objc func didTapSaveButton() {
+        var newMajors: [String] = []
+        
         newMajors.append(firstMajor)
-        newMajors.append(secondMajor)
-        self.changeMajorsService(majors: newMajors, completionHandler: {
-            self.simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
-            self.saveButton.isEnabled = false
+        if secondMajor != "" {
+            newMajors.append(secondMajor)
+        }
+        
+        changeMajorsService(majors: newMajors, completionHandler: { [self] in
+            originalUserInfo?.body.majors = newMajors
+            fetchUserMajorInfo()
+            
+            NotificationCenter.default.post(name: ProfileVC.notificationName, object: originalUserInfo)
+            
+            saveButton.isEnabled = false
         })
     }
     
@@ -174,23 +184,24 @@ class SettingMajorVC: SignUpMajorVC {
 
 extension SettingMajorVC {
     func changeMajorsService(majors: [String], completionHandler: @escaping () -> Void) {
-        UserService.shared.changeMajors(majors, completion: { (returnedData) -> Void in
+        UserService.shared.changeMajors(majors, completion: { [self] (returnedData) -> Void in
 
             switch returnedData {
-            case .success(_ ):
+            case .success(_):
+                simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
                 completionHandler()
 
             case .requestErr(let message):
-                self.failToChangeMajor("\(message)")
+                failToChangeMajor("\(message)")
 
             case .pathErr:
-                self.failToChangeMajor("서버 에러입니다")
+                failToChangeMajor("서버 에러입니다")
 
             case .serverErr:
-                self.failToChangeMajor("서버 에러입니다")
+                failToChangeMajor("서버 에러입니다")
 
             case .networkFail:
-                self.failToChangeMajor("네트워크 에러입니다")
+                failToChangeMajor("네트워크 에러입니다")
 
             }
         })

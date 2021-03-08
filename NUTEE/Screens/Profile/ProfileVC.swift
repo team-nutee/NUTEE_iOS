@@ -27,6 +27,8 @@ class ProfileVC: UIViewController {
     
     // MARK: - Variables and Properties
     
+    static let notificationName = Notification.Name("UserProfileInfomation")
+    
     var user: User?
     
     // MARK: - Dummy data
@@ -44,6 +46,8 @@ class ProfileVC: UIViewController {
         getMyProfileService(completionHandler: {
             self.fillDataToView()
         })
+        
+        addUserInfoNotification()
     }
     
     override func viewDidLayoutSubviews() {
@@ -204,19 +208,7 @@ class ProfileVC: UIViewController {
     
     @objc func didTapSetting() {
         let settingVC = SettingVC()
-        settingVC.userProfileImageSrc = user?.body.image?.src
-        
-        settingVC.originalNickname = user?.body.nickname
-        
-        settingVC.originalCategoryList = user?.body.interests ?? []
-        
-        if user?.body.majors != [] {
-            settingVC.originalFirstMajor = user?.body.majors[0]
-
-            if user?.body.majors.count ?? 0 > 1 {
-                settingVC.originalSecondMajor = user?.body.majors[1]
-            }
-        }
+        settingVC.originalUserInfo = user
         
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
@@ -224,6 +216,7 @@ class ProfileVC: UIViewController {
     func failToGetProfile(_ message: String) {
         self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: message)
     }
+    
 }
 
 // MARK: - NewsFeed CollectionView Container
@@ -320,4 +313,20 @@ extension ProfileVC {
             }
         })
     }
+}
+
+// MARK: - UserInfo Sync Notification
+
+extension ProfileVC {
+    
+    func addUserInfoNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(syncAfterChangeUserInfo(_:)), name: ProfileVC.notificationName, object: nil)
+    }
+    
+    @objc func syncAfterChangeUserInfo(_ notification: Notification) {
+        let updatedUserInfo = notification.object as? User
+        user = updatedUserInfo
+        fillDataToView()
+    }
+    
 }
