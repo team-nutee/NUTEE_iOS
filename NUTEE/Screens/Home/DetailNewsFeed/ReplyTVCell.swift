@@ -172,7 +172,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         showNuteeAlertSheet()
     }
     
-    func initComment() {
+    func fillDataToView() {
         // 사용자 프로필 설정
         profileImageView.setImageNutee(comment?.user?.image?.src)
 
