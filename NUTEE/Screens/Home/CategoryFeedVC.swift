@@ -7,31 +7,34 @@
 //
 
 import UIKit
+import SnapKit
 
 class CategoryFeedVC: FeedContainerVC {
     
     var category: String?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.navigationItem.title = "NUTEE"
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.CategoryFeedCVCell, for: indexPath) as! CategoryFeedCVCell
-        
-        cell.category = self.category ?? ""
-        cell.homeVC = self
-        cell.getPostsService(lastId: 0, limit: 10) { (Post) in
-            cell.postContent = Post.body
-            cell.afterFetchNewsFeed()
+    override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.getCategoryPosts(category: self.category ?? "", lastId: lastId, limit: limit) { responsedata in
             
-            if cell.postContent?.count == 0 {
-                cell.newsFeedTableView.setEmptyView(title: "게시글이 없습니다", message: "게시글을 작성해주세요✏️")
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.feedContainerCVCell.newsPost = response
+                completionHandler(self.feedContainerCVCell.newsPost!)
+                
+            case .requestErr(let message):
+                self.feedContainerCVCell.setFetchNewsFeedFail("\(message)")
+                
+            case .pathErr:
+                self.feedContainerCVCell.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.feedContainerCVCell.setFetchNewsFeedFail("서버에 오류가 있습니다")
+                
+            case .networkFail :
+                self.feedContainerCVCell.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+                
             }
         }
-        
-        return cell
     }
 }

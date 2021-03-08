@@ -12,20 +12,34 @@ class SearchResultVC: FeedContainerVC {
         
     var searchResult: String?
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.SearchResultFeedCVCell, for: indexPath) as! SearchResultFeedCVCell
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        cell.word = self.searchResult ?? ""
-        cell.homeVC = self
-        cell.getPostsService(lastId: 0, limit: 10) { (Post) in
-            cell.postContent = Post.body
-            cell.afterFetchNewsFeed()
+        self.navigationItem.title = self.searchResult ?? ""
+    }
+    
+    override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
+        ContentService.shared.searchPosts(word: self.searchResult ?? "", lastId: lastId, limit: limit) { responsedata in
             
-            if cell.postContent?.count == 0 {
-                cell.newsFeedTableView.setEmptyView(title: "검색 결과가 없습니다", message: "검색어를 확인해 주세요")
+            switch responsedata {
+            case .success(let res):
+                let response = res as! Post
+                self.feedContainerCVCell.newsPost = response
+                completionHandler(self.feedContainerCVCell.newsPost!)
+                
+            case .requestErr(let message):
+                self.feedContainerCVCell.setFetchNewsFeedFail("\(message)")
+                
+            case .pathErr:
+                self.feedContainerCVCell.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.feedContainerCVCell.setFetchNewsFeedFail("서버에 오류가 있습니다")
+                
+            case .networkFail :
+                self.feedContainerCVCell.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+                
             }
         }
-        
-        return cell
     }
 }
