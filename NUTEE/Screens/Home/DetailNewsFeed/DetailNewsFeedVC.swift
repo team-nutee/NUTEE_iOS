@@ -30,9 +30,9 @@ class DetailNewsFeedVC: UIViewController {
     let commentTextViewFontSize: CGFloat = 14
     let commentTextViewHeight: CGFloat = 100
     
-    var post: PostContent?
-    var postBody: PostContentBody?
     var postId: Int?
+    var post: PostContent?
+    var replyList: [ReplyList]?
     
     var commentViewBottomConstraint: Constraint?
     
@@ -87,6 +87,7 @@ class DetailNewsFeedVC: UIViewController {
             
             $0.register(DetailNewsFeedHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.DetailNewsFeedHeaderView)
             $0.register(ReplyTVCell.self, forCellReuseIdentifier: Identify.ReplyTVCell)
+            $0.register(ReReplyTVCell.self, forCellReuseIdentifier: Identify.ReReplyTVCell)
             $0.register(NoReplyFooterView.self, forHeaderFooterViewReuseIdentifier: Identify.NoReplyFooterView)
             
             $0.backgroundColor = .white
@@ -176,8 +177,31 @@ class DetailNewsFeedVC: UIViewController {
         refreshControl.addTarget(self, action: #selector(updatePost), for: UIControl.Event.valueChanged)
     }
     
+    func makeReplyList() {
+        // 댓글과 대댓글을 하나의 CommentBody 배열 형태로 구성 및 정렬
+        var replyList: [ReplyList] = []
+        var reply: ReplyList = ReplyList.init()
+        let comments = post?.body.comments ?? []
+        for comment in comments {
+            reply.type = .comment
+            reply.body = comment
+            
+            replyList.append(reply)
+            if comment.reComment?.isEmpty == false {
+                let recomments = comment.reComment ?? []
+                for recomment in recomments {
+                    reply.type = .reComment
+                    reply.body = recomment
+                    
+                    replyList.append(reply)
+                }
+            }
+        }
+        self.replyList = replyList
+    }
+    
     @objc func updatePost() {
-        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+        self.getPostService(postId: self.postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
             self.detailNewsFeedTableView.reloadData()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -288,17 +312,29 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return post?.body.comments?.count ?? 0
+        return replyList?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Identify.ReplyTVCell, for: indexPath) as! ReplyTVCell
+        let cellId: String
+        
+        switch replyList?[indexPath.row].type {
+        case .comment:
+            cellId = Identify.ReplyTVCell
+        case .reComment:
+            cellId = Identify.ReReplyTVCell
+        default:
+            cellId = Identify.ReplyTVCell
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ReplyTVCell
         cell.selectionStyle = .none
         
         cell.detailNewsFeedVC = self
-        cell.comment = post?.body.comments?[indexPath.row]
+        
         cell.postId = postId
-        cell.initComment()
+        cell.comment = replyList?[indexPath.row].body
+        cell.fillDataToView()
 
         return cell
     }
@@ -421,25 +457,27 @@ extension DetailNewsFeedVC {
     
     // 게시글 한 개 가져오기
     func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: PostContent) -> Void ) {
-        ContentService.shared.getPost(postId) { responsedata in
+        ContentService.shared.getPost(postId) { [self] responsedata in
             
             switch responsedata {
             case .success(let res):
                 let response = res as! PostContent
-                self.post = response
+                post = response
+                makeReplyList()
+                
                 completionHandler(self.post!)
                 
             case .requestErr(_):
-                self.setFetchDetailNewsFeedFail(failMessage: "요청에 실패했습니다")
+                setFetchDetailNewsFeedFail(failMessage: "요청에 실패했습니다")
                 
             case .pathErr:
-                self.setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
+                setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
+                setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
 
             case .networkFail :
-                self.setFetchDetailNewsFeedFail(failMessage: "네트워크에 오류가 있습니다")
+                setFetchDetailNewsFeedFail(failMessage: "네트워크에 오류가 있습니다")
             }
         }
     }
