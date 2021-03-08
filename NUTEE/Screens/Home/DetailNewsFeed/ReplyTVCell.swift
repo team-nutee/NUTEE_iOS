@@ -348,6 +348,9 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         detailNewsFeedVC?.dismiss(animated: true, completion: nil)
 
         // 댓글 신고 기능 구현
+        reportComment(postId: postId ?? 0, commentId: comment?.id ?? 0, content: text, completionHandler: {
+            self.detailNewsFeedVC?.dismiss(animated: true)
+        })
     }
 }
 
@@ -387,6 +390,28 @@ extension ReplyTVCell {
                 
             case .requestErr(let message):
                 print("request error: \(message)")
+
+            case .pathErr:
+                print(".pathErr")
+
+            case .serverErr:
+                print(".serverErr")
+
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
+    
+    func reportComment(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void) {
+        ContentService.shared.reportComment(postId, commentId, content) { (responsedata) in
+
+            switch responsedata {
+            case .success(_):
+                break
+
+            case .requestErr(_):
+                print("request error")
 
             case .pathErr:
                 print(".pathErr")
