@@ -10,15 +10,15 @@ import Foundation
 
 // MARK: - User
 struct User: Codable {
-    let body: UserBody
+    var body: UserBody
 }
 
 struct UserBody: Codable {
     let id: Int
-    let nickname: String
-    let image: UserProfileImage?
-    let interests: [String]
-    let majors: [String]
+    var nickname: String
+    var image: UserProfileImage?
+    var interests: [String]
+    var majors: [String]
     let postNum, commentNum, likeNum: Int
 
     enum CodingKeys: String, CodingKey {
