@@ -47,6 +47,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 409:
                             print("실패 409")
                             completion(.pathErr)
@@ -95,6 +103,14 @@ struct ContentService {
                                 let result = try decoder.decode(Post.self, from: value)
                                 completion(.success(result))
                                 
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -151,6 +167,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 409:
                             print("실패 409")
                             completion(.pathErr)
@@ -198,6 +222,14 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(PostContent.self, from: value)
                                 completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -348,8 +380,13 @@ struct ContentService {
                             }
                         case 400:
                             // 전공이나 카테고리를 선택하지 않았을 경우
-                            print("실패 400")
-                            completion(.requestErr(value))
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -460,6 +497,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -560,6 +605,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -610,6 +663,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -657,6 +718,14 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(PostContent.self, from: value)
                                 completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -711,6 +780,14 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(Comment.self, from: value)
                                 completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -809,6 +886,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -861,6 +946,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -906,6 +999,14 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(Comment.self, from: value)
                                 completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -955,6 +1056,14 @@ struct ContentService {
                                 let decoder = JSONDecoder()
                                 let result = try decoder.decode(Comment.self, from: value)
                                 completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }
@@ -1011,6 +1120,14 @@ struct ContentService {
                             } catch {
                                 completion(.pathErr)
                             }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
+                            } catch {
+                                completion(.pathErr)
+                            }
                         case 401:
                             print("실패 401")
                             completion(.pathErr)
@@ -1060,6 +1177,14 @@ struct ContentService {
                                 let result = try decoder.decode(Post.self, from: value)
                                 completion(.success(result))
                                 
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 400:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Response.self, from: value)
+                                completion(.requestErr(result.message))
                             } catch {
                                 completion(.pathErr)
                             }

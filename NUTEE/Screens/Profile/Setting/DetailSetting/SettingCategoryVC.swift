@@ -166,7 +166,7 @@ extension SettingCategoryVC {
             
             switch returnedData {
             case .success(let message):
-                let responseCategory = message as? ResponseChangeCategory
+                let responseCategory = message as? UploadImage
                 originalUserInfo?.body.interests = responseCategory?.body ?? []
                 completionHandler()
 

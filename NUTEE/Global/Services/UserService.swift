@@ -762,7 +762,7 @@ struct UserService {
                         case 200:
                             do {
                                 let decoder = JSONDecoder()
-                                let responseCategory = try decoder.decode(ResponseChangeCategory.self, from: value)
+                                let responseCategory = try decoder.decode(UploadImage.self, from: value)
                             completion(.success(responseCategory))
                             } catch {
                                 completion(.pathErr)

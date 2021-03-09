@@ -219,6 +219,7 @@ class DetailNewsFeedVC: UIViewController {
                 
                 // 수정 모드 종료
                 isEditCommentMode = false
+                self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
                 self.endCommentEditing()
                 
                 getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
@@ -226,7 +227,7 @@ class DetailNewsFeedVC: UIViewController {
                 })
             })
         } else {
-            // 댓글 수정x, 새로 작성할 때
+            // 답글 모드일 때
             if recommentMode {
                 self.createRecommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {
                     
@@ -512,20 +513,23 @@ extension DetailNewsFeedVC {
         ContentService.shared.createComment(postId, content) { (responsedata) in
             
             switch responsedata {
-            case .success(let res):
+            case .success(_):
                 completionHandler()
                 
-                print("Create comment successful", res)
-            case .requestErr(_):
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "\(message)")
                 print("request error")
                 
             case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
                 
             case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
                 
             case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
@@ -536,21 +540,23 @@ extension DetailNewsFeedVC {
         ContentService.shared.editComment(postId, commentId, content) { (responsedata) in
             
             switch responsedata {
-            case .success(let res):
-                print("commentEdit succussful", res)
+            case .success(_):
                 completionHandler()
-                print(res)
                 
-            case .requestErr(_):
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "\(message)")
                 print("request error")
                 
             case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
                 
             case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
                 
             case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
@@ -561,27 +567,23 @@ extension DetailNewsFeedVC {
         ContentService.shared.deleteComment(postId, commentId: commentId) { (responsedata) in
             
             switch responsedata {
-            case .success(let res):
-                print(res)
+            case .success(_):
                 completionHandler()
                 
-            case .requestErr(_):
-                let errorAlert = UIAlertController(title: "오류발생😵", message: "오류가 발생하여 댓글을 삭제하지 못했습니다", preferredStyle: UIAlertController.Style.alert)
-                let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-                
-                errorAlert.addAction(okAction)
-                
-                self.present(errorAlert, animated: true, completion: nil)
-                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "\(message)")
                 print("request error")
                 
             case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
                 
             case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
                 
             case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
@@ -594,18 +596,21 @@ extension DetailNewsFeedVC {
             switch responsedata {
             case .success(_):
                 completionHandler()
-                print("Create recomment successful")
                 
-            case .requestErr(_):
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "\(message)")
                 print("request error")
                 
             case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
                 
             case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
                 
             case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }

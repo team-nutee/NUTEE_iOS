@@ -308,7 +308,7 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
 
 extension ReplyTVCell: NuteeAlertActionDelegate {
     
-    func showNuteeAlertSheet() {
+    @objc func showNuteeAlertSheet() {
         let nuteeAlertSheet = NuteeAlertSheet()
         nuteeAlertSheet.nuteeAlertActionDelegate = self
         
@@ -327,7 +327,7 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         detailNewsFeedVC?.present(nuteeAlertSheet, animated: true)
     }
     
-    func nuteeAlertSheetAction(indexPath: Int) {
+    @objc func nuteeAlertSheetAction(indexPath: Int) {
         detailNewsFeedVC?.dismiss(animated: true, completion: nil)
         
         if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
@@ -374,15 +374,19 @@ extension ReplyTVCell {
                 print("comment like success")
                 
             case .requestErr(let message):
-                print("request error: \(message)")
-
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 실패", message: "\(message)")
+                print("request error")
+                
             case .pathErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
-
+                
             case .serverErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
-
+                
             case .networkFail :
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
@@ -396,15 +400,19 @@ extension ReplyTVCell {
                 print("comment unlike success")
                 
             case .requestErr(let message):
-                print("request error: \(message)")
-
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 취소 실패", message: "\(message)")
+                print("request error")
+                
             case .pathErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 취소 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
-
+                
             case .serverErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 취소 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
-
+                
             case .networkFail :
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 취소 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
@@ -417,16 +425,20 @@ extension ReplyTVCell {
             case .success(_):
                 completionHandler()
 
-            case .requestErr(_):
+            case .requestErr(let message):
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "\(message)")
                 print("request error")
-
+                
             case .pathErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
-
+                
             case .serverErr:
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
-
+                
             case .networkFail :
+                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }

@@ -8,7 +8,6 @@
 
 import Foundation
 
-    // MARK: - Comment
 struct UploadImage: Codable {
     let code: Int
     let message: String
