@@ -8,38 +8,46 @@
 
 import UIKit
 
-class SearchResultVC: FeedContainerVC {
-        
-    var searchResult: String?
+class SearchResultVC: UIViewController {
 
+    // MARK: - UI components
+    
+    let searchResultFeedCVCell = SearchResultFeedCVCell()
+    
+    // MARK: - Variables and Properties
+    
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = self.searchResult ?? ""
+        makeConstraints()
+        searchResultFeedCVCell.homeVC = self
     }
     
-    override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.searchPosts(word: self.searchResult ?? "", lastId: lastId, limit: limit) { responsedata in
-            
-            switch responsedata {
-            case .success(let res):
-                let response = res as! Post
-                self.feedContainerCVCell.newsPost = response
-                completionHandler(self.feedContainerCVCell.newsPost!)
-                
-            case .requestErr(let message):
-                self.feedContainerCVCell.setFetchNewsFeedFail("\(message)")
-                
-            case .pathErr:
-                self.feedContainerCVCell.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
-                
-            case .serverErr:
-                self.feedContainerCVCell.setFetchNewsFeedFail("서버에 오류가 있습니다")
-                
-            case .networkFail :
-                self.feedContainerCVCell.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
-                
-            }
+    // MARK: - Helper
+    
+    func makeConstraints() {
+        view.backgroundColor = .white
+        
+        view.addSubview(searchResultFeedCVCell)
+        
+        searchResultFeedCVCell.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
+    
+    func afterSetKeyword(keyword: String) {
+        navigationItem.title = keyword
+        
+        searchResultFeedCVCell.keyword = keyword
+        searchResultFeedCVCell.getPostsService(lastId: 0, limit: 10) { [self] (Post) in
+            searchResultFeedCVCell.postContent = Post.body
+            searchResultFeedCVCell.afterFetchNewsFeed()
+        }
+    }
+    
 }

@@ -10,28 +10,42 @@ import Foundation
 
 class SearchResultFeedCVCell: FeedContainerCVCell {
     
-    var word = ""
+    // MARK: - UI components
+    
+    // MARK: - Variables and Properties
+    
+    var keyword: String?
+    
+    // MARK: - Life Cycle
+    
+    // MARK: - Helper
+    
+    override func fetchNewsFeed() {
+        // <--- make do nothing
+    }
+    
+    //MARK: - Server connect
     
     override func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) {
-        ContentService.shared.searchPosts(word: self.word, lastId: lastId, limit: limit) { responsedata in
+        ContentService.shared.searchPosts(word: self.keyword ?? "", lastId: lastId, limit: limit) { [self] responsedata in
             
             switch responsedata {
             case .success(let res):
                 let response = res as! Post
-                self.newsPost = response
-                completionHandler(self.newsPost!)
+                newsPost = response
+                completionHandler(newsPost!)
                 
             case .requestErr(let message):
-                self.setFetchNewsFeedFail("\(message)")
+                setFetchNewsFeedFail("\(message)")
                 
             case .pathErr:
-                self.setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
+                setFetchNewsFeedFail("서버 연결에 오류가 있습니다")
                 
             case .serverErr:
-                self.setFetchNewsFeedFail("서버에 오류가 있습니다")
+                setFetchNewsFeedFail("서버에 오류가 있습니다")
 
             case .networkFail :
-                self.setFetchNewsFeedFail("네트워크에 오류가 있습니다")
+                setFetchNewsFeedFail("네트워크에 오류가 있습니다")
 
             }
         }

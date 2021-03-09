@@ -30,8 +30,6 @@ class SearchVC: UIViewController {
     var searchHistoryObjectList: [NSManagedObject] = []
     var searchHistoryList: [String] = []
     
-    var homeVC: HomeVC?
-    
     // MARK: - Dummy data
      
     // MARK: - Life Cycle
@@ -42,8 +40,7 @@ class SearchVC: UIViewController {
         initSearchVC()
         initView()
         
-        makeConstraints()
-        
+        makeConstraints()   
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -218,8 +215,7 @@ class SearchVC: UIViewController {
         let removedBlankStr = str.replacingOccurrences(of: " ", with: "")
         
         if removedBlankStr.count != 0 {
-            searchResultVC.navigationItem.title = str
-            searchResultVC.searchResult = str
+            searchResultVC.afterSetKeyword(keyword: str)
             saveSearchKeyword(toSaveKeyword: str)
             
             self.navigationController?.pushViewController(searchResultVC, animated: true)
@@ -343,7 +339,7 @@ extension SearchVC {
             switch data {
             case .success(let res):
                 self.categoryCollectionView.categoryList = res as! [String]
-                self.categoryCollectionView.homeVC = self.homeVC
+                self.categoryCollectionView.searchVC = self
                 completionHandler()
                 
             case .requestErr(let message):
