@@ -244,13 +244,21 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
             likeLabel.text = "좋아요 \(likeCount ?? 0)"
             setNormalLikeButton()
 
-            commentUnlikeService(postId: postId ?? 0, commentId: comment?.id ?? 0)
+            commentUnlikeService(postId: postId ?? 0, commentId: comment?.id ?? 0, completionHandler: {
+                self.detailNewsFeedVC?.getPostService(postId: self.postId ?? 0, completionHandler: { (PostContent) in
+                    self.detailNewsFeedVC?.post = PostContent
+                })
+            })
         } else {
             likeCount! += 1
             likeLabel.text = "좋아요 \(likeCount ?? 0)"
             setSelectedLikeButton()
 
-            commentLikeService(postId: postId ?? 0, commentId: comment?.id ?? 0)
+            commentLikeService(postId: postId ?? 0, commentId: comment?.id ?? 0, completionHandler: {
+                self.detailNewsFeedVC?.getPostService(postId: self.postId ?? 0, completionHandler: { (PostContent) in
+                    self.detailNewsFeedVC?.post = PostContent
+                })
+            })
         }
     }
     
@@ -366,12 +374,12 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
 extension ReplyTVCell {
     
     // MARK: - Like
-    func commentLikeService(postId: Int, commentId: Int) {
+    func commentLikeService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
         ContentService.shared.commentLike(postId, commentId) { (responsedata) in
 
             switch responsedata {
             case .success(_):
-                print("comment like success")
+                completionHandler()
                 
             case .requestErr(let message):
                 self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 실패", message: "\(message)")
@@ -392,12 +400,12 @@ extension ReplyTVCell {
         }
     }
 
-    func commentUnlikeService(postId: Int, commentId: Int) {
+    func commentUnlikeService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
         ContentService.shared.commentUnlike(postId, commentId) { (responsedata) in
 
             switch responsedata {
             case .success(_):
-                print("comment unlike success")
+                completionHandler()
                 
             case .requestErr(let message):
                 self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 좋아요 취소 실패", message: "\(message)")

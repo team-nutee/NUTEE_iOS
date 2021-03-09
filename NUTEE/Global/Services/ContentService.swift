@@ -747,7 +747,7 @@ struct ContentService {
         }
     }
     
-    // MARK: - Comments
+    // MARK: - 댓글 생성
     
     func createComment(_ postId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -809,6 +809,8 @@ struct ContentService {
         }
     }
     
+    // MARK: - 댓글 삭제
+    
     func deleteComment(_ postId: Int, commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId)
@@ -851,6 +853,8 @@ struct ContentService {
             }
         }
     }
+    
+    // MARK: - 댓글 수정
     
     func editComment(_ postId: Int, _ commentId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -911,6 +915,8 @@ struct ContentService {
             }
         }
     }
+    
+    // MARK: - 댓글 신고
         
     func reportComment(_ postId: Int, _ commentId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -972,6 +978,8 @@ struct ContentService {
         }
     }
     
+    // MARK: - 댓글 좋아요
+    
     func commentLike(_ postId: Int, _ commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId) + "/like"
@@ -1028,6 +1036,8 @@ struct ContentService {
             }
         }
     }
+    
+    // MARK: - 댓글 좋아요 취소
         
     func commentUnlike(_ postId: Int, _ commentId: Int, completion: @escaping (NetworkResult<Any>) -> Void) {
         
@@ -1085,6 +1095,8 @@ struct ContentService {
             }
         }
     }
+    
+    // MARK: - 답글(대댓글) 생성
     
     func createRecomment(_ postId: Int, _ commentId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         

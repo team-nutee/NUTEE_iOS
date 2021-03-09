@@ -375,13 +375,17 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             likeButton.setTitle(String(likeCount ?? 0), for: .normal)
             setNormalLikeButton()
 
-            postUnlikeService(postId: post?.body.id ?? 0)
+            postUnlikeService(postId: post?.body.id ?? 0, completionHandler: { (PostContent) -> Void in
+                self.detailNewsFeedVC?.post = PostContent
+            })
         } else {
             likeCount! += 1
             likeButton.setTitle(String(likeCount ?? 0), for: .normal)
             setSelectedLikeButton()
 
-            postLikeService(postId: post?.body.id ?? 0)
+            postLikeService(postId: post?.body.id ?? 0, completionHandler: { (PostContent) -> Void in
+                self.detailNewsFeedVC?.post = PostContent
+            })
         }
     }
     
@@ -684,12 +688,13 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
 extension DetailNewsFeedHeaderView {
 
     // MARK: - Like
-    func postLikeService(postId: Int) {
+    func postLikeService(postId: Int, completionHandler: @escaping (_ returnedData: PostContent) -> Void ){
         ContentService.shared.postLike(postId) { (responsedata) in
 
             switch responsedata {
             case .success(let res):
-                print("post like success", res)
+                let response = res as? PostContent
+                completionHandler(response!)
                 
             case .requestErr(_):
                 print("request error")
@@ -706,12 +711,13 @@ extension DetailNewsFeedHeaderView {
         }
     }
 
-    func postUnlikeService(postId: Int) {
+    func postUnlikeService(postId: Int, completionHandler: @escaping (_ returnedData: PostContent) -> Void ){
         ContentService.shared.postUnlike(postId) { (responsedata) in
 
             switch responsedata {
             case .success(let res):
-                print("post like delete success", res)
+                let response = res as? PostContent
+                completionHandler(response!)
                 
             case .requestErr(_):
                 print("request error")
