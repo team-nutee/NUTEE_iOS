@@ -18,8 +18,9 @@ class SearchVC: UIViewController {
     let searchTextField = UITextField()
     let deleteAllTextButton = UIButton()
     let searchButton = UIButton()
+    let cancelButton = HighlightedButton()
     
-//    let searchHistoryTableView = SearchHistoryTV()
+    let searchHistoryTableView = SearchHistoryTV()
     
     let categoryView = UIView()
     let categoryLabel = UILabel()
@@ -48,9 +49,9 @@ class SearchVC: UIViewController {
         
         hideTabBarController(isHidden: true)
         
-//        getSearchHistory(completion: {
-//            searchHistoryTableView.reloadData()
-//        })
+        getSearchHistory(completion: {
+            searchHistoryTableView.reloadData()
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,8 +97,6 @@ class SearchVC: UIViewController {
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             $0.tintColor = .nuteeGreen
             
-            $0.becomeFirstResponder()
-            
             $0.alpha = 0
         }
         _ = deleteAllTextButton.then {
@@ -121,10 +120,23 @@ class SearchVC: UIViewController {
             
             $0.alpha = 0
         }
+        _ = cancelButton.then {
+            $0.setTitle("취소", for: .normal)
+            $0.setTitleColor(.gray, for: .normal)
+            $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo", size: 15.0)
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            
+            $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+            
+            $0.isHidden = true
+        }
         
-//        _ = searchHistoryTableView.then {
-//            $0.searchVC = self
-//        }
+        _ = searchHistoryTableView.then {
+            $0.searchVC = self
+            
+            $0.alpha = 0
+        }
         _ = categoryView.then {
             $0.alpha = 0
         }
@@ -141,9 +153,10 @@ class SearchVC: UIViewController {
 
         view.addSubview(searchTextField)
         view.addSubview(deleteAllTextButton)
-        view.addSubview(searchButton)
+//        view.addSubview(searchButton)
+        view.addSubview(cancelButton)
         
-//        view.addSubview(searchHistoryTableView)
+        view.addSubview(searchHistoryTableView)
         view.addSubview(categoryView)
         categoryView.addSubview(categoryLabel)
         categoryView.addSubview(categoryCollectionView)
@@ -166,21 +179,28 @@ class SearchVC: UIViewController {
             $0.width.equalTo(searchTextField.snp.height)
             
             $0.centerY.equalTo(searchTextField)
-            $0.right.equalTo(searchButton.snp.left).inset(5)
+            $0.right.equalTo(cancelButton.snp.left).inset(5)
         }
-        searchButton.snp.makeConstraints {
-            $0.width.equalTo(searchTextField.snp.height)
+//        searchButton.snp.makeConstraints {
+//            $0.width.equalTo(searchTextField.snp.height)
+//
+//            $0.centerY.equalTo(searchTextField)
+//            $0.right.equalTo(searchTextField.snp.right)
+//        }
+        cancelButton.snp.makeConstraints {
+            $0.width.equalTo(cancelButton.intrinsicContentSize.width + 30)
+            $0.height.equalTo(searchTextField.snp.height)
             
             $0.centerY.equalTo(searchTextField)
-            $0.right.equalTo(searchTextField.snp.right)
+            $0.right.equalTo(view.snp.right)
         }
         
-//        searchHistoryTableView.snp.makeConstraints {
-//            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
-//            $0.left.equalTo(view.snp.left)
-//            $0.right.equalTo(view.snp.right)
-//            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
-//        }
+        searchHistoryTableView.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+        }
         categoryView.snp.makeConstraints {
             $0.top.equalTo(searchTextField.snp.bottom).offset(20)
             $0.left.equalTo(searchTextField.snp.left)
@@ -220,6 +240,35 @@ class SearchVC: UIViewController {
             
             self.navigationController?.pushViewController(searchResultVC, animated: true)
         }
+    }
+    
+    func afterFetchCategoryView() {
+        categoryCollectionView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        
+        searchButton.alpha = 1
+        searchTextField.alpha = 1
+        categoryView.alpha = 1
+    }
+    
+    @objc func didTapCancelButton() {
+        _ = searchTextField.then {
+            $0.text = ""
+            $0.endEditing(true)
+            textFieldDidChangeSelection($0)
+        }
+        
+        categoryView.isHidden = false
+        cancelButton.isHidden = true
+        searchHistoryTableView.alpha = 0
+        
+        searchTextField.snp.updateConstraints {
+            $0.right.equalTo(view.snp.right).inset(15)
+        }
+        UIView.animate(withDuration: 0.1, animations: { [self] in
+            self.view.layoutIfNeeded()
+        })
     }
     
     func getSearchHistory(completion: () -> Void) {
@@ -277,16 +326,6 @@ class SearchVC: UIViewController {
         }
     }
     
-    func afterFetchCategoryView() {
-        categoryCollectionView.reloadData()
-        
-        activityIndicator.stopAnimating()
-        
-        searchButton.alpha = 1
-        searchTextField.alpha = 1
-        categoryView.alpha = 1
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
         self.view.endEditing(true)
     }
@@ -295,6 +334,20 @@ class SearchVC: UIViewController {
 // MARK: - TextField Delegate
 
 extension SearchVC : UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        categoryView.isHidden = true
+        cancelButton.isHidden = false
+        searchTextField.snp.updateConstraints {
+            $0.right.equalTo(view.snp.right).inset(cancelButton.intrinsicContentSize.width + 30)
+        }
+        
+        UIView.animate(withDuration: 0.1, animations: { [self] in
+            searchHistoryTableView.alpha = 1
+        })
+        
+        return true
+    }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         // 입력된 빈칸 감지하기
