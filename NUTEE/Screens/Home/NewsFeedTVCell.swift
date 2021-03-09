@@ -328,9 +328,7 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: {
-            self.feedContainerCVCell?.afterFetchNewsFeed()
-        })
+        feedContainerCVCell?.deletePost(postId: newsPost?.id ?? 0)
     }
     
     func reportPost() {

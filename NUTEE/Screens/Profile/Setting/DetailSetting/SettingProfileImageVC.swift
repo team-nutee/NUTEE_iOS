@@ -128,7 +128,8 @@ class SettingProfileImageVC : UIViewController {
         postImage(images: self.pickedIMG, completionHandler: {(returnedData)-> Void in
             self.changeProfileImageService(image: self.uploadedImages[0], completionHandler: {
                 self.simpleNuteeAlertDialogue(title: "프로필 이미지 변경", message: "성공적으로 변경되었습니다")
-                self.fillDataToView()
+    
+                self.originalUserInfo?.body.image?.src = self.uploadedImages[0] as String
                 NotificationCenter.default.post(name: ProfileVC.notificationName, object: self.originalUserInfo)
 
                 self.saveButton.isEnabled = false

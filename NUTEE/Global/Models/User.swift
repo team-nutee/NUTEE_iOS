@@ -45,5 +45,5 @@ struct UserBody: Codable {
 
 // MARK: - Image
 struct UserProfileImage: Codable {
-    let src: String
+    var src: String
 }
