@@ -680,7 +680,7 @@ struct ContentService {
     
     // MARK: - Comments
     
-    func createComment(_ postId: Int, comment: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+    func createComment(_ postId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
         
         let URL = APIConstants.Post + "/" + String(postId) + "/comment"
         
@@ -694,7 +694,7 @@ struct ContentService {
         ]
         
         let body : Parameters = [
-            "content" : comment
+            "content" : content
         ]
         
         Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
@@ -966,6 +966,58 @@ struct ContentService {
                             completion(.serverErr)
                         default:
                             completion(.requestErr(response))
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    func createRecomment(_ postId: Int, _ commentId: Int, _ content: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.Post + "/" + String(postId) + "/comment/" + String(commentId)
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "content" : content
+        ]
+        
+        Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200, 201:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Comment.self, from: value)
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
                             break
                         }
                     }

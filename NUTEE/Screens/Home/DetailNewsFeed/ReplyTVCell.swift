@@ -296,6 +296,11 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
     @objc func didTapDeleteComment() {
         detailNewsFeedVC?.deleteComment(deleteCommentId: comment?.id ?? 0)
     }
+    
+    func createRecomment() {
+        detailNewsFeedVC?.setRecommentMode()
+        detailNewsFeedVC?.commentId = comment?.id
+    }
 
 }
 
@@ -308,12 +313,13 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         nuteeAlertSheet.nuteeAlertActionDelegate = self
         
         if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
-            nuteeAlertSheet.optionList = [["수정", UIColor.black],
+            nuteeAlertSheet.optionList = [["답글 작성하기", UIColor.black],
+                                          ["수정", UIColor.black],
                                           ["삭제", UIColor.red]]
             
         } else {
-            nuteeAlertSheet.optionList = [["🚨신고하기", UIColor.red]]
-            
+            nuteeAlertSheet.optionList = [["답글 작성하기", UIColor.black],
+                                          ["🚨신고하기", UIColor.red]]
         }
         
         nuteeAlertSheet.modalPresentationStyle = .custom
@@ -327,8 +333,10 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         if comment?.user?.id == KeychainWrapper.standard.integer(forKey: "id") {
             switch indexPath {
             case 0:
-                editComment()
+                createRecomment()
             case 1:
+                editComment()
+            case 2:
                 deleteComment()
             default:
                 break
@@ -337,6 +345,8 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         } else {
             switch indexPath {
             case 0:
+                createRecomment()
+            case 1:
                 reportComment()
             default:
                 break

@@ -39,6 +39,8 @@ class DetailNewsFeedVC: UIViewController {
     var isEditCommentMode = false
     var commentId: Int?
     
+    var recommentMode = false
+    
     var feedContainerCVCell: FeedContainerCVCell?
     
     //MARK: - Dummy data
@@ -214,12 +216,10 @@ class DetailNewsFeedVC: UIViewController {
         if isEditCommentMode {
             // 댓글 수정 모드일 때 실행될 문장
             self.editCommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: { [self] () -> Void in
-                commentTextView.text = ""
-                commentTextView.endEditing(true)
                 
-                // 수정모드 종료
+                // 수정 모드 종료
                 isEditCommentMode = false
-                textViewDidChange(commentTextView)
+                self.endCommentEditing()
                 
                 getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
                     detailNewsFeedTableView.reloadData()
@@ -227,17 +227,30 @@ class DetailNewsFeedVC: UIViewController {
             })
         } else {
             // 댓글 수정x, 새로 작성할 때
-            self.postCommentService(postId: postId ?? 0, comment: commentTextView.text) { [self] in
-                commentTextView.text = ""
-                commentTextView.endEditing(true)
-                textViewDidChange(commentTextView)
-                
-                getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
-                    detailNewsFeedTableView.reloadData()
+            if recommentMode {
+                self.createRecommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {
                     
-                    let lastRow = IndexPath(row: (post?.body.comments?.count ?? 1) - 1, section: 0)
-                    detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                    // 답글 모드 종료
+                    self.recommentMode = false
+                    self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
+                    self.endCommentEditing()
+                    
+                    self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                        self.detailNewsFeedTableView.reloadData()
+                    })
                 })
+                
+            } else {
+                self.postCommentService(postId: postId ?? 0, content: commentTextView.text) { [self] in
+                    self.endCommentEditing()
+                    
+                    getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                        detailNewsFeedTableView.reloadData()
+                        
+                        let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
+                        detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                    })
+                }
             }
         }
     }
@@ -257,6 +270,18 @@ class DetailNewsFeedVC: UIViewController {
         commentTextView.placeholderLabel.text = ""
         
         commentTextView.becomeFirstResponder()
+    }
+    
+    func setRecommentMode() {
+        recommentMode = true
+        commentTextView.placeholderLabel.text = "답글을 입력하세요"
+        commentTextView.becomeFirstResponder()
+    }
+    
+    func endCommentEditing() {
+        commentTextView.text = ""
+        commentTextView.endEditing(true)
+        textViewDidChange(commentTextView)
     }
     
     func deleteComment(deleteCommentId: Int) {
@@ -483,8 +508,8 @@ extension DetailNewsFeedVC {
     }
     
     // 댓글 작성
-    func postCommentService(postId: Int, comment: String, completionHandler: @escaping () -> Void ) {
-        ContentService.shared.createComment(postId, comment: comment) { (responsedata) in
+    func postCommentService(postId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.createComment(postId, content) { (responsedata) in
             
             switch responsedata {
             case .success(let res):
@@ -548,6 +573,30 @@ extension DetailNewsFeedVC {
                 
                 self.present(errorAlert, animated: true, completion: nil)
                 
+                print("request error")
+                
+            case .pathErr:
+                print(".pathErr")
+                
+            case .serverErr:
+                print(".serverErr")
+                
+            case .networkFail :
+                print("failure")
+            }
+        }
+    }
+    
+    // 답글 작성
+    func createRecommentService(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.createRecomment(postId, commentId, content) { (responsedata) in
+            
+            switch responsedata {
+            case .success(_):
+                completionHandler()
+                print("Create recomment successful")
+                
+            case .requestErr(_):
                 print("request error")
                 
             case .pathErr:
