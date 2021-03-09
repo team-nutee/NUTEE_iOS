@@ -5,9 +5,9 @@
 //  Created by Hee Jae Kim on 2020/07/31.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
+
 import UIKit
 import SnapKit
-import SkeletonView
 import SwiftKeychainWrapper
 
 class FeedContainerCVCell : UICollectionViewCell {
@@ -35,12 +35,12 @@ class FeedContainerCVCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        setRefresh()
+        
         initView()
         makeConstraints()
         
         fetchNewsFeed()
-        
-        setRefresh()
     }
     
     required init?(coder: NSCoder) {
@@ -153,10 +153,6 @@ class FeedContainerCVCell : UICollectionViewCell {
 extension FeedContainerCVCell : UITableViewDelegate { }
 extension FeedContainerCVCell : UITableViewDataSource {
     
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return Identify.NewsFeedTVCell
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -178,7 +174,6 @@ extension FeedContainerCVCell : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
         cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
@@ -241,7 +236,7 @@ extension FeedContainerCVCell : UITableViewDataSource {
     }
 }
 
-//MARK: - Server connect
+// MARK: - Server connect
 
 extension FeedContainerCVCell{
     

@@ -8,24 +8,46 @@
 
 import UIKit
 
-class SearchResultVC: FeedContainerVC {
-        
-    var searchResult: String?
+class SearchResultVC: UIViewController {
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identify.SearchResultFeedCVCell, for: indexPath) as! SearchResultFeedCVCell
+    // MARK: - UI components
+    
+    let searchResultFeedCVCell = SearchResultFeedCVCell()
+    
+    // MARK: - Variables and Properties
+    
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        cell.word = self.searchResult ?? ""
-        cell.homeVC = self
-        cell.getPostsService(lastId: 0, limit: 10) { (Post) in
-            cell.postContent = Post.body
-            cell.afterFetchNewsFeed()
-            
-            if cell.postContent?.count == 0 {
-                cell.newsFeedTableView.setEmptyView(title: "검색 결과가 없습니다", message: "검색어를 확인해 주세요")
-            }
-        }
-        
-        return cell
+        makeConstraints()
+        searchResultFeedCVCell.homeVC = self
     }
+    
+    // MARK: - Helper
+    
+    func makeConstraints() {
+        view.backgroundColor = .white
+        
+        view.addSubview(searchResultFeedCVCell)
+        
+        searchResultFeedCVCell.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+    }
+    
+    func afterSetKeyword(keyword: String) {
+        navigationItem.title = keyword
+        
+        searchResultFeedCVCell.keyword = keyword
+        searchResultFeedCVCell.getPostsService(lastId: 0, limit: 10) { [self] (Post) in
+            searchResultFeedCVCell.postContent = Post.body
+            searchResultFeedCVCell.afterFetchNewsFeed()
+        }
+    }
+    
 }

@@ -23,9 +23,6 @@ class NewsFeedTVCell: UITableViewCell {
         $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
         $0.titleLabel?.font = .systemFont(ofSize: 11)
         $0.setTitleColor(.white, for: .normal)
-        $0.isUserInteractionEnabled = false
-                
-        $0.isSkeletonable = true
     }
     var dateLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 11)
@@ -40,8 +37,6 @@ class NewsFeedTVCell: UITableViewCell {
     
     var titleLabel = UILabel().then {
         $0.font = .boldSystemFont(ofSize: 20)
-        
-        $0.isSkeletonable = true
     }
     var contentTextView = UITextView().then {
         $0.textContainer.maximumNumberOfLines = 3
@@ -50,15 +45,10 @@ class NewsFeedTVCell: UITableViewCell {
         $0.isUserInteractionEnabled = false
         $0.isScrollEnabled = false
         $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
-        
-        $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
     }
     
-    let postCountInfoContainerView = UIView().then {
-        $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
-    }
+    let postCountInfoContainerView = UIView()
+    
     let viewCountButton = UIButton().then {
         $0.contentHorizontalAlignment = .left
         $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -275,24 +265,13 @@ class NewsFeedTVCell: UITableViewCell {
         replyLabel.text = String(newsPost?.commentNum ?? 0)
     }
     
-    func hideSkeletonView() {
-        categoryButton.hideSkeleton()
-//        dateLabel.isHidden = false
-        
-        titleLabel.hideSkeleton()
-        contentTextView.hideSkeleton()
-        
-        postCountInfoContainerView.hideSkeleton()
-    }
-    
     @objc func didTapMoreButton() {
         showNuteeAlertSheet()
     }
     
     @objc func didTapCategoryButton() {
         let categoryFeedVC = CategoryFeedVC()
-        
-        categoryFeedVC.category = newsPost?.category ?? ""
+        categoryFeedVC.afterSetCategory(category: newsPost?.category ?? "")
         
         homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }

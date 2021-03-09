@@ -18,7 +18,7 @@ class CategoryCV: UICollectionView {
     
     var categoryList: [String] = []
     
-    var homeVC: HomeVC?
+    var searchVC: SearchVC?
     
     // MARK: - Life Cycle
     
@@ -49,7 +49,6 @@ class CategoryCV: UICollectionView {
         dataSource = self
         
         register(CategoryCVCell.self, forCellWithReuseIdentifier: Identify.CategoryCVCell)
-        
     }
     
 }
@@ -92,11 +91,9 @@ extension CategoryCV: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let categoryFeedVC = CategoryFeedVC()
+        categoryFeedVC.afterSetCategory(category: categoryList[indexPath.row])
         
-        //categoryFeedVC.homeVC = self.homeVC
-        categoryFeedVC.category = categoryList[indexPath.row]
-        
-        homeVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
+        searchVC?.navigationController?.pushViewController(categoryFeedVC, animated: true)
     }
 }
 
