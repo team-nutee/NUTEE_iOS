@@ -94,10 +94,9 @@ extension DeveloperInfoVC : UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.developerInfoVC = self
-        cell.developer = developerList[indexPath.row]
         
-        cell.initCell()
-        cell.addContentView()
+        cell.developer = developerList[indexPath.row]
+        cell.fillDataToView()
         
         return cell
     }
