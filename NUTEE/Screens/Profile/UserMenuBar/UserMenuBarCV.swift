@@ -71,7 +71,7 @@ class UserMenuBarCV: MenuBarCV {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        super.collectionView(collectionView, didSelectItemAt: indexPath)
+        self.profileVC?.scrollToMenuIndex(menuIndex: indexPath.item)
     }
 }
 

@@ -123,7 +123,6 @@ extension MenuBarCV : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.homeVC?.scrollToMenuIndex(menuIndex: indexPath.item)
-        self.profileVC?.scrollToMenuIndex(menuIndex: indexPath.item)
         self.noticeVC?.scrollToMenuIndex(menuIndex: indexPath.item)
     }
 }
