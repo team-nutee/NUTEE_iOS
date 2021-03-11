@@ -307,7 +307,9 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.deletePost(postId: newsPost?.id ?? 0)
+        feedContainerCVCell?.postDeleteService(postId: newsPost?.id ?? 0, completionHandler: { [self] in
+            feedContainerCVCell?.fetchNewsFeed()
+        })
     }
     
     func reportPost() {
@@ -365,8 +367,8 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: {
-            self.homeVC?.dismiss(animated: true)
+        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: { [self] in
+            homeVC?.simpleNuteeAlertDialogue(title: "신고완료", message: "해당 게시글이 신고되었습니다")
         })
     }
     

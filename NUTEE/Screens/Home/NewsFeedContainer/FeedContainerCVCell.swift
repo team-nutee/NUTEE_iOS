@@ -136,12 +136,6 @@ class FeedContainerCVCell : UICollectionViewCell {
         newsFeedTableView.isHidden = false
     }
     
-    func deletePost(postId: Int) {
-        postDeleteService(postId: postId, completionHandler: {
-            self.fetchNewsFeed()
-        })
-    }
-    
     func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) { }
 }
 
@@ -234,12 +228,11 @@ extension FeedContainerCVCell : UITableViewDataSource {
 
 // MARK: - Server connect
 
-extension FeedContainerCVCell{
+extension FeedContainerCVCell {
     
     // MARK: - Delete post
     func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
         ContentService.shared.deletePost(postId) { (responsedata) in
-
             switch responsedata {
             case .success(_):
                 completionHandler()
@@ -261,22 +254,27 @@ extension FeedContainerCVCell{
     
     // MARK: - Report post
     func reportPost(postId: Int, content: String, completionHandler: @escaping () -> Void) {
-        ContentService.shared.reportPost(postId, content) { (responsedata) in
-
+        ContentService.shared.reportPost(postId, content) { [self] (responsedata) in
             switch responsedata {
             case .success(_):
-                break
-
-            case .requestErr(_):
+                homeVC?.dismiss(animated: true, completion: {
+                    completionHandler()
+                })
+                
+            case .requestErr(let message):
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "\(message)")
                 print("request error")
 
             case .pathErr:
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
 
             case .serverErr:
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "서버에 오류가 있습니다")
                 print(".serverErr")
 
             case .networkFail :
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }

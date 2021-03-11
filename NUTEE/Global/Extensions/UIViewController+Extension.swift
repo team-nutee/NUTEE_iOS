@@ -24,7 +24,7 @@ extension UIViewController {
     func showActivityIndicator(activityIndicator: UIActivityIndicatorView) {
         DispatchQueue.main.async {
             
-            activityIndicator.style = .large
+            activityIndicator.style = .medium
             activityIndicator.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
             activityIndicator.center = CGPoint(x: self.view.bounds.size.width / 2, y: self.view.bounds.height / 2 - 40)
             self.view.addSubview(activityIndicator)
