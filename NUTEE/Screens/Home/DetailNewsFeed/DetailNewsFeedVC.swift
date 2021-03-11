@@ -317,7 +317,6 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.DetailNewsFeedHeaderView) as? DetailNewsFeedHeaderView
         headerView?.detailNewsFeedVC = self
-        headerView?.feedContainerCVCell = self.feedContainerCVCell
         
         // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
         headerView?.post = self.post

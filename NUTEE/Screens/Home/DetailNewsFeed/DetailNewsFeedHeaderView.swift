@@ -48,8 +48,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
    
     var detailNewsFeedVC: DetailNewsFeedVC?
     
-    var feedContainerCVCell: FeedContainerCVCell?
-    
     let TopAndBottomSpace = 10
     let leftAndRightSpace = 15
         
@@ -627,7 +625,10 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     @objc func didTapDeletePost() {
-        feedContainerCVCell?.deletePost(postId: post?.body.id ?? 0)
+        detailNewsFeedVC?.feedContainerCVCell?.postDeleteService(postId: post?.body.id ?? 0, completionHandler: { [self] in
+            detailNewsFeedVC?.feedContainerCVCell?.fetchNewsFeed()
+            detailNewsFeedVC?.navigationController?.popViewController(animated: true)
+        })
     }
     
     func showNuteeAlertSheet() {
@@ -673,7 +674,9 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
+        print("신고시작11")
+        detailNewsFeedVC?.feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
+            print("신고완료11")
             self.detailNewsFeedVC?.dismiss(animated: true)
         })
     }

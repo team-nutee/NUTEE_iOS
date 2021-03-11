@@ -136,12 +136,6 @@ class FeedContainerCVCell : UICollectionViewCell {
         newsFeedTableView.isHidden = false
     }
     
-    func deletePost(postId: Int) {
-        postDeleteService(postId: postId, completionHandler: {
-            self.fetchNewsFeed()
-        })
-    }
-    
     func getPostsService(lastId: Int, limit: Int, completionHandler: @escaping (_ returnedData: Post) -> Void ) { }
 }
 
@@ -261,11 +255,14 @@ extension FeedContainerCVCell{
     
     // MARK: - Report post
     func reportPost(postId: Int, content: String, completionHandler: @escaping () -> Void) {
+        print("신고서버>>>")
         ContentService.shared.reportPost(postId, content) { (responsedata) in
 
             switch responsedata {
             case .success(_):
-                break
+                print("<<<신고서버완료")
+                completionHandler()
+//                break
 
             case .requestErr(_):
                 print("request error")
