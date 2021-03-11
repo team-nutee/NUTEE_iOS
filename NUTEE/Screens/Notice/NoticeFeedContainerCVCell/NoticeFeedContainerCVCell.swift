@@ -49,6 +49,7 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
             $0.register(NoticeFeedTVCell.self, forCellReuseIdentifier: Identify.NoticeFeedTVCell)
             
             $0.separatorInset.left = 0
+            $0.separatorStyle = .none
             
             $0.isHidden = true
         }
