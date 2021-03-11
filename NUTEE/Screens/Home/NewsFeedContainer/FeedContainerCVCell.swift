@@ -55,9 +55,6 @@ class FeedContainerCVCell : UICollectionViewCell {
             
             $0.register(NewsFeedTVCell.self, forCellReuseIdentifier: Identify.NewsFeedTVCell)
             
-            $0.separatorInset.left = 0
-            $0.separatorStyle = .none
-            
             $0.isHidden = true
         }
         
@@ -176,7 +173,6 @@ extension FeedContainerCVCell : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Identify.NewsFeedTVCell, for: indexPath) as! NewsFeedTVCell
         cell.selectionStyle = .none
-        cell.addBorder(.bottom, color: .veryLightPink, thickness: 0)
         
         post = postContent?[indexPath.row]
         
