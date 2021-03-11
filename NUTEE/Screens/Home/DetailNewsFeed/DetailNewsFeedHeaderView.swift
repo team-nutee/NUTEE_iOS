@@ -674,10 +674,8 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        print("신고시작11")
-        detailNewsFeedVC?.feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: {
-            print("신고완료11")
-            self.detailNewsFeedVC?.dismiss(animated: true)
+        detailNewsFeedVC?.feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: { [self] in
+            detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "신고완료", message: "해당 게시글이 신고되었습니다")
         })
     }
     

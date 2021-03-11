@@ -228,12 +228,11 @@ extension FeedContainerCVCell : UITableViewDataSource {
 
 // MARK: - Server connect
 
-extension FeedContainerCVCell{
+extension FeedContainerCVCell {
     
     // MARK: - Delete post
     func postDeleteService(postId: Int, completionHandler: @escaping () -> Void) {
         ContentService.shared.deletePost(postId) { (responsedata) in
-
             switch responsedata {
             case .success(_):
                 completionHandler()
@@ -255,25 +254,27 @@ extension FeedContainerCVCell{
     
     // MARK: - Report post
     func reportPost(postId: Int, content: String, completionHandler: @escaping () -> Void) {
-        print("신고서버>>>")
-        ContentService.shared.reportPost(postId, content) { (responsedata) in
-
+        ContentService.shared.reportPost(postId, content) { [self] (responsedata) in
             switch responsedata {
             case .success(_):
-                print("<<<신고서버완료")
-                completionHandler()
-//                break
-
-            case .requestErr(_):
+                homeVC?.dismiss(animated: true, completion: {
+                    completionHandler()
+                })
+                
+            case .requestErr(let message):
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "\(message)")
                 print("request error")
 
             case .pathErr:
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
 
             case .serverErr:
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "서버에 오류가 있습니다")
                 print(".serverErr")
 
             case .networkFail :
+                homeVC?.presentedViewController?.simpleNuteeAlertDialogue(title: "신고오류", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }

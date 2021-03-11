@@ -367,10 +367,8 @@ extension NewsFeedTVCell: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        print("신고시작")
-        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: {
-            print("신고완료")
-            self.homeVC?.dismiss(animated: true)
+        feedContainerCVCell?.reportPost(postId: newsPost?.id ?? 0, content: text, completionHandler: { [self] in
+            homeVC?.simpleNuteeAlertDialogue(title: "신고완료", message: "해당 게시글이 신고되었습니다")
         })
     }
     
