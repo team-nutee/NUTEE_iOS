@@ -62,7 +62,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
     //MARK: - Dummy data
     
-    //var testImageList: [UIImage?] = [UIImage(named: "TestImage01"), UIImage(named: "TestImage02"), UIImage(named: "TestImage03")]
     var postImageList: [PostImage?] = []
     
     // MARK: - Life Cycle
@@ -78,7 +77,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-        
     }
     
     override func layoutSubviews() {
@@ -137,49 +135,49 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
         
         _ = firstImageViewWhenOne.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 0)
             
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenThree.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 0)
             
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenThree.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 1)
             
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenThree.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 2)
             
             $0.isHidden = true
         }
         
         _ = firstImageViewWhenFour.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 0)
             
             $0.isHidden = true
         }
         
         _ = secondImageViewWhenFour.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 1)
             
             $0.isHidden = true
         }
         
         _ = thirdImageViewWhenFour.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 2)
             
             $0.isHidden = true
         }
         
         _ = fourthImageViewWhenFour.then {
-            setClickActions(imageView: $0)
+            setClickActions(imageView: $0, tag: 3)
             
             $0.isHidden = true
         }
@@ -566,8 +564,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
     }
     
-    func setClickActions(imageView: UIImageView) {
-        imageView.tag = 1
+    func setClickActions(imageView: UIImageView, tag: Int) {
+        imageView.tag = tag
+        
         let tapGestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         tapGestureRecognizer1.numberOfTapsRequired = 1
         imageView.isUserInteractionEnabled = true
@@ -575,18 +574,20 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        let imgView = tapGestureRecognizer.view as! UIImageView
-//        print("your tapped image view tag is : \(imgView.tag)")
-        //Give your image View tag
-        if (imgView.tag == 1) {
-            let nuteeImageViewer = NuteeImageViewer()
-            nuteeImageViewer.imageList = postImageList
-            
-            nuteeImageViewer.modalPresentationStyle = .overFullScreen
-            
-            detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
-        }
+        let nuteeImageViewer = NuteeImageViewer()
+        nuteeImageViewer.modalPresentationStyle = .overFullScreen
+        
+        let imgView = tapGestureRecognizer.view as? UIImageView
+        nuteeImageViewer.setImageSource(imageList: postImageList, tag: imgView?.tag ?? 0)
+        
+        detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
     }
+    
+}
+
+// MARK: - NuteeAlert Action Definition
+
+extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     
     func editPost() {
         let postVC = PostVC()
@@ -628,11 +629,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     @objc func didTapDeletePost() {
         feedContainerCVCell?.deletePost(postId: post?.body.id ?? 0)
     }
-}
-
-// MARK: - NuteeAlert Action Definition
-
-extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     
     func showNuteeAlertSheet() {
         let nuteeAlertSheet = NuteeAlertSheet()

@@ -24,6 +24,7 @@ class NuteeImageViewer: UIViewController {
     let maximumAlphaValue: CGFloat = 1.0
     
     var imageList: [PostImage?] = []
+    var imageTag: Int?
     
     // MARK: - Dummy data
     
@@ -39,13 +40,14 @@ class NuteeImageViewer: UIViewController {
         makeConstraints()
         
         addPanGestureRecognizer()
+        
+        scrollToSelectedImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.presentingViewController?.view.alpha = minimumAlphaValue
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -94,10 +96,6 @@ class NuteeImageViewer: UIViewController {
             $0.backgroundColor = .clear
             $0.pageIndicatorTintColor = .white
             $0.currentPageIndicatorTintColor = .nuteeGreen
-            
-            $0.numberOfPages = imageList.count
-            $0.currentPage = 0
-            
             $0.isUserInteractionEnabled = false
         }
     }
@@ -129,6 +127,28 @@ class NuteeImageViewer: UIViewController {
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(20)
+        }
+    }
+    
+    func setImageSource(imageList: [PostImage?], tag: Int) {
+        self.imageList = imageList
+        self.imageTag = tag
+        
+        let numberOfImages = imageList.count
+        if numberOfImages > 1 {
+            _ = pageControl.then {
+                $0.numberOfPages = numberOfImages
+                $0.currentPage = imageTag ?? 0
+            }
+        }
+    }
+    
+    func scrollToSelectedImage() {
+        imageViewContainerCollectionView.performBatchUpdates(nil) { [self] (isLoded) in
+            if isLoded {
+                let indexPath = IndexPath(item: imageTag ?? 0, section: 0)
+                imageViewContainerCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            }
         }
     }
     
