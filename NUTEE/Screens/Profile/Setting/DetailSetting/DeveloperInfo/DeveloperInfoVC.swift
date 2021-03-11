@@ -20,7 +20,8 @@ class DeveloperInfoVC : UIViewController {
     
     let developerList = [
         ["이문혁", "BackEnd", "2019 ~", "MoonHKLee"],
-        ["오준현", "PM", "2019 ~ ", "5anniversary"],
+        ["윤석노", "BackEnd", "2021 ~", "sny1032"],
+        ["오준현", "PM, Design", "2019 ~ ", "5anniversary"],
         ["김희재", "iOS", "2019 ~ ", "iowa329"],
         ["김은우", "iOS", "2019 ~ ", "foreunwoo"],
         ["임윤휘", "Android", "2020 ~", "88yhtserof"],
@@ -29,7 +30,7 @@ class DeveloperInfoVC : UIViewController {
         ["박세연", "QA", "2020 ~ ", "SEYEON-PARK"],
 
         ["임우찬", "BackEnd", "2019 ~ 2020", "dladncks1217"],
-        ["박진수", "Android", "2020 ~ 2021", "jinsu4755"],
+        ["박진수", "Android, TI", "2020 ~ 2021", "jinsu4755"],
         ["배은서", "Android", "2020 ~ 2021", "eunseo5355"],
         ["정우경", "QA", "2020", ""],
         ["고병우", "QA", "2020", "kohbwoo"],
