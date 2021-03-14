@@ -109,7 +109,7 @@ class SignUpViewController: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = true
+            $0.isEnabled = false
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
