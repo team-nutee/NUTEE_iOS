@@ -196,6 +196,7 @@ extension FeedContainerCVCell : UITableViewDataSource {
         detailNewsFeedVC.postId = postContent?[indexPath.row].id
         detailNewsFeedVC.feedContainerCVCell = self
         if detailNewsFeedVC.postId != nil {
+            detailNewsFeedVC.fetchPost()
             homeVC?.navigationController?.pushViewController(detailNewsFeedVC, animated: true)
         }
     }
