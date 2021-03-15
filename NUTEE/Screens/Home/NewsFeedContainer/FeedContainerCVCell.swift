@@ -144,6 +144,15 @@ class FeedContainerCVCell : UICollectionViewCell {
 extension FeedContainerCVCell : UITableViewDelegate { }
 extension FeedContainerCVCell : UITableViewDataSource {
     
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let rootVC = homeVC as? HomeVC
+        if rootVC?.loadMorePostButton.isHidden == false {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                rootVC?.controlLoadMorePostButton(show: false)
+            }
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
