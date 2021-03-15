@@ -60,15 +60,6 @@ class DetailNewsFeedVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
-        showActivityIndicator(activityIndicator: activityIndicator)
-        getPostService(postId: postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
-            detailNewsFeedTableView.reloadData()
-            
-            hideActivityIndicator(activityIndicator: activityIndicator)
-            detailNewsFeedTableView.isHidden = false
-            commentView.isHidden = false
-        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -179,6 +170,15 @@ class DetailNewsFeedVC: UIViewController {
         refreshControl.addTarget(self, action: #selector(updatePost), for: UIControl.Event.valueChanged)
     }
     
+    func fetchPost() {
+        showActivityIndicator(activityIndicator: activityIndicator)
+        getPostService(postId: postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
+            hideActivityIndicator(activityIndicator: activityIndicator)
+            detailNewsFeedTableView.isHidden = false
+            commentView.isHidden = false
+        })
+    }
+    
     func makeReplyList() {
         // 댓글과 대댓글을 하나의 CommentBody 배열 형태로 구성 및 정렬
         var replyList: [ReplyList] = []
@@ -204,8 +204,6 @@ class DetailNewsFeedVC: UIViewController {
     
     @objc func updatePost() {
         self.getPostService(postId: self.postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
-            self.detailNewsFeedTableView.reloadData()
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.refreshControl.endRefreshing()
             }
@@ -223,7 +221,6 @@ class DetailNewsFeedVC: UIViewController {
                 self.endCommentEditing()
                 
                 getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
-                    detailNewsFeedTableView.reloadData()
                 })
             })
         } else {
@@ -237,7 +234,6 @@ class DetailNewsFeedVC: UIViewController {
                     self.endCommentEditing()
                     
                     self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-                        self.detailNewsFeedTableView.reloadData()
                     })
                 })
                 
@@ -246,7 +242,6 @@ class DetailNewsFeedVC: UIViewController {
                     self.endCommentEditing()
                     
                     getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
-                        detailNewsFeedTableView.reloadData()
                         
                         let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
                         detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
@@ -288,7 +283,6 @@ class DetailNewsFeedVC: UIViewController {
     func deleteComment(deleteCommentId: Int) {
         deleteCommentService(postId: postId ?? 0, commentId: deleteCommentId) { [self] in
             getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
-                detailNewsFeedTableView.reloadData()
             })
         }
     }
@@ -326,7 +320,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         
         return headerView
     }
-
+    
     // Cell
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -489,6 +483,8 @@ extension DetailNewsFeedVC {
                 let response = res as! PostContent
                 post = response
                 makeReplyList()
+                
+                detailNewsFeedTableView.reloadData()
                 
                 completionHandler(self.post!)
                 
