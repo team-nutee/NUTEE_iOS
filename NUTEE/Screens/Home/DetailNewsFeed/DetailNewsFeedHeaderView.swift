@@ -78,6 +78,8 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
+        
         imageFrameViewWidth = imageFrameView.frame.size.width
         
         firstImageViewWhenThree.snp.updateConstraints {
@@ -264,8 +266,9 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         }
 
         contentTextView.snp.makeConstraints {
-            let deviceHeight = UIScreen.main.bounds.height
-            $0.height.equalTo(deviceHeight / 2).priority(999)
+//            let deviceHeight = UIScreen.main.bounds.height
+//            $0.height.equalTo(deviceHeight / 2).priority(999)
+            $0.height.greaterThanOrEqualTo(0).priority(999)
             
             $0.top.equalTo(profileImageView.snp.bottom).offset(15)
             $0.left.equalTo(contentView).offset(leftAndRightSpace)
@@ -418,9 +421,10 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         // Posting 내용 설정
         contentTextView.text = post?.body.content
-        contentTextView.postingInit()
+        contentView.sizeToFit()
         contentTextView.snp.updateConstraints {
-            $0.height.equalTo(contentTextView.frame.size.height).priority(999)
+//            $0.height.equalTo(contentTextView.frame.size.height).priority(999)
+            $0.height.greaterThanOrEqualTo(contentTextView.frame.size.height).priority(999)
         }
         
         // 게시글 이미지 설정
