@@ -11,13 +11,13 @@
 앱 아이콘
 ------------
 
-<img src="IMG/NUTEE.png" width="300">
+<img src="IMG/NUTEE_icon.png" width="300">
 
 
 
 스크린 샷
 ------------
-<img src="IMG/1.jpg" width="300"><img src="IMG/2.jpg" width="300"><img src="IMG/3.jpg" width="300"><img src="IMG/4.jpg" width="300"><img src="IMG/5.jpg" width="300"><img src="IMG/6.jpg" width="300">
+<img src="IMG/1.png" width="300"><img src="IMG/2.jpg" width="300"><img src="IMG/3.png" width="300"><img src="IMG/4.png" width="300"><img src="IMG/5.png" width="300"><img src="IMG/6.png" width="300"><img src="IMG/7.png" width="300">
 
 
 
@@ -27,7 +27,7 @@
 - 5
 
 2. Xcode 버전
-- 11.4.1
+- 12.4
 
 3. 사용한 유틸
 
@@ -79,6 +79,7 @@
 > 성공회대 소프트웨어공학과 15학번 학생입니다.
 >
 > NUTEE iOS 파트를 담당하고 있습니다.
+
 
 
 * 김은우
