@@ -12,13 +12,13 @@
 앱 아이콘
 ------------
 
-<img src="IMG/NUTEE_icon.png" width="300">
+<img src="App_ScreenShot/NUTEE_icon.png" width="300">
 
 
 
 스크린 샷
 ------------
-<img src="IMG/1.png" width="300"><img src="IMG/2.jpg" width="300"><img src="IMG/3.png" width="300"><img src="IMG/4.png" width="300"><img src="IMG/5.png" width="300"><img src="IMG/6.png" width="300"><img src="IMG/7.png" width="300">
+<img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/01_LaunchScreen.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/01_LaunchScreen.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/02_Login.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/03_SignUp.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/04_Home.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/04-01_Category.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/04-02_Search.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/05_Notice.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/06_Post.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/07_Profile.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/07-01_SettingCategory.jpeg" width="300"><img src="App_ScreenShot/iPhone_PreviewScreenShoot(6_5inch)/jpg/07-02_SettingMajor.jpeg" width="300">
 
 
 
