@@ -137,9 +137,10 @@ class IDVC: SignUpViewController {
         nicknameVC.totalSignUpViews = totalSignUpViews
         nicknameVC.progressStatusCount = progressStatusCount
         
-        nicknameVC.userId = idTextField.text ?? ""
         nicknameVC.email = self.email
         nicknameVC.otp = self.otp
+        
+        nicknameVC.userId = idTextField.text ?? ""
         
         present(nicknameVC, animated: false)
     }

@@ -16,11 +16,26 @@ enum Identify {
     
     // Home
     static let FeedContainerCVCell = "FeedContainerCVCell"
+    
+    static let FavoriteFeedCVCell = "FavoriteFeedCVCell"
+    static let MajorFeedCVCell = "MajorFeedCVCell"
+    static let AllFeedCVCell = "AllFeedCVCell"
+    static let CategoryFeedCVCell = "CategoryFeedCVCell"
+    
     static let NewsFeedTVCell = "NewsFeedTVCell"
+    
+    // Detail NewsFeed
+    static let DetailNewsFeedHeaderView = "DetailNewsFeedHeaderView"
+    static let ReplyTVCell = "ReplyTVCell"
+    static let ReReplyTVCell = "ReReplyTVCell"
+    static let NoReplyFooterView = "NoReplyFooterView"
     
     // Search
     static let SearchHistoryTVHeaderView = "SearchHistoryTVHeaderView"
     static let SearchHistoryTVCell = "SearchHistoryTVCell"
+    static let SearchResultFeedCVCell = "SearchResultFeedCVCell"
+    
+    static let CategoryCVCell = "CategoryCVCell"
     
     // Notification
     static let NotificationTVCell = "NotificationTVCell"
@@ -37,10 +52,20 @@ enum Identify {
     
     static let NoticeFeedTVCell = "NoticeFeedTVCell"
     
+    // Profile
+    static let UserMenuBarCVCell = "UserMenuBarCVCell"
+    
+    static let UserPostFeedCVCell = "UserPostFeedCVCell"
+    static let UserCommentFeedCVCell = "UserCommentFeedCVCell"
+    static let UserRecommendFeedCVCell = "UserRecommendFeedCVCell"
+    
     // Setting
     static let SettingTVCell = "SettingTVCell"
     static let DeveloperInfoTVCell = "DeveloperInfoTVCell"
     
+    // NuteeAlertSheet
     static let OptionListTVCell = "OptionListTVCell"
+    static let SelectOptionListTVCell = "SelectOptionListTVCell"
+    static let CheckOptionListTVCell = "CheckOptionListTVCell"
     
 }

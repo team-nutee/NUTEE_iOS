@@ -8,6 +8,7 @@ target 'NUTEE' do
 
   pod 'Gedatsu', configuration: %w(Debug)
   pod 'Firebase/Analytics'
+	pod 'Firebase/Messaging'
   pod 'Kingfisher'
   pod "SkeletonView"
   pod 'SnapKit', '~> 5.0.0'

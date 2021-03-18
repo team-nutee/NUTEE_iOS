@@ -31,17 +31,11 @@ extension UIImageView {
 
     func setImageNutee(_ urlString: String?){
         if urlString == "" || urlString == nil {
-            setImage(with: APIConstants.BaseURL + "/settings/nutee_profile.png")
+            image = UIImage(named: "nutee_zigi_white")
+            contentMode = .scaleAspectFit
         } else {
-            setImage(with: APIConstants.BaseURL + "/"  + (urlString ?? ""))
-        }
-    }
-    
-    func setImageContentMode(_ urlString: String?, imgvw: ImageView){
-        if urlString == "" || urlString == nil {
-            imgvw.contentMode = .scaleAspectFit
-        } else {
-            imgvw.contentMode = .scaleAspectFill
+            setImage(with: urlString ?? "")
+            contentMode = .scaleAspectFill
         }
     }
 

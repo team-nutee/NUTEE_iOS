@@ -5,7 +5,6 @@
 //  Created by Junhyeon on 2020/07/21.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
 import AVFoundation
 import AVKit
 import UIKit
@@ -22,8 +21,12 @@ class PostVC: UIViewController {
     
     let containerView = UIView()
     
-    let postContentTextView = UITextView()
-    let placeholderLabel = UILabel()
+    let postTitleTextField = UITextField()
+    
+    let categoryButton = UIButton()
+    let majorButton = UIButton()
+    
+    let postContentTextView = PlaceholderTextView()
     
     let imageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
@@ -31,6 +34,14 @@ class PostVC: UIViewController {
     let imagePickerButton = UIButton()
     
     // MARK: - Variables and Properties
+    
+    var categoryList: [String] = []
+    var selectedCategory: String?
+    
+    var majorList: [String] = []
+    var selectedMajor: String?
+    
+    var pickedCategory: String?
 
     var pickedIMG : [UIImage] = []
     
@@ -38,9 +49,11 @@ class PostVC: UIViewController {
     
     var uploadedImages: [NSString] = []
     
-//    var editNewsPost: NewsPostsContentElement?
     var isEditMode = false
-    var editPostImg: [Image] = []
+    
+    var editPostBody: PostBody?
+    var editPostContent: PostContent?
+    var editPostImage: [PostImage?] = []
     
     // MARK: - Dummy data
     
@@ -54,6 +67,11 @@ class PostVC: UIViewController {
         setNavigationBarItem()
         initPostingView()
         addSubView()
+        
+        setEditMode()
+        
+        getCategoriesService()
+        getMyProfileService()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,8 +83,16 @@ class PostVC: UIViewController {
         ])
         
         addKeyboardNotification()
-        self.postContentTextView.becomeFirstResponder()
+        self.postTitleTextField.becomeFirstResponder()
+        
+        if isEditMode {
+            categoryButton.setTitle(selectedCategory, for: .normal)
+            categoryButton.isEnabled = false
+            
+            majorButton.isHidden = true
+        }
     }
+    
     
     // MARK: - Helper
     
@@ -80,8 +106,10 @@ class PostVC: UIViewController {
         if isEditMode == true {
             rightBarTitle = "수정"
         }
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapClosePosting))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: rightBarTitle, style: .plain, target: self, action: #selector(didTapUploadPosting))
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: barItemFont, NSAttributedString.Key.foregroundColor: UIColor.veryLightPink], for: .disabled)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func initPostingView() {
@@ -89,21 +117,51 @@ class PostVC: UIViewController {
             $0.verticalScrollIndicatorInsets = UIEdgeInsets(top: -10, left: 0, bottom: 0, right: 0)
         }
         
+        _ = postTitleTextField.then {
+            $0.delegate = self
+            
+            $0.font = .boldSystemFont(ofSize: 20)
+            $0.placeholder = "제목을 입력해주세요"
+            $0.tintColor = .nuteeGreen
+        }
+        
+        _ = categoryButton.then {
+            $0.layer.cornerRadius = 12
+            $0.backgroundColor = .nuteeGreen
+
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 13)
+            $0.setTitleColor(.white, for: .normal)
+            $0.setTitle("카테고리", for: .normal)
+            
+            $0.addTarget(self, action: #selector(didTapSelectPostCategoryButton), for: .touchUpInside)
+        }
+        
+        
+        _ = majorButton.then {
+            $0.layer.cornerRadius = 12
+            $0.backgroundColor = .nuteeGreen
+
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+            $0.titleLabel?.font = .boldSystemFont(ofSize: 13)
+            $0.setTitleColor(.white, for: .normal)
+            $0.setTitle("내 전공", for: .normal)
+            
+            $0.addTarget(self, action: #selector(didTapSelectPostMajorButton), for: .touchUpInside)
+        }
+        
         _ = postContentTextView.then {
             $0.delegate = self
             
             $0.font = .systemFont(ofSize: 15)
             
+            $0.placeholderLabel.text = "내용을 입력해주세요"
+            $0.placeholderLabel.font = .systemFont(ofSize: 15)
+            
             $0.tintColor = .nuteeGreen
             $0.isScrollEnabled = false
-            $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5)
-        }
-        
-        _ = placeholderLabel.then {
-            $0.text = "내용을 입력해주세요"
-            $0.sizeToFit()
-            $0.font = .systemFont(ofSize: 15)
-            $0.textColor = .gray
         }
         
         _ = imageCollectionView.then {
@@ -141,8 +199,10 @@ class PostVC: UIViewController {
         
         scrollView.addSubview(containerView)
         
+        containerView.addSubview(postTitleTextField)
+        containerView.addSubview(categoryButton)
+        containerView.addSubview(majorButton)
         containerView.addSubview(postContentTextView)
-        postContentTextView.addSubview(placeholderLabel)
 
         containerView.addSubview(imageCollectionView)
         
@@ -156,7 +216,9 @@ class PostVC: UIViewController {
             $0.right.equalTo(view.snp.right)
         }
         
+        let topAndBottomSpace = 15
         let leftAndRightSpace = 15
+        
         containerView.snp.makeConstraints {
             $0.width.equalTo(scrollView.snp.width)
             $0.height.greaterThanOrEqualTo(scrollView.snp.height)
@@ -167,24 +229,43 @@ class PostVC: UIViewController {
             $0.bottom.equalTo(scrollView.snp.bottom)
         }
         
-        postContentTextView.snp.makeConstraints {
+        postTitleTextField.snp.makeConstraints {
+            $0.height.equalTo(24)
+            
             $0.top.equalTo(containerView.snp.top)
             $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
             $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
         }
-        placeholderLabel.snp.makeConstraints {
-            $0.top.equalTo(postContentTextView.snp.top)
-            $0.left.equalTo(postContentTextView.snp.left)
-            $0.right.equalTo(postContentTextView.snp.right)
+        
+        categoryButton.snp.makeConstraints {
+            $0.width.greaterThanOrEqualTo(67)
+            $0.height.equalTo(28)
+            
+            $0.top.equalTo(postTitleTextField.snp.bottom).offset(topAndBottomSpace)
+            $0.left.equalTo(postTitleTextField.snp.left)
         }
-
+        
+        majorButton.snp.makeConstraints {
+            $0.width.greaterThanOrEqualTo(67)
+            $0.height.equalTo(28)
+            
+            $0.top.equalTo(postTitleTextField.snp.bottom).offset(topAndBottomSpace)
+            $0.left.equalTo(categoryButton.snp.right).offset(leftAndRightSpace)
+        }
+        
+        postContentTextView.snp.makeConstraints {
+            $0.top.equalTo(categoryButton.snp.bottom).offset(topAndBottomSpace)
+            $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
+            $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
+        }
+        
         imageCollectionView.snp.makeConstraints {
             $0.height.equalTo(60)
             
-            $0.top.equalTo(postContentTextView.snp.bottom).offset(10)
+            $0.top.equalTo(postContentTextView.snp.bottom).offset(topAndBottomSpace)
             $0.left.equalTo(containerView.snp.left).offset(leftAndRightSpace)
             $0.right.equalTo(containerView.snp.right).inset(leftAndRightSpace)
-            $0.bottom.equalTo(containerView.snp.bottom).inset(10)
+            $0.bottom.equalTo(containerView.snp.bottom).inset(topAndBottomSpace)
         }
         
         imagePickerView.snp.makeConstraints {
@@ -200,25 +281,32 @@ class PostVC: UIViewController {
             $0.height.equalTo(imagePickerButton.snp.width)
             
             $0.centerY.equalTo(imagePickerView)
-            $0.left.equalTo(imagePickerView.snp.left).offset(15)
+            $0.left.equalTo(imagePickerView.snp.left).offset(leftAndRightSpace)
         }
     }
- 
-//    func setEditMode() {
-//        isEditMode = true
-//        postContentTextView.text = editNewsPost?.content
-//        editPostImg = editNewsPost?.images ?? []
-//        self.navigationItem.leftBarButtonItem?.title = "취소"
-//        self.navigationItem.rightBarButtonItem?.title = "수정"
-//    }
+    
+    func setEditMode() {
+        if self.editPostContent != nil {
+            postTitleTextField.text = editPostContent?.body.title ?? ""
+            postContentTextView.text = editPostContent?.body.content ?? ""
+            selectedCategory = editPostContent?.body.category ?? ""
+            editPostImage = editPostContent?.body.images ?? []
+        } else {
+            postTitleTextField.text = editPostBody?.title ?? ""
+            postContentTextView.text = editPostBody?.content ?? ""
+            selectedCategory = editPostBody?.category ?? ""
+            editPostImage = editPostBody?.images ?? []
+        }
+    }
     
     @objc func didTapClosePosting() {
         // 입력된 빈칸과 줄바꿈 개수 구하기
-        var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
-        str = str.replacingOccurrences(of: "\n", with: "")
+        let titleStr = postTitleTextField.text?.count
+        var contentStr = postContentTextView.text.replacingOccurrences(of: " ", with: "")
+        contentStr = contentStr.replacingOccurrences(of: "\n", with: "")
         
         // 빈칸이나 줄바꿈으로만 입력된 경우 포스팅 창 바로 나가기
-        if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
+        if pickedIMG.count != 0 || editPostImage.count > 1 || contentStr.count != 0 || titleStr != 0 {
             var content = ""
             if isEditMode == true {
                 content = "수정을 취소하시겠습니까?"
@@ -241,59 +329,127 @@ class PostVC: UIViewController {
         }
     }
     
-//    @objc func didTapPosting(){
-//
-//        LoadingHUD.show()
-//        if isEditMode == false {
-//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-//            if pickedIMG != [] {
-//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-//                    self.postContent(images: self.uploadedImages,
-//                                     postContent: self.postContentTextView.text)
-//                })
-//            } else {
-//                postContent(images: [], postContent: postContentTextView.text)
-//            }
-//        } else {
-//            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-//            var images: [String] = []
-//            for img in self.editPostImg {
-//                images.append(img.src ?? "")
-//            }
-//            if pickedIMG != [] {
-//                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-//                    for uploadimg in self.uploadedImages {
-//                        images.append(uploadimg as String)
-//                    }
-//                    self.editPostContent(postId: self.editNewsPost?.id ?? 0,
-//                                         postContent: self.postContentTextView.text, postImages: images)
-//                })
-//            } else {
-//                editPostContent(postId: editNewsPost?.id ?? 0,
-//                                postContent: postContentTextView.text,
-//                                postImages: images)
-//            }
-//        }
-//
-//
-//    }
-//
-//    @objc func activeself.navigationItem.rightBarButtonItem?() {
-//        NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification,
-//                                               object: postContentTextView ,
-//                                               queue: OperationQueue.main) { (notification) in
-//            if self.postContentTextView.text != "" || self.pickedIMG != []{
-//                self.navigationItem.rightBarButtonItem?.isEnabled = true
-//            } else {
-//                self.navigationItem.rightBarButtonItem?.isEnabled = false
-//            }
-//        }
-//    }
+    @objc func didTapUploadPosting() {
+        if pickedCategory?.isEmpty == false {
+            if isEditMode == false {
+                // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+                if pickedIMG != [] {
+                    postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                        self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.pickedCategory ?? "")
+                    })
+                } else {
+                    uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.pickedCategory ?? "")
+                }
+            } else {
+                // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+                var images: [NSString] = []
+                for image in self.editPostImage {
+                    images.append((image?.src! ?? "") as NSString)
+                }
+                
+                if pickedIMG != [] {
+                    postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                        for uploadimg in self.uploadedImages {
+                            images.append(uploadimg)
+                        }
+                        
+                        if self.editPostContent != nil {
+                            self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                        } else {
+                            self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                        }
+                    })
+                } else {
+                    if self.editPostContent != nil {
+                        self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                    } else {
+                        self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                    }
+                }
+            }
+        } else {
+            simpleNuteeAlertDialogue(title: "업로드 오류", message: "카테고리나 전공을 선택해주세요")
+        }
+    }
+    
+    func updatePostMajorButtonStatus() {
+        majorButton.alpha = 1.0
+        majorButton.setTitle(selectedMajor, for: .normal)
+        pickedCategory = selectedMajor
+        
+        if selectedCategory != "" {
+            selectedCategory = ""
+            categoryButton.setTitle("카테고리", for: .normal)
+        }
+        categoryButton.alpha = 0.5
+    }
+    
+    func updatePostCategoryButtonStatus() {
+        categoryButton.alpha = 1.0
+        categoryButton.setTitle(selectedCategory, for: .normal)
+        pickedCategory = selectedCategory
+        
+        if selectedMajor != "" {
+            selectedMajor = ""
+            majorButton.setTitle("내 전공", for: .normal)
+        }
+        majorButton.alpha = 0.5
+    }
+    
+    @objc func didTapSelectPostCategoryButton() {
+        showCategoryListSheet()
+    }
+    
+    @objc func didTapSelectPostMajorButton() {
+        showMajorListSheet()
+    }
+}
 
+// MARK: - NuteeAlert Action Definition
+
+extension PostVC: NuteeAlertActionDelegate {
+    
+    func showCategoryListSheet() {
+        let selectCategorySheet = NuteeSelectSheet()
+        selectCategorySheet.nuteeAlertActionDelegate = self
+        selectCategorySheet.selectMode = .category
+        
+        selectCategorySheet.titleContent = "카테고리를 선택해주세요"
+        
+        selectCategorySheet.itemList = categoryList
+        
+        selectCategorySheet.modalPresentationStyle = .custom
+        present(selectCategorySheet, animated: true)
+    }
+    
+    func showMajorListSheet() {
+        let selectMajorSheet = NuteeSelectSheet()
+        selectMajorSheet.nuteeAlertActionDelegate = self
+        selectMajorSheet.selectMode = .major
+        
+        selectMajorSheet.titleContent = "전공을 선택해주세요"
+        
+        selectMajorSheet.itemList = majorList
+        
+        selectMajorSheet.modalPresentationStyle = .custom
+        present(selectMajorSheet, animated: true)
+    }
+    
+    func nuteeSelectSheetAction(selectedOptionItem: String, sheetMode: SelectMode) {
+        switch sheetMode {
+        case .category:
+            selectedCategory = selectedOptionItem
+            updatePostCategoryButtonStatus()
+        case .major:
+            selectedMajor = selectedOptionItem
+            updatePostMajorButtonStatus()
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - imageCollectionView Delegate
-
 extension PostVC : UICollectionViewDelegate { }
 extension PostVC : UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView:UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -306,7 +462,7 @@ extension PostVC : UICollectionViewDataSource {
         if isEditMode == false {
             return pickedIMG.count
         } else {
-            return (editPostImg.count ) + pickedIMG.count
+            return (editPostImage.count ) + pickedIMG.count
         }
         
     }
@@ -316,18 +472,11 @@ extension PostVC : UICollectionViewDataSource {
         
         if isEditMode == false {
             cell.postImageImageView.image = pickedIMG[indexPath.row]
-            if ( pickedIMG.count != 0 || editPostImg.count != 0) {
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
         } else {
-            self.navigationItem.rightBarButtonItem?.isEnabled = true
-            
-            if editPostImg.count >= 1 && indexPath.row < editPostImg.count {
-//                cell.postImageImageView.setImageNutee(editNewsPost?.images[indexPath.row].src ?? "")
+            if editPostImage.count > 0 && indexPath.row < editPostImage.count {
+                cell.postImageImageView.setImage(with: editPostImage[indexPath.row]?.src ?? "")
             } else {
-                let fixIndex = Int(indexPath.row) - (editPostImg.count)
+                let fixIndex = Int(indexPath.row) - (editPostImage.count)
                 cell.postImageImageView.image = pickedIMG[fixIndex]
             }
         }
@@ -337,34 +486,15 @@ extension PostVC : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // 입력된 빈칸과 줄바꿈 개수 구하기
-        var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
-        str = str.replacingOccurrences(of: "\n", with: "")
-        
         if isEditMode == false {
             pickedIMG.remove(at: indexPath.row)
-            if (pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0){
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
         } else {
-            print(false)
-            if editPostImg.count > 0 && indexPath.row < editPostImg.count {
-                editPostImg.remove(at: indexPath.row)
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
+            if editPostImage.count > 0 && indexPath.row < editPostImage.count {
+                editPostImage.remove(at: indexPath.row)
             } else {
-                let fixIndex = Int(indexPath.row) - (editPostImg.count)
+                let fixIndex = Int(indexPath.row) - (editPostImage.count)
                 pickedIMG.remove(at: fixIndex)
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
             }
-            
-            if (pickedIMG.count != 0 || editPostImg.count != 0 || str.count != 0){
-                self.navigationItem.rightBarButtonItem?.isEnabled = true
-            } else {
-                self.navigationItem.rightBarButtonItem?.isEnabled = false
-            }
-            
         }
         
         self.imageCollectionView.reloadData()
@@ -372,12 +502,15 @@ extension PostVC : UICollectionViewDataSource {
     
 }
 
-// MARK: - UITextView Delegate
-
+// MARK: - UITextView Delegate, UITextField Delegate
 extension PostVC: UITextViewDelegate {
     
     // TextView의 동적인 크기 변화를 위한 function
     func textViewDidChange(_ textView: UITextView) {
+        
+        postContentTextView.handlePlaceholder()
+        
+        // textView 높이 동적으로 구성하기
         let size = CGSize(width: view.frame.width, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         textView.constraints.forEach { (constraint) in
@@ -386,27 +519,37 @@ extension PostVC: UITextViewDelegate {
             }
         }
         
-        // 입력된 빈칸과 줄바꿈 개수 구하기
+        // 게시 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
+        let titleStr = postTitleTextField.text ?? ""
+        
         var str = postContentTextView.text.replacingOccurrences(of: " ", with: "")
         str = str.replacingOccurrences(of: "\n", with: "")
         
-        if str != "" {
-            self.placeholderLabel.isHidden = true
-        } else {
-            self.placeholderLabel.isHidden = false
-        }
-        
-        // 빈칸이나 줄바꿈으로만 입력된 경우 버튼 비활성화
-        if pickedIMG.count != 0 || editPostImg.count > 1 || str.count != 0 {
+        if str.count != 0 && titleStr.count != 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
+        
+    }
+    
+}
+
+extension PostVC: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return false }
+        
+        // 제목 글자 수 한글 기준 30자 제한
+        let newLength = text.count + string.count - range.length
+        return newLength <= 31
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        textViewDidChange(postContentTextView)
     }
 }
 
 // MARK: - KeyBoard
-
 extension PostVC {
     func addKeyboardNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -461,7 +604,6 @@ extension PostVC {
 }
 
 // MARK: - YPImagePicker
-
 extension PostVC {
     
     @objc func showPicker() {
@@ -479,6 +621,8 @@ extension PostVC {
         config.library.preselectedItems = selectedItems
         config.colors.tintColor = .nuteeGreen
         config.overlayView = UIView()
+        
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
         
         let picker = YPImagePicker(configuration: config)
         
@@ -501,6 +645,7 @@ extension PostVC {
             picker.dismiss(animated: true) {
                 self.imageCollectionView.reloadData()
             }
+            UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         }
         present(picker, animated: true, completion: nil)
     }
@@ -508,98 +653,138 @@ extension PostVC {
 }
 
 // MARK: - PostVC 서버 연결
+extension PostVC {
+    
+    func uploadPost(images: [NSString], title: String, content: String, category: String){
+        ContentService.shared.createPost(title: title, content: content, category: category, images: images){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+            
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "\(message)")
 
-//extension PostVC {
-//    func postContent(images: [NSString], postContent: String){
-//        ContentService.shared.uploadPost(pictures: images, postContent: postContent){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(_ ):
-//
-//                LoadingHUD.hide()
-//                self.dismiss(animated: true, completion: nil)
-//            case .requestErr:
-//                LoadingHUD.hide()
-//                print("requestErr")
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//
-//            }
-//        }
-//
-//    }
-//
-//    func postImage(images: [UIImage],
-//                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
-//        dump(images[0])
-//
-//        ContentService.shared.uploadImage(pictures: images){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(let res):
-//                self.uploadedImages = res as! [NSString]
-//                print(".successful uploadImage")
-//                completionHandler(self.uploadedImages)
-//            case .requestErr:
-//                self.simpleAlert(title: "실패", message: "")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//            }
-//        }
-//
-//    }
-//
-//    func editPostContent(postId: Int, postContent: String, postImages: [String]){
-//        ContentService.shared.editPost(postId, postContent, postImages){
-//            [weak self]
-//            data in
-//
-//            guard let `self` = self else { return }
-//
-//            switch data {
-//            case .success(_ ):
-//
-//                LoadingHUD.hide()
-//                self.dismiss(animated: true, completion: nil)
-//            case .requestErr:
-//                LoadingHUD.hide()
-//                print("requestErr")
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail:
-//                print(".networkFail")
-//
-//
-//            }
-//        }
-//
-//    }
-//
-//}
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+
+    func postImage(images: [UIImage],
+                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
+        dump(images[0])
+        
+        ContentService.shared.uploadImage(images: images){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.uploadedImages = res as! [NSString]
+                completionHandler(self.uploadedImages)
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "이미지 업로드 실패", message: "네트워크에 오류가 있습니다")
+
+            }
+        }
+    }
+    
+    func editPost(postId: Int, title: String, content: String, images: [NSString]){
+        ContentService.shared.editPost(postId: postId, title: title, content: content, images: images){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(_ ):
+                self.dismiss(animated: true, completion: nil)
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버 연결에 오류가 있습니다")
+
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "네트워크에 오류가 있습니다")
+
+            }
+        }
+    }
+    
+    func getCategoriesService() {
+        ContentService.shared.getCategories() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.categoryList = res as! [String]
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
+    func getMyProfileService() {
+        UserService.shared.getMyProfile(completion: { (returnedData) -> Void in
+            
+            switch returnedData {
+            case .success(let res):
+                let response = res as! User
+                self.majorList = response.body.majors
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "내 정보 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        })
+    }
+}

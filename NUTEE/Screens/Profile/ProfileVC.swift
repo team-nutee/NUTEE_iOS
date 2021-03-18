@@ -1,5 +1,5 @@
 //
-//  UserVC.swift
+//  ProfileVC.swift
 //  NUTEE
 //
 //  Created by Junhyeon on 2020/07/21.
@@ -8,73 +8,28 @@
 
 import UIKit
 
-import SkeletonView
-
 class ProfileVC: UIViewController {
 
     // MARK: - UI components
     
-    let userInfoView = UIView()
+    let rightNavigationBarButton = HighlightedButton()
     
-    let userProfileImageImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50)).then {
-        $0.contentMode = .scaleAspectFit
-        $0.cornerRadius = 0.5 * $0.frame.size.width
-        $0.clipsToBounds = true
-        
-        $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
-        }
-    let userNickNameButton = UIButton().then {
-        $0.titleLabel?.font = .boldSystemFont(ofSize: 18)
-        $0.setTitleColor(UIColor(red: 112, green: 112, blue: 112), for: .normal)
-        $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
-        $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
-    }
+    let scrollView = UIScrollView()
     
-    let containerTextViewsView = UIView().then {
-        $0.isSkeletonable = true
-//        $0.showAnimatedGradientSkeleton()
-    }
+    let refreshControl = SmallRefreshControl()
     
-    let postsTextView = UITextView().then {
-        $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
-        $0.isEditable = false
-    }
-    let replysTextView = UITextView().then {
-        $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
-        $0.isEditable = false
-    }
-    let recommandsTextView = UITextView().then {
-        $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
-        $0.isEditable = false
-    }
+    let userInfoView = UserInformationView()
     
-    let menuBar = MenuBarCV().then {
-        $0.menuList = ["내가 쓴 글", "내가 쓴 댓글", "내가 추천한 글"]
-    }
+    let userMenuBar = UserMenuBarCV()
+    let separatorView = UIView()
     
-    let userFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        
-        $0.collectionViewLayout = layout
-        
-        $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: "FeedContainerCVCell")
-        
-        $0.backgroundColor = .white
-        
-        $0.isPagingEnabled = true
-        $0.showsHorizontalScrollIndicator = false
-    }
+    let userFeedContainerCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     // MARK: - Variables and Properties
+    
+    static let notificationName = Notification.Name("UserProfileInfomation")
+    
+    var user: User?
     
     // MARK: - Dummy data
     
@@ -83,124 +38,167 @@ class ProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "NUTEE"
-        view.backgroundColor = .white
+        setNavigationBar()
         
-        setNavigationBarItem()
+        initView()
         makeConstraints()
-        fillDataToView()
+        
+        getMyProfileService(completionHandler: {
+            self.fillDataToView()
+        })
+        
+        addUserInfoNotification()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        userFeedContainerCollectionView.snp.updateConstraints {
+            let height = scrollView.frame.size.height - userInfoView.frame.size.height - userMenuBar.frame.size.height
+            $0.height.equalTo(height)
+        }
+        userFeedContainerCollectionView.reloadData()
+    }
+
     // MARK: - Helper
     
-    func setNavigationBarItem() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "설정", style: .plain, target: self, action: #selector(didTapSetting))
-        self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.nuteeGreen], for: .normal)
+    func setNavigationBar() {
+        _ = rightNavigationBarButton.then {
+            $0.setImage(UIImage(systemName: "gearshape"), for: .normal)
+            $0.tintColor = .black
+            
+            $0.addTarget(self, action: #selector(didTapSetting), for: .touchUpInside)
+        }
+        
+        _ = navigationItem.then {
+            $0.title = "프로필"
+            $0.rightBarButtonItem = UIBarButtonItem(customView: rightNavigationBarButton)
+        }
     }
     
-    func makeConstraints() {
-        // Add SubViews
-        view.addSubview(userInfoView)
-        
-        userInfoView.addSubview(userProfileImageImageView)
-        userInfoView.addSubview(userNickNameButton)
-        
-        userInfoView.addSubview(containerTextViewsView)
-        containerTextViewsView.addSubview(postsTextView)
-        containerTextViewsView.addSubview(replysTextView)
-        containerTextViewsView.addSubview(recommandsTextView)
-        
-        view.addSubview(menuBar)
-        
-        view.addSubview(userFeedContainerCollectionView)
-        
-        // Make Constraints
-        userInfoView.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-            $0.height.equalTo(100)
+    func initView() {
+        _ = view.then {
+            $0.backgroundColor = .white
         }
         
-        userProfileImageImageView.snp.makeConstraints {
-            $0.width.equalTo(50)
-            $0.height.equalTo(userProfileImageImageView.snp.width)
+        _ = refreshControl.then {
+            scrollView.addSubview($0)
+            $0.addTarget(self, action: #selector(updateUserInfo), for: UIControl.Event.valueChanged)
+        }
+        
+        _ = scrollView.then {
+            $0.showsVerticalScrollIndicator = false
             
-            $0.centerY.equalTo(userInfoView)
-            $0.left.equalTo(userInfoView.snp.left).offset(15)
+            $0.delegate = self
         }
-        userNickNameButton.snp.makeConstraints {
-            $0.width.equalTo(60)
+        
+        _ = userMenuBar.then {
+            $0.menuList = ["게시물", "댓글", "추천 게시글"]
             
-            $0.centerY.equalTo(userProfileImageImageView)
-            $0.left.equalTo(userProfileImageImageView.snp.right).offset(5)
+            $0.profileVC = self
         }
-        
-        containerTextViewsView.snp.makeConstraints {
-            $0.top.equalTo(userInfoView.snp.top).offset(15)
-            $0.left.equalTo(userNickNameButton.snp.right).offset(15)
-            $0.right.equalTo(userInfoView.snp.right).inset(15)
-            $0.bottom.equalTo(userInfoView.snp.bottom).inset(15)
-        }
-        postsTextView.snp.makeConstraints {
-            $0.centerY.equalTo(containerTextViewsView)
-            $0.left.equalTo(containerTextViewsView.snp.left).offset(10)
-        }
-        replysTextView.snp.makeConstraints {
-            $0.centerX.equalTo(containerTextViewsView)
-            $0.centerY.equalTo(containerTextViewsView)
-        }
-        recommandsTextView.snp.makeConstraints {
-            $0.centerY.equalTo(containerTextViewsView)
-            $0.right.equalTo(containerTextViewsView.snp.right).inset(10)
-        }
-        
-        menuBar.snp.makeConstraints {
-            $0.top.equalTo(userInfoView.snp.bottom)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-            $0.height.equalTo(50)
-        }
-        
-        userFeedContainerCollectionView.snp.makeConstraints {
-            $0.top.equalTo(menuBar.snp.bottom)
-            $0.left.equalTo(view.snp.left)
-            $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.snp.bottom)
+        _ = separatorView.then {
+            $0.backgroundColor = .lightGray
         }
         
         _ = userFeedContainerCollectionView.then {
+            let layout = UICollectionViewFlowLayout()
+            layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 0
+            layout.minimumInteritemSpacing = 0
+            
+            $0.collectionViewLayout = layout
+            
+            $0.register(FeedContainerCVCell.self, forCellWithReuseIdentifier: Identify.FeedContainerCVCell)
+            
+            $0.register(UserPostFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserPostFeedCVCell)
+            $0.register(UserCommentFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserCommentFeedCVCell)
+            $0.register(UserRecommendFeedCVCell.self, forCellWithReuseIdentifier: Identify.UserRecommendFeedCVCell)
+            
             $0.delegate = self
             $0.dataSource = self
+            
+            $0.backgroundColor = .white
+            
+            $0.isPagingEnabled = true
+            $0.showsHorizontalScrollIndicator = false
         }
     }
     
+    func makeConstraints() {
+        // Add Subviews
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(userInfoView)
+        
+        scrollView.addSubview(userMenuBar)
+        scrollView.addSubview(separatorView)
+        
+        scrollView.addSubview(userFeedContainerCollectionView)
+        
+        
+        // Make Constraints
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        
+        userInfoView.snp.makeConstraints {
+            $0.width.equalTo(scrollView.snp.width)
+            
+            $0.top.equalTo(scrollView.snp.top)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        
+        userMenuBar.snp.makeConstraints {
+            $0.top.equalTo(userInfoView.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        separatorView.snp.makeConstraints {
+            $0.height.equalTo(0.3).priority(999)
+            
+            $0.top.equalTo(userMenuBar.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+        }
+        
+        userFeedContainerCollectionView.snp.makeConstraints {
+            $0.height.equalTo(0) // 업데이트 전 임의 값 0인 height 생성
+            
+            $0.top.equalTo(separatorView.snp.bottom)
+            $0.left.equalTo(scrollView.snp.left)
+            $0.right.equalTo(scrollView.snp.right)
+            $0.bottom.greaterThanOrEqualTo(scrollView.snp.bottom)
+        }
+    
+    }
+    
     func fillDataToView() {
-        userProfileImageImageView.image = UIImage(named: "nutee_zigi_white")
-        userNickNameButton.setTitle("닉네임", for: .normal)
+        userInfoView.userProfileImageImageView.setImageNutee(user?.body.image?.src)
+        userInfoView.userNickNameButton.setTitle(user?.body.nickname, for: .normal)
         
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 10
-        style.alignment = .center
-        let attributes = [NSAttributedString.Key.paragraphStyle : style, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor(red: 141, green: 141, blue: 141)]
+        userMenuBar.userInfomationList[0] = user?.body.postNum ?? 0
+        userMenuBar.userInfomationList[1] = user?.body.commentNum ?? 0
+        userMenuBar.userInfomationList[2] = user?.body.likeNum ?? 0
+        userMenuBar.menuBarCollectionView.reloadData()
         
-        postsTextView.attributedText = NSAttributedString(string: "글\n100", attributes: attributes)
-        replysTextView.attributedText = NSAttributedString(string: "댓글\n200", attributes: attributes)
-        recommandsTextView.attributedText = NSAttributedString(string: "추천\n300", attributes: attributes)
-        
-        menuBar.profileVC = self
+        let indexPath = IndexPath(item: 0, section: 0)
+        userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
     }
     
-    func showSkeletonView() {
-        userProfileImageImageView.showAnimatedGradientSkeleton()
-        userNickNameButton.showAnimatedGradientSkeleton()
-        containerTextViewsView.showAnimatedGradientSkeleton()
-    }
-    
-    func hideSkeletonView() {
-        userProfileImageImageView.hideSkeleton()
-        userNickNameButton.hideSkeleton()
-        containerTextViewsView.hideSkeleton()
+    @objc func updateUserInfo() {
+        getMyProfileService(completionHandler: {
+            self.fillDataToView()
+            self.scrollToMenuIndex(menuIndex: 0)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        })
     }
     
     func scrollToMenuIndex(menuIndex: Int) {
@@ -210,8 +208,13 @@ class ProfileVC: UIViewController {
     
     @objc func didTapSetting() {
         let settingVC = SettingVC()
+        settingVC.originalUserInfo = user
         
         self.navigationController?.pushViewController(settingVC, animated: true)
+    }
+    
+    func failToGetProfile(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "프로필 조회 실패", message: message)
     }
     
 }
@@ -230,26 +233,100 @@ extension ProfileVC : UICollectionViewDelegateFlowLayout {
 extension ProfileVC : UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        menuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(menuBar.menuList.count) + 10
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let menuIndex = Int(targetContentOffset.pointee.x / view.frame.width)
-        let indexPath = IndexPath(item: menuIndex, section: 0)
-        menuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        switch scrollView {
+            case self.scrollView :
+                // forbid bounce drag 'up' direction
+                if scrollView.contentOffset.y > 0 {
+                    scrollView.contentOffset.y = 0
+                }
+                
+            case userFeedContainerCollectionView :
+                // move 'Menu positionBar' to correct Feed index
+                var adjustStartPoint: CGFloat = userMenuBar.adjustItemLength / 2
+
+                let fullWidth = scrollView.bounds.size.width
+                let currentWidth = scrollView.contentOffset.x
+                let currentPositionRatio = currentWidth / fullWidth
+
+                let boundaryItemIndex = CGFloat(1)
+
+                if currentPositionRatio < boundaryItemIndex {
+                    adjustStartPoint *= currentPositionRatio
+                }
+                
+                userMenuBar.positionBarView.frame.origin.x = scrollView.contentOffset.x / CGFloat(userMenuBar.menuList.count) + 10 - adjustStartPoint
+                
+            default :
+                break
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return menuBar.menuList.count
+        return userMenuBar.menuList.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = userFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: "FeedContainerCVCell", for: indexPath) as! FeedContainerCVCell
-
+        let cellId: String
+        
+        switch indexPath.row {
+        case 0:
+            cellId = Identify.UserPostFeedCVCell
+        case 1:
+            cellId = Identify.UserCommentFeedCVCell
+        case 2:
+            cellId = Identify.UserRecommendFeedCVCell
+        default:
+            cellId = Identify.FeedContainerCVCell
+        }
+        
+        let cell = userFeedContainerCollectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedContainerCVCell
         cell.homeVC = self
         
-        cell.newsFeedTableView.reloadData()
-
         return cell
     }
+}
+
+// MARK: - Server connect
+
+extension ProfileVC {
+    
+    func getMyProfileService(completionHandler: @escaping () -> Void ) {
+        UserService.shared.getMyProfile(completion: { (returnedData) -> Void in
+            
+            switch returnedData {
+            case .success(let res):
+                let response = res as! User
+                self.user = response
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.failToGetProfile("\(message)")
+                
+            case .pathErr:
+                self.failToGetProfile("서버 에러입니다")
+
+            case .serverErr:
+                self.failToGetProfile("서버 에러입니다")
+
+            case .networkFail :
+                self.failToGetProfile("네트워크 에러입니다")
+            }
+        })
+    }
+}
+
+// MARK: - UserInfo Sync Notification
+
+extension ProfileVC {
+    
+    func addUserInfoNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(syncAfterChangeUserInfo(_:)), name: ProfileVC.notificationName, object: nil)
+    }
+    
+    @objc func syncAfterChangeUserInfo(_ notification: Notification) {
+        let updatedUserInfo = notification.object as? User
+        user = updatedUserInfo
+        fillDataToView()
+    }
+    
 }

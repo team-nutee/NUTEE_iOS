@@ -18,6 +18,8 @@ class SettingVC : UIViewController {
     
     // MARK: - Variables and Properties
     
+    var originalUserInfo: User?
+    
     let settingList = [
         ["프로필 이미지를 설정하고 싶으신가요?", "닉네임을 변경하고 싶으신가요?", "비밀번호를 변경하고 싶으신가요?", "카테고리를 변경하고 싶으신가요?", "전공을 변경하고 싶으신가요?"],
         ["NUTEE 서비스 이용약관", "개발자 정보"],
@@ -35,6 +37,8 @@ class SettingVC : UIViewController {
         view.backgroundColor = .white
         
         setTableView()
+        
+        addUserInfoNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,7 +47,12 @@ class SettingVC : UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        alignmentSettingListToCenter()
     }
     
     // MARK: - Helper
@@ -57,7 +66,6 @@ class SettingVC : UIViewController {
             
             $0.separatorStyle = .none
             $0.backgroundColor = .white
-            $0.contentInset = UIEdgeInsets(top: view.frame.size.height / 8, left: 0, bottom: 0, right: 0)
         }
         
         view.addSubview(settingListTableView)
@@ -66,8 +74,18 @@ class SettingVC : UIViewController {
             $0.top.equalTo(view.snp.top)
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
-            $0.bottom.equalTo(view.snp.bottom)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+    }
+    
+    func alignmentSettingListToCenter() {
+        let screenHeight = view.frame.size.height
+        let listHeight = settingListTableView.contentSize.height
+        let tabbarHeight = tabBarController?.tabBar.frame.size.height ?? 0
+        
+        let pos = (screenHeight - listHeight - tabbarHeight) / 2
+        
+        settingListTableView.contentInset = UIEdgeInsets(top: pos, left: 0, bottom: 0, right: 0)
     }
 }
 
@@ -133,10 +151,13 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 0, section: 0):
             let settingProfileImageVC = SettingProfileImageVC()
+//            settingProfileImageVC.userProfileImageSrc = originalUserInfo?.body.image?.src
+            settingProfileImageVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingProfileImageVC, animated: true)
             
         case IndexPath(row: 1, section: 0):
             let settingNicknameVC = SettingNicknameVC()
+            settingNicknameVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingNicknameVC, animated: true)
             
         case IndexPath(row: 2, section: 0):
@@ -145,10 +166,12 @@ extension SettingVC : UITableViewDataSource {
             
         case IndexPath(row: 3, section: 0):
             let settingCategoryVC = SettingCategoryVC()
+            settingCategoryVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingCategoryVC, animated: true)
             
         case IndexPath(row: 4, section: 0):
             let settingMajorVC = SettingMajorVC()
+            settingMajorVC.originalUserInfo = originalUserInfo
             self.navigationController?.pushViewController(settingMajorVC, animated: true)
             
         case IndexPath(row: 0, section: 1):
@@ -162,12 +185,18 @@ extension SettingVC : UITableViewDataSource {
             self.navigationController?.pushViewController(developerInfoVC, animated: true)
         
         case IndexPath(row: 0, section: 2):
-            KeychainWrapper.standard.remove(forKey: "userId")
-            KeychainWrapper.standard.remove(forKey: "pw")
+            let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
             
-            let rootVC = view.window?.rootViewController
-            self.view.window!.rootViewController?.dismiss(animated: true, completion: {
-                rootVC?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
+            let loginVC = LoginVC()
+            UIView.transition(from: (sceneDelegate.window?.rootViewController?.view)!, to: loginVC.view, duration: 0.2, options: [.transitionCrossDissolve], completion: {
+                _ in
+                KeychainWrapper.standard.remove(forKey: "pw")
+                KeychainWrapper.standard.remove(forKey: "userId")
+                KeychainWrapper.standard.remove(forKey: "id")
+                KeychainWrapper.standard.remove(forKey: "token")
+                
+                sceneDelegate.window?.rootViewController = loginVC
+                sceneDelegate.window?.rootViewController?.simpleNuteeAlertDialogue(title: "로그아웃", message: "로그아웃 되었습니다")
             })
             
         default:
@@ -196,8 +225,6 @@ class SettingTVCell : UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -259,6 +286,21 @@ class SettingTVCell : UITableViewCell {
         } else {
             contentView.backgroundColor = .white
         }
+    }
+    
+}
+
+// MARK: - UserInfo Sync Notification
+
+extension SettingVC {
+    
+    func addUserInfoNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(syncAfterChangeUserInfo(_:)), name: ProfileVC.notificationName, object: nil)
+    }
+    
+    @objc func syncAfterChangeUserInfo(_ notification: Notification) {
+        let updatedUserInfo = notification.object as? User
+        originalUserInfo = updatedUserInfo
     }
     
 }

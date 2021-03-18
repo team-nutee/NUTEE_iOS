@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SwiftKeychainWrapper
+
 class SplashVC: UIViewController {
 
     // MARK: - UI components
@@ -48,78 +50,10 @@ class SplashVC: UIViewController {
     }
     
     func startNuteeApp() {
-        var navigationController: UINavigationController
-        
-        // HomeTab
-        let homeVC = HomeVC()
-        navigationController = UINavigationController(rootViewController: homeVC)
-        
-//        navigationController.tabBarItem.image = UIImage(systemName: "house")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
-
-        navigationController.tabBarItem.image = UIImage(named: "home")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "home_fill")
-        
-        let HomeTab = navigationController
-        
-        // SearchTab
-//        let searchVC = SearchVC()
-//        navigationController = UINavigationController(rootViewController: searchVC)
-//
-//        navigationController.tabBarItem.image = UIImage(systemName: "magnifyingglass")
-//        let configuration = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass", withConfiguration: configuration)
-//
-//        let SearchTab = navigationController
-        
-        // NotificationTab
-        let notificationVC = NotificationVC()
-        navigationController = UINavigationController(rootViewController: notificationVC)
-        
-        navigationController.tabBarItem.image = UIImage(systemName: "bell")
-        navigationController.tabBarItem.selectedImage = UIImage(systemName: "bell.fill")
-
-        let NotificationTab = navigationController
-        
-        // PostTab
-        let postVC = UIViewController()
-        postVC.view.backgroundColor = .white
-        navigationController = UINavigationController(rootViewController: postVC)
-//        navigationController.tabBarItem.image = UIImage(systemName: "plus")
-        navigationController.tabBarItem.image = UIImage(named: "post")
-        
-        let PostTab = navigationController
-        
-        // NoticeTab
-        let noticeVC = NoticeVC()
-        navigationController = UINavigationController(rootViewController: noticeVC)
-        
-//        navigationController.tabBarItem.image = UIImage(systemName: "pin")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "pin.fill")
-        navigationController.tabBarItem.image = UIImage(named: "alarm")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "alarm_fill")
-
-        let NoticeTab = navigationController
-        
-        // ProfileTab
-        let profileVC = ProfileVC()
-        navigationController = UINavigationController(rootViewController: profileVC)
-//        navigationController.tabBarItem.image = UIImage(systemName: "person")
-//        navigationController.tabBarItem.selectedImage = UIImage(systemName: "person.fill")
-        navigationController.tabBarItem.image = UIImage(named: "profile")
-        navigationController.tabBarItem.selectedImage = UIImage(named: "profile_fill")
-
-        let ProfileTab = navigationController
-        
-        // TabBarController Settings
-        let tabBarController = TabBarController()
-        tabBarController.viewControllers = [HomeTab, NotificationTab, PostTab, NoticeTab, ProfileTab]
-
-        tabBarController.tabBar.tintColor = .nuteeGreen
-        
         let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
-//        sceneDelegate.window?.rootViewController = tabBarController
-        sceneDelegate.window?.rootViewController = LoginVC()
+        
+        let nuteeApp = BuildTabBarController.shared.nuteeApp()
+        sceneDelegate.window?.rootViewController = nuteeApp
     }
     
 }

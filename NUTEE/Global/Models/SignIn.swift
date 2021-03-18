@@ -23,13 +23,14 @@ struct SignIn: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         code = (try? values.decode(Int.self, forKey: .code)) ?? 0
         message = (try? values.decode(String.self, forKey: .message)) ?? ""
-        body = (try? values.decode(SignInBody.self, forKey: .body)) ?? SignInBody.init(accessToken: "", refreshToken: "")
+        body = (try? values.decode(SignInBody.self, forKey: .body)) ?? SignInBody.init(memberId: 0, accessToken: "", refreshToken: "")
         links = (try? values.decode(Links.self, forKey: .links)) ?? Links.init(linksSelf: SelfClass.init(href: ""))
     }
 }
 
 // MARK: - SignInBody
 struct SignInBody: Codable {
+    let memberId: Int
     let accessToken, refreshToken: String
 }
 

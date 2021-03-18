@@ -13,11 +13,18 @@ class SearchVC: UIViewController {
     
     // MARK: - UI components
     
+    let activityIndicator = UIActivityIndicatorView()
+    
     let searchTextField = UITextField()
     let deleteAllTextButton = UIButton()
     let searchButton = UIButton()
+    let cancelButton = HighlightedButton()
     
     let searchHistoryTableView = SearchHistoryTV()
+    
+    let categoryView = UIView()
+    let categoryLabel = UILabel()
+    let categoryCollectionView = CategoryCV()
     
     // MARK: - Variables and Properties
     
@@ -32,17 +39,25 @@ class SearchVC: UIViewController {
         super.viewDidLoad()
         
         initSearchVC()
-        setSearchBar()
+        initView()
         
-        makeConstraints()
+        makeConstraints()   
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        hideTabBarController(isHidden: true)
+        
         getSearchHistory(completion: {
             searchHistoryTableView.reloadData()
         })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        hideTabBarController(isHidden: false)
     }
     
     override func viewDidLayoutSubviews() {
@@ -54,6 +69,13 @@ class SearchVC: UIViewController {
         }
     }
     
+    func hideTabBarController(isHidden: Bool) {
+        tabBarController?.tabBar.isHidden = isHidden
+        
+        let tabBarController = self.tabBarController as? TabBarController
+        tabBarController?.toPostButton.isHidden = isHidden
+    }
+    
     // MARK: - Helper
     
     func initSearchVC() {
@@ -61,7 +83,12 @@ class SearchVC: UIViewController {
         view.backgroundColor = .white
     }
     
-    func setSearchBar(){
+    func initView(){
+        _ = activityIndicator.then {
+            $0.style = .medium
+            $0.startAnimating()
+        }
+        
         _ = searchTextField.then {
             $0.delegate = self
             
@@ -69,6 +96,8 @@ class SearchVC: UIViewController {
             $0.placeholder = "검색어를 입력해주세요"
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             $0.tintColor = .nuteeGreen
+            
+            $0.alpha = 0
         }
         _ = deleteAllTextButton.then {
             $0.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
@@ -79,27 +108,65 @@ class SearchVC: UIViewController {
             $0.addTarget(self, action: #selector(didTapDeleteAllTextButton), for: .touchUpInside)
         }
         _ = searchButton.then {
-            $0.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+            $0.setImage(UIImage(named: "search")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.setImage(UIImage(named: "search_fill")?.withRenderingMode(.alwaysTemplate), for: .highlighted)
+            
             $0.tintColor = .nuteeGreen
             
             $0.isEnabled = false
             $0.alpha = 0.5
             
             $0.addTarget(self, action: #selector(didTapSearchButton), for: .touchUpInside)
+            
+            $0.alpha = 0
+        }
+        _ = cancelButton.then {
+            $0.setTitle("취소", for: .normal)
+            $0.setTitleColor(.gray, for: .normal)
+            $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo", size: 15.0)
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+            $0.titleLabel?.adjustsFontSizeToFitWidth = true
+            
+            $0.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
+            
+            $0.isHidden = true
         }
         
         _ = searchHistoryTableView.then {
             $0.searchVC = self
+            
+            $0.alpha = 0
+        }
+        _ = categoryView.then {
+            $0.alpha = 0
+        }
+        
+        _ = categoryLabel.then {
+            $0.text = "카테고리"
+            $0.font = .boldSystemFont(ofSize: 16)
+            $0.textColor = .black
         }
     }
     
     func makeConstraints() {
+        view.addSubview(activityIndicator)
+
         view.addSubview(searchTextField)
         view.addSubview(deleteAllTextButton)
-        view.addSubview(searchButton)
+//        view.addSubview(searchButton)
+        view.addSubview(cancelButton)
         
         view.addSubview(searchHistoryTableView)
-        
+        view.addSubview(categoryView)
+        categoryView.addSubview(categoryLabel)
+        categoryView.addSubview(categoryCollectionView)
+
+        activityIndicator.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.snp.bottom)
+        }
         
         searchTextField.snp.makeConstraints {
             $0.height.equalTo(40)
@@ -112,13 +179,20 @@ class SearchVC: UIViewController {
             $0.width.equalTo(searchTextField.snp.height)
             
             $0.centerY.equalTo(searchTextField)
-            $0.right.equalTo(searchButton.snp.left).inset(5)
+            $0.right.equalTo(cancelButton.snp.left).inset(5)
         }
-        searchButton.snp.makeConstraints {
-            $0.width.equalTo(searchTextField.snp.height)
+//        searchButton.snp.makeConstraints {
+//            $0.width.equalTo(searchTextField.snp.height)
+//
+//            $0.centerY.equalTo(searchTextField)
+//            $0.right.equalTo(searchTextField.snp.right)
+//        }
+        cancelButton.snp.makeConstraints {
+            $0.width.equalTo(cancelButton.intrinsicContentSize.width + 30)
+            $0.height.equalTo(searchTextField.snp.height)
             
             $0.centerY.equalTo(searchTextField)
-            $0.right.equalTo(searchTextField.snp.right)
+            $0.right.equalTo(view.snp.right)
         }
         
         searchHistoryTableView.snp.makeConstraints {
@@ -126,6 +200,25 @@ class SearchVC: UIViewController {
             $0.left.equalTo(view.snp.left)
             $0.right.equalTo(view.snp.right)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+        }
+        categoryView.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(20)
+            $0.left.equalTo(searchTextField.snp.left)
+            $0.right.equalTo(searchTextField.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(10)
+        }
+        
+        categoryLabel.snp.makeConstraints {
+            $0.top.equalTo(categoryView.snp.top)
+            $0.left.equalTo(categoryView.snp.left)
+            $0.right.equalTo(categoryView.snp.right)
+        }
+        
+        categoryCollectionView.snp.makeConstraints {
+            $0.top.equalTo(categoryLabel.snp.bottom).offset(10)
+            $0.left.equalTo(categoryView.snp.left)
+            $0.right.equalTo(categoryView.snp.right)
+            $0.bottom.equalTo(categoryView.snp.bottom)
         }
     }
     
@@ -142,11 +235,40 @@ class SearchVC: UIViewController {
         let removedBlankStr = str.replacingOccurrences(of: " ", with: "")
         
         if removedBlankStr.count != 0 {
-            searchResultVC.navigationItem.title = str
+            searchResultVC.afterSetKeyword(keyword: str)
             saveSearchKeyword(toSaveKeyword: str)
             
             self.navigationController?.pushViewController(searchResultVC, animated: true)
         }
+    }
+    
+    func afterFetchCategoryView() {
+        categoryCollectionView.reloadData()
+        
+        activityIndicator.stopAnimating()
+        
+        searchButton.alpha = 1
+        searchTextField.alpha = 1
+        categoryView.alpha = 1
+    }
+    
+    @objc func didTapCancelButton() {
+        _ = searchTextField.then {
+            $0.text = ""
+            $0.endEditing(true)
+            textFieldDidChangeSelection($0)
+        }
+        
+        categoryView.isHidden = false
+        cancelButton.isHidden = true
+        searchHistoryTableView.alpha = 0
+        
+        searchTextField.snp.updateConstraints {
+            $0.right.equalTo(view.snp.right).inset(15)
+        }
+        UIView.animate(withDuration: 0.1, animations: { [self] in
+            self.view.layoutIfNeeded()
+        })
     }
     
     func getSearchHistory(completion: () -> Void) {
@@ -213,6 +335,20 @@ class SearchVC: UIViewController {
 
 extension SearchVC : UITextFieldDelegate {
     
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        categoryView.isHidden = true
+        cancelButton.isHidden = false
+        searchTextField.snp.updateConstraints {
+            $0.right.equalTo(view.snp.right).inset(cancelButton.intrinsicContentSize.width + 30)
+        }
+        
+        UIView.animate(withDuration: 0.1, animations: { [self] in
+            searchHistoryTableView.alpha = 1
+        })
+        
+        return true
+    }
+    
     func textFieldDidChangeSelection(_ textField: UITextField) {
         // 입력된 빈칸 감지하기
         var str = textField.text ?? ""
@@ -241,4 +377,36 @@ extension SearchVC : UITextFieldDelegate {
         return true
     }
     
+}
+
+// MARK: - Server connect
+
+extension SearchVC {
+    func getCategoriesService(completionHandler: @escaping () -> Void ) {
+        ContentService.shared.getCategories() {
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.categoryCollectionView.categoryList = res as! [String]
+                self.categoryCollectionView.searchVC = self
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "\(message)")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail:
+                self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
 }

@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 
+import Firebase
+import SwiftKeychainWrapper
+#if DEBUG
+import Gedatsu
+#endif
+
 @UIApplicationMain
     class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -25,6 +31,29 @@ import CoreData
         // remove all navigationbar back button title
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         
+        // Gedatsu (show AutoLayout error pretty) enable
+        #if DEBUG
+        Gedatsu.open()
+        #endif
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        if #available(iOS 10.0, *) {
+          // For iOS 10 display notification (sent via APNS)
+          UNUserNotificationCenter.current().delegate = self
+
+          let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+          UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        } else {
+          let settings: UIUserNotificationSettings =
+          UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+          application.registerUserNotificationSettings(settings)
+        }
+        application.registerForRemoteNotifications()
+        
+
+
         return true
     }
 
@@ -33,7 +62,8 @@ import CoreData
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+        return UISceneConfiguration(name: "Default Configuration",
+                                    sessionRole: connectingSceneSession.role)
     }
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
@@ -92,3 +122,90 @@ import CoreData
 
 }
 
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging,
+                   didReceiveRegistrationToken fcmToken: String) {
+
+        KeychainWrapper.standard.set(fcmToken, forKey: "deviceToken")
+        let dataDict:[String: String] = ["token": fcmToken]
+        
+        print("fcmToken :", fcmToken)
+        NotificationCenter.default.post(name: Notification.Name("FCMToken"),
+                                        object: nil,
+                                        userInfo: dataDict)
+    }
+
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        // If you are receiving a notification message while your app is in the background,
+        // this callback will not be fired till the user taps on the notification launching the application.
+        // TODO: Handle data of notification
+        
+        // With swizzling disabled you must let Messaging know about the message, for Analytics
+        // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+        // Print message ID.
+        // Print full message.
+        print(userInfo)
+    }
+
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+      // If you are receiving a notification message while your app is in the background,
+      // this callback will not be fired till the user taps on the notification launching the application.
+      // TODO: Handle data of notification
+
+      // With swizzling disabled you must let Messaging know about the message, for Analytics
+      // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+      // Print message ID.
+      // Print full message.
+        print(userInfo)
+
+        completionHandler(UIBackgroundFetchResult.newData)
+    }
+    
+    
+
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+      // With swizzling disabled you must let Messaging know about the message, for Analytics
+      // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+      // Print message ID.
+        
+      // Print full message.
+        
+        if let message = userInfo["aps"] {
+            print(message)
+        }
+      // Change this to your preferred presentation option
+        completionHandler([[.alert, .sound, .badge]])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+      let userInfo = response.notification.request.content.userInfo
+      // Print message ID.
+
+      // With swizzling disabled you must let Messaging know about the message, for Analytics
+      // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+      // Print full message.
+
+      completionHandler()
+    }
+    
+}

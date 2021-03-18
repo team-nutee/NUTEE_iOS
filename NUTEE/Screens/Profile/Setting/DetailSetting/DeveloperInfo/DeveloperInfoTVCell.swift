@@ -31,29 +31,33 @@ class DeveloperInfoTVCell: UITableViewCell {
     
     // MARK: - Life Cycle
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        initCell()
+        addContentView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Helper
     
     func initCell () {
         _ = nameLabel.then {
-            $0.text = developer[0]
             $0.font = .boldSystemFont(ofSize: 18)
         }
         
         _ = partLabel.then {
-            $0.text = developer[1]
             $0.font = UIFont(name: "AppleSDGothicNeo-Medium", size: 15.0)
         }
         
         _ = termLabel.then {
-            $0.text = developer[2]
             $0.font = UIFont(name: "AppleSDGothicNeo-Medium", size: 15.0)
         }
         
         _ = gitButton.then {
-            if developer[3] == "" {
-                $0.isHidden = true
-            }
-            
             $0.setTitle("GIT", for: .normal)
             $0.titleLabel?.font = .boldSystemFont(ofSize: 15)
             $0.contentEdgeInsets = UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 15)
@@ -69,7 +73,6 @@ class DeveloperInfoTVCell: UITableViewCell {
     }
     
     func addContentView() {
-        
         contentView.addSubview(nameLabel)
         
         contentView.addSubview(partLabel)
@@ -97,7 +100,28 @@ class DeveloperInfoTVCell: UITableViewCell {
             $0.centerY.equalTo(contentView)
             $0.right.equalTo(contentView.snp.right).inset(20)
         }
+    }
+    
+    func fillDataToView() {
+        _ = nameLabel.then {
+            $0.text = developer[0]
+        }
         
+        _ = partLabel.then {
+            $0.text = developer[1]
+        }
+        
+        _ = termLabel.then {
+            $0.text = developer[2]
+        }
+        
+        _ = gitButton.then {
+            if developer[3] == "" {
+                $0.isHidden = true
+            } else {
+                $0.isHidden = false
+            }
+        }
     }
     
     @objc func didTapGitButton() {

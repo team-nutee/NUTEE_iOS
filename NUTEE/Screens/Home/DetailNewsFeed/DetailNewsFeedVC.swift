@@ -5,8 +5,9 @@
 //  Created by Hee Jae Kim on 2020/07/24.
 //  Copyright © 2020 Nutee. All rights reserved.
 //
-
 import UIKit
+
+import SnapKit
 
 import SwiftKeychainWrapper
 
@@ -14,35 +15,33 @@ class DetailNewsFeedVC: UIViewController {
     
     //MARK: - UI components
     
+    let activityIndicator = UIActivityIndicatorView()
+    
+    let refreshControl = SmallRefreshControl()
+    
     let detailNewsFeedTableView = UITableView(frame: CGRect(), style: .grouped)
     
-    var refreshControl: UIRefreshControl!
-    
-    // 댓글창 표시
-    @IBOutlet var vwCommentWindow: UIView!
-    // 댓글창 상태표시(수정 or 답글)
-    @IBOutlet var statusView: UIView!
-    @IBOutlet var statusViewHeight: NSLayoutConstraint!
-    @IBOutlet var lblStatus: UILabel!
-    @IBOutlet var btnCancel: UIButton!
-    // 댓글작성
-    @IBOutlet var txtvwComment: UITextView!
-    @IBOutlet var btnSubmit: UIButton!
-    @IBOutlet var CommentWindowToBottom: NSLayoutConstraint!
-    @IBOutlet var CommentToTrailing: NSLayoutConstraint!
+    let commentView = UIView()
+    let commentTextView = PlaceholderTextView()
+    let submitButton = UIButton()
     
     //MARK: - Variables and Properties
     
-    // FeedTVC와 DetailHeadderView가 통신하기 위해 중간(DetailNewsFeed) 연결 델리게이트 변수 선언
-//    weak var delegate: DetailHeaderViewDelegate?
-//
-//    var content: NewsPostsContentElement?
-//    var postId: Int?
-//
-//    var isEditCommentMode = false
-//    var currentCommentId: Int?
-//
-//    let statusNoReply = UIView()
+    let commentTextViewFontSize: CGFloat = 14
+    let commentTextViewHeight: CGFloat = 100
+    
+    var postId: Int?
+    var post: PostContent?
+    var replyList: [ReplyList]?
+    
+    var commentViewBottomConstraint: Constraint?
+    
+    var isEditCommentMode = false
+    var commentId: Int?
+    
+    var recommentMode = false
+    
+    var feedContainerCVCell: FeedContainerCVCell?
     
     //MARK: - Dummy data
     
@@ -51,552 +50,564 @@ class DetailNewsFeedVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTableView()
-//
-//        txtvwComment.delegate = self
-//
-//        initCommentWindow()
-//
-//        setRefresh()
+        initView()
+        makeConstraints()
+        
+        setRefresh()
+        
+        addKeyboardNotification()
     }
-//
-//    override func viewWillAppear(_ animated: Bool) {
-//        // ---> NewsFeedVC에서 getPostService 실행 후 reloadData 실행 <--- //
-//    }
-//
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(false)
-//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-//        self.navigationController?.navigationBar.shadowImage = UIImage()
-//
-//        addKeyboardNotification()
-//    }
 
-//MARK: - Helper
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+    }
     
-    func setTableView() {
+    // MARK: - Helper
+    
+    func initView() {
+        _ = view.then {
+            $0.backgroundColor = .white
+            $0.tintColor = .nuteeGreen
+        }
+        
         _ = detailNewsFeedTableView.then {
             $0.delegate = self
             $0.dataSource = self
             
-            $0.register(DetailNewsFeedHeaderView.self, forHeaderFooterViewReuseIdentifier: "DetailNewsFeedHeaderView")
-            $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
-            
-            view.addSubview($0)
-            
-            $0.snp.makeConstraints {
-                $0.top.equalToSuperview()
-                $0.left.equalToSuperview()
-                $0.right.equalToSuperview()
-                $0.bottom.equalToSuperview()
-            }
+            $0.register(DetailNewsFeedHeaderView.self, forHeaderFooterViewReuseIdentifier: Identify.DetailNewsFeedHeaderView)
+            $0.register(ReplyTVCell.self, forCellReuseIdentifier: Identify.ReplyTVCell)
+            $0.register(ReReplyTVCell.self, forCellReuseIdentifier: Identify.ReReplyTVCell)
+            $0.register(NoReplyFooterView.self, forHeaderFooterViewReuseIdentifier: Identify.NoReplyFooterView)
             
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
+            
+            $0.keyboardDismissMode = .onDrag
+            
+            $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
+            
+            $0.isHidden = true
+        }
+        
+        _ = commentView.then {
+            $0.backgroundColor = .white
+            $0.addBorder(.top, color: .veryLightPink, thickness: 0.3)
+            
+            $0.isHidden = true
+        }
+        _ = commentTextView.then {
+            $0.delegate = self
+            
+            $0.placeholderLabel.text = "댓글을 입력하세요"
+            $0.placeholderLabel.font = .systemFont(ofSize: commentTextViewFontSize)
+            
+            $0.font = .systemFont(ofSize: commentTextViewFontSize)
+            $0.tintColor = .nuteeGreen
+            
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isScrollEnabled = false
+        }
+        _ = submitButton.then {
+            $0.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
+            $0.tintColor = .nuteeGreen
+            
+            $0.imageView?.contentMode = .scaleAspectFit
+            $0.contentHorizontalAlignment = .fill
+            $0.contentVerticalAlignment = .fill
+            $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 5)
+            
+            $0.alpha = 0
+            
+            $0.addTarget(self, action: #selector(didTapSubmitButton), for: .touchUpInside)
         }
     }
-//
-//    // 댓글창 밖에서 탭 하였을 때 키보드 내리기
-//    @IBAction func tapOutsideOfCommentWindow(_ sender: Any) {
-//        self.txtvwComment.endEditing(true)
-//    }
-//
-//    @IBAction func btnSubmit(_ sender: Any) {
-//        if isEditCommentMode == false {
-//            postCommentService(postId: postId ?? 0, comment: txtvwComment.text, completionHandler: {() -> Void in
-//                self.txtvwComment.endEditing(true)
-//                self.txtvwComment.text = ""
-//                self.textViewDidChange(self.txtvwComment)
-//                self.textViewDidEndEditing(self.txtvwComment)
-//
-//                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-//                    self.replyTV.reloadData()
-//
-//                    let lastRow = IndexPath(row: (self.content?.comments.count ?? 1) - 1, section: 0)
-//                    self.replyTV.scrollToRow(at: lastRow, at: .bottom, animated: true)
-//                })
-//            })
-//        } else {
-//            editCommentService(postId: postId ?? 0, commentId: currentCommentId ?? 0, editComment: txtvwComment.text, completionHandler: {() -> Void in
-//                self.txtvwComment.text = ""
-//
-//                // 수정모드 종료
-//                self.isEditCommentMode = false
-//                self.textViewDidChange(self.txtvwComment)
-//
-//                self.btnCancel.isHidden = true
-//                self.lblStatus.isHidden = true
-//                self.statusViewHeight.constant = 0
-//
-//                self.txtvwComment.endEditing(true)
-//
-//                self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-//                    self.replyTV.reloadData()
-//                })
-//            })
-//        }
-//    }
-//
-//    @IBAction func btnCancel(_ sender: Any) {
-//        isEditCommentMode = false
-//
-//        txtvwComment.text = ""
-//        textViewDidChange(txtvwComment)
-//
-//        btnCancel.isHidden = true
-//        lblStatus.isHidden = true
-//        statusViewHeight.constant = 0
-//
-//        txtvwComment.endEditing(true)
-//    }
-//
-//    func initCommentWindow() {
-//        txtvwComment.tintColor = .nuteeGreen
-//
-//        btnCancel.isHidden = true
-//        lblStatus.isHidden = true
-//        statusViewHeight.constant = 0
-//
-//        // 시스템 Light or Dark 설정에 의한 댓글입력 창 배경색 설정
-//        txtvwComment.backgroundColor = .white
-//        txtvwComment.borderColor = .white
-//
-//        // 댓글창 top부분과 table Cell의 경계 구분을 위한 shadow 효과 적용
-////        vwCommentWindow.layer.shadowOpacity = 0.7
-////        vwCommentWindow.layer.shadowOffset = CGSize(width: 3, height: 3)
-////        vwCommentWindow.layer.shadowRadius = 5.0
-////        vwCommentWindow.layer.shadowColor = UIColor.gray.cgColor
-//        vwCommentWindow.addBorder(.top, color: .veryLightPink, thickness: 0.3)
-//
-//        if (txtvwComment.text == "") {
-//            textViewDidEndEditing(txtvwComment)
-//        }
-//    }
-//
-//    func setRefresh() {
-//        refreshControl = UIRefreshControl()
-//        replyTV.addSubview(refreshControl)
-//        refreshControl.addTarget(self, action: #selector(updatePost), for: UIControl.Event.valueChanged)
-//    }
-//
-//    @objc func updatePost() {
-//        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-//            self.replyTV.reloadData()
-//
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                self.refreshControl.endRefreshing()
-//            }
-//        })
-//    }
-//
-//    // 해당 이용자의 light or dark 모드를 감지하는 함수
-//    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//        super.traitCollectionDidChange(previousTraitCollection)
-//
-//        let userInterfaceStyle = traitCollection.userInterfaceStyle // Either .unspecified, .light, or .dark
-//        // Update your user interface based on the appearance
-//        switch userInterfaceStyle {
-//        case .light, .unspecified:
-//            txtvwComment.backgroundColor = UIColor.commentWindowLight
-//            txtvwComment.borderColor = UIColor.commentWindowLight
-//        case .dark:
-//            txtvwComment.backgroundColor = UIColor.commentWindowDark
-//            txtvwComment.borderColor = UIColor.commentWindowDark
-//        @unknown default:
-//            fatalError()
-//        }
-//    }
-//
-//    func alertNoticeEditCommentError(){
-//        let errorAlert = UIAlertController(title: "오류발생😵", message: "오류가 발생하여 댓글을 수정하지 못했습니다", preferredStyle: UIAlertController.Style.alert)
-//        let okAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-//
-//        errorAlert.addAction(okAction)
-//
-//        self.present(errorAlert, animated: true, completion: nil)
-//    }
+    
+    func makeConstraints() {
+        view.addSubview(detailNewsFeedTableView)
+
+        view.addSubview(commentView)
+        commentView.addSubview(commentTextView)
+        commentView.addSubview(submitButton)
+        
+        
+        detailNewsFeedTableView.snp.makeConstraints {
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+        }
+        
+        commentView.snp.makeConstraints {
+            $0.top.equalTo(detailNewsFeedTableView.snp.bottom)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            commentViewBottomConstraint =
+                $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).constraint
+        }
+        commentTextView.snp.makeConstraints {
+            $0.height.lessThanOrEqualTo(commentTextViewHeight)
+            
+            $0.top.equalTo(commentView.snp.top).offset(20)
+            $0.left.equalTo(commentView.snp.left).offset(10)
+            $0.bottom.equalTo(commentView.snp.bottom).inset(20)
+        }
+        submitButton.snp.makeConstraints {
+            $0.width.equalTo(40)
+            $0.height.equalTo(submitButton.snp.width)
+
+            $0.left.equalTo(commentTextView.snp.right)
+            $0.right.equalTo(commentView.snp.right)
+            $0.bottom.equalTo(commentView.snp.bottom).inset(3)
+        }
+    }
+    
+    func setRefresh() {
+        detailNewsFeedTableView.addSubview(refreshControl)
+        refreshControl.addTarget(self, action: #selector(updatePost), for: UIControl.Event.valueChanged)
+    }
+    
+    func fetchPost() {
+        showActivityIndicator(activityIndicator: activityIndicator)
+        getPostService(postId: postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
+            hideActivityIndicator(activityIndicator: activityIndicator)
+            detailNewsFeedTableView.isHidden = false
+            commentView.isHidden = false
+        })
+    }
+    
+    func makeReplyList() {
+        // 댓글과 대댓글을 하나의 CommentBody 배열 형태로 구성 및 정렬
+        var replyList: [ReplyList] = []
+        var reply: ReplyList = ReplyList.init()
+        let comments = post?.body.comments ?? []
+        for comment in comments {
+            reply.type = .comment
+            reply.body = comment
+            
+            replyList.append(reply)
+            if comment.reComment?.isEmpty == false {
+                let recomments = comment.reComment ?? []
+                for recomment in recomments {
+                    reply.type = .reComment
+                    reply.body = recomment
+                    
+                    replyList.append(reply)
+                }
+            }
+        }
+        self.replyList = replyList
+    }
+    
+    @objc func updatePost() {
+        self.getPostService(postId: self.postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.refreshControl.endRefreshing()
+            }
+        })
+    }
+    
+    @objc func didTapSubmitButton(_ sender: UIButton) {
+        if isEditCommentMode {
+            // 댓글 수정 모드일 때 실행될 문장
+            self.editCommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: { [self] () -> Void in
+                
+                // 수정 모드 종료
+                isEditCommentMode = false
+                self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
+                self.endCommentEditing()
+                
+                getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                })
+            })
+        } else {
+            // 답글 모드일 때
+            if recommentMode {
+                self.createRecommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {
+                    
+                    // 답글 모드 종료
+                    self.recommentMode = false
+                    self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
+                    self.endCommentEditing()
+                    
+                    self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    })
+                })
+                
+            } else {
+                self.postCommentService(postId: postId ?? 0, content: commentTextView.text) { [self] in
+                    self.endCommentEditing()
+                    
+                    getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                        
+                        let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
+                        detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                    })
+                }
+            }
+        }
+    }
+
+    @objc func didTapOutsideOfCommentView(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            view.endEditing(true)
+        }
+        sender.cancelsTouchesInView = false
+    }
+    
+    func setEditCommentMode(editCommentId: Int, content: String) {
+        isEditCommentMode = true
+        
+        commentId = editCommentId
+        commentTextView.text = content
+        commentTextView.placeholderLabel.text = ""
+        
+        commentTextView.becomeFirstResponder()
+    }
+    
+    func setRecommentMode() {
+        recommentMode = true
+        commentTextView.placeholderLabel.text = "답글을 입력하세요"
+        commentTextView.becomeFirstResponder()
+    }
+    
+    func endCommentEditing() {
+        commentTextView.text = ""
+        commentTextView.endEditing(true)
+        textViewDidChange(commentTextView)
+    }
+    
+    func deleteComment(deleteCommentId: Int) {
+        deleteCommentService(postId: postId ?? 0, commentId: deleteCommentId) { [self] in
+            getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+            })
+        }
+    }
+    
+    func setFetchDetailNewsFeedFail(failMessage: String?) {
+        activityIndicator.stopAnimating()
+        self.detailNewsFeedTableView.isHidden = false
+        
+        self.detailNewsFeedTableView.setEmptyView(title: "게시글 조회 실패", message: failMessage ?? "")
+    }
 }
 
 //MARK: - Build TableView
+extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
 
-extension DetailNewsFeedVC : UITableViewDelegate { }
-
-extension DetailNewsFeedVC : UITableViewDataSource {
-
-    // HeaderView settings
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // Dequeue with the reuse identifier
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "DetailNewsFeedHeaderView") as? DetailNewsFeedHeaderView
-        headerView?.detailNewsFeedVC = self
-        
-        headerView?.initHeaderView()
-        headerView?.addContentView()
-        
-//        // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
-//        headerNewsFeed?.detailNewsPost = self.content
-//        headerNewsFeed?.initPosting()
-//
-//        // VC 컨트롤 권한을 HeaderView로 넘겨주기
-//        headerNewsFeed?.RootVC = self
-//        // 중간 매개 델리게이트(DetailNewsFeed)와 DetailHeaderView 사이를 통신하기 위한 변수 연결작업
-//        headerNewsFeed?.delegate = self.delegate
-//        // 사용자 프로필 이미지 탭 인식 설정
-//        headerNewsFeed?.setClickActions()
-//        headerNewsFeed?.setImageView()
-//        headerNewsFeed?.awakeFromNib()
-//        headerNewsFeed?.initTextView()
-
-        return headerView
+    // HeaderView
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        // 임의 값이 있어야 작동함
+        return 100
     }
 
-    // TableView cell settings
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.DetailNewsFeedHeaderView) as? DetailNewsFeedHeaderView
+        headerView?.detailNewsFeedVC = self
+        
+        // HeaderView로 NewsFeedVC에서 받아온 게시글 정보룰 넘김
+        headerView?.post = self.post
+        if headerView?.post != nil {
+            headerView?.initPosting()
+        }
+        
+        return headerView
+    }
+    
+    // Cell
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if content?.comments.count == 0 {
-//            if indexPath.row == 0 {
-//                return 0.5
-//            } else {
-//                return 220
-//            }
-//        } else {
-            return UITableView.automaticDimension
-//        }
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if content?.comments.count == 0 {
-//            if indexPath.row == 0 {
-//                return 0.5
-//            } else {
-//                return 220
-//            }
-//        } else {
-            return UITableView.automaticDimension
-//        }
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        // 생성한 댓글 cell 개수 파악
-//        var replyCnt = content?.comments.count ?? 0
-//
-//        if replyCnt == 0 {
-//            // 보여줄 댓글이 없을 때
-//            replyCnt += 2
-//        } /*else {
-//            // 추가로 파악해야 할 대댓글의 개수
-//            for i in 0...(replyCnt - 1) {
-//                let reReply = content?.comments[i]
-//                replyCnt += reReply?.reComment?.count ?? 0
-//            }
-//        }*/
-//
-//        return replyCnt
-        return 5
+        return replyList?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //Custom셀인 'ReplyCell' 형식으로 변환
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as! ReplyCell
+        let cellId: String
+        
+        switch replyList?[indexPath.row].type {
+        case .comment:
+            cellId = Identify.ReplyTVCell
+        case .reComment:
+            cellId = Identify.ReReplyTVCell
+        default:
+            cellId = Identify.ReplyTVCell
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ReplyTVCell
         cell.selectionStyle = .none
-
+        
         cell.detailNewsFeedVC = self
         
-        cell.initCell()
-        cell.addContentView()
-
-//        cell.initTextView()
-//        if content?.comments.count == 0 {
-//            replyTV.allowsSelection = false
-//            if indexPath.row == 0 {
-//                cell.backgroundColor = .lightGray
-//            } else {
-//                replyTV.setStatusNoReplyView(cell, emptyView: statusNoReply)
-//                statusNoReply.isHidden = false
-//                cell.contentsCell.isHidden = true
-//                tableView.separatorStyle = .none
-//            }
-//        } else {
-//            // 불러올 댓글이 있는 경우 cell 초기화 진행
-//            cell.backgroundColor = .white
-//            tableView.separatorStyle = .singleLine
-//            cell.contentsCell.isHidden = false
-//            statusNoReply.isHidden = true
-//
-//            // 생성된 Cell클래스로 comment 정보 넘겨주기
-//            cell.comment = content?.comments[indexPath.row]
-//            cell.initComments()
-//
-//            // VC 컨트롤 권한을 Cell클래스로 넘겨주기
-//            cell.RootVC = self
-//            // DetailNewsFeedVC와 ReplyCell 사이를 통신하기 위한 변수 연결작업
-//            cell.delegate = self
-//
-//            // 댓글 사용자 이미지 탭 인식 설정
-//            cell.setClickActions()
-
-            // 대댓글 관련 replyCell 설정
-//            if cell.comment?.reComment?.count != 0 {
-//                replyTV.beginUpdates()
-//                print("insertRow 함수 실행")
-////                let indextPath = IndexPath(row: indexPath.row, section: 0)
-//                replyTV.insertRows(at: [indexPath], with: .automatic)
-//                replyTV.endUpdates()
-//            }
-//        }
+        cell.postId = postId
+        cell.comment = replyList?[indexPath.row].body
+        cell.fillDataToView()
 
         return cell
     }
 
-    // tableView의 마지막 cell 밑의 여백 발생 문제(footerView의 기본 높이 값) 제거 코드
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+    // FooterView
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        // 임의 값이 있어야 작동함
+        return 2
     }
     
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if post?.body.comments?.count == 0 {
+            return UITableView.automaticDimension
+        } else {
+            return 0
+        }
     }
 
+    // 댓글이 없을 때 표시 할 정보
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Identify.NoReplyFooterView) as? NoReplyFooterView
+        
+        return footerView
+    }
 }
 
-//// MARK: - Reply KeyBoard PopUp
-//
-//extension DetailNewsFeedVC {
-//
-//    func addKeyboardNotification() {
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-//    }
-//
-//    @objc private func keyboardWillShow(_ notification: Notification)  {
-//        if let info = notification.userInfo {
-//            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-//            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-//            let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-//            let keyboardHeight = keyboardFrame.height
-//            let tabbarHeight = self.tabBarController?.tabBar.frame.size.height ?? 0
-//            //            let safeBottomHeight = self.view.bottomAnchor
-//            _ = UIApplication.shared.connectedScenes
-//                .filter({$0.activationState == .foregroundActive})
-//                .map({$0 as? UIWindowScene})
-//                .compactMap({$0})
-//                .first?.windows
-//                .filter({$0.isKeyWindow}).first
-//
-////            let window = UIApplication.shared.keyWindow
-////            let bottomPadding = window?.safeAreaInsets.bottom
-//
-//            if CommentWindowToBottom.constant == 0 {
-//                CommentWindowToBottom.constant -= (keyboardHeight - tabbarHeight)
-//            }
-////            CommentWindowToBottom.constant = -300
-////            replyTV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//
-//            self.view.setNeedsLayout()
-//            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-//                self.view.layoutIfNeeded()
-//            })
-//        }
-//    }
-//
-//    @objc private func keyboardWillHide(_ notification: Notification) {
-//        if let info = notification.userInfo {
-//            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
-//            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-//
-//            CommentWindowToBottom.constant = 0
-//            replyTV.contentInset = .zero
-//            self.view.setNeedsLayout()
-//            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
-//                self.view.layoutIfNeeded()
-//            })
-//        }
-//    }
-//
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-//        self.txtvwComment.endEditing(true)
-//    }
-//
-//}
-//
-//// MARK: - Detect commentWindow text changed
-//extension DetailNewsFeedVC: UITextViewDelegate {
-//
-//    public func textViewDidChange(_ textView: UITextView) {
-//        // 입력된 빈칸과 줄바꿈 개수 구하기
-//        var str = txtvwComment.text.replacingOccurrences(of: " ", with: "")
-//        str = str.replacingOccurrences(of: "\n", with: "")
-//        // 빈칸이나 줄바꿈으로만 입력된 경우 버튼 비활성화
-//        if str.count != 0 {
-//            // 전송 버튼 보이기
-//            UIView.animate(withDuration: 0.2) {
-//                self.btnSubmit.alpha = 1.0
-//            }
-//            self.CommentToTrailing.constant = 40
-//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//        } else {
-//            // 전송 버튼 가리기
-//            UIView.animate(withDuration: 0.1) {
-//                self.btnSubmit.alpha = 0
-//            }
-//            self.CommentToTrailing.constant = 5
-//            UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseInOut, animations: {
-//                self.view.layoutIfNeeded()
-//            }, completion: nil)
-//        }
-//
-//        // 댓글 입력창의 높이가 100 이상 넘을 시 스크롤 가능 활성화
-//        if txtvwComment.contentSize.height >= 100 {
-//            txtvwComment.isScrollEnabled = true
-//        } else {
-//            txtvwComment.frame.size.height = txtvwComment.contentSize.height
-//            txtvwComment.isScrollEnabled = false
-//        }
-//
-//        // 입력된 줄바꿈 개수 구하기
-//        let originalStr = txtvwComment.text.count
-//        let removeEnterStr = txtvwComment.text.replacingOccurrences(of: "\n", with: "").count
-//        // 엔터가 4개 이하 일시 댓글창 높이 자동조절 설정
-//        let enterNum = originalStr - removeEnterStr
-//        if enterNum <= 4 {
-//            self.txtvwComment.translatesAutoresizingMaskIntoConstraints = false
-//        } else {
-//            self.txtvwComment.translatesAutoresizingMaskIntoConstraints = true
-//        }
-//    }
-//
-//
-//    // PlaceHolder 따로 지정해주기(기존 것 사용시 충돌 일어남)
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if (textView.text == "") {
-//            textView.text = " 댓글을 입력하세요"
-//            textView.textColor = UIColor.lightGray
-//        }
-//        textView.resignFirstResponder()
-//    }
-//
-//    func textViewDidBeginEditing(_ textView: UITextView){
-//        if (txtvwComment.text == " 댓글을 입력하세요"){
-//            textView.text = ""
-//            textView.textColor = UIColor.black
-//        }
-//        textView.becomeFirstResponder()
-//    }
-//
-//}
-//
-//// MARK: - ReplyCell과 통신하여 게시글 삭제 후 테이블뷰 정보 다시 로드하기
-//
-//extension DetailNewsFeedVC: ReplyCellDelegate {
-//    func updateReplyTV() {
-//        self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-//            self.replyTV.reloadData()
-//        })
-//    }
-//
-//    func setEditCommentMode(commentId: Int, commentContent: String) {
-//        self.isEditCommentMode = true
-//        self.currentCommentId = commentId
-//
-//        self.btnCancel.isHidden = false
-//        self.lblStatus.isHidden = false
-//        self.lblStatus.text = "댓글수정"
-//        self.statusViewHeight.constant = 40
-//
-//        self.txtvwComment.text = commentContent
-//        self.txtvwComment.textColor = .black
-//
-//        self.view.setNeedsLayout()
-//        UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-//            self.view.layoutIfNeeded()
-//        }, completion: nil)
-//
-//        txtvwComment.becomeFirstResponder()
-//    }
-//}
-//
-//// MARK: - 서버 연결 코드 구간
-//
-//extension DetailNewsFeedVC {
-//
-//    // 게시글 한 개 가져오기
-//    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: NewsPostsContentElement) -> Void ) {
-//        ContentService.shared.getPost(postId) { responsedata in
-//
-//            switch responsedata {
-//            case .success(let res):
-//                let response = res as! NewsPostsContentElement
-//                self.content = response
-//                completionHandler(self.content!)
-//
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//                }
-//        }
-//    }
-//
-//    // 댓글 작성
-//    func postCommentService(postId: Int, comment: String, completionHandler: @escaping () -> Void ) {
-//        ContentService.shared.commentPost(postId, comment: comment) { (responsedata) in
-//
-//            switch responsedata {
-//            case .success(let res):
-//                completionHandler()
-//
-//                print("commentPost succussful", res)
-//            case .requestErr(_):
-//                print("request error")
-//
-//            case .pathErr:
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                print("failure")
-//                }
-//        }
-//    }
-//
-//    // 댓글 수정
-//    func editCommentService(postId: Int, commentId: Int, editComment: String, completionHandler: @escaping () -> Void ) {
-//        ContentService.shared.commentEdit(postId, commentId, editComment) { (responsedata) in
-//
-//            switch responsedata {
-//            case .success(let res):
-//
-//                print("commentEdit succussful", res)
-//                completionHandler()
-//                print(res)
-//            case .requestErr(_):
-//                self.alertNoticeEditCommentError()
-//
-//                print("request error")
-//
-//            case .pathErr:
-//                self.alertNoticeEditCommentError()
-//                print(".pathErr")
-//
-//            case .serverErr:
-//                self.alertNoticeEditCommentError()
-//                print(".serverErr")
-//
-//            case .networkFail :
-//                self.alertNoticeEditCommentError()
-//                print("failure")
-//            }
-//        }
-//    }
-//
-//}
+// MARK: - UITextView Delegate
+extension DetailNewsFeedVC: UITextViewDelegate {
+    
+    public func textViewDidChange(_ textView: UITextView) {
+        
+        commentTextView.handlePlaceholder()
+        
+        
+        // 전송 버튼 활성화(빈칸이나 줄바꿈으로만 입력된 경우 비활성화) 조건
+        var str = commentTextView.text.replacingOccurrences(of: " ", with: "")
+        str = str.replacingOccurrences(of: "\n", with: "")
+        if str.isEmpty == true {
+            UIView.animate(withDuration: 0.1) {
+                self.submitButton.alpha = 0.0
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                self.submitButton.alpha = 1.0
+            }
+        }
+
+        
+        // 댓글 입력창의 높이가 100 이상 넘을 시 스크롤 가능 활성화
+        if commentTextView.contentSize.height > commentTextViewHeight - commentTextViewFontSize {
+            if commentTextView.text.isEmpty == false {
+                commentTextView.translatesAutoresizingMaskIntoConstraints = true
+                commentTextView.isScrollEnabled = true
+            }
+        } else {
+            commentTextView.translatesAutoresizingMaskIntoConstraints = false
+            commentTextView.isScrollEnabled = false
+            
+            commentTextView.frame.size.height = commentTextView.contentSize.height
+        }
+        
+        
+        UIView.animate(withDuration: 0.1) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+}
+
+// MARK: - KeyBoard
+extension DetailNewsFeedVC {
+
+    func addKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification)  {
+        if let info = notification.userInfo {
+            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
+            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
+            let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            let keyboardHeight = keyboardFrame.height
+        
+            let tabbarHeight = self.tabBarController?.tabBar.frame.size.height ?? 0
+            _ = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .map({$0 as? UIWindowScene})
+                .compactMap({$0})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+
+            commentViewBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - tabbarHeight)
+            
+            self.view.setNeedsLayout()
+            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        if let info = notification.userInfo {
+            let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as! TimeInterval
+            let curve = info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
+            
+            commentViewBottomConstraint?.layoutConstraints[0].constant = 0
+            detailNewsFeedTableView.contentInset = .zero
+            
+            self.view.setNeedsLayout()
+            UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+}
+
+// MARK: - Server connect
+extension DetailNewsFeedVC {
+    
+    // 게시글 한 개 가져오기
+    func getPostService(postId: Int, completionHandler: @escaping (_ returnedData: PostContent) -> Void ) {
+        ContentService.shared.getPost(postId) { [self] responsedata in
+            
+            switch responsedata {
+            case .success(let res):
+                let response = res as! PostContent
+                post = response
+                makeReplyList()
+                
+                detailNewsFeedTableView.reloadData()
+                
+                completionHandler(self.post!)
+                
+            case .requestErr(_):
+                setFetchDetailNewsFeedFail(failMessage: "요청에 실패했습니다")
+                
+            case .pathErr:
+                setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
+                
+            case .serverErr:
+                setFetchDetailNewsFeedFail(failMessage: "서버 연결에 오류가 있습니다")
+
+            case .networkFail :
+                setFetchDetailNewsFeedFail(failMessage: "네트워크에 오류가 있습니다")
+            }
+        }
+    }
+    
+    // 댓글 작성
+    func postCommentService(postId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.createComment(postId, content) { (responsedata) in
+            
+            switch responsedata {
+            case .success(_):
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "\(message)")
+                print("request error")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "서버 연결에 오류가 있습니다")
+                print(".pathErr")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "서버에 오류가 있습니다")
+                print(".serverErr")
+                
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 작성 실패", message: "네트워크에 오류가 있습니다")
+                print("failure")
+            }
+        }
+    }
+    
+    // 댓글 수정
+    func editCommentService(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.editComment(postId, commentId, content) { (responsedata) in
+            
+            switch responsedata {
+            case .success(_):
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "\(message)")
+                print("request error")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "서버 연결에 오류가 있습니다")
+                print(".pathErr")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "서버에 오류가 있습니다")
+                print(".serverErr")
+                
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 수정 실패", message: "네트워크에 오류가 있습니다")
+                print("failure")
+            }
+        }
+    }
+    
+    // 댓글 삭제
+    func deleteCommentService(postId: Int, commentId: Int, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.deleteComment(postId, commentId: commentId) { (responsedata) in
+            
+            switch responsedata {
+            case .success(_):
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "\(message)")
+                print("request error")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "서버 연결에 오류가 있습니다")
+                print(".pathErr")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "서버에 오류가 있습니다")
+                print(".serverErr")
+                
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "댓글 삭제 실패", message: "네트워크에 오류가 있습니다")
+                print("failure")
+            }
+        }
+    }
+    
+    // 답글 작성
+    func createRecommentService(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void ) {
+        ContentService.shared.createRecomment(postId, commentId, content) { (responsedata) in
+            
+            switch responsedata {
+            case .success(_):
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "\(message)")
+                print("request error")
+                
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "서버 연결에 오류가 있습니다")
+                print(".pathErr")
+                
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "서버에 오류가 있습니다")
+                print(".serverErr")
+                
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "답글 작성 실패", message: "네트워크에 오류가 있습니다")
+                print("failure")
+            }
+        }
+    }
+}

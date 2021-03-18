@@ -8,132 +8,202 @@
 
 import UIKit
 
-class SettingMajorVC : UIViewController {
+class SettingMajorVC: SignUpMajorVC {
     
     // MARK: - UI components
     
-    let majorTitleLabel = UILabel()
-    
-    let firstMajorLabel = UILabel()
-    let saveButton = UIButton()
-    
-    let firstMajorTextField = UITextField()
-    
-    let secondMajorLabel = UILabel()
-    let secondMajorTextField = UITextField()
+    let saveButton = HighlightedButton()
     
     // MARK: - Variables and Properties
+    
+    var originalUserInfo: User?
+    
+    var originalFirstMajor = ""
+    var originalSecondMajor = ""
+    
+//    var newMajors: [String] = []
     
     // MARK: - Dummy data
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         self.navigationItem.title = "설정"
         view.backgroundColor = .white
         
-        initView()
-        addSubView()
+        xPosAnimationRange = 0.0
+        yPosAnimationRange = 0.0
         
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapKeyboardOutSide)))
+        super.viewDidLoad()
+        
+        fetchUserMajorInfo()
     }
     
     // MARK: - Helper
     
-    func initView() {
-        _ = majorTitleLabel.then {
-            $0.text = "전공을 설정해주세요!!"
-            $0.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 18.0)
-        }
+    override func initView() {
+        super.initView()
+        
         _ = saveButton.then {
             $0.setTitle("저장하기", for: .normal)
             $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
+            
+            $0.isEnabled = false
+            
+            $0.addTarget(self, action: #selector(didTapSaveButton), for: .touchUpInside)
         }
         
-        _ = firstMajorLabel.then {
-            $0.text = "전공"
-            $0.font = .systemFont(ofSize: 17)
-            $0.sizeToFit()
-        }
-        _ = firstMajorTextField.then {
-            $0.placeholder = "첫 번쨰 전공"
-            $0.font = .systemFont(ofSize: 14)
-            
-            $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-            $0.tintColor = .nuteeGreen
+        _ = guideLabel.then {
+            $0.alpha = 1
         }
         
-        _ = secondMajorLabel.then {
-            $0.text = "두 번째 전공이 있다면!!"
-            $0.font = .systemFont(ofSize: 17)
-            $0.sizeToFit()
+        _ = firstMajorTitleLabel.then {
+            $0.alpha = 1
         }
-        _ = secondMajorTextField.then {
-            $0.placeholder = "두 번쨰 전공"
-            $0.font = .systemFont(ofSize: 14)
-            
-            $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
-            $0.tintColor = .nuteeGreen
+        _ = firstMajorButton.then {
+            $0.alpha = 1
+        }
+        _ = firstMajorUnderLineView.then {
+            $0.alpha = 1
+        }
+        
+        _ = secondMajorTitleLabel.then {
+            $0.alpha = 1
+        }
+        _ = secondMajorButton.then {
+            $0.alpha = 1
+        }
+        _ = secondMajorUnderLineView.then {
+            $0.alpha = 1
         }
     }
-    
-    func addSubView() {
-        
-        view.addSubview(majorTitleLabel)
-        
-        view.addSubview(firstMajorLabel)
-        view.addSubview(firstMajorTextField)
-        
+
+    override func makeConstraints() {
+        // add Subview
         view.addSubview(saveButton)
         
-        view.addSubview(secondMajorLabel)
-        view.addSubview(secondMajorTextField)
-        
-        
-        majorTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(view.snp.top).offset(45)
-            $0.left.equalTo(view.snp.left).offset(20)
-        }
+        // make Constraints
         saveButton.snp.makeConstraints {
             $0.width.equalTo(saveButton.intrinsicContentSize.width)
             $0.height.equalTo(40)
             
-            $0.centerY.equalTo(majorTitleLabel)
-            $0.left.equalTo(firstMajorTextField.snp.right).offset(5)
+            $0.centerY.equalTo(guideLabel)
             $0.right.equalTo(view.snp.right).inset(20)
         }
         
-        firstMajorLabel.snp.makeConstraints {
-            $0.top.equalTo(majorTitleLabel.snp.bottom).offset(25)
-            $0.left.equalTo(majorTitleLabel.snp.left)
-        }
-        firstMajorTextField.snp.makeConstraints {
-            $0.height.equalTo(35)
-            
-            $0.top.equalTo(firstMajorLabel.snp.bottom).offset(15)
-            $0.left.equalTo(firstMajorLabel.snp.left)
+        super.makeConstraints()
+        
+        // remove SignUp style UI components
+        closeButton.removeFromSuperview()
+        progressView.removeFromSuperview()
+        
+        // add replacement SignUp style UI components constraints
+        guideLabel.snp.remakeConstraints {
+            $0.top.equalTo(view.snp.top).offset(45)
+            $0.left.equalTo(view.snp.left).offset(20)
+            $0.right.equalTo(saveButton.snp.left).inset(-10)
         }
         
-        secondMajorLabel.snp.makeConstraints {
-            $0.top.equalTo(firstMajorTextField.snp.bottom).offset(30)
-            $0.left.equalTo(firstMajorTextField.snp.left)
+        previousButton.snp.updateConstraints {
+            $0.width.equalTo(0)
+            $0.height.equalTo(0)
         }
-        secondMajorTextField.snp.makeConstraints {
-            $0.height.equalTo(35)
-            
-            $0.top.equalTo(secondMajorLabel.snp.bottom).offset(15)
-            $0.left.equalTo(secondMajorLabel.snp.left)
-            $0.right.equalTo(firstMajorTextField.snp.right)
+    }
+    
+    func fetchUserMajorInfo() {
+        let originalMajors = originalUserInfo?.body.majors ?? []
+        if originalMajors != [] {
+            originalFirstMajor = originalUserInfo?.body.majors[0] ?? ""
+            firstMajor = originalFirstMajor
+            if originalMajors.count > 1 {
+                originalSecondMajor = originalUserInfo?.body.majors[1] ?? ""
+                secondMajor = originalSecondMajor
+            }
         }
         
+        updateFirstMajorButtonStatus()
+        updateSecondMajorButtonStatus()
     }
     
-    @objc func didTapKeyboardOutSide() {
-        firstMajorTextField.resignFirstResponder()
-        secondMajorTextField.resignFirstResponder()
+    override func updateFirstMajorButtonStatus() {
+        super.updateFirstMajorButtonStatus()
+
+        checkSaveButtonEnableCondition()
     }
     
+    override func updateSecondMajorButtonStatus() {
+        super.updateSecondMajorButtonStatus()
+        
+        checkSaveButtonEnableCondition()
+    }
+    
+    func checkSaveButtonEnableCondition() {
+        if originalFirstMajor != firstMajor || originalSecondMajor != secondMajor {
+            saveButton.isEnabled = true
+        } else {
+            saveButton.isEnabled = false
+        }
+    }
+    
+    @objc func didTapSaveButton() {
+        var newMajors: [String] = []
+        
+        newMajors.append(firstMajor)
+        if secondMajor != "" {
+            newMajors.append(secondMajor)
+        }
+        
+        changeMajorsService(majors: newMajors, completionHandler: { [self] in
+            originalUserInfo?.body.majors = newMajors
+            fetchUserMajorInfo()
+            
+            NotificationCenter.default.post(name: ProfileVC.notificationName, object: originalUserInfo)
+            
+            saveButton.isEnabled = false
+        })
+    }
+    
+    func failToChangeMajor(_ message: String) {
+        self.simpleNuteeAlertDialogue(title: "전공 변경 실패", message: message)
+    }
+    
+    // MARK: - Remove SignUpMajorVC Animation
+    
+    override func enterCommonViewsAnimate() {
+        // <---- make do nothing
+    }
+    
+    override func enterMajorVCAnimate() {
+        // <---- make do nothing
+    }
+    
+}
+
+// MARK: - Server connect
+
+extension SettingMajorVC {
+    func changeMajorsService(majors: [String], completionHandler: @escaping () -> Void) {
+        UserService.shared.changeMajors(majors, completion: { [self] (returnedData) -> Void in
+
+            switch returnedData {
+            case .success(_):
+                simpleNuteeAlertDialogue(title: "전공 변경", message: "성공적으로 변경되었습니다")
+                completionHandler()
+
+            case .requestErr(let message):
+                failToChangeMajor("\(message)")
+
+            case .pathErr:
+                failToChangeMajor("서버 에러입니다")
+
+            case .serverErr:
+                failToChangeMajor("서버 에러입니다")
+
+            case .networkFail:
+                failToChangeMajor("네트워크 에러입니다")
+
+            }
+        })
+    }
 }

@@ -31,8 +31,8 @@ class SignUpViewController: UIViewController {
     var progressStatusCount: Float = 0.0
     
     var animationDuration: TimeInterval = 1.4
-    let xPosAnimationRange: CGFloat = 50
-    let yPosAnimationRange: CGFloat = 50
+    var xPosAnimationRange: CGFloat = 50
+    var yPosAnimationRange: CGFloat = 50
     
     var previousButtonBottomConstraint: Constraint?
     
@@ -59,7 +59,7 @@ class SignUpViewController: UIViewController {
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
         switch viewControllerToPresent {
         case is NuteeAlertDialogue, is NuteeAlertSheet:
-            viewControllerToPresent.modalPresentationStyle = .overCurrentContext
+            viewControllerToPresent.modalPresentationStyle = .custom
         default:
             viewControllerToPresent.modalPresentationStyle = .fullScreen
         }
@@ -109,7 +109,7 @@ class SignUpViewController: UIViewController {
             $0.titleLabel?.font = .boldSystemFont(ofSize: 20)
             $0.setTitleColor(.nuteeGreen, for: .normal)
             
-            $0.isEnabled = true
+            $0.isEnabled = false
             $0.setTitleColor(.veryLightPink, for: .normal)
             
             $0.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
@@ -151,7 +151,7 @@ class SignUpViewController: UIViewController {
             $0.right.equalTo(view.snp.right).inset(20)
         }
         
-        // specific constraints are here
+        // specific constraints will be here
         
         previousButton.snp.makeConstraints {
             $0.width.equalTo(view.frame.size.width / 2.0)
@@ -173,7 +173,7 @@ class SignUpViewController: UIViewController {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.windowWidth = 270
         nuteeAlertDialogue.dialogueData = ["나가기", "입력하신 회원정보가 저장되지 않습니다\n그래도 나가시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["나기기", UIColor.white, UIColor.red]
+        nuteeAlertDialogue.okButtonData = ["나가기", UIColor.white, UIColor.red]
         nuteeAlertDialogue.cancelButtonData[0] = "취소"
         
         nuteeAlertDialogue.addCancelSigUpAction()
@@ -191,17 +191,17 @@ class SignUpViewController: UIViewController {
     @objc func didTapNextButton() {
     }
     
+    func failToGetList(_ title: String, _ message: String) {
+        self.simpleNuteeAlertDialogue(title: title, message: message)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
     
-}
-
-// MARK: - PasswordVC Animation
-
-extension SignUpViewController {
+    // MARK: - SignUpViewController Common Animation
     
-    private func enterCommonViewsAnimate() {
+    func enterCommonViewsAnimate() {
         // progressView
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
@@ -225,6 +225,7 @@ extension SignUpViewController {
     }
     
 }
+
 // MARK: - Keyboard
 
 extension SignUpViewController {

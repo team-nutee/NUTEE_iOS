@@ -12,12 +12,20 @@ class SettingProfileImageVC : UIViewController {
     
     // MARK: - UI components
     
-    let profileImageView = UIImageView()
+    let profileImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
     let profileImagePicker = UIImagePickerController()
     
-    let saveButton = UIButton()
+    let saveButton = HighlightedButton()
     
     // MARK: - Variables and Properties
+    
+    var originalUserInfo: User?
+    
+//    var userProfileImageSrc: String?
+    
+    var pickedIMG: [UIImage] = []
+    
+    var uploadedImages: [NSString] = []
     
     // MARK: - Dummy data
     
@@ -32,6 +40,8 @@ class SettingProfileImageVC : UIViewController {
         initView()
         addSubView()
         
+        fillDataToView()
+        
         setProfileImageClickActions()
     }
     
@@ -40,12 +50,14 @@ class SettingProfileImageVC : UIViewController {
         
         initViewAfterLoadLayout()
     }
+    
     // MARK: - Helper
     
     func initView() {
         _ = profileImageView.then {
-            $0.image = #imageLiteral(resourceName: "nutee_zigi_green")
-            $0.contentMode = .scaleAspectFit
+            $0.layer.cornerRadius = 0.5 * profileImageView.frame.size.width
+//            $0.setImageNutee(userProfileImageSrc)
+            $0.clipsToBounds = true
         }
         _ = profileImagePicker.then {
             $0.delegate = self
@@ -55,6 +67,10 @@ class SettingProfileImageVC : UIViewController {
             $0.setTitle("저장하기", for: .normal)
             $0.titleLabel?.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 14.0)
             $0.setTitleColor(.black, for: .normal)
+            
+            $0.isEnabled = false
+            
+            $0.addTarget(self, action: #selector(didTapSaveButton), for: .touchUpInside)
         }
     }
     
@@ -66,7 +82,6 @@ class SettingProfileImageVC : UIViewController {
     }
     
     func addSubView() {
-        
         view.addSubview(profileImageView)
         view.addSubview(saveButton)
         
@@ -83,7 +98,11 @@ class SettingProfileImageVC : UIViewController {
             $0.top.equalTo(profileImageView.snp.bottom).offset(20)
             $0.centerX.equalTo(profileImageView)
         }
-        
+    }
+    
+    
+    func fillDataToView() {
+        profileImageView.setImageNutee(originalUserInfo?.body.image?.src)
     }
     
     func setProfileImageClickActions() {
@@ -102,57 +121,58 @@ class SettingProfileImageVC : UIViewController {
     }
     
     @objc func didTapProfileImageView() {
-        let nuteeAlertSheet = NuteeAlertSheet()
-        nuteeAlertSheet.titleHeight = 0
-        
-        nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen, "openLibrary"]]
-        
-        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen, "openCamera"]])
-        }
-        
-        nuteeAlertSheet.settingProfileImageVCDelegate = self
-        
-        nuteeAlertSheet.modalPresentationStyle = .custom
-        
-        present(nuteeAlertSheet, animated: true)
-        
-        
-        
-        
-        
-//        let profileImageAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        profileImageAlert.view.tintColor = .nuteeGreen
-//
-//        let albumAction = UIAlertAction(title: "앨범에서 프로필 사진 선택", style: .default) { action in
-//            self.openLibrary()
-//        }
-//        let cameraAction = UIAlertAction(title: "카메라로 프로필 사진 찍기", style: .default) { action in
-//            self.openCamera()
-//        }
-//        let cancel = UIAlertAction(title: "취소", style: .cancel)
-//
-//        profileImageAlert.addAction(albumAction)
-//        profileImageAlert.addAction(cancel)
-//
-//        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-//            profileImageAlert.addAction(cameraAction)
-//        }
-//
-//        present(profileImageAlert, animated: true)
+        showNuteeAlertSheet()
+    }
+    
+    @objc func didTapSaveButton() {
+        postImage(images: self.pickedIMG, completionHandler: {(returnedData)-> Void in
+            self.changeProfileImageService(image: self.uploadedImages[0], completionHandler: {
+                self.simpleNuteeAlertDialogue(title: "프로필 이미지 변경", message: "성공적으로 변경되었습니다")
+    
+                self.originalUserInfo?.body.image?.src = self.uploadedImages[0] as String
+                NotificationCenter.default.post(name: ProfileVC.notificationName, object: self.originalUserInfo)
+
+                self.saveButton.isEnabled = false
+            })
+        })
+    }
+    
+    func failToChangeProfile(_ title: String, _ message: String) {
+        self.simpleNuteeAlertDialogue(title: title, message: message)
     }
 }
 
-extension SettingProfileImageVC : SettingProfileImageVCDelegate {
-    func openSettingProfileImageVCLibrary() {
-        dismiss(animated: true)
-        openLibrary()
+// MARK: - NuteeAlert Action Definition
+
+extension SettingProfileImageVC: NuteeAlertActionDelegate {
+    
+    func showNuteeAlertSheet() {
+        let nuteeAlertSheet = NuteeAlertSheet()
+        nuteeAlertSheet.nuteeAlertActionDelegate = self
+        
+        nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen]]
+        
+        if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
+            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen]])
+        }
+        
+        nuteeAlertSheet.modalPresentationStyle = .custom
+        present(nuteeAlertSheet, animated: true)
     }
     
-    func openSettingProfileImageVCCamera() {
-        dismiss(animated: true)
-        openCamera()
+    func nuteeAlertSheetAction(indexPath: Int) {
+        switch indexPath {
+        case 0:
+            dismiss(animated: true)
+            openLibrary()
+        case 1:
+            dismiss(animated: true)
+            openCamera()
+        default:
+            break
+        }
     }
+    
 }
 
 // MARK: - 프로필 이미지 선택 창 전환 기능 구현
@@ -185,10 +205,74 @@ extension SettingProfileImageVC : UIImagePickerControllerDelegate, UINavigationC
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            self.pickedIMG = []
+            self.pickedIMG.append(image)
+            
             profileImageView.image = image
             profileImageView.contentMode = .scaleAspectFill
+            
+            self.saveButton.isEnabled = true
         }
         dismiss(animated: true, completion: nil)
     }
     
+}
+
+// MARK: - Server connect
+
+extension SettingProfileImageVC {
+    func postImage(images: [UIImage],
+                   completionHandler: @escaping (_ returnedData: [NSString]) -> Void ) {
+        dump(images[0])
+        
+        ContentService.shared.uploadImage(images: images){
+            [weak self]
+            data in
+            
+            guard let `self` = self else { return }
+            
+            switch data {
+            case .success(let res):
+                self.uploadedImages = res as! [NSString]
+                completionHandler(self.uploadedImages)
+                
+            case .requestErr(let message):
+                self.failToChangeProfile("이미지 업로드 실패", "\(message)")
+
+            case .pathErr:
+                self.failToChangeProfile("이미지 업로드 실패", "서버 에러입니다")
+                
+            case .serverErr:
+                self.failToChangeProfile("이미지 업로드 실패", "서버 에러입니다")
+
+            case .networkFail:
+                self.failToChangeProfile("이미지 업로드 실패", "네트워크 에러입니다")
+
+            }
+        }
+        
+    }
+    
+    func changeProfileImageService(image: NSString, completionHandler: @escaping () -> Void) {
+        UserService.shared.changeProfileImage(image, completion: { (returnedData) -> Void in
+       
+            switch returnedData {
+            case .success(_ ):
+                completionHandler()
+
+            case .requestErr(let message):
+                self.failToChangeProfile("프로필 이미지 변경 실패", "\(message)")
+
+            case .pathErr:
+                self.failToChangeProfile("프로필 이미지 변경 실패", "서버 에러입니다")
+
+            case .serverErr:
+                self.failToChangeProfile("프로필 이미지 변경 실패", "서버 에러입니다")
+
+            case .networkFail:
+                self.failToChangeProfile("프로필 이미지 변경 실패", "네트워크 에러입니다")
+
+            }
+        })
+    }
 }

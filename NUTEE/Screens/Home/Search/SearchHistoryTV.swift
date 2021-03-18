@@ -117,7 +117,7 @@ extension SearchHistoryTV : UITableViewDelegate, UITableViewDataSource {
         let selectedKeyword = searchVC?.searchHistoryList[indexPath.row] ?? ""
         
         let searchResultVC = SearchResultVC()
-        searchResultVC.navigationItem.title = selectedKeyword
+        searchResultVC.afterSetKeyword(keyword: selectedKeyword)
         searchVC?.saveSearchKeyword(toSaveKeyword: selectedKeyword)
         
         searchVC?.navigationController?.pushViewController(searchResultVC, animated: true)

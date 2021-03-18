@@ -57,10 +57,10 @@ class TermsAndConditionsVC : UIViewController {
         containerView.addSubview(contentsTextView)
         
         scrollView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaInsets.top)
-            $0.left.equalTo(view.safeAreaInsets.left)
-            $0.right.equalTo(view.safeAreaInsets.right)
-            $0.bottom.equalTo(view.safeAreaInsets.bottom)
+            $0.top.equalTo(view.snp.top)
+            $0.left.equalTo(view.snp.left)
+            $0.right.equalTo(view.snp.right)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         containerView.snp.makeConstraints {
             $0.width.equalTo(scrollView.snp.width)

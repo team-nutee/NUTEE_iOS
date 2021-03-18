@@ -19,7 +19,7 @@ struct UserService {
     
     func signUp(_ userId: String, _ nickname: String, _ email: String, _ password: String, _ otp: String, _ interests: [String], _ majors: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
         
-        let URL = APIConstants.SignUp
+        let URL = APIConstants.User
         let headers: HTTPHeaders = [
             "Content-Type": "application/json;charset=UTF-8",
             "Accept": "application/hal+json"
@@ -45,10 +45,10 @@ struct UserService {
                 if let value = response.result.value {
                     if let status = response.response?.statusCode {
                         switch status {
-                        case 200:
+                        case 200, 201:
                             do{
                                 let decoder = JSONDecoder()
-                                let result = try decoder.decode(SignUp.self, from: value)
+                                let result = try decoder.decode(User.self, from: value)
                                 completion(.success(result))
                                 print("회원가입 성공")
                             } catch {
@@ -59,7 +59,7 @@ struct UserService {
                         case 500:
                             completion(.serverErr)
                         default:
-                            break
+                            completion(.requestErr(status))
                         }
                     }
                 }
@@ -107,9 +107,10 @@ struct UserService {
                         
                         switch status {
                         case 200:
-                                // 로그인 성공 시 토큰 저장
-                                KeychainWrapper.standard.set(result!.body.accessToken, forKey: "token")
-                                completion(.success(result!))
+                            // 로그인 성공 시 토큰 저장
+                            KeychainWrapper.standard.set(result!.body.accessToken, forKey: "token")
+                            KeychainWrapper.standard.set(result!.body.memberId, forKey: "id")
+                            completion(.success(result!))
                         case 401:
                             completion(.pathErr)
                         case 403:
@@ -159,7 +160,7 @@ struct UserService {
                     case 500:
                         completion(.serverErr)
                     default:
-                        break
+                        completion(.requestErr(response))
                     }
                 }
                 
@@ -379,4 +380,458 @@ struct UserService {
         }
     }
     
+    // MARK: -  내 정보 불러오기
+    func getMyProfile(completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Profile + "/me"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(User.self, from: value)
+                                completion(.success(result))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+                
+            }
+            
+        }
+    }
+
+    
+    // MARK: -  내가 쓴 게시글들(posts) 가져오기
+    
+    func getMyPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Profile + "/me/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Post.self, from: value)
+                                completion(.success(result))
+                                
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            print(status)
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: -  내가 쓴 댓글의 게시글들(posts) 가져오기
+    
+    func getMyCommentPosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Profile + "/me/comment/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Post.self, from: value)
+                                completion(.success(result))
+                                
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            print(status)
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: -  내가 좋아요를 누른 게시글들(posts) 가져오기
+    
+    func getMyFavoritePosts(lastId: Int, limit: Int, completion: @escaping (NetworkResult<Any>) -> Void){
+        let URL = APIConstants.Profile + "/me/like/posts?lastId=" + "\(lastId)" + "&limit=" + "\(limit)"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let header: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: header).responseData{ response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    
+                    if let status = response.response?.statusCode{
+                        switch status {
+                        case 200:
+                            do{
+                                let decoder = JSONDecoder()
+                                let result = try decoder.decode(Post.self, from: value)
+                                completion(.success(result))
+                                
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 409:
+                            print("실패 409")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            print(status)
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    
+    // MARK: - 프로필 이미지 변경하기
+    
+    func changeProfileImage(_ profileImage: NSString, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/profile"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "profileUrl" : profileImage
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("프로필 이미지 변경 성공"))
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    
+    // MARK: - 닉네임 변경하기
+    
+    func changeNickname(_ nickname: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/nickname"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "nickname" : nickname
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("닉네임 변경 성공"))
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: - 비밀번호 변경하기
+    
+    func changePassword(_ currentPw: String, _ changePw: String, completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/password"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "nowPassword" : currentPw,
+            "changePassword" : changePw
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("비밀번호 변경 성공"))
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: - 관심사 변경하기
+    
+    func changeInterests(_ interests: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/interests"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "interests" : interests,
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let value = response.result.value {
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200:
+                            do {
+                                let decoder = JSONDecoder()
+                                let responseCategory = try decoder.decode(UploadImage.self, from: value)
+                            completion(.success(responseCategory))
+                            } catch {
+                                completion(.pathErr)
+                            }
+                        case 401:
+                            print("실패 401")
+                            completion(.pathErr)
+                        case 500:
+                            print("실패 500")
+                            completion(.serverErr)
+                        default:
+                            completion(.requestErr("해당하는 관심주제 카테고리가 없습니다."))
+                            break
+                        }
+                    }
+                }
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
+    
+    // MARK: - 전공 변경하기
+    
+    func changeMajors(_ majors: [String], completion: @escaping (NetworkResult<Any>) -> Void) {
+        
+        let URL = APIConstants.User + "/majors"
+        
+        var token = "Bearer "
+        token += KeychainWrapper.standard.string(forKey: "token") ?? ""
+        
+        let headers: HTTPHeaders = [
+            "Content-Type" : "application/json;charset=UTF-8",
+            "Accept": "application/hal+json",
+            "Authorization": token
+        ]
+        
+        let body : Parameters = [
+            "majors" : majors,
+        ]
+        
+        Alamofire.request(URL, method: .patch, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
+            response in
+            
+            switch response.result {
+            
+            case .success:
+                if let status =
+                    response.response?.statusCode {
+                    switch status {
+                    case 200:
+                        completion(.success("전공 변경 성공"))
+                    case 401:
+                        print("실패 401")
+                        completion(.pathErr)
+                    case 500:
+                        print("실패 500")
+                        completion(.serverErr)
+                    default:
+                        completion(.requestErr("해당하는 전공이 없습니다."))
+                        break
+                    }
+                }
+                
+            case .failure(let err):
+                print(err.localizedDescription)
+                completion(.networkFail)
+            }
+        }
+    }
 }

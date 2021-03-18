@@ -75,14 +75,7 @@ extension UITextView : UITextViewDelegate {
         self.resizePlaceholder()
         self.delegate = self
     }
-
-    public func postingInit() {
-        isEditable = false
-        isScrollEnabled = false
-        isSelectable = false
-        sizeToFit()
-    }
-
+    
     func centerVertically() {
            let fittingSize = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
            let size = sizeThatFits(fittingSize)
