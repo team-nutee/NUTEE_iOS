@@ -35,6 +35,15 @@ class NoticeVC: UIViewController {
         setNoticeFeedContainerCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        // 웹페이지에서 돌아올 때 기기방향이 세로모드가 아닐 경우 강제로 세로모드 설정
+        let value = UIInterfaceOrientation.portraitUpsideDown.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        UIViewController.attemptRotationToDeviceOrientation()
+    }
+    
     // MARK: - Helper
     
     func setMenuBar() {
