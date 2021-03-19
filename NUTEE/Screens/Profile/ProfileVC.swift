@@ -232,6 +232,12 @@ extension ProfileVC : UICollectionViewDelegateFlowLayout {
 
 extension ProfileVC : UICollectionViewDataSource {
     
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let menuIndex = Int(targetContentOffset.pointee.x / view.frame.width)
+        let indexPath = IndexPath(item: menuIndex, section: 0)
+        userMenuBar.menuBarCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         switch scrollView {
             case self.scrollView :
