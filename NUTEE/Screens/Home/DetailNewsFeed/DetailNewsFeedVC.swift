@@ -86,9 +86,7 @@ class DetailNewsFeedVC: UIViewController {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
-            
-            $0.keyboardDismissMode = .onDrag
-            
+                        
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
             
             $0.isHidden = true
