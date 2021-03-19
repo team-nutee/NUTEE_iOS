@@ -446,6 +446,10 @@ extension DetailNewsFeedVC {
 
             commentViewBottomConstraint?.layoutConstraints[0].constant = -(keyboardHeight - tabbarHeight)
             
+            self.detailNewsFeedTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight - tabbarHeight, right: 0);
+            let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
+            detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+            
             self.view.setNeedsLayout()
             UIView.animate(withDuration: duration, delay: 0, options: .init(rawValue: curve), animations: {
                 self.view.layoutIfNeeded()
