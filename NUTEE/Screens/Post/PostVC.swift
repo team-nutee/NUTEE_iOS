@@ -315,11 +315,12 @@ class PostVC: UIViewController {
             }
             let nuteeAlertDialogue = NuteeAlertDialogue()
             nuteeAlertDialogue.dialogueData = ["나가기", content]
-            nuteeAlertDialogue.okButtonData = ["예", UIColor.white, UIColor.red]
+            
             nuteeAlertDialogue.cancelButtonData[0] = "아니오"
             
-            nuteeAlertDialogue.addCancelPostAction()
-
+            nuteeAlertDialogue.okButtonData = ["예", UIColor.white, UIColor.red]
+            nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapCancelPostYes), for: .touchUpInside)
+            
             nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
             nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
             
@@ -327,6 +328,13 @@ class PostVC: UIViewController {
         } else {
             self.dismiss(animated: true, completion: nil)
         }
+    }
+    
+    @objc func didTapCancelPostYes() {
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.dismiss(animated: true)
+        })
     }
     
     @objc func didTapUploadPosting() {
