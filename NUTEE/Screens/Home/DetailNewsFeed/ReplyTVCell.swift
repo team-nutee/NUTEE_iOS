@@ -29,6 +29,8 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
 
     //MARK: - Variables and Properties
 
+    var indextPathRow: Int?
+    
     var detailNewsFeedVC: DetailNewsFeedVC?
     var comment: CommentBody?
     
@@ -272,44 +274,6 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
     }
     
-    func editComment() {
-        detailNewsFeedVC?.setEditCommentMode(editCommentId: comment?.id ?? 0, content: comment?.content ?? "")
-    }
-    
-    func reportComment() {
-        let nuteeReportDialogue = NuteeReportDialogue()
-        nuteeReportDialogue.nuteeAlertActionDelegate = self
-        
-        nuteeReportDialogue.dialogueData = ["댓글 신고하기", "신고 사유를 입력해주세요."]
-        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-        
-        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
-        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
-        
-        detailNewsFeedVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
-    }
-    
-    func deleteComment() {
-        let nuteeAlertDialogue = NuteeAlertDialogue()
-        nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
-        
-        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
-        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
-        
-        detailNewsFeedVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
-    }
-    
-    @objc func didTapDeleteComment() {
-        detailNewsFeedVC?.deleteComment(deleteCommentId: comment?.id ?? 0)
-    }
-    
-    func createRecomment() {
-        detailNewsFeedVC?.setRecommentMode()
-        detailNewsFeedVC?.commentId = comment?.id
-    }
-
 }
 
 // MARK: - NuteeAlert Action Definition
@@ -362,9 +326,49 @@ extension ReplyTVCell: NuteeAlertActionDelegate {
         }
     }
     
+    func editComment() {
+        detailNewsFeedVC?.setEditCommentMode(editCommentId: comment?.id ?? 0, content: comment?.content ?? "", currentCellRow: indextPathRow)
+    }
+    
+    func reportComment() {
+        let nuteeReportDialogue = NuteeReportDialogue()
+        nuteeReportDialogue.nuteeAlertActionDelegate = self
+        
+        nuteeReportDialogue.dialogueData = ["댓글 신고하기", "신고 사유를 입력해주세요."]
+        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
+        
+        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
+        
+        detailNewsFeedVC?.tabBarController?.present(nuteeReportDialogue, animated: true)
+    }
+    
+    func deleteComment() {
+        let nuteeAlertDialogue = NuteeAlertDialogue()
+        nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
+        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
+        
+        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
+        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
+        
+        detailNewsFeedVC?.tabBarController?.present(nuteeAlertDialogue, animated: true)
+    }
+    
+    @objc func didTapDeleteComment() {
+        detailNewsFeedVC?.deleteComment(deleteCommentId: comment?.id ?? 0)
+    }
+    
+    func createRecomment() {
+        detailNewsFeedVC?.commentTextView.text = ""
+        detailNewsFeedVC?.isEditCommentMode = false
+        detailNewsFeedVC?.switchRecommentMode(recommentMode: true, currentCellRow: indextPathRow)
+        detailNewsFeedVC?.commentId = comment?.id
+    }
+    
     func nuteeAlertDialogueAction(text: String) {
-        reportComment(postId: postId ?? 0, commentId: comment?.id ?? 0, content: text, completionHandler: {
-            self.detailNewsFeedVC?.dismiss(animated: true)
+        reportCommentService(postId: postId ?? 0, commentId: comment?.id ?? 0, content: text, completionHandler: { [self] in
+            detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "신고완료", message: "해당 댓글이 신고되었습니다")
         })
     }
 }
@@ -426,27 +430,28 @@ extension ReplyTVCell {
         }
     }
     
-    func reportComment(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void) {
-        ContentService.shared.reportComment(postId, commentId, content) { (responsedata) in
+    func reportCommentService(postId: Int, commentId: Int, content: String, completionHandler: @escaping () -> Void) {
+        ContentService.shared.reportComment(postId, commentId, content) { [self] (responsedata) in
 
             switch responsedata {
             case .success(_):
+                detailNewsFeedVC?.dismiss(animated: true)
                 completionHandler()
 
             case .requestErr(let message):
-                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "\(message)")
+                detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "\(message)")
                 print("request error")
                 
             case .pathErr:
-                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버 연결에 오류가 있습니다")
+                detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버 연결에 오류가 있습니다")
                 print(".pathErr")
                 
             case .serverErr:
-                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버에 오류가 있습니다")
+                detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "서버에 오류가 있습니다")
                 print(".serverErr")
                 
             case .networkFail :
-                self.detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "네트워크에 오류가 있습니다")
+                detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "댓글 신고 실패", message: "네트워크에 오류가 있습니다")
                 print("failure")
             }
         }
