@@ -7,8 +7,6 @@
 //
 import UIKit
 
-import SafariServices
-
 import SwiftKeychainWrapper
 
 class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate {
@@ -135,7 +133,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값이 좌우 여백이 있기 때문에 조정 필요
             
-            $0.delegate = self
+            $0.delegate = self.detailNewsFeedVC
         }
         
         _ = firstImageViewWhenOne.then {
@@ -587,17 +585,6 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         nuteeImageViewer.setImageSource(imageList: postImageList, tag: imgView?.tag ?? 0)
         
         detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
-    }
-    
-    func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        
-        // 링크 연결 코드
-        let safariViewController = SFSafariViewController(url: url)
-        safariViewController.preferredControlTintColor = .nuteeGreen
-        
-        self.detailNewsFeedVC?.present(safariViewController, animated: true, completion: nil)
-        
-        return true
     }
 }
 

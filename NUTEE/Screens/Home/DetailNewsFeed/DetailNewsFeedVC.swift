@@ -11,6 +11,8 @@ import SnapKit
 
 import SwiftKeychainWrapper
 
+import SafariServices
+
 class DetailNewsFeedVC: UIViewController {
     
     //MARK: - UI components
@@ -456,6 +458,17 @@ extension DetailNewsFeedVC: UITextViewDelegate {
         UIView.animate(withDuration: 0.1) {
             self.view.layoutIfNeeded()
         }
+    }
+    
+    func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        
+        // 링크 연결 코드
+        let safariViewController = SFSafariViewController(url: url)
+        safariViewController.preferredControlTintColor = .nuteeGreen
+        
+        self.present(safariViewController, animated: true, completion: nil)
+        
+        return true
     }
     
 }
