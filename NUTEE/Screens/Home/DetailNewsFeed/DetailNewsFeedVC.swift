@@ -243,14 +243,15 @@ class DetailNewsFeedVC: UIViewController {
                     
                     let beforeReplyList = replyList
                     getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
-                        for index in 0..<(replyList?.count ?? 0) {
+                        var toScrollRowIndex = (replyList?.count ?? 1) - 1
+                        for index in 0..<(beforeReplyList?.count ?? 0) {
                             if (replyList?[index].body?.id != beforeReplyList?[index].body?.id) {
-                                let lastRow = IndexPath(row: index, section: 0)
-                                detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
-                                
+                                toScrollRowIndex = index
                                 break
                             }
                         }
+                        let lastRow = IndexPath(row: toScrollRowIndex, section: 0)
+                        detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
                     })
                 })
                 
