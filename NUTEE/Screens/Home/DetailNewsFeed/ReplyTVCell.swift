@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import SafariServices
 import SwiftKeychainWrapper
 
 class ReplyTVCell: UITableViewCell, UITextViewDelegate{
@@ -87,8 +87,12 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         _ = replyTextView.then {
             $0.textContainer.lineBreakMode = .byTruncatingTail
             $0.font = .systemFont(ofSize: 14)
-            $0.isUserInteractionEnabled = false
+            
+            $0.isUserInteractionEnabled = true
+            $0.isEditable = false
+            $0.dataDetectorTypes = .link
             $0.isScrollEnabled = false
+            
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값인 0이 좌우 여백이 있기 때문에 조정 필요
         }
         
@@ -274,6 +278,16 @@ class ReplyTVCell: UITableViewCell, UITextViewDelegate{
         likeButton.setImage(UIImage(systemName: "heart.fill"), for: .selected)
     }
     
+    func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        
+        // 링크 연결 코드
+        let safariViewController = SFSafariViewController(url: url)
+        safariViewController.preferredControlTintColor = .nuteeGreen
+        
+        self.detailNewsFeedVC?.present(safariViewController, animated: true, completion: nil)
+        
+        return true
+    }
 }
 
 // MARK: - NuteeAlert Action Definition
