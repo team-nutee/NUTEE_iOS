@@ -360,6 +360,8 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
             headerView?.initPosting()
         }
         
+        headerView?.contentTextView.resolveHashTags()
+        
         return headerView
     }
     

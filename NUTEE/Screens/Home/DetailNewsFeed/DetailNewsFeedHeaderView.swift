@@ -25,7 +25,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     let moreButton = UIButton()
     
-    let contentTextView = UITextView()
+    let contentTextView = HashtagTextView()
     let contentImageView = UIImageView()
     
     let imageFrameView = UIView()
@@ -591,11 +591,25 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         
-        // 링크 연결 코드
-        let safariViewController = SFSafariViewController(url: url)
-        safariViewController.preferredControlTintColor = .nuteeGreen
+        guard let hashTagTextView = textView as? HashtagTextView  else { return false }
         
-        self.detailNewsFeedVC?.present(safariViewController, animated: true, completion: nil)
+        if url.scheme == "http" {
+            // 링크 연결
+            let safariViewController = SFSafariViewController(url: url)
+            safariViewController.preferredControlTintColor = .nuteeGreen
+            
+            self.detailNewsFeedVC?.present(safariViewController, animated: true, completion: nil)
+        } else {
+            // 해시 태그 검색
+            let urlString = String(describing: url)
+            if let index = Int(urlString) {
+                let hashtagFeedVC = HashtagFeedVC()
+                
+                hashtagFeedVC.afterSetKeyword(keyword: hashTagTextView.hashtagArr?[index] ?? "")
+                    
+                self.detailNewsFeedVC?.navigationController?.pushViewController(hashtagFeedVC, animated: true)
+            }
+        }
         
         return false
     }

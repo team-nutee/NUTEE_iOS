@@ -52,4 +52,7 @@ struct APIConstants {
     
     // Search
     static let Search = BackURL + "/search"
+    
+    // Hashtag
+    static let Hashtag = BackURL + "/hashtag"
 }
