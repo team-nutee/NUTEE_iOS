@@ -8,7 +8,21 @@
 
 import Foundation
 
-class HashtagFeedCVCell: SearchResultFeedCVCell {
+class HashtagFeedCVCell: FeedContainerCVCell {
+    
+    // MARK: - UI components
+    
+    // MARK: - Variables and Properties
+    
+    var keyword: String?
+    
+    // MARK: - Life Cycle
+    
+    // MARK: - Helper
+    
+    override func fetchNewsFeed() {
+        // <--- make do nothing
+    }
     
     //MARK: - Server connect
     
