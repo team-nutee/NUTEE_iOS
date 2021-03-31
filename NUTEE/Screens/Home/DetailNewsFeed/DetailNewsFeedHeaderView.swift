@@ -593,7 +593,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         
         guard let hashTagTextView = textView as? HashtagTextView  else { return false }
         
-        if url.scheme == "http" {
+        if url.scheme == "http" || url.scheme == "https" {
             // 링크 연결
             let safariViewController = SFSafariViewController(url: url)
             safariViewController.preferredControlTintColor = .nuteeGreen
