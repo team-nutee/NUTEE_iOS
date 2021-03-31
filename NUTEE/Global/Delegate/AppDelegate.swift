@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+import SafariServices
+
 import Firebase
 import SwiftKeychainWrapper
 #if DEBUG
@@ -57,7 +59,23 @@ import Gedatsu
         return true
     }
 
-    // MARK: UISceneSession Lifecycle
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        
+        if let rootViewController = window?.rootViewController as? UITabBarController {
+            if let navigationController = rootViewController.selectedViewController as? UINavigationController {
+                switch navigationController.visibleViewController {
+                case is SFSafariViewController:
+                    return UIInterfaceOrientationMask.all
+                default:
+                    return UIInterfaceOrientationMask.portrait
+                }
+            }
+        }
+        
+        return UIInterfaceOrientationMask.portrait
+    }
+        
+    // MARK: - UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.

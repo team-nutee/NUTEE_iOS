@@ -172,16 +172,23 @@ class SignUpViewController: UIViewController {
     @objc func didTapCloseButton() {
         let nuteeAlertDialogue = NuteeAlertDialogue()
         nuteeAlertDialogue.windowWidth = 270
+        
         nuteeAlertDialogue.dialogueData = ["나가기", "입력하신 회원정보가 저장되지 않습니다\n그래도 나가시겠습니까?"]
-        nuteeAlertDialogue.okButtonData = ["나가기", UIColor.white, UIColor.red]
+        
         nuteeAlertDialogue.cancelButtonData[0] = "취소"
         
-        nuteeAlertDialogue.addCancelSigUpAction()
-
+        nuteeAlertDialogue.okButtonData = ["나가기", UIColor.white, UIColor.red]
+        nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapCancelSignUpYes), for: .touchUpInside)
+        
         nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
         nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
         
         present(nuteeAlertDialogue, animated: true)
+    }
+    
+    @objc func didTapCancelSignUpYes() {
+        let rootVC = self.view.window!.rootViewController
+        rootVC?.dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapPreviousButton() {

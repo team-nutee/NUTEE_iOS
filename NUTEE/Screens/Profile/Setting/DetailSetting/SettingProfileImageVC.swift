@@ -153,7 +153,7 @@ extension SettingProfileImageVC: NuteeAlertActionDelegate {
         nuteeAlertSheet.optionList = [["앨범에서 프로필 사진 선택", UIColor.nuteeGreen]]
         
         if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
-            nuteeAlertSheet.optionList.append([["카메라로 프로필 사진 찍기", UIColor.nuteeGreen]])
+            nuteeAlertSheet.optionList.insert(["카메라로 프로필 사진 찍기", UIColor.nuteeGreen], at: 0)
         }
         
         nuteeAlertSheet.modalPresentationStyle = .custom
@@ -161,13 +161,18 @@ extension SettingProfileImageVC: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertSheetAction(indexPath: Int) {
+        dismiss(animated: true)
+        
         switch indexPath {
         case 0:
-            dismiss(animated: true)
-            openLibrary()
+            if (UIImagePickerController .isSourceTypeAvailable(.camera)) {
+                openCamera()
+            } else {
+                openLibrary()
+            }
+            
         case 1:
-            dismiss(animated: true)
-            openCamera()
+            openLibrary()
         default:
             break
         }

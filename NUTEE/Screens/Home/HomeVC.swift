@@ -149,7 +149,9 @@ class HomeVC: UIViewController {
     @objc func didTapSearchBarItem() {
         let searchVC = SearchVC()
         searchVC.getCategoriesService(completionHandler: {
-            searchVC.afterFetchCategoryView()
+            searchVC.getMyProfileService {
+                searchVC.afterFetchCategoryView()
+            }
         })
         
         self.navigationController?.pushViewController(searchVC, animated: true)

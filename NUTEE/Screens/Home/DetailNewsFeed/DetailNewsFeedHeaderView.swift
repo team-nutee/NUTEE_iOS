@@ -7,9 +7,9 @@
 //
 import UIKit
 
-import SafariServices
-
 import SwiftKeychainWrapper
+
+import SafariServices
 
 class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate {
     
@@ -25,7 +25,7 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
     
     let moreButton = UIButton()
     
-    let contentTextView = UITextView()
+    let contentTextView = HashtagTextView()
     let contentImageView = UIImageView()
     
     let imageFrameView = UIView()
@@ -128,10 +128,14 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
             $0.textAlignment = .justified
             $0.font = .systemFont(ofSize: 14)
             
-            $0.isUserInteractionEnabled = false
+            $0.isUserInteractionEnabled = true
             $0.isScrollEnabled = false
+            $0.isEditable = false
+            $0.dataDetectorTypes = .link
             
             $0.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -5) // 기본 설정 값이 좌우 여백이 있기 때문에 조정 필요
+            
+            $0.delegate = self
         }
         
         _ = firstImageViewWhenOne.then {
@@ -585,6 +589,31 @@ class DetailNewsFeedHeaderView: UITableViewHeaderFooterView, UITextViewDelegate 
         detailNewsFeedVC?.present(nuteeImageViewer, animated: true)
     }
     
+    func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        
+        guard let hashTagTextView = textView as? HashtagTextView  else { return false }
+        
+        if url.scheme == "http" || url.scheme == "https" {
+            // 링크 연결
+            let safariViewController = SFSafariViewController(url: url)
+            safariViewController.preferredControlTintColor = .nuteeGreen
+            
+            self.detailNewsFeedVC?.present(safariViewController, animated: true, completion: nil)
+        } else {
+            // 해시 태그 검색
+            let urlString = String(describing: url)
+            if let index = Int(urlString) {
+                let hashtagFeedVC = HashtagFeedVC()
+                
+                hashtagFeedVC.afterSetKeyword(keyword: hashTagTextView.hashtagArr?[index] ?? "")
+                    
+                self.detailNewsFeedVC?.navigationController?.pushViewController(hashtagFeedVC, animated: true)
+            }
+        }
+        
+        return false
+    }
+    
 }
 
 // MARK: - NuteeAlert Action Definition
@@ -678,7 +707,7 @@ extension DetailNewsFeedHeaderView: NuteeAlertActionDelegate {
     }
     
     func nuteeAlertDialogueAction(text: String) {
-        detailNewsFeedVC?.feedContainerCVCell?.reportPost(postId: post?.body.id ?? 0, content: text, completionHandler: { [self] in
+        detailNewsFeedVC?.feedContainerCVCell?.reportPostService(postId: post?.body.id ?? 0, content: text, completionHandler: { [self] in
             detailNewsFeedVC?.simpleNuteeAlertDialogue(title: "신고완료", message: "해당 게시글이 신고되었습니다")
         })
     }

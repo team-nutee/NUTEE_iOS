@@ -397,7 +397,7 @@ extension LoginVC: UITextFieldDelegate {
         
         // 로그인 입력 조건 확인
         let id = idTextField.text
-        if id?.validateID() == true && pwTextField.text?.validatePassword() == true {
+        if id?.validateID() == true && pwTextField.text?.isEmpty == false {
             loginButton.isEnabled = true
             
             loginButton.backgroundColor = .nuteeGreen

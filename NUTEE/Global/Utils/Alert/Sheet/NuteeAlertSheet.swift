@@ -163,84 +163,6 @@ class NuteeAlertSheet : UIViewController {
         }
     }
     
-// MARK: - Custom Settings
-    
-//    func editPost() {
-//        let postVC = PostVC()
-//        // 의존성 주입 실패로 일단 파라미터 값을 통해 주입
-//        postVC.setEditMode(postContent: editPostContent, postBody: editPostBody)
-//
-//        let navigationController = UINavigationController(rootViewController: postVC)
-//        navigationController.modalPresentationStyle = .currentContext
-//
-//        let beforeVC = self.presentingViewController
-//        dismiss(animated: true, completion: {
-//            beforeVC?.present(navigationController, animated: true, completion: nil)
-//        })
-//    }
-//
-//    func deletePost() {
-//        let nuteeAlertDialogue = NuteeAlertDialogue()
-//        nuteeAlertDialogue.dialogueData = ["게시글 삭제", "해당 게시글을 삭제하시겠습니까?"]
-//        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-//
-//        nuteeAlertDialogue.feedContainerCVCell = self.feedContainerCVCell
-//        nuteeAlertDialogue.categoryFeedVC = self.categoryFeedVC
-//        nuteeAlertDialogue.postId = postId
-//        nuteeAlertDialogue.addDeletePostAction()
-//
-//        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
-//        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
-//
-//        let beforeVC = self.presentingViewController
-//        dismiss(animated: true, completion: {
-//            beforeVC?.present(nuteeAlertDialogue, animated: true)
-//        })
-//    }
-//
-//    func reportPost() {
-//        let nuteeReportDialogue = NuteeReportDialogue()
-//        nuteeReportDialogue.dialogueData = ["신고하기", "신고 사유를 입력해주세요."]
-//        nuteeReportDialogue.okButtonData = ["신고", UIColor.white, UIColor.red]
-//
-//        nuteeReportDialogue.feedContainerCVCell = self.feedContainerCVCell
-//        nuteeReportDialogue.postId = postId
-//        nuteeReportDialogue.addReportPostAction()
-//
-//        nuteeReportDialogue.modalPresentationStyle = .overCurrentContext
-//        nuteeReportDialogue.modalTransitionStyle = .crossDissolve
-//
-//        let beforeVC = self.presentingViewController
-//        dismiss(animated: true, completion: {
-//            beforeVC?.present(nuteeReportDialogue, animated: true)
-//        })
-//    }
-//
-//    func editComment() {
-//        detailNewsFeedVC?.setEditCommentMode(editCommentId: commentId ?? 0, content: editCommentContent ?? "")
-//
-//        dismiss(animated: true, completion: nil)
-//    }
-//
-//    func deleteComment() {
-//        let nuteeAlertDialogue = NuteeAlertDialogue()
-//        nuteeAlertDialogue.dialogueData = ["댓글 삭제", "해당 댓글을 삭제하시겠습니까?"]
-//        nuteeAlertDialogue.okButtonData = ["삭제", UIColor.white, UIColor.red]
-//
-//        nuteeAlertDialogue.detailNewsFeedVC = self.detailNewsFeedVC
-//        //nuteeAlertDialogue.postId = postId
-//        nuteeAlertDialogue.commentId = commentId
-//        nuteeAlertDialogue.addDeleteCommentAction()
-//
-//        nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
-//        nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
-//
-//        let beforeVC = self.presentingViewController
-//        dismiss(animated: true, completion: {
-//            beforeVC?.present(nuteeAlertDialogue, animated: true)
-//        })
-//    }
-    
 }
 
 // MARK: - optionList TableView
@@ -270,29 +192,7 @@ extension NuteeAlertSheet: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         nuteeAlertActionDelegate?.nuteeAlertSheetAction(indexPath: indexPath.row)
-        
-        
-        
-//        switch optionList[indexPath.row][2] as? String {
-//        case "editPost":
-//            editPost()
-//        case "deletePost":
-//            deletePost()
-//        case "reportPost":
-//            reportPost()
-//        case "editComment":
-//            editComment()
-//        case "deleteComment":
-//            deleteComment()
-        
-//        default:
-//            simpleNuteeAlertDialogue(title: "Error😵", message: "Error ocurred: cannot find")
-//        }
-        
-        
-        
     }
 
 }

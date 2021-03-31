@@ -19,8 +19,8 @@ struct APIConstants {
     static let Login = AuthURL + "/login"
     static let Logout = AuthURL + "/logout"
     
-    static let FindID = AuthURL + "/findid"
-    static let FindPW = AuthURL + "/findpw"
+    static let FindID = AuthURL + "/user-id"
+    static let FindPW = AuthURL + "/password"
     
     // SignUp
     static let User = AuthURL + "/user"
@@ -52,4 +52,7 @@ struct APIConstants {
     
     // Search
     static let Search = BackURL + "/search"
+    
+    // Hashtag
+    static let Hashtag = BackURL + "/hashtag"
 }

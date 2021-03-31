@@ -137,7 +137,7 @@ extension NoticeFeedContainerCVCell : UITableViewDataSource {
         let url = URL(string: notices?[indexPath.row].href ?? "")
         let safariViewController = SFSafariViewController(url: url!)
         safariViewController.preferredControlTintColor = .nuteeGreen
-
+        
         noticeVC?.present(safariViewController, animated: true, completion: nil)
     }
     

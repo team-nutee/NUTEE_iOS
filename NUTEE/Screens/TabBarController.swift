@@ -36,7 +36,7 @@ class TabBarController: UITabBarController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        toPostButton.snp.makeConstraints {
+        toPostButton.snp.updateConstraints {
             let tabsCount = CGFloat(viewControllers?.count ?? 0)
             let tabIconWidth = tabBar.frame.size.width / tabsCount
             
@@ -73,6 +73,10 @@ class TabBarController: UITabBarController {
         
         view.addSubview(toPostButton)
         toPostButton.snp.makeConstraints {
+            $0.width.equalTo(0)
+            $0.height.equalTo(0)
+            
+            $0.left.equalTo(view.snp.left).offset(0)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }

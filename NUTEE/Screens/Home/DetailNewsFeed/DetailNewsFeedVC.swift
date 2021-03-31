@@ -36,6 +36,8 @@ class DetailNewsFeedVC: UIViewController {
     
     var commentViewBottomConstraint: Constraint?
     
+    let commentTextViewPlaceholder = "댓글을 작성해주세요"
+    
     var isEditCommentMode = false
     var commentId: Int?
     
@@ -60,6 +62,11 @@ class DetailNewsFeedVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        // 웹페이지에서 돌아올 때 기기방향이 세로모드가 아닐 경우 강제로 세로모드 설정
+        let value = UIInterfaceOrientation.portraitUpsideDown.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        UIViewController.attemptRotationToDeviceOrientation()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -86,9 +93,7 @@ class DetailNewsFeedVC: UIViewController {
             $0.backgroundColor = .white
             $0.separatorInset.left = 0
             $0.separatorStyle = .singleLine
-            
-            $0.keyboardDismissMode = .onDrag
-            
+                        
             $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfCommentView(sender:))))
             
             $0.isHidden = true
@@ -103,7 +108,7 @@ class DetailNewsFeedVC: UIViewController {
         _ = commentTextView.then {
             $0.delegate = self
             
-            $0.placeholderLabel.text = "댓글을 입력하세요"
+            $0.placeholderLabel.text = commentTextViewPlaceholder
             $0.placeholderLabel.font = .systemFont(ofSize: commentTextViewFontSize)
             
             $0.font = .systemFont(ofSize: commentTextViewFontSize)
@@ -217,23 +222,39 @@ class DetailNewsFeedVC: UIViewController {
                 
                 // 수정 모드 종료
                 isEditCommentMode = false
-                self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
+                self.commentTextView.placeholderLabel.text = commentTextViewPlaceholder
                 self.endCommentEditing()
                 
                 getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    for index in 0..<(replyList?.count ?? 0) {
+                        if (replyList?[index].body?.id == commentId) {
+                            let lastRow = IndexPath(row: index, section: 0)
+                            detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                            
+                            break
+                        }
+                    }
                 })
             })
         } else {
             // 답글 모드일 때
             if recommentMode {
-                self.createRecommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: {
+                self.createRecommentService(postId: postId ?? 0, commentId: commentId ?? 0, content: commentTextView.text, completionHandler: { [self] in
                     
                     // 답글 모드 종료
-                    self.recommentMode = false
-                    self.commentTextView.placeholderLabel.text = "댓글을 작성해주세요"
-                    self.endCommentEditing()
+                    switchRecommentMode(recommentMode: false, currentCellRow: nil)
                     
-                    self.getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                    let beforeReplyList = replyList
+                    getPostService(postId: self.postId ?? 0, completionHandler: {(returnedData)-> Void in
+                        var toScrollRowIndex = (replyList?.count ?? 1) - 1
+                        for index in 0..<(beforeReplyList?.count ?? 0) {
+                            if (replyList?[index].body?.id != beforeReplyList?[index].body?.id) {
+                                toScrollRowIndex = index
+                                break
+                            }
+                        }
+                        let lastRow = IndexPath(row: toScrollRowIndex, section: 0)
+                        detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
                     })
                 })
                 
@@ -252,13 +273,15 @@ class DetailNewsFeedVC: UIViewController {
     }
 
     @objc func didTapOutsideOfCommentView(sender: UITapGestureRecognizer) {
-        if sender.state == .ended {
-            view.endEditing(true)
-        }
-        sender.cancelsTouchesInView = false
+        switchRecommentMode(recommentMode: false, currentCellRow: nil)
+        
+        isEditCommentMode = false
+        commentId = 0
+        
+        view.endEditing(true)
     }
     
-    func setEditCommentMode(editCommentId: Int, content: String) {
+    func setEditCommentMode(editCommentId: Int, content: String, currentCellRow: Int?) {
         isEditCommentMode = true
         
         commentId = editCommentId
@@ -266,12 +289,31 @@ class DetailNewsFeedVC: UIViewController {
         commentTextView.placeholderLabel.text = ""
         
         commentTextView.becomeFirstResponder()
+        
+        let indextPath = IndexPath(row: currentCellRow ?? 0, section: 0)
+        detailNewsFeedTableView.scrollToRow(at: indextPath, at: .bottom, animated: true)
     }
     
-    func setRecommentMode() {
-        recommentMode = true
-        commentTextView.placeholderLabel.text = "답글을 입력하세요"
-        commentTextView.becomeFirstResponder()
+    func switchRecommentMode(recommentMode: Bool, currentCellRow: Int?) {
+        switch recommentMode {
+        case true:
+            commentTextView.becomeFirstResponder()
+            
+            self.recommentMode = recommentMode
+            
+            let indextPath = IndexPath(row: currentCellRow ?? 0, section: 0)
+            detailNewsFeedTableView.scrollToRow(at: indextPath, at: .bottom, animated: true)
+            
+            commentTextView.placeholderLabel.text = "답글을 입력하세요"
+            
+        default:
+            self.recommentMode = recommentMode
+            commentTextView.placeholderLabel.text = commentTextViewPlaceholder
+            commentTextView.text = ""
+            textViewDidChange(commentTextView)
+            commentTextView.resignFirstResponder()
+        }
+        
     }
     
     func endCommentEditing() {
@@ -318,6 +360,8 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
             headerView?.initPosting()
         }
         
+        headerView?.contentTextView.resolveHashTags()
+        
         return headerView
     }
     
@@ -350,6 +394,7 @@ extension DetailNewsFeedVC : UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         
         cell.detailNewsFeedVC = self
+        cell.indextPathRow = indexPath.row
         
         cell.postId = postId
         cell.comment = replyList?[indexPath.row].body

@@ -315,11 +315,12 @@ class PostVC: UIViewController {
             }
             let nuteeAlertDialogue = NuteeAlertDialogue()
             nuteeAlertDialogue.dialogueData = ["나가기", content]
-            nuteeAlertDialogue.okButtonData = ["예", UIColor.white, UIColor.red]
+            
             nuteeAlertDialogue.cancelButtonData[0] = "아니오"
             
-            nuteeAlertDialogue.addCancelPostAction()
-
+            nuteeAlertDialogue.okButtonData = ["예", UIColor.white, UIColor.red]
+            nuteeAlertDialogue.okButton.addTarget(self, action: #selector(didTapCancelPostYes), for: .touchUpInside)
+            
             nuteeAlertDialogue.modalPresentationStyle = .overCurrentContext
             nuteeAlertDialogue.modalTransitionStyle = .crossDissolve
             
@@ -329,48 +330,53 @@ class PostVC: UIViewController {
         }
     }
     
+    @objc func didTapCancelPostYes() {
+        let beforeVC = self.presentingViewController
+        dismiss(animated: true, completion: {
+            beforeVC?.dismiss(animated: true)
+        })
+    }
+    
     @objc func didTapUploadPosting() {
-        if pickedCategory?.isEmpty == false {
-            if isEditMode == false {
-                // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-                if pickedIMG != [] {
-                    postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-                        self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.pickedCategory ?? "")
-                    })
-                } else {
-                    uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.pickedCategory ?? "")
-                }
+        if isEditMode == false {
+            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+            if pickedIMG != [] {
+                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                    self.uploadPost(images: self.uploadedImages, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", category: self.pickedCategory ?? "")
+                })
             } else {
-                // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
-                var images: [NSString] = []
-                for image in self.editPostImage {
-                    images.append((image?.src! ?? "") as NSString)
-                }
-                
-                if pickedIMG != [] {
-                    postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
-                        for uploadimg in self.uploadedImages {
-                            images.append(uploadimg)
-                        }
-                        
-                        if self.editPostContent != nil {
-                            self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
-                        } else {
-                            self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
-                        }
-                    })
-                } else {
+                uploadPost(images: [], title: postTitleTextField.text ?? "", content: postContentTextView.text ?? "", category: self.pickedCategory ?? "")
+            }
+            
+        } else {
+            // 사진이 있을때는 사진 올리고 게시물 업로드를 위한 분기처리
+            var images: [NSString] = []
+            for image in self.editPostImage {
+                images.append((image?.src! ?? "") as NSString)
+            }
+            
+            if pickedIMG != [] {
+                postImage(images: pickedIMG, completionHandler: {(returnedData)-> Void in
+                    for uploadimg in self.uploadedImages {
+                        images.append(uploadimg)
+                    }
+                    
                     if self.editPostContent != nil {
                         self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
                     } else {
                         self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
                     }
+                })
+            } else {
+                if self.editPostContent != nil {
+                    self.editPost(postId: self.editPostContent?.body.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
+                } else {
+                    self.editPost(postId: self.editPostBody?.id ?? 0, title: self.postTitleTextField.text ?? "", content: self.postContentTextView.text ?? "", images: images)
                 }
             }
-        } else {
-            simpleNuteeAlertDialogue(title: "업로드 오류", message: "카테고리나 전공을 선택해주세요")
         }
     }
+
     
     func updatePostMajorButtonStatus() {
         majorButton.alpha = 1.0
@@ -666,8 +672,8 @@ extension PostVC {
             case .success(_ ):
                 self.dismiss(animated: true, completion: nil)
             
-            case .requestErr(let message):
-                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "\(message)")
+            case .requestErr(_):
+                self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "카테고리나 전공을 선택해주세요")
 
             case .pathErr:
                 self.simpleNuteeAlertDialogue(title: "게시물 업로드 실패", message: "서버 연결에 오류가 있습니다")

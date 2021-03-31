@@ -23,15 +23,6 @@ class NuteeAlertDialogue: UIViewController {
     
     // MARK: - Variables and Properties
     
-//    var detailNewsFeedVC: DetailNewsFeedVC?
-//
-//    var feedContainerCVCell: FeedContainerCVCell?
-//
-//    var categoryFeedVC: CategoryFeedVC?
-//
-//    var postId: Int?
-//    var commentId: Int?
-    
     weak var nuteeAlertActionDelegate: NuteeAlertActionDelegate?
     
     var windowWidth: CGFloat = 245
@@ -160,49 +151,8 @@ class NuteeAlertDialogue: UIViewController {
         
     }
     
-    func addCancelPostAction() {
-        okButton.addTarget(self, action: #selector(didTapCancelPost), for: .touchUpInside)
-    }
-    
-//    func addDeletePostAction() {
-//        okButton.addTarget(self, action: #selector(didTapDeletePost), for: .touchUpInside)
-//    }
-    
-    func addCancelSigUpAction() {
-        okButton.addTarget(self, action: #selector(didTapCancelSignUp), for: .touchUpInside)
-    }
-    
-//    func addDeleteCommentAction() {
-//        okButton.addTarget(self, action: #selector(didTapDeleteComment), for: .touchUpInside)
-//    }
-    
     @objc func dismissAction() {
         dismiss(animated: true)
     }
     
-    @objc func didTapCancelPost() {
-        let beforeVC = self.presentingViewController
-        dismiss(animated: true, completion: {
-            beforeVC?.dismiss(animated: true)
-        })
-    }
-    
-    @objc func didTapCancelSignUp() {
-        let rootVC = self.view.window!.rootViewController
-        rootVC?.dismiss(animated: true, completion: nil)
-    }
-    
-//    @objc func didTapDeletePost() {
-//        feedContainerCVCell?.postDeleteService(postId: postId ?? 0, completionHandler: {
-////            if self.categoryFeedVC != nil {
-////                self.categoryFeedVC?.fetchCategoryFeed()
-////                return
-////            }
-//            self.feedContainerCVCell?.fetchNewsFeed()
-//        })
-//    }
-    
-//    @objc func didTapDeleteComment() {
-//        detailNewsFeedVC?.deleteComment(deleteCommentId: commentId ?? 0)
-//    }
 }

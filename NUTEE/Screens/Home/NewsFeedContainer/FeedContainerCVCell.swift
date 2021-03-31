@@ -263,7 +263,7 @@ extension FeedContainerCVCell {
     }
     
     // MARK: - Report post
-    func reportPost(postId: Int, content: String, completionHandler: @escaping () -> Void) {
+    func reportPostService(postId: Int, content: String, completionHandler: @escaping () -> Void) {
         ContentService.shared.reportPost(postId, content) { [self] (responsedata) in
             switch responsedata {
             case .success(_):

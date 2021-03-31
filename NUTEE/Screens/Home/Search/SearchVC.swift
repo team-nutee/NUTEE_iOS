@@ -96,6 +96,7 @@ class SearchVC: UIViewController {
             $0.placeholder = "검색어를 입력해주세요"
             $0.addBorder(.bottom, color: .nuteeGreen, thickness: 1)
             $0.tintColor = .nuteeGreen
+            $0.returnKeyType = .search
             
             $0.alpha = 0
         }
@@ -408,5 +409,29 @@ extension SearchVC {
                 self.simpleNuteeAlertDialogue(title: "카테고리 목록 조회 실패", message: "네트워크에 오류가 있습니다")
             }
         }
+    }
+    
+    func getMyProfileService(completionHandler: @escaping () -> Void ) {
+        UserService.shared.getMyProfile(completion: { (returnedData) -> Void in
+            
+            switch returnedData {
+            case .success(let res):
+                let response = res as! User
+                self.categoryCollectionView.categoryList.append(contentsOf: response.body.majors)
+                completionHandler()
+                
+            case .requestErr(let message):
+                self.simpleNuteeAlertDialogue(title: "전공 목록 가져오기 실패", message: "\(message)")
+
+            case .pathErr:
+                self.simpleNuteeAlertDialogue(title: "전공 목록 가져오기 실패", message: "서버 연결에 오류가 있습니다")
+
+            case .serverErr:
+                self.simpleNuteeAlertDialogue(title: "전공 목록 가져오기 실패", message: "서버에 오류가 있습니다")
+
+            case .networkFail :
+                self.simpleNuteeAlertDialogue(title: "전공 목록 가져오기 실패", message: "네트워크에 오류가 있습니다")
+            }
+        })
     }
 }
