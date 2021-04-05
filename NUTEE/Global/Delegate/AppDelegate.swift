@@ -13,6 +13,7 @@ import SafariServices
 
 import Firebase
 import SwiftKeychainWrapper
+
 #if DEBUG
 import Gedatsu
 #endif
@@ -141,9 +142,7 @@ import Gedatsu
 }
 
 extension AppDelegate: MessagingDelegate {
-    func messaging(_ messaging: Messaging,
-                   didReceiveRegistrationToken fcmToken: String) {
-
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         KeychainWrapper.standard.set(fcmToken, forKey: "deviceToken")
         let dataDict:[String: String] = ["token": fcmToken]
         
@@ -153,13 +152,11 @@ extension AppDelegate: MessagingDelegate {
                                         userInfo: dataDict)
     }
 
-    func application(_ application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
     }
     
-    func application(_ application: UIApplication,
-                     didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
         // TODO: Handle data of notification
