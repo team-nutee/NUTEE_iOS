@@ -25,7 +25,7 @@ class NoticeFeedTVCell: UITableViewCell {
     
     // MARK: - Variables and Properties
     
-    var noticeContent: NoticeElement?
+    var noticeContent: NoticeBody?
     
     // MARK: - Life Cycle
     
@@ -131,7 +131,7 @@ class NoticeFeedTVCell: UITableViewCell {
         }
     }
     
-    func setFetchedData(noticeContent: NoticeElement?, completionHandler: @escaping () -> Void) {
+    func setFetchedData(noticeContent: NoticeBody?, completionHandler: @escaping () -> Void) {
         self.noticeContent = noticeContent
         completionHandler()
     }

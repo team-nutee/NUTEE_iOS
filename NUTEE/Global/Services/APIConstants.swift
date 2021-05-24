@@ -31,7 +31,7 @@ struct APIConstants {
     static let NickCheck = AuthURL + "/check/nickname"
 
     // Notice
-    static let NoticeURL = "http://nutee.kr:9709/crawl"
+    static let NoticeURL = "http://3.34.61.71:9709/crawl"
     
     static let NoticeBachelor = NoticeURL + "/haksa"
     static let NoticeClass = NoticeURL + "/sooup"

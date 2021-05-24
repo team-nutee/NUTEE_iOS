@@ -18,7 +18,7 @@ struct NoticeService {
         
         let URL = url
         let headers: HTTPHeaders = [
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/json"
         ]
         
         Alamofire.request(URL, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseData {

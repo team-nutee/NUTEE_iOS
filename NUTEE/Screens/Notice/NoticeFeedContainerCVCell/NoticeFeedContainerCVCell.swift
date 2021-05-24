@@ -22,7 +22,7 @@ class NoticeFeedContainerCVCell : UICollectionViewCell {
     
     var noticeVC: NoticeVC?
     
-    var notices: Notice?
+    var notices: [NoticeBody]?
     
     // MARK: - Life Cycle
     
@@ -153,7 +153,7 @@ extension NoticeFeedContainerCVCell {
             case .success(let res):
                 
                 let response = res as! Notice
-                notices = response
+                notices = response.body
                 completionHandler()
                 
             case .requestErr(let message):
