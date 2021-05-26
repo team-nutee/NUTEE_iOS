@@ -182,7 +182,7 @@ struct UserService {
         ]
         
         let body : Parameters = [
-            "otpcheck" : otpNumber
+            "otp" : otpNumber
         ]
         
         Alamofire.request(URL, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers).responseData{
