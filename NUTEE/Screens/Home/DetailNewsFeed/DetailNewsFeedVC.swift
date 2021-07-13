@@ -208,11 +208,15 @@ class DetailNewsFeedVC: UIViewController {
     }
     
     @objc func updatePost() {
-        self.getPostService(postId: self.postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.refreshControl.endRefreshing()
-            }
-        })
+        if self.replyList?.count ?? 1 > 0 { // 레이아웃 오류 발생 방어를 위한 코드
+            self.getPostService(postId: self.postId ?? 0, completionHandler: { [self] (returnedData)-> Void in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.refreshControl.endRefreshing()
+                }
+            })
+        } else {
+            self.refreshControl.endRefreshing()
+        }
     }
     
     @objc func didTapSubmitButton(_ sender: UIButton) {
@@ -262,11 +266,13 @@ class DetailNewsFeedVC: UIViewController {
                 self.postCommentService(postId: postId ?? 0, content: commentTextView.text) { [self] in
                     self.endCommentEditing()
                     
-                    getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
-                        
-                        let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
-                        detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
-                    })
+                    if self.replyList?.count ?? 1 > 0 { // 레이아웃 오류 발생 방어를 위한 코드
+                        getPostService(postId: postId ?? 0, completionHandler: {(returnedData)-> Void in
+
+                            let lastRow = IndexPath(row: (self.replyList?.count ?? 1) - 1, section: 0)
+                            detailNewsFeedTableView.scrollToRow(at: lastRow, at: .bottom, animated: true)
+                        })
+                    }
                 }
             }
         }
