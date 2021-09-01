@@ -46,8 +46,10 @@ extension UIImageView {
                 self.image = image // 바로 이미지를 셋한다.
             } else {
                 let url = URL(string: urlString) // 캐시가 없다면
-                let resource = ImageResource(downloadURL: url! , cacheKey: urlString) // URL로부터 이미지를 다운받고 String 타입의 URL을 캐시키로 지정하고
-                self.kf.setImage(with: resource) // 이미지를 셋한다.
+                if let tempUrl = url {
+                    let resource = ImageResource(downloadURL: tempUrl, cacheKey: urlString) // URL로부터 이미지를 다운받고 String 타입의 URL을 캐시키로 지정하고
+                    self.kf.setImage(with: resource) // 이미지를 셋한다.
+                }
             }
         }
     }
